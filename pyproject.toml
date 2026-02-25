@@ -1,0 +1,8 @@
+[project]
+name = "festival-docs"
+version = "0.1.0"
+description = "Documentation tooling for the Festival Methodology"
+requires-python = ">=3.11"
+dependencies = [
+    "mkdocs-material",
+]

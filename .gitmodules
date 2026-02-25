@@ -1,0 +1,6 @@
+[submodule "fest"]
+	path = fest
+	url = git@github.com:Obedience-Corp/fest.git
+[submodule "camp"]
+	path = camp
+	url = git@github.com:Obedience-Corp/camp.git

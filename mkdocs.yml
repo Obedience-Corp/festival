@@ -1,0 +1,66 @@
+site_name: Festival Methodology
+site_description: AI-native project planning with festivals, phases, sequences, and tasks
+site_url: https://obedience-corp.github.io/festival
+
+docs_dir: docs
+
+theme:
+  name: material
+  palette:
+    - scheme: slate
+      primary: deep purple
+      accent: purple
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+    - scheme: default
+      primary: deep purple
+      accent: purple
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+  features:
+    - navigation.instant
+    - navigation.sections
+    - navigation.expand
+    - navigation.tabs
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+
+plugins:
+  - search
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - toc:
+      permalink: true
+
+nav:
+  - Home: index.md
+  - Getting Started:
+    - Installation: getting-started/installation.md
+    - Quick Start: getting-started/quickstart.md
+    - Shell Setup: getting-started/shell-setup.md
+  - Methodology:
+    - Overview: methodology/overview.md
+    - Campaigns: methodology/campaigns.md
+    - Festivals: methodology/festivals.md
+    - Phases: methodology/phases.md
+    - Sequences: methodology/sequences.md
+    - Tasks: methodology/tasks.md
+  - CLI Reference:
+    - fest: cli-reference/fest/index.md
+    - camp: cli-reference/camp/index.md
+  - Guides:
+    - Agent Workflows: guides/agent-workflows.md
+    - Team Planning: guides/team-planning.md
+    - Best Practices: guides/best-practices.md
+  - Tutorials:
+    - First Festival: tutorials/first-festival.md
+    - Campaign Setup: tutorials/campaign-setup.md
+    - CI Integration: tutorials/ci-integration.md

@@ -1,0 +1,16 @@
+# Build artifacts
+dist/
+bin/
+
+# Python / MkDocs
+.venv/
+site/
+__pycache__/
+
+# OS
+.DS_Store
+
+# Editor
+*.swp
+*.swo
+*~

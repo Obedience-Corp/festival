@@ -1,0 +1,137 @@
+# .goreleaser.yaml
+version: 2
+
+before:
+  hooks:
+    - cd fest && go mod tidy
+    - cd camp && go mod tidy
+
+builds:
+  - id: fest
+    dir: fest
+    main: ./cmd/fest
+    binary: fest
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    ignore:
+      - goos: windows
+        goarch: arm64
+    ldflags:
+      - -s -w
+      - -X github.com/Obedience-Corp/fest/internal/commands.Version={{.Version}}
+      - -X github.com/Obedience-Corp/fest/internal/commands.GitCommit={{.Commit}}
+      - -X github.com/Obedience-Corp/fest/internal/commands.BuildTime={{.Date}}
+
+  - id: camp
+    dir: camp
+    main: ./cmd/camp
+    binary: camp
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    ignore:
+      - goos: windows
+        goarch: arm64
+    ldflags:
+      - -s -w
+      - -X github.com/obediencecorp/camp/internal/version.Version={{.Version}}
+      - -X github.com/obediencecorp/camp/internal/version.Commit={{.Commit}}
+      - -X github.com/obediencecorp/camp/internal/version.BuildDate={{.Date}}
+
+archives:
+  - id: festival-suite
+    builds: [fest, camp]
+    name_template: >-
+      festival-
+      {{- .Version }}-
+      {{- if eq .Os "darwin" }}macOS
+      {{- else }}{{ .Os }}{{ end }}-
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+    format_overrides:
+      - goos: windows
+        format: zip
+    files:
+      - README.md
+      - LICENSE
+      - install.sh
+
+checksum:
+  name_template: 'checksums.txt'
+
+snapshot:
+  version_template: "{{ incpatch .Version }}-next"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+      - '^chore:'
+
+brews:
+  - repository:
+      owner: lancekrogers
+      name: homebrew-tap
+      branch: main
+      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
+
+    name: festival
+
+    homepage: "https://github.com/Obedience-Corp/festival"
+    description: "Festival Methodology CLI suite (fest + camp)"
+    license: "BUSL-1.1"
+
+    folder: Formula
+
+    test: |
+      system "#{bin}/fest", "--version"
+      system "#{bin}/camp", "--version"
+
+    install: |
+      bin.install "fest"
+      bin.install "camp"
+
+release:
+  github:
+    owner: Obedience-Corp
+    name: festival
+
+  prerelease: auto
+
+  header: |
+    ## Festival {{ .Tag }}
+
+    Festival Methodology CLI suite release — includes `fest` and `camp`.
+
+  footer: |
+    **Full Changelog**: https://github.com/Obedience-Corp/festival/compare/{{ .PreviousTag }}...{{ .Tag }}
+
+    ## Installation
+
+    ```bash
+    curl -fsSL https://raw.githubusercontent.com/Obedience-Corp/festival/main/install.sh | bash
+    ```
+
+universal_binaries:
+  - replace: true
+    id: fest
+    name_template: "fest"
+  - replace: true
+    id: camp
+    name_template: "camp"
