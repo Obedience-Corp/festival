@@ -1,6 +1,6 @@
 # Festival
 
-![Festival Banner](docs/images/festival_banner.jpg)
+![Festival Banner](docs/images/festival_banner.png)
 
 **AI-native project planning with campaigns, festivals, phases, sequences, and tasks.**
 
