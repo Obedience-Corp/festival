@@ -62,7 +62,7 @@ Festival includes two CLI tools: **fest** (festival planning) and **camp** (camp
     ### Scoop (Recommended)
 
     ```powershell
-    scoop bucket add obey https://github.com/lancekrogers/scoop-bucket
+    scoop bucket add obey https://github.com/Obedience-Corp/scoop-bucket
     scoop install festival
     ```
 

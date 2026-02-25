@@ -124,7 +124,7 @@ aurs:
 scoops:
   - name: festival
     repository:
-      owner: lancekrogers
+      owner: Obedience-Corp
       name: scoop-bucket
       branch: main
       token: "{{ .Env.SCOOP_GITHUB_TOKEN }}"

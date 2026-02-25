@@ -30,7 +30,7 @@ yay -S festival-bin
 **Windows:**
 
 ```powershell
-scoop bucket add obey https://github.com/lancekrogers/scoop-bucket
+scoop bucket add obey https://github.com/Obedience-Corp/scoop-bucket
 scoop install festival
 ```
 
