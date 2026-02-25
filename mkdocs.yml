@@ -40,8 +40,12 @@ markdown_extensions:
   - toc:
       permalink: true
 
+extra_javascript:
+  - javascripts/install-detect.js
+
 nav:
   - Home: index.md
+  - Install: install.md
   - Getting Started:
     - Installation: getting-started/installation.md
     - Quick Start: getting-started/quickstart.md

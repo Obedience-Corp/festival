@@ -13,15 +13,28 @@ This repository is the distribution hub for the Festival CLI tools:
 
 ## Install
 
-```bash
-curl -fsSL https://raw.githubusercontent.com/Obedience-Corp/festival/main/install.sh | bash
-```
-
-Or with Homebrew:
+**macOS:**
 
 ```bash
 brew install lancekrogers/tap/festival
 ```
+
+**Arch Linux:**
+
+```bash
+yay -S festival-bin
+```
+
+**Debian/Ubuntu:** Download `.deb` from [releases](https://github.com/Obedience-Corp/festival/releases/latest)
+
+**Windows:**
+
+```powershell
+scoop bucket add obey https://github.com/lancekrogers/scoop-bucket
+scoop install festival
+```
+
+See the [installation guide](https://obedience-corp.github.io/festival/install/) for all platforms and methods.
 
 ## Quick Start
 

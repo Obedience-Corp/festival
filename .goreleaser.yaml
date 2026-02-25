@@ -70,6 +70,68 @@ archives:
       - LICENSE
       - install.sh
 
+nfpms:
+  - id: festival
+    package_name: festival
+    file_name_template: "{{ .ConventionalFileName }}"
+    builds:
+      - fest
+      - camp
+    vendor: Obedience Corp
+    homepage: "https://obedience-corp.github.io/festival"
+    maintainer: "Lance Rogers <lance@obediencecorp.com>"
+    description: |-
+      Festival Methodology CLI suite.
+      AI-native project planning with fest and camp.
+    license: "BUSL-1.1"
+    formats:
+      - deb
+      - rpm
+      - apk
+      - archlinux
+    bindir: /usr/bin
+    section: devel
+    priority: optional
+    contents:
+      - src: ./LICENSE
+        dst: /usr/share/licenses/festival/LICENSE
+      - src: ./README.md
+        dst: /usr/share/doc/festival/README.md
+
+aurs:
+  - name: festival-bin
+    ids:
+      - festival-suite
+    homepage: "https://obedience-corp.github.io/festival"
+    description: "Festival Methodology CLI suite (fest + camp) - AI-native project planning"
+    maintainers:
+      - "Lance Rogers <lance@obediencecorp.com>"
+    license: "BUSL-1.1"
+    private_key: "{{ .Env.AUR_SSH_KEY }}"
+    git_url: "ssh://aur@aur.archlinux.org/festival-bin.git"
+    provides:
+      - fest
+      - camp
+    conflicts:
+      - fest
+      - camp
+    package: |-
+      install -Dm755 "./fest" "${pkgdir}/usr/bin/fest"
+      install -Dm755 "./camp" "${pkgdir}/usr/bin/camp"
+      install -Dm644 "./LICENSE" "${pkgdir}/usr/share/licenses/festival/LICENSE"
+    commit_msg_template: "Update to {{ .Tag }}"
+
+scoops:
+  - name: festival
+    repository:
+      owner: lancekrogers
+      name: scoop-bucket
+      branch: main
+      token: "{{ .Env.SCOOP_GITHUB_TOKEN }}"
+    homepage: "https://obedience-corp.github.io/festival"
+    description: "Festival Methodology CLI suite (fest + camp) - AI-native project planning"
+    license: "BUSL-1.1"
+
 checksum:
   name_template: 'checksums.txt'
 
@@ -124,9 +186,15 @@ release:
 
     ## Installation
 
-    ```bash
-    curl -fsSL https://raw.githubusercontent.com/Obedience-Corp/festival/main/install.sh | bash
-    ```
+    See [full installation guide](https://obedience-corp.github.io/festival/install/) for all platforms.
+
+    | Platform | Command |
+    |----------|---------|
+    | macOS | `brew install lancekrogers/tap/festival` |
+    | Arch Linux | `yay -S festival-bin` |
+    | Debian/Ubuntu | Download `.deb` from assets below |
+    | Fedora/RHEL | Download `.rpm` from assets below |
+    | Windows | `scoop bucket add obey https://github.com/lancekrogers/scoop-bucket && scoop install festival` |
 
 universal_binaries:
   - replace: true
