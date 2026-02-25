@@ -148,7 +148,7 @@ changelog:
 
 brews:
   - repository:
-      owner: lancekrogers
+      owner: Obedience-Corp
       name: homebrew-tap
       branch: main
       token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
@@ -190,7 +190,7 @@ release:
 
     | Platform | Command |
     |----------|---------|
-    | macOS | `brew install lancekrogers/tap/festival` |
+    | macOS | `brew install Obedience-Corp/tap/festival` |
     | Arch Linux | `yay -S festival-bin` |
     | Debian/Ubuntu | Download `.deb` from assets below |
     | Fedora/RHEL | Download `.rpm` from assets below |

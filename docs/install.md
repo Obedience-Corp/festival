@@ -9,7 +9,7 @@
 The fastest way to install:
 
 ```bash
-brew install lancekrogers/tap/festival
+brew install Obedience-Corp/tap/festival
 ```
 
 Or download the latest macOS release directly:

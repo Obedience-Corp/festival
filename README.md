@@ -16,7 +16,7 @@ This repository is the distribution hub for the Festival CLI tools:
 **macOS:**
 
 ```bash
-brew install lancekrogers/tap/festival
+brew install Obedience-Corp/tap/festival
 ```
 
 **Arch Linux:**

@@ -7,7 +7,7 @@ Festival includes two CLI tools: **fest** (festival planning) and **camp** (camp
     ### Homebrew (Recommended)
 
     ```bash
-    brew install lancekrogers/tap/festival
+    brew install Obedience-Corp/tap/festival
     ```
 
     ### Direct Download
