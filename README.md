@@ -1,8 +1,10 @@
-# Festival Methodology
+# Festival
+
+![Festival Banner](docs/images/festival_banner.jpg)
 
 **AI-native project planning with campaigns, festivals, phases, sequences, and tasks.**
 
-Festival Methodology is a hierarchical planning system designed for human-AI collaboration, long-running autonomous development cycles, and complex project orchestration.
+Festival is a hierarchical planning system designed for human-AI collaboration, long-running autonomous development cycles, and complex project orchestration.
 
 This repository is the distribution hub for the Festival CLI tools:
 
@@ -40,7 +42,7 @@ fest understand
 
 ## Documentation
 
-Full documentation is available at the [Festival Methodology docs site](https://obedience-corp.github.io/festival).
+Full documentation is available at the [Festival docs site](https://obedience-corp.github.io/festival).
 
 ## Hierarchy
 

@@ -1,4 +1,4 @@
-# Festival Methodology
+# Festival
 
 AI-native project planning with campaigns, festivals, phases, sequences, and tasks.
 
