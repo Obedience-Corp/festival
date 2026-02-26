@@ -78,7 +78,7 @@ nfpms:
       - fest
       - camp
     vendor: Obedience Corp
-    homepage: "https://obedience-corp.github.io/festival"
+    homepage: "https://fest.build"
     maintainer: "Lance Rogers <lance@obediencecorp.com>"
     description: |-
       Festival Methodology CLI suite.
@@ -102,7 +102,7 @@ aurs:
   - name: festival-bin
     ids:
       - festival-suite
-    homepage: "https://obedience-corp.github.io/festival"
+    homepage: "https://fest.build"
     description: "Festival Methodology CLI suite (fest + camp) - AI-native project planning"
     maintainers:
       - "Lance Rogers <lance@obediencecorp.com>"
@@ -128,7 +128,7 @@ scoops:
       name: scoop-bucket
       branch: main
       token: "{{ .Env.SCOOP_GITHUB_TOKEN }}"
-    homepage: "https://obedience-corp.github.io/festival"
+    homepage: "https://fest.build"
     description: "Festival Methodology CLI suite (fest + camp) - AI-native project planning"
     license: "BUSL-1.1"
 
@@ -186,7 +186,7 @@ release:
 
     ## Installation
 
-    See [full installation guide](https://obedience-corp.github.io/festival/install/) for all platforms.
+    See [full installation guide](https://fest.build/install/) for all platforms.
 
     | Platform | Command |
     |----------|---------|

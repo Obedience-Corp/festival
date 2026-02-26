@@ -4,6 +4,8 @@
 
 **Mission-based AI workspace management for developers using AI coding tools.**
 
+→ [Get started](https://fest.build/getting-started/quickstart) (takes ~5 minutes).
+
 ## The Problem
 
 You have multiple missions running in parallel - your day job, a side project, a startup idea, an open-source contribution. Each mission has its own projects, planning docs, research, and context. Without structure, this becomes a flat mess of repos, scattered notes, and context that lives only in your head (or worse, in expired chat sessions).
@@ -23,7 +25,7 @@ A **festival** is a structured plan within a campaign. It breaks work into phase
 
 ### Real Example
 
-Here's what `obey-campaign` looks like - a real campaign with 19 projects and active festival planning:
+Here's what `obey-campaign` looks like - a real campaign that orchestrates Obedience Corp's internal platform and product stack:
 
 ```
 obey-campaign/
@@ -51,7 +53,9 @@ obey-campaign/
 
 Every project, every plan, every piece of context for this mission lives here. `cgo p fest` jumps to the fest project. `fgo` toggles between a festival and its linked project. Everything is navigable by both humans and AI agents.
 
-## Two CLIs
+## CLI Overview
+
+For full CLI reference, see the [fest](https://fest.build/cli-reference/fest/) and [camp](https://fest.build/cli-reference/camp/) documentation.
 
 ### camp - workspace management
 
@@ -96,6 +100,8 @@ scoop bucket add obey https://github.com/Obedience-Corp/scoop-bucket
 scoop install festival
 ```
 
+After installing, see the [quick start guide](https://fest.build/getting-started/quickstart/) for shell setup and first steps.
+
 ## Quick Start
 
 ```bash
@@ -116,15 +122,13 @@ fest create festival my-first-feature
 fest next
 ```
 
-See the [quick start guide](https://obedience-corp.github.io/festival/getting-started/quickstart/) for a full walkthrough.
-
 ## Documentation
 
-Full documentation at **[obedience-corp.github.io/festival](https://obedience-corp.github.io/festival)**:
+Full documentation at **[fest.build](https://fest.build)**:
 
-- [Methodology Overview](https://obedience-corp.github.io/festival/methodology/overview/) - Core principles and concepts
-- [Agent Workflows](https://obedience-corp.github.io/festival/guides/agent-workflows/) - Using Festival with AI coding tools
-- [First Festival Tutorial](https://obedience-corp.github.io/festival/tutorials/first-festival/) - End-to-end walkthrough
+- [Methodology Overview](https://fest.build/methodology/overview/) - Core principles and concepts
+- [Agent Workflows](https://fest.build/guides/agent-workflows/) - Using Festival with AI coding tools
+- [First Festival Tutorial](https://fest.build/tutorials/first-festival/) - End-to-end walkthrough
 
 ## License
 
