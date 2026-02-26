@@ -6,17 +6,17 @@ How to use Festival Methodology with AI agents for autonomous development sessio
 
 ## Why Festival for AI Agents
 
-AI coding agents are powerful but stateless. Every session starts from zero — the agent doesn't know what was planned, what's already done, or what comes next. Without structure, you get duplicated work, missed steps, and sessions that spend half their context window figuring out where they are.
+AI coding agents are powerful but stateless. Every session starts from zero - the agent doesn't know what was planned, what's already done, or what comes next. Without structure, you get duplicated work, missed steps, and sessions that spend half their context window figuring out where they are.
 
 Festival solves this by putting all project state in the filesystem. Plans, progress, and context are markdown files that any agent can read. There is no external database, no API, and no proprietary format. An agent that can run bash commands and read files can use Festival immediately.
 
 The key properties that make this work:
 
-- **Context management** — Work is broken into tasks sized to fit within agent context windows. No task requires loading the entire project state.
-- **Resumable sessions** — `fest next` tells any new agent exactly what to do next, with full context included inline.
-- **Just-in-time context** — Agents load only what they need for the current task. Phase goals, sequence context, and task documents are served on demand.
-- **Progress tracking** — `fest status` shows what's done, what's in flight, and what remains. No guessing.
-- **Methodology on demand** — `fest intro` and `fest understand` teach agents the system without upfront context dumps. The agent learns what it needs, when it needs it.
+- **Context management** - Work is broken into tasks sized to fit within agent context windows. No task requires loading the entire project state.
+- **Resumable sessions** - `fest next` tells any new agent exactly what to do next, with full context included inline.
+- **Just-in-time context** - Agents load only what they need for the current task. Phase goals, sequence context, and task documents are served on demand.
+- **Progress tracking** - `fest status` shows what's done, what's in flight, and what remains. No guessing.
+- **Methodology on demand** - `fest intro` and `fest understand` teach agents the system without upfront context dumps. The agent learns what it needs, when it needs it.
 
 ---
 
@@ -39,20 +39,20 @@ On first contact, run `fest intro` once. After that, the loop is just `fest next
 
 ## fest as a Guidance System
 
-These are the commands agents use most. They are designed to return agent-readable output — structured markdown that can be consumed directly as context.
+These are the commands agents use most. They are designed to return agent-readable output - structured markdown that can be consumed directly as context.
 
 | Command | Purpose |
 |---|---|
 | `fest intro` | Getting started guide. First thing any agent should run in a new festival. |
 | `fest understand [topic]` | Deep dive into methodology concepts: `methodology`, `structure`, `tasks`, `workflow`, etc. |
-| `fest context` | Get context for current location — phase, sequence, or task. |
+| `fest context` | Get context for current location - phase, sequence, or task. |
 | `fest next` | Get the next incomplete task with full inline context: task document, phase goal, festival goal. |
-| `fest status` | Overview of festival progress — phases, sequences, completion percentages. |
+| `fest status` | Overview of festival progress - phases, sequences, completion percentages. |
 | `fest progress` | Detailed progress breakdown across the entire festival. |
 | `fest task complete` | Mark the current task as done. |
 | `fest commit -m "msg"` | Git commit with festival metadata for traceability. |
 
-`fest next` is the most important command. Its output includes everything an agent needs to start working — the task document content, the phase it belongs to, and the overall festival goal. No additional file reads required.
+`fest next` is the most important command. Its output includes everything an agent needs to start working - the task document content, the phase it belongs to, and the overall festival goal. No additional file reads required.
 
 ---
 
@@ -74,7 +74,7 @@ Claude Code is the primary development environment for Festival workflows. These
 
 ## Working with Other Agents
 
-Festival is tool-agnostic. Any agent that can run bash commands can use it — Cursor, Codex, Windsurf, Aider, or anything else with shell access.
+Festival is tool-agnostic. Any agent that can run bash commands can use it - Cursor, Codex, Windsurf, Aider, or anything else with shell access.
 
 There is no API integration required. Everything is bash commands and markdown files:
 
@@ -82,7 +82,7 @@ There is no API integration required. Everything is bash commands and markdown f
 - `fest task complete` marks progress. The agent moves on.
 - `fest status` shows the state of the world. The agent orients itself.
 
-The filesystem IS the state. Task documents are markdown files. Progress is tracked by file location and status markers. An agent reads task documents, writes code, and records completion — all through standard file operations and CLI commands.
+The filesystem IS the state. Task documents are markdown files. Progress is tracked by file location and status markers. An agent reads task documents, writes code, and records completion - all through standard file operations and CLI commands.
 
 This means Festival works the same way regardless of which AI tool is driving the session. Switch from Claude Code to Cursor mid-festival and nothing breaks. The state is in the files, not in any tool's memory.
 
@@ -90,13 +90,13 @@ This means Festival works the same way regardless of which AI tool is driving th
 
 ## Session Handoff
 
-The hardest problem in agent workflows is handoff — when one session ends and another begins. Festival makes this explicit rather than hoping context survives.
+The hardest problem in agent workflows is handoff - when one session ends and another begins. Festival makes this explicit rather than hoping context survives.
 
 **`fest status`** shows exactly where work stands. Which phases are complete, which sequences are in progress, which tasks remain. A new agent reads this and knows the full picture in seconds.
 
 **`fest next`** picks up the next incomplete task automatically. No manual searching through directories or reading status files. The agent gets a task with full context and starts working immediately.
 
-**`fest context`** provides full context for the current location. If an agent needs to understand where it is in the festival hierarchy — what phase, what sequence, what the goals are — this command delivers it.
+**`fest context`** provides full context for the current location. If an agent needs to understand where it is in the festival hierarchy - what phase, what sequence, what the goals are - this command delivers it.
 
 **CONTEXT.md files** capture decisions and rationale across sessions. Why was this approach chosen? What alternatives were considered? What gotchas were discovered? This is the institutional memory that prevents the next session from re-learning hard-won lessons.
 

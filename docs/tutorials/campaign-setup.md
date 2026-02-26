@@ -45,8 +45,8 @@ source ~/.zshrc
 
 This gives you two navigation commands:
 
-- **`cgo`** — campaign navigation (directories, projects, categories)
-- **`fgo`** — festival navigation (jump to festivals, toggle between planning and code)
+- **`cgo`** - campaign navigation (directories, projects, categories)
+- **`fgo`** - festival navigation (jump to festivals, toggle between planning and code)
 
 ## Navigate Your Campaign
 
@@ -183,6 +183,6 @@ You now have a fully structured campaign workspace with:
 
 ## Next Steps
 
-- [Your First Festival](first-festival.md) — create phases, sequences, and tasks
-- [Methodology Overview](../methodology/overview.md) — understand the festival lifecycle
-- [Agent Workflows](../guides/agent-workflows.md) — run autonomous agent sessions with festivals
+- [Your First Festival](first-festival.md) - create phases, sequences, and tasks
+- [Methodology Overview](../methodology/overview.md) - understand the festival lifecycle
+- [Agent Workflows](../guides/agent-workflows.md) - run autonomous agent sessions with festivals

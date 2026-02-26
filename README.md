@@ -6,24 +6,24 @@
 
 ## The Problem
 
-You have multiple missions running in parallel — your day job, a side project, a startup idea, an open-source contribution. Each mission has its own projects, planning docs, research, and context. Without structure, this becomes a flat mess of repos, scattered notes, and context that lives only in your head (or worse, in expired chat sessions).
+You have multiple missions running in parallel - your day job, a side project, a startup idea, an open-source contribution. Each mission has its own projects, planning docs, research, and context. Without structure, this becomes a flat mess of repos, scattered notes, and context that lives only in your head (or worse, in expired chat sessions).
 
 AI coding tools make you faster at writing code, but they don't help you organize *where* you work or *what* you're working toward. You need two things traditional tools don't give you:
 
-1. **Isolated workspaces** — one per mission, with all projects, docs, and planning in one place
-2. **Structured plans** — that AI agents can pick up, execute, and resume without losing context
+1. **Isolated workspaces** - one per mission, with all projects, docs, and planning in one place
+2. **Structured plans** - that AI agents can pick up, execute, and resume without losing context
 
 ## What Festival Does
 
-Festival gives you **campaigns** and **festivals** — two concepts, two CLIs, one product.
+Festival gives you **campaigns** and **festivals** - two concepts, two CLIs, one product.
 
 A **campaign** is an isolated workspace for one mission. It organizes your projects, documentation, research, and planning into a standard layout that both you and AI agents can navigate.
 
-A **festival** is a structured plan within a campaign. It breaks work into phases, sequences, and tasks — a hierarchy designed for AI agents to execute autonomously, pause, and resume without context loss.
+A **festival** is a structured plan within a campaign. It breaks work into phases, sequences, and tasks - a hierarchy designed for AI agents to execute autonomously, pause, and resume without context loss.
 
 ### Real Example
 
-Here's what `obey-campaign` looks like — a real campaign with 19 projects and active festival planning:
+Here's what `obey-campaign` looks like - a real campaign with 19 projects and active festival planning:
 
 ```
 obey-campaign/
@@ -53,7 +53,7 @@ Every project, every plan, every piece of context for this mission lives here. `
 
 ## Two CLIs
 
-### camp — workspace management
+### camp - workspace management
 
 ```bash
 camp init my-startup          # Create a campaign
@@ -63,7 +63,7 @@ camp doctor                   # Health check the workspace
 camp leverage                 # Find highest-impact work
 ```
 
-### fest — hierarchical planning
+### fest - hierarchical planning
 
 ```bash
 fest create festival my-feature   # Create a structured plan
@@ -122,12 +122,12 @@ See the [quick start guide](https://obedience-corp.github.io/festival/getting-st
 
 Full documentation at **[obedience-corp.github.io/festival](https://obedience-corp.github.io/festival)**:
 
-- [Methodology Overview](https://obedience-corp.github.io/festival/methodology/overview/) — Core principles and concepts
-- [Agent Workflows](https://obedience-corp.github.io/festival/guides/agent-workflows/) — Using Festival with AI coding tools
-- [First Festival Tutorial](https://obedience-corp.github.io/festival/tutorials/first-festival/) — End-to-end walkthrough
+- [Methodology Overview](https://obedience-corp.github.io/festival/methodology/overview/) - Core principles and concepts
+- [Agent Workflows](https://obedience-corp.github.io/festival/guides/agent-workflows/) - Using Festival with AI coding tools
+- [First Festival Tutorial](https://obedience-corp.github.io/festival/tutorials/first-festival/) - End-to-end walkthrough
 
 ## License
 
 [Business Source License 1.1](LICENSE)
 
-Built by [Obedience Corp](https://obediencecorp.com) — AI that does what you want, the way you want it done.
+Built by [Obedience Corp](https://obediencecorp.com) - AI that does what you want, the way you want it done.

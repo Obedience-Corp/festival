@@ -1,6 +1,6 @@
 # Team Planning
 
-How teams—human, AI agent, or mixed—use the Festival Methodology to coordinate work.
+How teams -human, AI agent, or mixed -use the Festival Methodology to coordinate work.
 
 ---
 
@@ -16,7 +16,7 @@ Why sequences and not tasks? A single task lacks enough context to be meaningful
 
 Sequences within a phase can run in parallel when they don't depend on each other. The numbering prefix signals dependency order:
 
-- `01_backend/` and `01_frontend/` share the same prefix—they can run simultaneously.
+- `01_backend/` and `01_frontend/` share the same prefix -they can run simultaneously.
 - `02_integration/` depends on both and runs after.
 
 Within a single sequence, tasks with the same number can also run in parallel:
@@ -40,7 +40,7 @@ This gives you two levels of parallelism: across sequences and within them. Use 
 
 The `testing -> review -> iterate` quality gates at the end of each sequence serve as natural sync points. Before starting the next sequence, verify the previous one passed its gates. This prevents compounding errors across dependent work.
 
-If sequence `01_backend/` fails its review gate, do not start `02_integration/`. Fix the issues in the iterate step first. Quality gates exist to catch problems early—skipping them defeats the entire purpose of structured planning.
+If sequence `01_backend/` fails its review gate, do not start `02_integration/`. Fix the issues in the iterate step first. Quality gates exist to catch problems early -skipping them defeats the entire purpose of structured planning.
 
 ---
 

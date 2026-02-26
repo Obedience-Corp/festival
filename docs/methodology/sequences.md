@@ -1,6 +1,6 @@
 # Sequences
 
-A sequence is an ordered group of related tasks within a phase. Sequences use 2-digit numbering (`01_`, `02_`) within their parent phase directory. Each sequence represents a cohesive unit of work — like "user authentication" or "API endpoints" — that can be assigned to one person or agent for focused execution.
+A sequence is an ordered group of related tasks within a phase. Sequences use 2-digit numbering (`01_`, `02_`) within their parent phase directory. Each sequence represents a cohesive unit of work - like "user authentication" or "API endpoints" - that can be assigned to one person or agent for focused execution.
 
 Sequences are the primary unit of assignment. When you hand off work, you hand off a sequence.
 
@@ -38,11 +38,11 @@ Keep sequences focused. If you find yourself context-switching between unrelated
 
 ## Anti-Patterns
 
-- **Single task per sequence** — Just make it a standalone task in the phase.
-- **Unrelated tasks grouped arbitrarily** — Each sequence should have a clear theme.
-- **Sequences with >8 tasks** — Break into multiple sequences. Large sequences lose focus.
-- **Mixing work types** — Don't combine frontend, backend, and DevOps in one sequence. Separate by domain.
-- **Creating sequences without requirements** — The biggest anti-pattern. No specs, no sequence.
+- **Single task per sequence** - Just make it a standalone task in the phase.
+- **Unrelated tasks grouped arbitrarily** - Each sequence should have a clear theme.
+- **Sequences with >8 tasks** - Break into multiple sequences. Large sequences lose focus.
+- **Mixing work types** - Don't combine frontend, backend, and DevOps in one sequence. Separate by domain.
+- **Creating sequences without requirements** - The biggest anti-pattern. No specs, no sequence.
 
 ## Example Sequence
 
@@ -64,9 +64,9 @@ Tasks execute in numbered order. Each task builds on the output of the previous 
 
 Every implementation sequence must end with quality gate tasks:
 
-- `XX_testing.md` — Run tests, verify behavior, confirm coverage targets.
-- `XX+1_review.md` — Code review against project standards.
-- `XX+2_iterate.md` — Address review findings, fix issues, re-verify.
+- `XX_testing.md` - Run tests, verify behavior, confirm coverage targets.
+- `XX+1_review.md` - Code review against project standards.
+- `XX+2_iterate.md` - Address review findings, fix issues, re-verify.
 
 Create a `results/` subdirectory within the sequence for testing output, review documents, and iteration notes. This keeps artifacts co-located with the work that produced them.
 
@@ -83,7 +83,7 @@ Tasks sharing the same number execute in parallel:
 02_integration_layer.md   # Waits for all 01_ tasks to complete
 ```
 
-Use parallel numbering when tasks are genuinely independent — they share no outputs, no dependencies, and no conflicting file modifications. If two tasks might touch the same files, they are not parallel.
+Use parallel numbering when tasks are genuinely independent - they share no outputs, no dependencies, and no conflicting file modifications. If two tasks might touch the same files, they are not parallel.
 
 ## Sequence Numbering
 
@@ -96,7 +96,7 @@ phase_01_setup/
 └── 03_dev_environment/
 ```
 
-The numbering defines execution order. `01_` completes before `02_` begins. If two sequences are truly independent, give them the same number — but this is rare. Most sequences within a phase have at least an implicit ordering.
+The numbering defines execution order. `01_` completes before `02_` begins. If two sequences are truly independent, give them the same number - but this is rare. Most sequences within a phase have at least an implicit ordering.
 
 ## Sequence Completion
 

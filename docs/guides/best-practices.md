@@ -12,13 +12,13 @@ Patterns and recommendations for getting the most out of Festival Methodology. F
 
 **Choose the right festival type:**
 
-- **Implementation** — Specs already exist. You know what to build.
-- **Standard** — You need a planning phase before implementation.
-- **Research** — Investigation with uncertain outcomes. Deliverables are findings, not code.
+- **Implementation** - Specs already exist. You know what to build.
+- **Standard** - You need a planning phase before implementation.
+- **Research** - Investigation with uncertain outcomes. Deliverables are findings, not code.
 
 **Start with the simplest structure that works.** A single phase with one or two sequences is fine for small goals. Don't create three phases because the template has three sections. Structure serves the work, not the other way around.
 
-**Write FESTIVAL_RULES.md early.** Codify quality standards before implementation starts — test coverage thresholds, linting requirements, review criteria. This prevents arguments later about what "done" means.
+**Write FESTIVAL_RULES.md early.** Codify quality standards before implementation starts - test coverage thresholds, linting requirements, review criteria. This prevents arguments later about what "done" means.
 
 ---
 
@@ -60,11 +60,11 @@ Test the JWT implementation
 
 **Use `fest commit` for git commits.** It tracks festival context in commit metadata, making it possible to trace changes back to specific tasks and sequences. Raw `git commit` loses this traceability.
 
-**Run quality gates at the end of every implementation sequence.** The pattern is: implement, test, review, iterate. Don't skip the review step — bugs caught here are 10x cheaper than bugs caught in integration.
+**Run quality gates at the end of every implementation sequence.** The pattern is: implement, test, review, iterate. Don't skip the review step - bugs caught here are 10x cheaper than bugs caught in integration.
 
 **Move completed sequences to `completed/`.** This keeps the active workspace clean and provides a clear record of progress. Use `fest status` to verify the move was tracked correctly.
 
-**Check `fest status` regularly.** It gives you a real-time view of overall progress — what's done, what's in flight, and what's blocked. Losing awareness of festival state leads to duplicate work and missed tasks.
+**Check `fest status` regularly.** It gives you a real-time view of overall progress - what's done, what's in flight, and what's blocked. Losing awareness of festival state leads to duplicate work and missed tasks.
 
 ---
 
@@ -74,15 +74,15 @@ Test the JWT implementation
 
 **Use `dungeon/` for lifecycle management:**
 
-- `dungeon/completed/` — Finished festivals (reference and metrics)
-- `dungeon/archived/` — Shelved but preserved (might resume later)
-- `dungeon/someday/` — Deprioritized indefinitely (ideas, not commitments)
+- `dungeon/completed/` - Finished festivals (reference and metrics)
+- `dungeon/archived/` - Shelved but preserved (might resume later)
+- `dungeon/someday/` - Deprioritized indefinitely (ideas, not commitments)
 
 **Keep FESTIVAL_RULES.md current.** Update it as you learn what standards actually matter for this festival. Rules written before implementation are guesses; rules updated during implementation are knowledge.
 
 **Use `fest validate` to catch structural issues early.** Missing required files, malformed task documents, and broken sequence references are easier to fix before execution than during it.
 
-**Link festivals to project directories with `fest link`.** This enables `fgo` navigation between the festival workspace and the project codebase — eliminates context-switching friction.
+**Link festivals to project directories with `fest link`.** This enables `fgo` navigation between the festival workspace and the project codebase - eliminates context-switching friction.
 
 ---
 
@@ -94,7 +94,7 @@ These are the failure modes that come up repeatedly. Learn to recognize them.
 
 **Vague tasks.** "Implement user management" gives an agent nothing actionable. What models? What endpoints? What validation rules? What tests? A vague task produces vague output.
 
-**Skipping quality gates.** The testing-review-iterate cycle exists because implementation sequences reliably produce bugs and gaps. Skipping review doesn't save time — it moves the cost to integration, where fixes are harder.
+**Skipping quality gates.** The testing-review-iterate cycle exists because implementation sequences reliably produce bugs and gaps. Skipping review doesn't save time - it moves the cost to integration, where fixes are harder.
 
 **Over-planning upfront.** Designing all phases before starting the first one is speculative architecture. You don't have enough information yet. Plan the current phase in detail, sketch the next one loosely, and leave the rest undefined.
 

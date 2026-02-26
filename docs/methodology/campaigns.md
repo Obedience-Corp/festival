@@ -2,15 +2,15 @@
 
 ## The Multiple Missions Problem
 
-Every developer runs multiple missions at once. The day job. The side project that might become a startup. The open-source library you maintain on weekends. Each mission accumulates its own gravity — project repos, planning documents, research notes, AI conversation history, design decisions, workflow configurations. Without a boundary around each mission, that context scatters. It lives in expired chat windows, unmarked browser tabs, and directories named `misc-stuff-2`.
+Every developer runs multiple missions at once. The day job. The side project that might become a startup. The open-source library you maintain on weekends. Each mission accumulates its own gravity - project repos, planning documents, research notes, AI conversation history, design decisions, workflow configurations. Without a boundary around each mission, that context scatters. It lives in expired chat windows, unmarked browser tabs, and directories named `misc-stuff-2`.
 
-The problem compounds with AI-assisted development. An agent session needs to understand your workspace — where the code lives, what the plan is, what's been tried before. If your projects, plans, and research are spread across unrelated directories with no shared structure, every new session starts from scratch. You spend tokens re-explaining what an organized workspace would make obvious.
+The problem compounds with AI-assisted development. An agent session needs to understand your workspace - where the code lives, what the plan is, what's been tried before. If your projects, plans, and research are spread across unrelated directories with no shared structure, every new session starts from scratch. You spend tokens re-explaining what an organized workspace would make obvious.
 
-A campaign solves this by isolating one mission into a single, navigable workspace. Everything related to that mission — every repo, every plan, every design doc — lives under one root with a predictable layout. Humans can `cd` into it and know where things are. Agents can read the structure and orient themselves immediately.
+A campaign solves this by isolating one mission into a single, navigable workspace. Everything related to that mission - every repo, every plan, every design doc - lives under one root with a predictable layout. Humans can `cd` into it and know where things are. Agents can read the structure and orient themselves immediately.
 
 ## What is a Campaign?
 
-A campaign is an isolated workspace for a single mission. It groups all related projects as git submodules, all festival plans in a structured hierarchy, and all supporting materials — documentation, research, workflow configs, design artifacts — into a standard directory layout.
+A campaign is an isolated workspace for a single mission. It groups all related projects as git submodules, all festival plans in a structured hierarchy, and all supporting materials - documentation, research, workflow configs, design artifacts - into a standard directory layout.
 
 The key property is **navigability**. Both humans and AI agents can enter a campaign and immediately understand its structure. Projects are in `projects/`. Plans are in `festivals/`. Docs are in `docs/`. There is no guessing, no project-specific convention to learn, no onboarding friction.
 
@@ -22,7 +22,7 @@ Campaigns are independent. Switching from your day-job campaign to your side-pro
 my-campaign/
 ├── .campaign/              # Campaign configuration
 │   └── campaign.yaml       # Name, type, description, metadata
-├── projects/               # Git submodules — your actual code
+├── projects/               # Git submodules - your actual code
 │   ├── api-service/        # Each project is a separate repo
 │   └── web-app/            # Added via camp project add
 ├── festivals/              # Festival planning workspace
@@ -58,7 +58,7 @@ The `obey-campaign` workspace is the central campaign for all Obedience Corp pro
 
 Key projects in the campaign include `camp` (the campaign CLI itself), `fest` (the festival planning CLI), `obey-platform-monorepo` (the core daemon and services), `obey-chat` (chat client), `guild-chat` (Rust TUI), and `obediencecorp.com` (the website). The campaign also holds `guild-core`, the archived reference implementation that the current architecture evolved from.
 
-This is a large campaign. Most campaigns are smaller — a side project with two or three repos and a handful of festivals. The structure scales in both directions.
+This is a large campaign. Most campaigns are smaller - a side project with two or three repos and a handful of festivals. The structure scales in both directions.
 
 ## Camp CLI Overview
 

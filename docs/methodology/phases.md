@@ -91,7 +91,7 @@ Review phases are freeform. They contain a `PHASE_GOAL.md` with review criteria 
 
 ### Non-Coding Action
 
-Same as review — freeform. `PHASE_GOAL.md` with action items and checklists. Use this for documentation work, process changes, or anything that isn't code.
+Same as review - freeform. `PHASE_GOAL.md` with action items and checklists. Use this for documentation work, process changes, or anything that isn't code.
 
 ## PHASE_GOAL.md
 
@@ -145,4 +145,4 @@ Most festivals follow one of these patterns. Pick the simplest one that fits you
 **Research Festival**:
 `001_INGEST` → `002_RESEARCH` → `003_SYNTHESIZE`
 
-These are starting points, not rigid templates. Add custom phases as the work demands — `005_SECURITY_AUDIT/`, `006_PERFORMANCE_OPTIMIZATION/`, whatever the festival needs. Phase types exist to give you sensible defaults, not to constrain you.
+These are starting points, not rigid templates. Add custom phases as the work demands - `005_SECURITY_AUDIT/`, `006_PERFORMANCE_OPTIMIZATION/`, whatever the festival needs. Phase types exist to give you sensible defaults, not to constrain you.
