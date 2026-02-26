@@ -1,0 +1,37 @@
+## fest config
+
+Manage fest configuration repositories
+
+### Synopsis
+
+Manage fest configuration repositories.
+
+Config repos contain custom templates, policies, plugins, and extensions
+that override or extend the built-in fest methodology resources.
+
+### Options
+
+```
+  -h, --help   help for config
+```
+
+### Options inherited from parent commands
+
+```
+      --config string   config file (default: ~/.config/fest/config.json)
+      --debug           enable debug logging
+      --no-color        disable colored output
+      --verbose         enable verbose output
+```
+
+### SEE ALSO
+
+* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
+* [fest config add](fest_config_add.md)	 - Add a configuration repository
+* [fest config list](fest_config_list.md)	 - List all configuration repositories
+* [fest config remove](fest_config_remove.md)	 - Remove a configuration repository
+* [fest config show](fest_config_show.md)	 - Show active configuration
+* [fest config sync](fest_config_sync.md)	 - Sync configuration repository
+* [fest config theme](fest_config_theme.md)	 - Manage TUI color theme
+* [fest config use](fest_config_use.md)	 - Set active configuration repository
+
