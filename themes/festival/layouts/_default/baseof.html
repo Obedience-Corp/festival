@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} — {{ .Site.Title }}{{ end }}</title>
+  <meta name="description" content="{{ with .Description }}{{ . }}{{ else }}{{ .Site.Params.description }}{{ end }}">
+  {{ $css := resources.Get "css/main.css" | minify | fingerprint }}
+  <link rel="stylesheet" href="{{ $css.RelPermalink }}">
+</head>
+<body>
+  {{ partial "header.html" . }}
+
+  <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+  <div class="site-layout">
+    {{ if not .IsHome }}
+      {{ partial "sidebar.html" . }}
+    {{ end }}
+
+    <main class="content-area{{ if .IsHome }} content-area--home{{ end }}">
+      <div class="content">
+        {{ block "main" . }}{{ end }}
+      </div>
+    </main>
+
+    {{ if and (not .IsHome) .TableOfContents }}
+      {{ partial "toc.html" . }}
+    {{ end }}
+  </div>
+
+  {{ if not .IsHome }}
+    <footer class="site-footer">
+      &copy; {{ now.Year }} Obedience Corp. Built with <a href="https://gohugo.io">Hugo</a>.
+    </footer>
+  {{ end }}
+
+  <script>
+  // Theme toggle
+  (function() {
+    var theme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', theme);
+  })();
+
+  function toggleTheme() {
+    var current = document.documentElement.getAttribute('data-theme');
+    var next = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+    updateThemeIcon();
+  }
+
+  function updateThemeIcon() {
+    var btn = document.querySelector('.theme-toggle');
+    if (!btn) return;
+    var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    btn.textContent = isDark ? '☀' : '☾';
+  }
+
+  document.addEventListener('DOMContentLoaded', updateThemeIcon);
+
+  // Mobile sidebar
+  function toggleSidebar() {
+    document.querySelector('.sidebar').classList.toggle('open');
+    document.querySelector('.sidebar-overlay').classList.toggle('open');
+  }
+
+  // Code copy buttons
+  document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('pre').forEach(function(pre) {
+      var wrapper = document.createElement('div');
+      wrapper.className = 'code-block';
+      pre.parentNode.insertBefore(wrapper, pre);
+      wrapper.appendChild(pre);
+
+      var btn = document.createElement('button');
+      btn.className = 'copy-btn';
+      btn.textContent = 'Copy';
+      btn.addEventListener('click', function() {
+        var code = pre.querySelector('code') || pre;
+        navigator.clipboard.writeText(code.textContent).then(function() {
+          btn.textContent = 'Copied!';
+          btn.classList.add('copied');
+          setTimeout(function() {
+            btn.textContent = 'Copy';
+            btn.classList.remove('copied');
+          }, 2000);
+        });
+      });
+      wrapper.appendChild(btn);
+    });
+  });
+
+  // Tabs
+  document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.tabs').forEach(function(tabs) {
+      var btns = tabs.querySelectorAll('.tabs__btn');
+      var panels = tabs.querySelectorAll('.tabs__panel');
+      btns.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var target = btn.getAttribute('data-tab');
+          btns.forEach(function(b) { b.classList.remove('tabs__btn--active'); });
+          panels.forEach(function(p) { p.classList.remove('tabs__panel--active'); });
+          btn.classList.add('tabs__btn--active');
+          tabs.querySelector('[data-panel="' + target + '"]').classList.add('tabs__panel--active');
+        });
+      });
+    });
+  });
+  </script>
+</body>
+</html>

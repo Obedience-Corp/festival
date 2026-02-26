@@ -8,7 +8,8 @@ This is the public distribution repository for the Festival Methodology CLI tool
 
 - `fest/` — Git submodule for the fest CLI (festival planning and execution)
 - `camp/` — Git submodule for the camp CLI (campaign workspace management)
-- `docs/` — MkDocs Material documentation site
+- `content/` — Hugo documentation content (markdown)
+- `themes/festival/` — Custom Hugo theme matching festui design system
 - `.justfiles/` — Modular justfile system
 - `.github/workflows/` — CI/CD release pipeline
 
@@ -35,11 +36,12 @@ just sub init     # Initialize submodules
 
 ## Documentation
 
-The `docs/` directory contains the MkDocs Material site. CLI reference docs are auto-generated:
+The site uses Hugo with a custom `festival` theme. Content lives in `content/docs/`. CLI reference docs are auto-generated:
 
 ```bash
 just docs all     # Generate CLI reference docs
-just docs serve   # Serve at localhost:8000
+just docs serve   # Serve at localhost:1313
+just docs build   # Build for production
 ```
 
 ## Releases

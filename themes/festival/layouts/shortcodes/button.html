@@ -1,0 +1,4 @@
+{{ $text := .Get "text" }}
+{{ $link := .Get "link" }}
+{{ $style := .Get "style" | default "primary" }}
+<a href="{{ $link }}" class="btn btn--{{ $style }}">{{ $text }}</a>

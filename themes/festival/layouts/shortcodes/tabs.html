@@ -1,0 +1,17 @@
+{{ $id := .Get "id" | default (printf "tabs-%d" .Ordinal) }}
+{{ $tabs := split (.Get "names") "," }}
+<div class="tabs" id="{{ $id }}">
+  <div class="tabs__nav">
+    {{ range $i, $name := $tabs }}
+      <button class="tabs__btn{{ if eq $i 0 }} tabs__btn--active{{ end }}" data-tab="{{ $i }}">{{ $name | strings.TrimSpace }}</button>
+    {{ end }}
+  </div>
+  {{ $panels := split .Inner "<!-- tab -->" }}
+  {{ range $i, $panel := $panels }}
+    {{ if gt (len (strings.TrimSpace $panel)) 0 }}
+      <div class="tabs__panel{{ if eq $i 0 }} tabs__panel--active{{ end }}" data-panel="{{ $i }}">
+        {{ $panel | markdownify }}
+      </div>
+    {{ end }}
+  {{ end }}
+</div>

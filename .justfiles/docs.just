@@ -1,6 +1,6 @@
 # Documentation management
 
-docs_root := "docs/cli-reference"
+docs_root := "content/docs/cli-reference"
 
 # Show available docs commands
 [private]
@@ -32,7 +32,12 @@ camp:
     ./camp/bin/camp gendocs --output {{docs_root}}/camp --format markdown --single
     echo "camp docs generated"
 
-# Serve docs locally (localhost:8000)
+# Serve docs locally with live reload
 [no-cd]
 serve:
-    uv run mkdocs serve
+    hugo server -D --source .
+
+# Build docs for production
+[no-cd]
+build:
+    hugo --minify --source .

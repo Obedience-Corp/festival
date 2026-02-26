@@ -1,0 +1,7 @@
+{{ $title := .Get "title" }}
+{{ $link := .Get "link" }}
+<a href="{{ $link }}" class="card">
+  <div class="card__title">{{ $title }}</div>
+  <div class="card__description">{{ .Inner | markdownify }}</div>
+  <span class="card__arrow">→</span>
+</a>

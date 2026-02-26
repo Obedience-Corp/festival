@@ -1,0 +1,108 @@
+baseURL: https://fest.build
+title: Festival
+theme: festival
+
+params:
+  description: "Mission-based AI workspace management for developers using AI coding tools"
+  repo: "https://github.com/Obedience-Corp/festival"
+
+markup:
+  highlight:
+    style: github
+    lineNos: false
+    noClasses: false
+  goldmark:
+    renderer:
+      unsafe: true
+    extensions:
+      table: true
+
+menu:
+  docs:
+    - name: Getting Started
+      identifier: getting-started
+      weight: 10
+    - name: Installation
+      parent: getting-started
+      url: /docs/getting-started/installation/
+      weight: 11
+    - name: Quick Start
+      parent: getting-started
+      url: /docs/getting-started/quickstart/
+      weight: 12
+    - name: Shell Setup
+      parent: getting-started
+      url: /docs/getting-started/shell-setup/
+      weight: 13
+
+    - name: Methodology
+      identifier: methodology
+      weight: 20
+    - name: Overview
+      parent: methodology
+      url: /docs/methodology/overview/
+      weight: 21
+    - name: Campaigns
+      parent: methodology
+      url: /docs/methodology/campaigns/
+      weight: 22
+    - name: Festivals
+      parent: methodology
+      url: /docs/methodology/festivals/
+      weight: 23
+    - name: Phases
+      parent: methodology
+      url: /docs/methodology/phases/
+      weight: 24
+    - name: Sequences
+      parent: methodology
+      url: /docs/methodology/sequences/
+      weight: 25
+    - name: Tasks
+      parent: methodology
+      url: /docs/methodology/tasks/
+      weight: 26
+
+    - name: Guides
+      identifier: guides
+      weight: 30
+    - name: Agent Workflows
+      parent: guides
+      url: /docs/guides/agent-workflows/
+      weight: 31
+    - name: Team Planning
+      parent: guides
+      url: /docs/guides/team-planning/
+      weight: 32
+    - name: Best Practices
+      parent: guides
+      url: /docs/guides/best-practices/
+      weight: 33
+
+    - name: Tutorials
+      identifier: tutorials
+      weight: 40
+    - name: Your First Festival
+      parent: tutorials
+      url: /docs/tutorials/first-festival/
+      weight: 41
+    - name: Campaign Setup
+      parent: tutorials
+      url: /docs/tutorials/campaign-setup/
+      weight: 42
+    - name: CI Integration
+      parent: tutorials
+      url: /docs/tutorials/ci-integration/
+      weight: 43
+
+    - name: CLI Reference
+      identifier: cli-reference
+      weight: 50
+    - name: fest
+      parent: cli-reference
+      url: /docs/cli-reference/fest/
+      weight: 51
+    - name: camp
+      parent: cli-reference
+      url: /docs/cli-reference/camp/
+      weight: 52

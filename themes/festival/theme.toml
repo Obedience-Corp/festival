@@ -1,0 +1,7 @@
+name = "Festival"
+license = "BSL-1.1"
+description = "Custom theme for Festival documentation matching the festui design system"
+min_version = "0.100.0"
+
+[author]
+  name = "Obedience Corp"

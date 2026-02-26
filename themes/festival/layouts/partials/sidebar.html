@@ -1,0 +1,16 @@
+<nav class="sidebar">
+  {{ $currentURL := .RelPermalink }}
+  {{ range .Site.Menus.docs }}
+    {{ if .HasChildren }}
+      <div class="sidebar__section">
+        <div class="sidebar__section-title">{{ .Name }}</div>
+        {{ range .Children }}
+          <a href="{{ .URL }}"
+             class="sidebar__link{{ if eq $currentURL .URL }} sidebar__link--active{{ end }}">
+            {{ .Name }}
+          </a>
+        {{ end }}
+      </div>
+    {{ end }}
+  {{ end }}
+</nav>

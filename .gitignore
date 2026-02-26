@@ -1,11 +1,11 @@
 # Build artifacts
 dist/
 bin/
+public/
 
-# Python / MkDocs
-.venv/
-site/
-__pycache__/
+# Hugo
+resources/_gen/
+.hugo_build.lock
 
 # OS
 .DS_Store
