@@ -23,6 +23,12 @@ jobs:
         with:
           go-version: '1.25'
 
+      - name: Configure private Go modules
+        run: |
+          git config --global url."https://${{ secrets.GO_PRIVATE_TOKEN }}@github.com/".insteadOf "https://github.com/"
+        env:
+          GOPRIVATE: github.com/Obedience-Corp/*
+
       - name: Import AUR SSH key
         if: env.AUR_SSH_KEY != ''
         run: |
@@ -40,6 +46,7 @@ jobs:
           args: release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GOPRIVATE: github.com/Obedience-Corp/*
           HOMEBREW_TAP_GITHUB_TOKEN: ${{ secrets.HOMEBREW_TAP_GITHUB_TOKEN }}
           AUR_SSH_KEY: ${{ secrets.AUR_SSH_KEY }}
           SCOOP_GITHUB_TOKEN: ${{ secrets.SCOOP_GITHUB_TOKEN }}

@@ -47,9 +47,9 @@ builds:
         goarch: arm64
     ldflags:
       - -s -w
-      - -X github.com/obediencecorp/camp/internal/version.Version={{.Version}}
-      - -X github.com/obediencecorp/camp/internal/version.Commit={{.Commit}}
-      - -X github.com/obediencecorp/camp/internal/version.BuildDate={{.Date}}
+      - -X github.com/Obedience-Corp/camp/internal/version.Version={{.Version}}
+      - -X github.com/Obedience-Corp/camp/internal/version.Commit={{.Commit}}
+      - -X github.com/Obedience-Corp/camp/internal/version.BuildDate={{.Date}}
 
 archives:
   - id: festival-suite
