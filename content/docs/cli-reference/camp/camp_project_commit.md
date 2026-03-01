@@ -29,7 +29,7 @@ camp project commit [flags]
   -h, --help             help for commit
   -m, --message string   Commit message (required)
   -p, --project string   Project name (auto-detected from cwd if not specified)
-      --sync             Auto-commit submodule ref in campaign root (default true)
+      --sync             Sync submodule ref at campaign root after commit (opt-in)
 ```
 
 ### Options inherited from parent commands
