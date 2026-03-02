@@ -21,7 +21,6 @@ fest workflow advance [flags]
 
 ```
   -h, --help   help for advance
-      --skip   Skip current step without completing
 ```
 
 ### Options inherited from parent commands

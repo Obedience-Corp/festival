@@ -48,13 +48,14 @@ fest commit [flags]
 ### Options
 
 ```
-      --festival string   festival name or ID (overrides auto-detection)
-  -h, --help              help for commit
-      --json              output result as JSON
-  -m, --message string    commit message
-      --no-tag            don't prepend task reference
-      --stage             auto-stage all changes before commit (default true)
-      --task string       task reference ID to use (e.g., FEST-a3b2c1)
+      --festival string      festival name or ID (overrides auto-detection)
+  -h, --help                 help for commit
+      --json                 output result as JSON
+  -m, --message string       commit message
+      --no-tag               don't prepend task reference
+      --stage                auto-stage all changes before commit (default true)
+      --sync-submodule-ref   sync submodule ref at campaign root after commit
+      --task string          task reference ID to use (e.g., FEST-a3b2c1)
 ```
 
 ### Options inherited from parent commands

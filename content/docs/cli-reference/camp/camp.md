@@ -65,6 +65,7 @@ camp [flags]
 * [camp project](camp_project.md)	 - Manage campaign projects
 * [camp pull](camp_pull.md)	 - Pull latest changes from remote
 * [camp push](camp_push.md)	 - Push campaign changes to remote
+* [camp refs-sync](camp_refs-sync.md)	 - Sync submodule ref pointers in campaign root
 * [camp register](camp_register.md)	 - Register campaign in global registry
 * [camp registry](camp_registry.md)	 - Manage the campaign registry
 * [camp run](camp_run.md)	 - Execute command from campaign root, or just recipe in a project

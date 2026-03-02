@@ -39,6 +39,8 @@ camp project [flags]
 * [camp project commit](camp_project_commit.md)	 - Commit changes in a project submodule
 * [camp project list](camp_project_list.md)	 - List projects in campaign
 * [camp project new](camp_project_new.md)	 - Create a new project in campaign
+* [camp project prune](camp_project_prune.md)	 - Delete merged branches in a project
 * [camp project remove](camp_project_remove.md)	 - Remove a project from campaign
+* [camp project run](camp_project_run.md)	 - Run a command inside a project directory
 * [camp project worktree](camp_project_worktree.md)	 - Manage worktrees for a project
 
