@@ -5,6 +5,7 @@ before:
   hooks:
     - cd fest && go mod tidy
     - cd camp && go mod tidy
+    - bash scripts/completions.sh
 
 builds:
   - id: fest
@@ -25,9 +26,9 @@ builds:
         goarch: arm64
     ldflags:
       - -s -w
-      - -X github.com/Obedience-Corp/fest/internal/commands.Version={{.Version}}
-      - -X github.com/Obedience-Corp/fest/internal/commands.GitCommit={{.Commit}}
-      - -X github.com/Obedience-Corp/fest/internal/commands.BuildTime={{.Date}}
+      - -X github.com/Obedience-Corp/fest/internal/version.Version={{.Version}}
+      - -X github.com/Obedience-Corp/fest/internal/version.Commit={{.Commit}}
+      - -X github.com/Obedience-Corp/fest/internal/version.BuildDate={{.Date}}
 
   - id: camp
     dir: camp
@@ -69,6 +70,7 @@ archives:
       - README.md
       - LICENSE
       - install.sh
+      - completions/*
 
 nfpms:
   - id: festival
@@ -97,6 +99,12 @@ nfpms:
         dst: /usr/share/licenses/festival/LICENSE
       - src: ./README.md
         dst: /usr/share/doc/festival/README.md
+      - src: ./completions/fest.bash
+        dst: /usr/share/bash-completion/completions/fest
+      - src: ./completions/_fest
+        dst: /usr/share/zsh/vendor-completions/_fest
+      - src: ./completions/fest.fish
+        dst: /usr/share/fish/vendor_completions.d/fest.fish
 
 aurs:
   - name: festival-bin
@@ -119,6 +127,9 @@ aurs:
       install -Dm755 "./fest" "${pkgdir}/usr/bin/fest"
       install -Dm755 "./camp" "${pkgdir}/usr/bin/camp"
       install -Dm644 "./LICENSE" "${pkgdir}/usr/share/licenses/festival/LICENSE"
+      install -Dm644 "./completions/fest.bash" "${pkgdir}/usr/share/bash-completion/completions/fest"
+      install -Dm644 "./completions/_fest" "${pkgdir}/usr/share/zsh/site-functions/_fest"
+      install -Dm644 "./completions/fest.fish" "${pkgdir}/usr/share/fish/vendor_completions.d/fest.fish"
     commit_msg_template: "Update to {{ .Tag }}"
 
 scoops:
@@ -159,7 +170,7 @@ brews:
     description: "Festival Methodology CLI suite (fest + camp)"
     license: "BUSL-1.1"
 
-    folder: Formula
+    directory: Formula
 
     test: |
       system "#{bin}/fest", "--version"
@@ -168,6 +179,24 @@ brews:
     install: |
       bin.install "fest"
       bin.install "camp"
+      bash_completion.install "completions/fest.bash" => "fest"
+      zsh_completion.install "completions/_fest"
+      fish_completion.install "completions/fest.fish"
+
+    caveats: |
+      To activate shell completions and camp shell integration, add to your shell config:
+
+        # bash (~/.bashrc)
+        eval "$(camp shell-init bash)"
+        source <(fest completion bash)
+
+        # zsh (~/.zshrc)
+        eval "$(camp shell-init zsh)"
+        source <(fest completion zsh)
+
+        # fish (~/.config/fish/config.fish)
+        camp shell-init fish | source
+        fest completion fish | source
 
 release:
   github:
@@ -194,7 +223,22 @@ release:
     | Arch Linux | `yay -S festival-bin` |
     | Debian/Ubuntu | Download `.deb` from assets below |
     | Fedora/RHEL | Download `.rpm` from assets below |
-    | Windows | `scoop bucket add obey https://github.com/lancekrogers/scoop-bucket && scoop install festival` |
+    | Windows | `scoop bucket add obey https://github.com/Obedience-Corp/scoop-bucket && scoop install festival` |
+
+# macOS signing and notarization — disabled until Apple Developer account is configured.
+# To enable: set MACOS_SIGN_P12, MACOS_SIGN_PASSWORD, MACOS_NOTARY_KEY,
+# MACOS_NOTARY_KEY_ID, and MACOS_NOTARY_ISSUER_ID secrets, then uncomment below.
+#
+# notarize:
+#   macos:
+#     - enabled: true
+#       sign:
+#         certificate: "{{ .Env.MACOS_SIGN_P12 }}"
+#         password: "{{ .Env.MACOS_SIGN_PASSWORD }}"
+#       notarize:
+#         key: "{{ .Env.MACOS_NOTARY_KEY }}"
+#         key_id: "{{ .Env.MACOS_NOTARY_KEY_ID }}"
+#         issuer_id: "{{ .Env.MACOS_NOTARY_ISSUER_ID }}"
 
 universal_binaries:
   - replace: true

@@ -8,7 +8,7 @@ default:
 # Run GoReleaser dry run (no publish)
 [no-cd]
 dry-run:
-    goreleaser release --snapshot --clean
+    goreleaser release --snapshot --clean --skip=publish,announce
 
 # Create a release tag
 [no-cd]
