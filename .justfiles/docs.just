@@ -1,6 +1,7 @@
 # Documentation management
 
 docs_root := "content/docs/cli-reference"
+base_url := env("HUGO_BASEURL", "https://fest.build")
 
 # Show available docs commands
 [private]
@@ -37,7 +38,7 @@ camp:
 serve:
     hugo server -D --source .
 
-# Build docs for production
+# Build docs for production (override domain: HUGO_BASEURL="https://example.com" just docs build)
 [no-cd]
 build:
-    hugo --minify --source .
+    hugo --minify --source . --baseURL "{{base_url}}"

@@ -3,8 +3,12 @@
   <h1>Festival</h1>
   <p>Mission-based AI workspace management for developers using AI coding tools.</p>
   <div class="hero__actions">
-    <a href="/docs/getting-started/quickstart/" class="btn btn--primary">Get Started</a>
-    <a href="/docs/getting-started/installation/" class="btn" style="border: 1px solid var(--festival-200);">Install</a>
+    {{ with site.GetPage "/docs/getting-started/quickstart" }}
+      <a href="{{ .RelPermalink }}" class="btn btn--primary">Get Started</a>
+    {{ end }}
+    {{ with site.GetPage "/docs/getting-started/installation" }}
+      <a href="{{ .RelPermalink }}" class="btn" style="border: 1px solid var(--festival-200);">Install</a>
+    {{ end }}
   </div>
 </div>
 
@@ -55,26 +59,34 @@
 <h2 style="border: none;">Next Steps</h2>
 
 <div class="cards">
-  <a href="/docs/getting-started/quickstart/" class="card">
+  {{ with site.GetPage "/docs/getting-started/quickstart" }}
+  <a href="{{ .RelPermalink }}" class="card">
     <div class="card__title">New to Festival?</div>
     <div class="card__description">Start with the hands-on quick start guide.</div>
     <span class="card__arrow">→ Quick Start</span>
   </a>
-  <a href="/docs/methodology/overview/" class="card">
+  {{ end }}
+  {{ with site.GetPage "/docs/methodology/overview" }}
+  <a href="{{ .RelPermalink }}" class="card">
     <div class="card__title">Understand the Methodology</div>
     <div class="card__description">Learn the core principles, hierarchy, and workflow.</div>
     <span class="card__arrow">→ Methodology Overview</span>
   </a>
-  <a href="/docs/guides/agent-workflows/" class="card">
+  {{ end }}
+  {{ with site.GetPage "/docs/guides/agent-workflows" }}
+  <a href="{{ .RelPermalink }}" class="card">
     <div class="card__title">Using AI Agents?</div>
     <div class="card__description">How Festival integrates with Claude Code, Cursor, and other AI tools.</div>
     <span class="card__arrow">→ Agent Workflows</span>
   </a>
-  <a href="/docs/tutorials/campaign-setup/" class="card">
+  {{ end }}
+  {{ with site.GetPage "/docs/tutorials/campaign-setup" }}
+  <a href="{{ .RelPermalink }}" class="card">
     <div class="card__title">Setting Up a Campaign</div>
     <div class="card__description">Full tutorial for workspace setup and project organization.</div>
     <span class="card__arrow">→ Campaign Setup</span>
   </a>
+  {{ end }}
 </div>
 
 </div>

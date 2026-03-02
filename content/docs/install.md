@@ -71,4 +71,4 @@ See the [full installation guide]({{< ref "/docs/getting-started/installation" >
 
 </details>
 
-<script src="/js/install-detect.js"></script>
+<script src='{{< static-url "/js/install-detect.js" >}}'></script>
