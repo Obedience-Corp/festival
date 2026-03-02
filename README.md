@@ -17,11 +17,11 @@ AI coding tools make you faster at writing code, but they don't help you organiz
 
 ## What Festival Does
 
-Festival gives you **campaigns** and **festivals** - two concepts, two CLIs, one product.
+Festival ships two CLIs — `camp` and `fest` — that solve the two problems above.
 
-A **campaign** is an isolated workspace for one mission. It organizes your projects, documentation, research, and planning into a standard layout that both you and AI agents can navigate.
+**`camp`** manages campaigns: isolated workspaces that hold all the projects, docs, research, and planning for a single mission. It gives you instant navigation across everything in the workspace, project lifecycle management, and shell shortcuts that make `cd` obsolete.
 
-A **festival** is a structured plan within a campaign. It breaks work into phases, sequences, and tasks - a hierarchy designed for AI agents to execute autonomously, pause, and resume without context loss.
+**`fest`** manages festivals: structured plans that break work into phases, sequences, and tasks — a hierarchy designed for AI agents to execute autonomously, pause, and resume without context loss. Run `fest next` and the agent gets its next task with full surrounding context. Run `fest commit` and every commit traces back to the plan.
 
 ### Real Example
 
@@ -53,29 +53,103 @@ obey-campaign/
 
 Every project, every plan, every piece of context for this mission lives here. `cgo p fest` jumps to the fest project. `fgo` toggles between a festival and its linked project. Everything is navigable by both humans and AI agents.
 
+## Navigation — the killer feature
+
+Shell integration gives you shorthand functions that make navigating a campaign instant. Add these to your shell config:
+
+```bash
+eval "$(camp shell-init zsh)"   # gives you: cgo, cr, csw, cint
+eval "$(fest shell-init zsh)"   # gives you: fgo, fls
+```
+
+### cgo — jump anywhere in your workspace
+
+`cgo` wraps `camp go` with real `cd` behavior. It's the fastest way to move around:
+
+```bash
+cgo                   # Toggle between campaign root and last location
+cgo p                 # Jump to projects/
+cgo p api             # Fuzzy-find "api" in projects/ (matches api-server, api-gateway, etc.)
+cgo f                 # Jump to festivals/
+cgo w                 # Jump to workflow/
+cgo wt api@feat       # Jump to a worktree branch
+```
+
+Single-letter category shortcuts (`p`, `f`, `w`, `a`, `d`, `i`, `wt`, `du`, `cr`, `de`) map to top-level campaign directories. After the category, any additional argument is a fuzzy search — `cgo p mono` lands you in `obey-platform-monorepo/`. Tab completion works at every level.
+
+You can also run a command without leaving your current directory:
+
+```bash
+cgo -c p api ls       # Run ls inside projects/api-* without cd'ing
+cr just build         # Run "just build" from campaign root
+```
+
+### fgo — toggle between a festival and its linked project
+
+`fgo` wraps `fest go`. Its standout feature is bidirectional toggling:
+
+```bash
+fgo                   # From a festival → jump to its linked project
+                      # From a linked project → jump back to the festival
+
+fgo 2                 # Jump to phase 002
+fgo 2/1               # Jump to phase 2, sequence 1
+fgo active            # Jump to festivals/active/
+fgo active my-fest    # Jump to a specific active festival
+```
+
+Link a festival to a project once (`fgo link`) and `fgo` with no args toggles between them forever. Named shortcuts work too — `fest go map n` bookmarks the current directory, then `fgo -n` jumps there.
+
+### Other shorthands
+
+| Shorthand | Expands to | What it does |
+|-----------|------------|--------------|
+| `csw`     | `camp switch` | Switch between campaigns (fuzzy match + interactive picker) |
+| `cint`    | `camp intent add` | Quick-capture an idea to the intent inbox |
+| `cr`      | `camp run` | Run a command from campaign root |
+| `fls`     | `fest list` | List festivals by status |
+
+### Concept shortcuts
+
+`camp` supports shorthand for subcommands too. `camp p` expands to `camp project`, so these are identical:
+
+```bash
+camp p commit -m "fix bug"    # Same as: camp project commit -m "fix bug"
+camp p add <url>              # Same as: camp project add <url>
+camp p list                   # Same as: camp project list
+```
+
 ## CLI Overview
 
-For full CLI reference, see the [fest](https://fest.build/cli-reference/fest/) and [camp](https://fest.build/cli-reference/camp/) documentation.
+Full reference: [fest CLI](https://fest.build/cli-reference/fest/) | [camp CLI](https://fest.build/cli-reference/camp/)
 
-### camp - workspace management
-
-```bash
-camp init my-startup          # Create a campaign
-cgo p api                     # Navigate to projects/api-*
-camp project add <url>        # Add a project as submodule
-camp doctor                   # Health check the workspace
-camp leverage                 # Find highest-impact work
-```
-
-### fest - hierarchical planning
+### camp — workspace management
 
 ```bash
-fest create festival my-feature   # Create a structured plan
-fest next                         # Get the next task (with full context)
-fest status                       # View progress across all levels
-fest commit -m "implement auth"   # Git commit with festival tracking
-fest understand                   # Teach an agent the methodology
+camp init my-startup             # Create a campaign
+camp project add <url>           # Add a project as submodule
+camp p commit -m "fix auth"      # Commit in a project (auto-stages, auto-syncs submodule ref)
+camp status all                  # Dashboard of all project statuses
+camp doctor                      # Health check the workspace
+camp intent add "idea"           # Capture an idea to the inbox
+camp leverage                    # Measure productivity leverage across projects
 ```
+
+### fest — planning and execution
+
+The core workflow: create a festival, then let `fest next` drive execution.
+
+```bash
+fest create festival my-feature  # Scaffold a structured plan (phases, sequences, tasks)
+fest next                        # Get the next task with layered context (festival → phase → sequence → task)
+fest task completed              # Mark the current task done
+fest workflow advance            # Complete a workflow step and move to the next
+fest status                      # View progress across all levels
+fest commit -m "implement auth"  # Git commit with automatic festival/task reference
+fest understand                  # Teach an AI agent the full methodology
+```
+
+`fest next` is the entry point for agents — it resolves what to do next, includes surrounding context from every level of the hierarchy, and respects workflow ordering and quality gates. An agent session is: `fest next` → do the work → `fest commit` → `fest task completed` → `fest next`.
 
 ## Install
 
