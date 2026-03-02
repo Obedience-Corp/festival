@@ -95,6 +95,7 @@ camp [flags]
 * [camp settings](camp_settings.md)	 - Manage camp configuration
 * [camp shell-init](camp_shell-init.md)	 - Output shell initialization code
 * [camp shortcuts](camp_shortcuts.md)	 - List all available shortcuts
+* [camp skills](camp_skills.md)	 - Manage campaign skill directory links
 * [camp status](camp_status.md)	 - Show git status of the campaign
 * [camp switch](camp_switch.md)	 - Switch to a different campaign
 * [camp sync](camp_sync.md)	 - Safely synchronize submodules
@@ -4471,6 +4472,192 @@ camp shortcuts remove <name> or <project> <name> [flags]
 ### SEE ALSO
 
 * [camp shortcuts](camp_shortcuts.md)	 - List all available shortcuts
+
+
+---
+
+## camp skills
+
+Manage campaign skill directory links
+
+### Synopsis
+
+Manage campaign skill bundle projection for tool interoperability.
+
+Skills are centralized in .campaign/skills/ and projected into tool ecosystems
+(Claude, agents, etc.) as per-bundle symlinks. This keeps a single source of
+truth while preserving existing provider-native skills directories.
+
+Commands:
+  link     Project per-skill symlinks into a tool-specific skills directory
+  status   Show projection status for tool-specific skills directories
+  unlink   Remove projected skill symlinks
+
+Examples:
+  camp skills link --tool claude    Project skills into .claude/skills/
+  camp skills link --tool agents    Project skills into .agents/skills/
+  camp skills status                Show all skill projection states
+  camp skills unlink --tool claude  Remove projected symlinks from .claude/skills/
+
+```
+camp skills [flags]
+```
+
+### Options
+
+```
+  -h, --help   help for skills
+```
+
+### Options inherited from parent commands
+
+```
+      --config string   config file (default: ~/.obey/campaign/config.yaml)
+      --no-color        disable colored output
+      --verbose         enable verbose output
+```
+
+### SEE ALSO
+
+* [camp](camp.md)	 - Campaign management CLI for multi-project AI workspaces
+* [camp skills link](camp_skills_link.md)	 - Project campaign skill bundles into tool-specific skills directories
+* [camp skills status](camp_skills_status.md)	 - Show the current state of projected skill bundle symlinks
+* [camp skills unlink](camp_skills_unlink.md)	 - Remove projected skill bundle symlinks
+
+
+---
+
+## camp skills link
+
+Project campaign skill bundles into tool-specific skills directories
+
+### Synopsis
+
+Project campaign skill bundles from .campaign/skills/ into tool-specific
+skills directories.
+
+This command creates one symlink per skill bundle. It does not replace entire
+provider skills directories, so existing user skills remain intact.
+
+Examples:
+  camp skills link --tool claude       Project skills into .claude/skills/
+  camp skills link --tool agents       Project skills into .agents/skills/
+  camp skills link --path custom/dir   Project skills into custom/dir
+  camp skills link --tool claude -n    Dry run — show what would happen
+  camp skills link --tool claude -f    Replace conflicting symlink entries
+
+```
+camp skills link [flags]
+```
+
+### Options
+
+```
+  -n, --dry-run       Show what would happen without making changes
+  -f, --force         Replace conflicting symlink entries (never files/directories)
+  -h, --help          help for link
+  -p, --path string   Custom destination directory
+  -t, --tool string   Tool to link: claude, agents
+```
+
+### Options inherited from parent commands
+
+```
+      --config string   config file (default: ~/.obey/campaign/config.yaml)
+      --no-color        disable colored output
+      --verbose         enable verbose output
+```
+
+### SEE ALSO
+
+* [camp skills](camp_skills.md)	 - Manage campaign skill directory links
+
+
+---
+
+## camp skills status
+
+Show the current state of projected skill bundle symlinks
+
+### Synopsis
+
+Show projection status for campaign skill bundles across tool targets.
+
+Reports whether each tool's skills directory has projected entries from
+.campaign/skills/, is partially projected, missing, broken, or blocked.
+
+Examples:
+  camp skills status          Show projection states in table format
+  camp skills status --json   Machine-readable JSON output
+
+```
+camp skills status [flags]
+```
+
+### Options
+
+```
+  -h, --help     help for status
+      --json     Output as JSON
+      --strict   Return non-zero exit code when links need attention (for CI)
+```
+
+### Options inherited from parent commands
+
+```
+      --config string   config file (default: ~/.obey/campaign/config.yaml)
+      --no-color        disable colored output
+      --verbose         enable verbose output
+```
+
+### SEE ALSO
+
+* [camp skills](camp_skills.md)	 - Manage campaign skill directory links
+
+
+---
+
+## camp skills unlink
+
+Remove projected skill bundle symlinks
+
+### Synopsis
+
+Remove managed skill bundle symlinks created by 'camp skills link'.
+
+Only removes projected symlink entries created from .campaign/skills bundles.
+It never removes non-symlink files/directories or foreign symlinks.
+
+Examples:
+  camp skills unlink --tool claude       Remove projected entries in .claude/skills/
+  camp skills unlink --tool agents       Remove projected entries in .agents/skills/
+  camp skills unlink --path custom/dir   Remove projected entries in custom/dir
+  camp skills unlink --tool claude -n    Dry run — show what would happen
+
+```
+camp skills unlink [flags]
+```
+
+### Options
+
+```
+  -n, --dry-run       Show what would happen without making changes
+  -h, --help          help for unlink
+  -p, --path string   Custom destination directory to unlink
+  -t, --tool string   Tool to unlink: claude, agents
+```
+
+### Options inherited from parent commands
+
+```
+      --config string   config file (default: ~/.obey/campaign/config.yaml)
+      --no-color        disable colored output
+      --verbose         enable verbose output
+```
+
+### SEE ALSO
+
+* [camp skills](camp_skills.md)	 - Manage campaign skill directory links
 
 
 ---

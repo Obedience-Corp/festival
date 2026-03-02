@@ -1,21 +1,21 @@
-## fest chain validate
+## fest chain graph
 
-Validate a festival chain
+Visualize chain dependency graph
 
 ### Synopsis
 
-Run all structural validation checks (S1-S10) against a chain definition.
-Use --cross to validate across all chains.
+Render the chain's dependency graph as ASCII waves or Mermaid diagram syntax.
 
 ```
-fest chain validate <chain-id> [flags]
+fest chain graph <chain-id> [flags]
 ```
 
 ### Options
 
 ```
-      --cross   validate across all chains (duplicate IDs, conflicts)
-  -h, --help    help for validate
+  -h, --help      help for graph
+      --live      annotate nodes with live festival statuses
+      --mermaid   output Mermaid diagram syntax
 ```
 
 ### Options inherited from parent commands

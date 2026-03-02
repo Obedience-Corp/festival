@@ -1,21 +1,23 @@
-## fest chain validate
+## fest chain complete
 
-Validate a festival chain
+Complete and archive a chain
 
 ### Synopsis
 
-Run all structural validation checks (S1-S10) against a chain definition.
-Use --cross to validate across all chains.
+Mark a chain as completed and move it to festivals/dungeon/completed/chains/.
+
+All festivals in the chain must be completed unless --force is used.
 
 ```
-fest chain validate <chain-id> [flags]
+fest chain complete <chain-id> [flags]
 ```
 
 ### Options
 
 ```
-      --cross   validate across all chains (duplicate IDs, conflicts)
-  -h, --help    help for validate
+      --force          complete even if not all festivals are done
+  -h, --help           help for complete
+      --notes string   completion notes for the status history
 ```
 
 ### Options inherited from parent commands
