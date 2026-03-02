@@ -180,7 +180,9 @@ Create, validate, and track chains of dependent festivals.
 
 * [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
 * [fest chain check](fest_chain_check.md)	 - Check if a festival is unblocked within its chain
+* [fest chain complete](fest_chain_complete.md)	 - Complete and archive a chain
 * [fest chain create](fest_chain_create.md)	 - Create a new festival chain
+* [fest chain graph](fest_chain_graph.md)	 - Visualize chain dependency graph
 * [fest chain list](fest_chain_list.md)	 - List all festival chains
 * [fest chain status](fest_chain_status.md)	 - Show chain status and progress
 * [fest chain validate](fest_chain_validate.md)	 - Validate a festival chain
@@ -223,6 +225,44 @@ fest chain check <ref-or-id> [flags]
 
 ---
 
+## fest chain complete
+
+Complete and archive a chain
+
+### Synopsis
+
+Mark a chain as completed and move it to festivals/dungeon/completed/chains/.
+
+All festivals in the chain must be completed unless --force is used.
+
+```
+fest chain complete <chain-id> [flags]
+```
+
+### Options
+
+```
+      --force          complete even if not all festivals are done
+  -h, --help           help for complete
+      --notes string   completion notes for the status history
+```
+
+### Options inherited from parent commands
+
+```
+      --config string   config file (default: ~/.config/fest/config.json)
+      --debug           enable debug logging
+      --no-color        disable colored output
+      --verbose         enable verbose output
+```
+
+### SEE ALSO
+
+* [fest chain](fest_chain.md)	 - Manage festival chains (inter-festival dependencies)
+
+
+---
+
 ## fest chain create
 
 Create a new festival chain
@@ -241,6 +281,42 @@ fest chain create [flags]
       --goal string   chain goal description
   -h, --help          help for create
       --name string   chain name (required)
+```
+
+### Options inherited from parent commands
+
+```
+      --config string   config file (default: ~/.config/fest/config.json)
+      --debug           enable debug logging
+      --no-color        disable colored output
+      --verbose         enable verbose output
+```
+
+### SEE ALSO
+
+* [fest chain](fest_chain.md)	 - Manage festival chains (inter-festival dependencies)
+
+
+---
+
+## fest chain graph
+
+Visualize chain dependency graph
+
+### Synopsis
+
+Render the chain's dependency graph as ASCII waves or Mermaid diagram syntax.
+
+```
+fest chain graph <chain-id> [flags]
+```
+
+### Options
+
+```
+  -h, --help      help for graph
+      --live      annotate nodes with live festival statuses
+      --mermaid   output Mermaid diagram syntax
 ```
 
 ### Options inherited from parent commands
@@ -327,6 +403,7 @@ Validate a festival chain
 ### Synopsis
 
 Run all structural validation checks (S1-S10) against a chain definition.
+Use --cross to validate across all chains.
 
 ```
 fest chain validate <chain-id> [flags]
@@ -335,7 +412,8 @@ fest chain validate <chain-id> [flags]
 ### Options
 
 ```
-  -h, --help   help for validate
+      --cross   validate across all chains (duplicate IDs, conflicts)
+  -h, --help    help for validate
 ```
 
 ### Options inherited from parent commands
@@ -7635,36 +7713,47 @@ Manage workflow-based phase execution
 
 ### Synopsis
 
-Commands for managing workflow-based phases (ingest, research, planning).
+Commands for managing step-based phase navigation (workflows and phase gates).
 
-These phases use WORKFLOW.md files with step-by-step guidance and checkpoints.
-Use 'fest next' to see the current step, then these commands to advance.
+These commands work with WORKFLOW.md files (step-by-step guidance for workflow phases)
+and GATES.md files (phase-level quality gates for all phase types). Use 'fest next'
+to see the current step, then these commands to advance.
 
 Workflow Steps:
   Workflows are defined in WORKFLOW.md files within phase directories.
   Each step has a goal, actions to complete, expected output, and an optional checkpoint.
+
+Phase Gates:
+  Gates are defined in GATES.md files and run after all other phase work is complete.
+  Each gate step poses a quality/compliance question requiring approval before the
+  phase can advance. Gates are available for all phase types.
 
 Checkpoints:
   Some steps require user approval before proceeding. Use 'fest workflow approve'
   to approve or 'fest workflow reject' to request revisions.
 
 State:
-  Workflow progress is tracked in <festival>/.fest/progress_events.jsonl.
+  Progress is tracked in <festival>/.fest/progress_events.jsonl.
   Use 'fest workflow status' to view current progress.
 
 Running from Festival Root:
   When run from the festival root (not inside a phase directory), the command
-  will auto-detect the first incomplete workflow phase. Use --phase to specify
-  a particular phase.
+  auto-detects the first incomplete navigable phase (workflow or gate).
+  Use --phase to specify a particular phase.
+
+Auto-Routing:
+  Commands automatically target the correct document:
+  - WORKFLOW.md if incomplete (takes priority)
+  - GATES.md if workflow is complete/absent and phase work is done
 
 Examples:
-  fest workflow status              # Show workflow progress
+  fest workflow status              # Show workflow or gate progress
   fest workflow status --phase 001_INGEST  # Show specific phase
   fest workflow advance             # Complete current step and move to next
   fest workflow skip --reason "already completed externally" # Operator override
   fest workflow approve             # Approve a blocking checkpoint
   fest workflow reject              # Reject checkpoint with feedback
-  fest workflow reset               # Reset workflow to step 1
+  fest workflow reset               # Reset workflow or gate to step 1
   fest workflow show                # Display the current step details
 
 ### Options
