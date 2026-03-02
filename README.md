@@ -128,7 +128,7 @@ Full reference: [fest CLI](https://fest.build/cli-reference/fest/) | [camp CLI](
 ```bash
 camp init my-startup             # Create a campaign
 camp project add <url>           # Add a project as submodule
-camp p commit -m "fix auth"      # Commit in a project (auto-stages, auto-syncs submodule ref)
+camp p commit -m "fix auth"      # Commit in a project (auto-stages all changes)
 camp status all                  # Dashboard of all project statuses
 camp doctor                      # Health check the workspace
 camp intent add "idea"           # Capture an idea to the inbox
