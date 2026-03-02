@@ -2,6 +2,7 @@
 dist/
 bin/
 public/
+completions/
 
 # Hugo
 resources/_gen/
