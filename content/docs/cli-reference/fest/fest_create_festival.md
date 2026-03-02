@@ -1,6 +1,6 @@
 ## fest create festival
 
-Create a new festival scaffold under festivals/(active|planning)
+Create a new festival scaffold under festivals/planning
 
 ```
 fest create festival [flags]
@@ -10,7 +10,7 @@ fest create festival [flags]
 
 ```
       --agent                 Strict mode: require markers, auto-validate, block on errors, JSON output
-      --dest string           Destination under festivals/: active, planning, or ritual (default "active")
+      --dest string           Destination under festivals/: planning or ritual (use 'fest promote' to advance to active) (default "planning")
       --dry-run               Show template markers without creating file
       --goal string           Festival goal
   -h, --help                  help for festival

@@ -61,6 +61,7 @@ Run 'fest understand' to learn the methodology before executing tasks.
 ### SEE ALSO
 
 * [fest apply](fest_apply.md)	 - Apply a local template to a destination file (copy or render)
+* [fest chain](fest_chain.md)	 - Manage festival chains (inter-festival dependencies)
 * [fest commit](fest_commit.md)	 - Create git commit with task reference
 * [fest commits](fest_commits.md)	 - Query commits by festival element
 * [fest completion](fest_completion.md)	 - Generate shell completion scripts
@@ -72,6 +73,7 @@ Run 'fest understand' to learn the methodology before executing tasks.
 * [fest feedback](fest_feedback.md)	 - Manage structured feedback collection
 * [fest gates](fest_gates.md)	 - Manage quality gates - validation steps at sequence end
 * [fest go](fest_go.md)	 - Navigate to festivals/ - use 'fgo' after shell-init setup
+* [fest id](fest_id.md)	 - Show the festival ID for the current context
 * [fest index](fest_index.md)	 - Manage festival indices
 * [fest init](fest_init.md)	 - Initialize a new festival directory structure
 * [fest insert](fest_insert.md)	 - Insert new festival elements
@@ -105,6 +107,7 @@ Run 'fest understand' to learn the methodology before executing tasks.
 * [fest understand](fest_understand.md)	 - Learn methodology FIRST - run before executing festival tasks
 * [fest unlink](fest_unlink.md)	 - Remove festival-project link (context-aware)
 * [fest validate](fest_validate.md)	 - Check festival structure - find missing task files and issues
+* [fest version](fest_version.md)	 - Show version information
 * [fest wizard](fest_wizard.md)	 - Interactive guidance and assistance for festival creation
 * [fest workflow](fest_workflow.md)	 - Manage workflow-based phase execution
 
@@ -146,6 +149,207 @@ fest apply [flags]
 ### SEE ALSO
 
 * [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
+
+
+---
+
+## fest chain
+
+Manage festival chains (inter-festival dependencies)
+
+### Synopsis
+
+Create, validate, and track chains of dependent festivals.
+
+### Options
+
+```
+  -h, --help   help for chain
+```
+
+### Options inherited from parent commands
+
+```
+      --config string   config file (default: ~/.config/fest/config.json)
+      --debug           enable debug logging
+      --no-color        disable colored output
+      --verbose         enable verbose output
+```
+
+### SEE ALSO
+
+* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
+* [fest chain check](fest_chain_check.md)	 - Check if a festival is unblocked within its chain
+* [fest chain create](fest_chain_create.md)	 - Create a new festival chain
+* [fest chain list](fest_chain_list.md)	 - List all festival chains
+* [fest chain status](fest_chain_status.md)	 - Show chain status and progress
+* [fest chain validate](fest_chain_validate.md)	 - Validate a festival chain
+
+
+---
+
+## fest chain check
+
+Check if a festival is unblocked within its chain
+
+### Synopsis
+
+Quick check whether a specific festival's hard dependencies are met.
+
+```
+fest chain check <ref-or-id> [flags]
+```
+
+### Options
+
+```
+      --chain string   specify chain ID for disambiguation
+  -h, --help           help for check
+```
+
+### Options inherited from parent commands
+
+```
+      --config string   config file (default: ~/.config/fest/config.json)
+      --debug           enable debug logging
+      --no-color        disable colored output
+      --verbose         enable verbose output
+```
+
+### SEE ALSO
+
+* [fest chain](fest_chain.md)	 - Manage festival chains (inter-festival dependencies)
+
+
+---
+
+## fest chain create
+
+Create a new festival chain
+
+### Synopsis
+
+Create a new chain YAML definition file in festivals/chains/.
+
+```
+fest chain create [flags]
+```
+
+### Options
+
+```
+      --goal string   chain goal description
+  -h, --help          help for create
+      --name string   chain name (required)
+```
+
+### Options inherited from parent commands
+
+```
+      --config string   config file (default: ~/.config/fest/config.json)
+      --debug           enable debug logging
+      --no-color        disable colored output
+      --verbose         enable verbose output
+```
+
+### SEE ALSO
+
+* [fest chain](fest_chain.md)	 - Manage festival chains (inter-festival dependencies)
+
+
+---
+
+## fest chain list
+
+List all festival chains
+
+```
+fest chain list [flags]
+```
+
+### Options
+
+```
+  -h, --help            help for list
+      --status string   filter by status (planning|active|completed)
+```
+
+### Options inherited from parent commands
+
+```
+      --config string   config file (default: ~/.config/fest/config.json)
+      --debug           enable debug logging
+      --no-color        disable colored output
+      --verbose         enable verbose output
+```
+
+### SEE ALSO
+
+* [fest chain](fest_chain.md)	 - Manage festival chains (inter-festival dependencies)
+
+
+---
+
+## fest chain status
+
+Show chain status and progress
+
+```
+fest chain status <chain-id> [flags]
+```
+
+### Options
+
+```
+  -h, --help   help for status
+```
+
+### Options inherited from parent commands
+
+```
+      --config string   config file (default: ~/.config/fest/config.json)
+      --debug           enable debug logging
+      --no-color        disable colored output
+      --verbose         enable verbose output
+```
+
+### SEE ALSO
+
+* [fest chain](fest_chain.md)	 - Manage festival chains (inter-festival dependencies)
+
+
+---
+
+## fest chain validate
+
+Validate a festival chain
+
+### Synopsis
+
+Run all structural validation checks (S1-S10) against a chain definition.
+
+```
+fest chain validate <chain-id> [flags]
+```
+
+### Options
+
+```
+  -h, --help   help for validate
+```
+
+### Options inherited from parent commands
+
+```
+      --config string   config file (default: ~/.config/fest/config.json)
+      --debug           enable debug logging
+      --no-color        disable colored output
+      --verbose         enable verbose output
+```
+
+### SEE ALSO
+
+* [fest chain](fest_chain.md)	 - Manage festival chains (inter-festival dependencies)
 
 
 ---
@@ -200,13 +404,14 @@ fest commit [flags]
 ### Options
 
 ```
-      --festival string   festival name or ID (overrides auto-detection)
-  -h, --help              help for commit
-      --json              output result as JSON
-  -m, --message string    commit message
-      --no-tag            don't prepend task reference
-      --stage             auto-stage all changes before commit (default true)
-      --task string       task reference ID to use (e.g., FEST-a3b2c1)
+      --festival string      festival name or ID (overrides auto-detection)
+  -h, --help                 help for commit
+      --json                 output result as JSON
+  -m, --message string       commit message
+      --no-tag               don't prepend task reference
+      --stage                auto-stage all changes before commit (default true)
+      --sync-submodule-ref   sync submodule ref at campaign root after commit
+      --task string          task reference ID to use (e.g., FEST-a3b2c1)
 ```
 
 ### Options inherited from parent commands
@@ -865,7 +1070,7 @@ fest create [flags]
 ### SEE ALSO
 
 * [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-* [fest create festival](fest_create_festival.md)	 - Create a new festival scaffold under festivals/(active|planning)
+* [fest create festival](fest_create_festival.md)	 - Create a new festival scaffold under festivals/planning
 * [fest create phase](fest_create_phase.md)	 - Insert a new phase and render its goal file
 * [fest create sequence](fest_create_sequence.md)	 - Insert a new sequence and render its goal file
 * [fest create task](fest_create_task.md)	 - Insert a new task file in a sequence
@@ -876,7 +1081,7 @@ fest create [flags]
 
 ## fest create festival
 
-Create a new festival scaffold under festivals/(active|planning)
+Create a new festival scaffold under festivals/planning
 
 ```
 fest create festival [flags]
@@ -886,7 +1091,7 @@ fest create festival [flags]
 
 ```
       --agent                 Strict mode: require markers, auto-validate, block on errors, JSON output
-      --dest string           Destination under festivals/: active, planning, or ritual (default "active")
+      --dest string           Destination under festivals/: planning or ritual (use 'fest promote' to advance to active) (default "planning")
       --dry-run               Show template markers without creating file
       --goal string           Festival goal
   -h, --help                  help for festival
@@ -2238,6 +2443,48 @@ fest go unmap <name> [flags]
 ### SEE ALSO
 
 * [fest go](fest_go.md)	 - Navigate to festivals/ - use 'fgo' after shell-init setup
+
+
+---
+
+## fest id
+
+Show the festival ID for the current context
+
+### Synopsis
+
+Display the festival ID for the current location.
+
+Works from inside a festival directory or from a project linked to one.
+The ID is read from fest.yaml metadata, falling back to the directory name.
+
+Examples:
+  fest id          # Print the festival ID (e.g., SR0001)
+  fest id --json   # Output as JSON with id, name, and path
+
+```
+fest id [flags]
+```
+
+### Options
+
+```
+  -h, --help   help for id
+      --json   output as JSON
+```
+
+### Options inherited from parent commands
+
+```
+      --config string   config file (default: ~/.config/fest/config.json)
+      --debug           enable debug logging
+      --no-color        disable colored output
+      --verbose         enable verbose output
+```
+
+### SEE ALSO
+
+* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
 
 
 ---
@@ -3726,6 +3973,11 @@ Each transition validates readiness:
   ready → active:      Festival is ready to begin execution
   active → completed:  All tasks must be completed
 
+Use --dungeon to send a festival directly to a dungeon status:
+  fest promote --dungeon someday     Shelve for later
+  fest promote --dungeon archived    Archive the festival
+  fest promote --dungeon completed   Mark as completed (skips task validation)
+
 ```
 fest promote [flags]
 ```
@@ -3733,9 +3985,11 @@ fest promote [flags]
 ### Options
 
 ```
-      --force   skip readiness validation
-  -h, --help    help for promote
-      --json    output as JSON
+      --dungeon string   send to dungeon status (completed, archived, someday)
+      --force            skip readiness validation
+  -h, --help             help for promote
+      --json             output as JSON
+      --no-commit        skip auto-commit after promotion
 ```
 
 ### Options inherited from parent commands
@@ -7198,6 +7452,47 @@ fest validate tasks [festival-path] [flags]
 
 ---
 
+## fest version
+
+Show version information
+
+### Synopsis
+
+Show fest version, build information, and runtime details.
+
+Examples:
+  fest version           Show full version info
+  fest version --short   Show only version number
+  fest version --json    Output as JSON
+
+```
+fest version [flags]
+```
+
+### Options
+
+```
+  -h, --help    help for version
+      --json    output as JSON
+  -s, --short   show only version number
+```
+
+### Options inherited from parent commands
+
+```
+      --config string   config file (default: ~/.config/fest/config.json)
+      --debug           enable debug logging
+      --no-color        disable colored output
+      --verbose         enable verbose output
+```
+
+### SEE ALSO
+
+* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
+
+
+---
+
 ## fest wizard
 
 Interactive guidance and assistance for festival creation
@@ -7366,6 +7661,7 @@ Examples:
   fest workflow status              # Show workflow progress
   fest workflow status --phase 001_INGEST  # Show specific phase
   fest workflow advance             # Complete current step and move to next
+  fest workflow skip --reason "already completed externally" # Operator override
   fest workflow approve             # Approve a blocking checkpoint
   fest workflow reject              # Reject checkpoint with feedback
   fest workflow reset               # Reset workflow to step 1
@@ -7395,6 +7691,7 @@ Examples:
 * [fest workflow reject](fest_workflow_reject.md)	 - Reject checkpoint with feedback
 * [fest workflow reset](fest_workflow_reset.md)	 - Reset workflow to step 1
 * [fest workflow show](fest_workflow_show.md)	 - Display current step details
+* [fest workflow skip](fest_workflow_skip.md)	 - Operator override: mark workflow steps as skipped/completed
 * [fest workflow status](fest_workflow_status.md)	 - Show workflow progress
 
 
@@ -7423,7 +7720,6 @@ fest workflow advance [flags]
 
 ```
   -h, --help   help for advance
-      --skip   Skip current step without completing
 ```
 
 ### Options inherited from parent commands
@@ -7591,6 +7887,52 @@ fest workflow show [step] [flags]
 
 ```
   -h, --help   help for show
+```
+
+### Options inherited from parent commands
+
+```
+      --config string   config file (default: ~/.config/fest/config.json)
+      --debug           enable debug logging
+      --no-color        disable colored output
+      --phase string    specify phase directory (e.g., 001_INGEST)
+      --verbose         enable verbose output
+```
+
+### SEE ALSO
+
+* [fest workflow](fest_workflow.md)	 - Manage workflow-based phase execution
+
+
+---
+
+## fest workflow skip
+
+Operator override: mark workflow steps as skipped/completed
+
+### Synopsis
+
+Mark remaining steps in a workflow phase with an explicit terminal state.
+
+Use this when work was already completed outside the normal fest next loop and
+you need a documented operator override with an audit reason.
+Example: backfilling earlier phases for ai-investor-outreach-system-AI0001.
+
+Security:
+  - Human operator only (excluded from agent manifest access)
+  - Requires an interactive TTY
+  - Requires --reason for auditability
+
+```
+fest workflow skip [flags]
+```
+
+### Options
+
+```
+      --as string       terminal state to apply: skipped or completed (default "skipped")
+  -h, --help            help for skip
+  -r, --reason string   human-readable reason for operator override (required)
 ```
 
 ### Options inherited from parent commands

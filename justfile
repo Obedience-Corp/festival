@@ -22,6 +22,11 @@ mod sub '.justfiles/sub.just'
 [doc('Git operations')]
 mod git '.justfiles/git.just'
 
+# Sync all submodules to latest main and regenerate CLI docs
+refresh:
+    just git sync
+    just docs all
+
 [private]
 default:
     #!/usr/bin/env bash

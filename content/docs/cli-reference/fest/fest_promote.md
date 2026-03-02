@@ -11,6 +11,11 @@ Each transition validates readiness:
   ready → active:      Festival is ready to begin execution
   active → completed:  All tasks must be completed
 
+Use --dungeon to send a festival directly to a dungeon status:
+  fest promote --dungeon someday     Shelve for later
+  fest promote --dungeon archived    Archive the festival
+  fest promote --dungeon completed   Mark as completed (skips task validation)
+
 ```
 fest promote [flags]
 ```
@@ -18,9 +23,11 @@ fest promote [flags]
 ### Options
 
 ```
-      --force   skip readiness validation
-  -h, --help    help for promote
-      --json    output as JSON
+      --dungeon string   send to dungeon status (completed, archived, someday)
+      --force            skip readiness validation
+  -h, --help             help for promote
+      --json             output as JSON
+      --no-commit        skip auto-commit after promotion
 ```
 
 ### Options inherited from parent commands

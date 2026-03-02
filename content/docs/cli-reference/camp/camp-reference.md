@@ -88,6 +88,7 @@ camp [flags]
 * [camp project](camp_project.md)	 - Manage campaign projects
 * [camp pull](camp_pull.md)	 - Pull latest changes from remote
 * [camp push](camp_push.md)	 - Push campaign changes to remote
+* [camp refs-sync](camp_refs-sync.md)	 - Sync submodule ref pointers in campaign root
 * [camp register](camp_register.md)	 - Register campaign in global registry
 * [camp registry](camp_registry.md)	 - Manage the campaign registry
 * [camp run](camp_run.md)	 - Execute command from campaign root, or just recipe in a project
@@ -346,6 +347,10 @@ Commit changes in the campaign root directory.
 Automatically stages all changes and creates a commit. Handles
 stale lock files from crashed processes.
 
+At the campaign root, submodule ref changes (projects/*) are excluded
+from staging by default to prevent accidental ref conflicts across
+machines. Use --include-refs to stage them explicitly.
+
 Use --sub to commit in the submodule detected from your current directory.
 Use -p/--project to commit in a specific project (e.g., -p projects/camp).
 
@@ -353,6 +358,7 @@ Examples:
   camp commit -m "Add new feature"
   camp commit --amend -m "Fix typo"
   camp commit -a -m "Stage and commit all"
+  camp commit --include-refs -m "Sync all submodule refs"
   camp commit --sub -m "Commit in current submodule"
   camp commit -p projects/camp -m "Commit in camp project"
 
@@ -366,6 +372,7 @@ camp commit [flags]
   -a, --all              Stage all changes before committing (default true)
       --amend            Amend the previous commit
   -h, --help             help for commit
+      --include-refs     Include submodule ref changes when staging at campaign root
   -m, --message string   Commit message (required)
   -p, --project string   Operate on a specific project/submodule path
       --sub              Operate on the submodule detected from current directory
@@ -805,10 +812,15 @@ It keeps items visible without them competing for your attention.
 Commands:
   add     Initialize dungeon structure with documentation
   crawl   Interactive review and archival of dungeon contents
+  list    List dungeon items (agent-friendly)
+  move    Move items between dungeon statuses (agent-friendly)
 
 Examples:
-  camp dungeon add            Initialize the dungeon
-  camp dungeon crawl          Review and archive dungeon items
+  camp dungeon add                        Initialize the dungeon
+  camp dungeon crawl                      Review and archive dungeon items
+  camp dungeon list                       List dungeon root items
+  camp dungeon list --triage              List parent items eligible for triage
+  camp dungeon move old-feature archived  Move item to archived status
 
 ```
 camp dungeon [flags]
@@ -833,6 +845,8 @@ camp dungeon [flags]
 * [camp](camp.md)	 - Campaign management CLI for multi-project AI workspaces
 * [camp dungeon add](camp_dungeon_add.md)	 - Initialize dungeon structure
 * [camp dungeon crawl](camp_dungeon_crawl.md)	 - Interactive dungeon review
+* [camp dungeon list](camp_dungeon_list.md)	 - List dungeon items
+* [camp dungeon move](camp_dungeon_move.md)	 - Move dungeon items between statuses
 
 
 ---
@@ -922,6 +936,101 @@ camp dungeon crawl [flags]
   -h, --help     help for crawl
       --inner    Force inner mode (review dungeon items)
       --triage   Force triage mode (review parent items)
+```
+
+### Options inherited from parent commands
+
+```
+      --config string   config file (default: ~/.obey/campaign/config.yaml)
+      --no-color        disable colored output
+      --verbose         enable verbose output
+```
+
+### SEE ALSO
+
+* [camp dungeon](camp_dungeon.md)	 - Manage the campaign dungeon
+
+
+---
+
+## camp dungeon list
+
+List dungeon items
+
+### Synopsis
+
+List items in the dungeon or parent items eligible for triage.
+
+By default, lists items at the dungeon root (items already in the dungeon).
+Use --triage to list parent directory items that could be moved into the dungeon.
+
+OUTPUT FORMATS:
+  table (default)   Human-readable table with columns
+  simple            Names only, one per line (for scripting)
+  json              Full metadata in JSON format
+
+Examples:
+  camp dungeon list                  List dungeon root items
+  camp dungeon list --triage         List parent items eligible for triage
+  camp dungeon list -f json          JSON output for scripting
+  camp dungeon list -f simple        Names only, pipe to other commands
+
+```
+camp dungeon list [flags]
+```
+
+### Options
+
+```
+  -f, --format string   Output format: table, simple, json (default "table")
+  -h, --help            help for list
+      --triage          List parent items eligible for triage into dungeon
+```
+
+### Options inherited from parent commands
+
+```
+      --config string   config file (default: ~/.obey/campaign/config.yaml)
+      --no-color        disable colored output
+      --verbose         enable verbose output
+```
+
+### SEE ALSO
+
+* [camp dungeon](camp_dungeon.md)	 - Manage the campaign dungeon
+
+
+---
+
+## camp dungeon move
+
+Move dungeon items between statuses
+
+### Synopsis
+
+Move items within the dungeon or from the parent directory into the dungeon.
+
+Without --triage, moves an item already in the dungeon root to a status directory.
+With --triage, moves an item from the parent directory into the dungeon.
+
+Statuses: completed, archived, someday
+
+Examples:
+  camp dungeon move old-feature archived         Move dungeon item to archived
+  camp dungeon move stale-doc completed          Move dungeon item to completed
+  camp dungeon move old-project --triage         Move parent item into dungeon root
+  camp dungeon move old-project archived --triage Move parent item directly to archived
+
+```
+camp dungeon move <item> [status] [flags]
+```
+
+### Options
+
+```
+  -h, --help        help for move
+      --no-commit   Don't create a git commit
+      --triage      Move from parent directory (not from dungeon root)
 ```
 
 ### Options inherited from parent commands
@@ -2925,7 +3034,9 @@ camp project [flags]
 * [camp project commit](camp_project_commit.md)	 - Commit changes in a project submodule
 * [camp project list](camp_project_list.md)	 - List projects in campaign
 * [camp project new](camp_project_new.md)	 - Create a new project in campaign
+* [camp project prune](camp_project_prune.md)	 - Delete merged branches in a project
 * [camp project remove](camp_project_remove.md)	 - Remove a project from campaign
+* [camp project run](camp_project_run.md)	 - Run a command inside a project directory
 * [camp project worktree](camp_project_worktree.md)	 - Manage worktrees for a project
 
 
@@ -3013,7 +3124,7 @@ camp project commit [flags]
   -h, --help             help for commit
   -m, --message string   Commit message (required)
   -p, --project string   Project name (auto-detected from cwd if not specified)
-      --sync             Auto-commit submodule ref in campaign root (default true)
+      --sync             Sync submodule ref at campaign root after commit (opt-in)
 ```
 
 ### Options inherited from parent commands
@@ -3125,6 +3236,100 @@ camp project new <name> [flags]
 
 ---
 
+## camp project prune
+
+Delete merged branches in a project
+
+### Synopsis
+
+Delete local branches that have been merged into the default branch.
+
+Auto-detects the current project from your working directory,
+or accepts a project name as a positional argument.
+
+Protected branches (default branch, current branch) are never deleted.
+
+Examples:
+  camp project prune                     # Prune current project
+  camp project prune camp                # Prune by name
+  camp project prune -p camp             # Prune by flag
+  camp project prune --dry-run           # Preview what would be deleted
+  camp project prune --remote            # Also prune stale remote tracking refs
+  camp project prune --remote-delete     # Also delete merged branches on origin
+
+```
+camp project prune [project-name] [flags]
+```
+
+### Options
+
+```
+  -n, --dry-run          Preview without deleting
+  -f, --force            Skip local branch deletion confirmation
+  -h, --help             help for prune
+  -p, --project string   Project name (auto-detected from cwd)
+      --remote           Also prune stale remote tracking refs
+      --remote-delete    Also delete merged branches on origin (destructive)
+```
+
+### Options inherited from parent commands
+
+```
+      --config string   config file (default: ~/.obey/campaign/config.yaml)
+      --no-color        disable colored output
+      --verbose         enable verbose output
+```
+
+### SEE ALSO
+
+* [camp project](camp_project.md)	 - Manage campaign projects
+* [camp project prune all](camp_project_prune_all.md)	 - Delete merged branches across all projects
+
+
+---
+
+## camp project prune all
+
+Delete merged branches across all projects
+
+### Synopsis
+
+Delete local branches that have been merged into the default branch,
+across every project submodule in the campaign.
+
+Produces a per-project summary showing what was (or would be) pruned.
+
+Examples:
+  camp project prune all                 # Prune all projects
+  camp project prune all --dry-run       # Preview across all projects
+  camp project prune all --force         # Skip confirmation for each project
+  camp project prune all --remote        # Also prune stale remote tracking refs
+
+```
+camp project prune all [flags]
+```
+
+### Options
+
+```
+  -h, --help   help for all
+```
+
+### Options inherited from parent commands
+
+```
+      --config string   config file (default: ~/.obey/campaign/config.yaml)
+      --no-color        disable colored output
+      --verbose         enable verbose output
+```
+
+### SEE ALSO
+
+* [camp project prune](camp_project_prune.md)	 - Delete merged branches in a project
+
+
+---
+
 ## camp project remove
 
 Remove a project from campaign
@@ -3157,6 +3362,60 @@ camp project remove <name> [flags]
   -f, --force       Skip confirmation prompts
   -h, --help        help for remove
       --no-commit   Skip automatic git commit
+```
+
+### Options inherited from parent commands
+
+```
+      --config string   config file (default: ~/.obey/campaign/config.yaml)
+      --no-color        disable colored output
+      --verbose         enable verbose output
+```
+
+### SEE ALSO
+
+* [camp project](camp_project.md)	 - Manage campaign projects
+
+
+---
+
+## camp project run
+
+Run a command inside a project directory
+
+### Synopsis
+
+Run any shell command inside a project directory from anywhere in the campaign.
+
+The project is resolved in this order:
+  1. --project / -p flag (explicit project name)
+  2. Auto-detect from current working directory
+  3. Interactive fuzzy picker (if neither above applies)
+
+Use -- to separate camp flags from the command to execute.
+
+Examples:
+  # Interactive project picker, then run command
+  camp project run -- ls -la
+
+  # Specify project explicitly
+  camp project run -p fest -- just build
+  camp project run --project camp -- go test ./...
+
+  # Auto-detect from cwd (inside projects/fest/)
+  camp project run -- just test all
+
+  # Simple commands (no -- needed when no flags)
+  camp project run make build
+
+```
+camp project run [--project <name>] [--] <command> [args...] [flags]
+```
+
+### Options
+
+```
+  -h, --help   help for run
 ```
 
 ### Options inherited from parent commands
@@ -3454,15 +3713,19 @@ branch with upstream, and pulls them. Any extra flags are passed through
 to git pull for each repo.
 
 Repos in detached HEAD state or without upstream tracking are skipped.
+Use --default-branch to auto-checkout each submodule's default branch
+before pulling. This is useful when submodules are on stale feature
+branches whose remote tracking branch has been deleted.
 
 By default, nested submodules (e.g. inside monorepos) are included.
 Use --no-recurse to only pull top-level submodules.
 
 Examples:
-  camp pull all              # Pull all repos
-  camp pull all --rebase     # Pull all repos with rebase
-  camp pull all --ff-only    # Fast-forward only for all repos
-  camp pull all --no-recurse # Only top-level submodules
+  camp pull all                      # Pull all repos
+  camp pull all --rebase             # Pull all repos with rebase
+  camp pull all --ff-only            # Fast-forward only for all repos
+  camp pull all --no-recurse         # Only top-level submodules
+  camp pull all --default-branch     # Checkout default branch first
 
 ```
 camp pull all [git pull flags] [flags]
@@ -3582,6 +3845,49 @@ camp push all [git push flags] [flags]
 ### SEE ALSO
 
 * [camp push](camp_push.md)	 - Push campaign changes to remote
+
+
+---
+
+## camp refs-sync
+
+Sync submodule ref pointers in campaign root
+
+### Synopsis
+
+Update the campaign root's recorded submodule pointers to match
+each submodule's current HEAD. Creates a single atomic commit.
+
+Without arguments, syncs all submodules. Specify paths to sync specific ones.
+
+Examples:
+  camp refs-sync                      # Sync all dirty refs
+  camp refs-sync projects/camp        # Sync specific submodule
+  camp refs-sync --dry-run            # Show plan without executing
+
+```
+camp refs-sync [submodule...] [flags]
+```
+
+### Options
+
+```
+  -n, --dry-run   Show plan without executing
+  -f, --force     Skip safety checks (staged changes)
+  -h, --help      help for refs-sync
+```
+
+### Options inherited from parent commands
+
+```
+      --config string   config file (default: ~/.obey/campaign/config.yaml)
+      --no-color        disable colored output
+      --verbose         enable verbose output
+```
+
+### SEE ALSO
+
+* [camp](camp.md)	 - Campaign management CLI for multi-project AI workspaces
 
 
 ---

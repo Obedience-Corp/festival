@@ -30,6 +30,7 @@ Examples:
   fest workflow status              # Show workflow progress
   fest workflow status --phase 001_INGEST  # Show specific phase
   fest workflow advance             # Complete current step and move to next
+  fest workflow skip --reason "already completed externally" # Operator override
   fest workflow approve             # Approve a blocking checkpoint
   fest workflow reject              # Reject checkpoint with feedback
   fest workflow reset               # Reset workflow to step 1
@@ -59,5 +60,6 @@ Examples:
 * [fest workflow reject](fest_workflow_reject.md)	 - Reject checkpoint with feedback
 * [fest workflow reset](fest_workflow_reset.md)	 - Reset workflow to step 1
 * [fest workflow show](fest_workflow_show.md)	 - Display current step details
+* [fest workflow skip](fest_workflow_skip.md)	 - Operator override: mark workflow steps as skipped/completed
 * [fest workflow status](fest_workflow_status.md)	 - Show workflow progress
 
