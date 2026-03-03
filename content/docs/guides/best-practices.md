@@ -75,7 +75,7 @@ Test the JWT implementation
 
 ## Organization
 
-**One festival per goal.** If you find yourself writing "and also" in the festival description, split it into two festivals. A festival that tries to "add auth and redesign the dashboard" will deliver neither well.
+**Festivals handle big, complex goals.** A festival decomposes a high-level goal into phases, sequences, and tasks -- all the way down to individual file changes. Think Jira epics, not tickets. You could gather a dozen related intents into one festival and plan them together, or build an entire product feature end-to-end. The only real requirement is that the work is complex enough to warrant the structure. If a single agent plan covers it, you don't need a festival. If it would take a dozen or more chained plans, a festival is the right tool.
 
 **Use `dungeon/` for lifecycle management:**
 
@@ -101,7 +101,7 @@ These are the failure modes that come up repeatedly. Learn to recognize them.
 
 **Skipping quality gates.** The testing-review-iterate cycle exists because implementation sequences reliably produce bugs and gaps. Skipping review doesn't save time - it moves the cost to integration, where fixes are harder.
 
-**Over-planning upfront.** Designing all phases before starting the first one is speculative architecture. You don't have enough information yet. Plan the current phase in detail, sketch the next one loosely, and leave the rest undefined.
+**Planning without structure.** Freeform planning misses requirements and produces inconsistent results. Use INGEST and PLAN phase workflows to guide structured thinking -- they exist precisely to front-load the planning work so execution phases run clean. The hierarchy (phases → sequences → tasks) handles complexity at any scale.
 
 **Giant sequences.** Keep sequences at 3-6 tasks. If you have more than 8, the sequence covers too much scope and should be split. Large sequences are harder to track, harder to review, and harder to recover from when something goes wrong.
 
