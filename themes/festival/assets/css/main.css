@@ -837,6 +837,28 @@ summary {
   background: var(--festival-200);
 }
 
+.btn--secondary {
+  background: transparent;
+  color: var(--festival-700);
+  border: 1px solid var(--festival-300);
+}
+
+.btn--secondary:hover {
+  background: var(--festival-100);
+  color: var(--festival-900);
+  text-decoration: none;
+}
+
+[data-theme="dark"] .btn--secondary {
+  color: var(--festival-300);
+  border-color: var(--festival-700);
+}
+
+[data-theme="dark"] .btn--secondary:hover {
+  background: var(--festival-800);
+  color: var(--festival-100);
+}
+
 /* Landing page */
 .hero {
   text-align: center;
@@ -864,6 +886,11 @@ summary {
   gap: 0.75rem;
   justify-content: center;
   flex-wrap: wrap;
+}
+
+.hero__actions .btn {
+  min-width: 140px;
+  text-align: center;
 }
 
 /* Search trigger button */
