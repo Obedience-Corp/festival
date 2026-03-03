@@ -7,7 +7,7 @@
   <meta name="description" content="{{ with .Description }}{{ . }}{{ else }}{{ .Site.Params.description }}{{ end }}">
   {{ $css := resources.Get "css/main.css" | minify | fingerprint }}
   <link rel="stylesheet" href="{{ $css.RelPermalink }}">
-  <link href="/pagefind/pagefind-ui.css" rel="stylesheet">
+  <link href="{{ "pagefind/pagefind-ui.css" | relURL }}" rel="stylesheet">
 </head>
 <body>
   {{ partial "header.html" . }}
@@ -36,7 +36,7 @@
     </footer>
   {{ end }}
 
-  <script src="/pagefind/pagefind-ui.js"></script>
+  <script src="{{ "pagefind/pagefind-ui.js" | relURL }}"></script>
   <script>
   // Theme toggle
   (function() {
