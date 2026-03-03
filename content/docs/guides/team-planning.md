@@ -1,9 +1,9 @@
 ---
-title: "Team Planning"
+title: "Work Pipeline"
 weight: 32
 ---
 
-# Team Planning
+# Work Pipeline
 
 How to keep the work pipeline full when AI agents execute faster than you can plan.
 

@@ -72,7 +72,7 @@ menu:
       parent: guides
       url: /docs/guides/agent-workflows/
       weight: 31
-    - name: Team Planning
+    - name: Work Pipeline
       parent: guides
       url: /docs/guides/team-planning/
       weight: 32
