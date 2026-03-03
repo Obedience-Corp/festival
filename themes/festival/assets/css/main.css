@@ -305,6 +305,10 @@ a:hover {
   justify-content: center;
 }
 
+.content-area--home {
+  margin-left: 0;
+}
+
 .content {
   max-width: var(--content-max-width);
   width: 100%;
