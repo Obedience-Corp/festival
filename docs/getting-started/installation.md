@@ -92,7 +92,7 @@ Requires Go 1.25+:
 
 ```bash
 go install github.com/Obedience-Corp/fest/cmd/fest@latest
-go install github.com/obediencecorp/camp/cmd/camp@latest
+go install github.com/Obedience-Corp/camp/cmd/camp@latest
 ```
 
 ## Verify Installation
