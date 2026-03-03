@@ -12,9 +12,10 @@
   </div>
 </div>
 
-<div style="max-width: 800px; margin: 0 auto; padding: 0 2rem 4rem;">
+<div class="home-body">
 
-<h2 style="border: none; text-align: center;">The Multiple Missions Problem</h2>
+<div class="home-section home-section--problem">
+<h2 class="home-section__heading home-section__heading--centered">The Multiple Missions Problem</h2>
 
 <p>Most developers juggle several missions at once. Your day job has a backend service, a frontend app, and infrastructure. Your side project has its own repos and research. Maybe you're building a startup on nights and weekends, or contributing to open source.</p>
 
@@ -23,8 +24,10 @@
 <p>AI coding tools make you dramatically faster at writing code. But they operate at the file and project level. They don't help you organize across projects, plan multi-step work, or maintain context between sessions. You end up re-explaining the same architecture, re-discovering the same decisions, and re-planning work that was already planned.</p>
 
 <p>Festival solves this with two concepts: <strong>campaigns</strong> for workspace isolation and <strong>festivals</strong> for structured planning.</p>
+</div>
 
-<h2 style="border: none;">Next Steps</h2>
+<div class="home-section home-section--next-steps">
+<h2 class="home-section__heading">Next Steps</h2>
 
 <div class="cards">
   {{ with site.GetPage "/docs/getting-started/quickstart" }}
@@ -55,6 +58,7 @@
     <span class="card__arrow">→ Campaign Setup</span>
   </a>
   {{ end }}
+</div>
 </div>
 
 </div>

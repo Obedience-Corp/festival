@@ -840,7 +840,7 @@ summary {
 .btn--secondary {
   background: transparent;
   color: var(--festival-700);
-  border: 1px solid var(--festival-300);
+  border: 1px solid var(--festival-400);
 }
 
 .btn--secondary:hover {
@@ -891,6 +891,51 @@ summary {
 .hero__actions .btn {
   min-width: 140px;
   text-align: center;
+}
+
+/* Home page body & sections */
+.home-body {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 2rem 6rem;
+}
+
+.home-section {
+  padding-top: 3rem;
+}
+
+.home-section--problem {
+  border-top: 1px solid var(--festival-200);
+}
+
+[data-theme="dark"] .home-section--problem {
+  border-top-color: var(--festival-800);
+}
+
+.home-section__heading {
+  border: none;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+}
+
+.home-section__heading--centered {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+/* Equal-height cards on home page */
+.home-section--next-steps .cards {
+  grid-template-columns: repeat(2, 1fr);
+  align-items: stretch;
+}
+
+.home-section--next-steps .card {
+  display: flex;
+  flex-direction: column;
+}
+
+.home-section--next-steps .card__arrow {
+  margin-top: auto;
 }
 
 /* Search trigger button */
@@ -1051,5 +1096,40 @@ summary {
 
   .hero h1 {
     font-size: 2rem;
+  }
+
+  /* Nav: reduce gap, hide Search label (keep ⌘K badge) */
+  .site-header__nav {
+    gap: 0.5rem;
+  }
+
+  .search-trigger__text {
+    display: none;
+  }
+
+  /* Hero buttons: full-width stacked, not "accidentally wrapped" */
+  .hero__actions {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .hero__actions .btn {
+    min-width: 0;
+    width: 100%;
+    max-width: 16rem;
+  }
+
+  /* Reduce spacing for smaller screens */
+  .home-body {
+    padding-bottom: 4rem;
+  }
+
+  .home-section {
+    padding-top: 2rem;
+  }
+
+  /* Cards: single column */
+  .home-section--next-steps .cards {
+    grid-template-columns: 1fr;
   }
 }
