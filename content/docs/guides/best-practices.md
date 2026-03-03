@@ -11,9 +11,9 @@ Patterns and recommendations for getting the most out of Festival Methodology. F
 
 ## Planning
 
-**Set concrete, outcome-focused goals.** A festival goal like "implement JWT auth with 7-day expiry and refresh token rotation" gives agents and collaborators something to verify against. "Add authentication" does not. If you can't tell when the goal is done, rewrite it.
+**Start with whatever you have.** A festival goal can be rough -- "overhaul the auth system" is enough to start. INGEST and PLAN phase workflows exist precisely to take rough ideas and refine them into concrete requirements, architecture decisions, and detailed task breakdowns. You don't need a polished spec to create a festival; you need a direction. The structured planning phases produce the specificity.
 
-**Don't pre-plan phases.** Start with a single phase covering the immediate work. Add phases as requirements emerge during execution. Trying to design the entire festival upfront leads to speculative structure that gets rewritten anyway.
+**Use standard festivals when requirements are unclear.** Standard festivals include INGEST and PLAN phases with WORKFLOW.md files that guide agents through structured thinking -- extracting requirements, gap analysis, decomposition. Let the planning phases do their job rather than trying to front-load all the specificity into the festival goal.
 
 **Choose the right festival type:**
 
