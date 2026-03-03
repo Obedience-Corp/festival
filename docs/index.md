@@ -1,29 +1,16 @@
 # Festival
 
-**The workspace and planning layer for AI-native development.**
+**Mission-based AI workspace management for developers using AI coding tools.**
 
-## The Problem
+## The Multiple Missions Problem
 
-AI coding tools made writing code 10–100x faster. But they operate in a vacuum — no understanding of the larger goal, no memory across sessions, no structure for multi-step work. Every new chat starts from zero. The agent is fast but contextless.
+Most developers juggle several missions at once. Your day job has a backend service, a frontend app, and infrastructure. Your side project has its own repos and research. Maybe you're building a startup on nights and weekends, or contributing to open source.
 
-This gets worse when you're running multiple missions in parallel — your day job, a side project, a startup, open source. Context that lives only in your head (or in expired chat sessions) doesn't scale.
+Each mission accumulates context - project repos, planning documents, research notes, design decisions, AI conversation history. Without structure, this context scatters across your filesystem, gets lost between sessions, and lives in your head instead of somewhere durable.
 
-You need two things traditional tools don't give you:
+AI coding tools (Claude Code, Cursor, Codex) make you dramatically faster at writing code. But they operate at the file and project level. They don't help you organize across projects, plan multi-step work, or maintain context between sessions. You end up re-explaining the same architecture, re-discovering the same decisions, and re-planning work that was already planned.
 
-1. **Isolated workspaces** — one per mission, with all projects, docs, and planning in one place
-2. **Structured plans** — that AI agents can pick up, execute, and resume without losing context
-
-## What Festival Does
-
-**`camp`** manages campaigns: isolated workspaces that hold all the projects, docs, research, and planning for a single mission. It gives you instant navigation across everything in the workspace, project lifecycle management, and shell shortcuts that make `cd` obsolete.
-
-**`fest`** manages festivals: structured plans that break complex work into phases, sequences, and tasks — a hierarchy designed for AI agents to execute autonomously, pause, and resume without context loss. Run `fest next` and the agent gets its next task with full surrounding context. Run `fest commit` and every commit traces back to the plan.
-
-### Where Festival Fits
-
-Festival is a **planning and context layer**, not a runtime orchestrator. It doesn't spawn agents or manage their processes — it gives them the structure, context, and goals they need to work autonomously. Runtime orchestrators tell agents what to do next. Festival gives agents the context to understand *why* they're doing it, what success looks like, and where they are in a larger mission.
-
-The context model is persistent and filesystem-based — plans survive across sessions, days, and weeks, not just a single agent run. And Festival is agent-agnostic: it works with Claude Code, Cursor, Codex, Aider, or any tool that can read files and run commands.
+Festival solves this with two concepts: **campaigns** for workspace isolation and **festivals** for structured planning.
 
 ## Next Steps
 
