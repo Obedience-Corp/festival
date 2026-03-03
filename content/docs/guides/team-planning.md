@@ -5,103 +5,155 @@ weight: 32
 
 # Team Planning
 
-How teams -human, AI agent, or mixed -use the Festival Methodology to coordinate work.
+How to keep the work pipeline full when AI agents execute faster than you can plan.
 
 ---
 
-## Sequences as Units of Assignment
+## The Pipeline Problem
 
-Sequences are the natural unit for assigning work. Each sequence is a cohesive set of 3-6 tasks that one person or agent can own end-to-end. Assign sequences to team members, not individual tasks.
+AI agents execute festivals fast. Work that would take a team days finishes in hours. A well-structured festival with clear tasks and acceptance criteria runs through `fest next` loops at a pace that surprises even experienced users.
 
-Why sequences and not tasks? A single task lacks enough context to be meaningful on its own. A full phase is too large for one owner to manage. Sequences hit the sweet spot: enough scope to make autonomous progress, small enough to finish and hand off cleanly.
+This creates a new bottleneck: **keeping enough planned work queued so there's always something ready to execute when capacity opens up.** The coordination challenge isn't within a single festival -- it's maintaining a pipeline of ideas, designs, and planned festivals so agent sessions never sit idle.
 
 ---
 
-## Parallel Sequences
+## The Work Pipeline
 
-Sequences within a phase can run in parallel when they don't depend on each other. The numbering prefix signals dependency order:
+Work flows through a pipeline from raw idea to completed festival:
 
-- `01_backend/` and `01_frontend/` share the same prefix -they can run simultaneously.
-- `02_integration/` depends on both and runs after.
+```
+Idea -> Intent -> Design -> Festival -> Done
+```
 
-Within a single sequence, tasks with the same number can also run in parallel:
+Each stage refines the work. Not every item passes through every stage -- a simple bug fix can go from intent straight to festival. Complex work benefits from design time before festival creation.
+
+### Intents
+
+Intents are the entry point. Capture ideas, bugs, features, and research topics as they come -- don't lose them while executing other work.
+
+```bash
+camp intent add "Add WebSocket support to chat"        # Fast capture
+camp intent add -e "Refactor auth system"              # Deep capture with editor
+camp intent list                                        # See the pipeline
+camp intent list --status ready                         # What's promotion-ready
+```
+
+Intents have a lifecycle:
+
+| Status | Meaning |
+|--------|---------|
+| `inbox` | Captured, not yet reviewed |
+| `active` | Being enriched with details and context |
+| `ready` | Fully scoped, ready to become a festival |
+| `done` | Promoted to festival or resolved |
+| `killed` | Abandoned |
+
+Related intents can be gathered into a single unified work item:
+
+```bash
+camp intent gather auth-refactor token-rotation session-mgmt
+```
+
+This combines scattered ideas into a coherent scope before promotion.
+
+### Design Docs
+
+`workflow/design/` holds architectural thinking, specs, and decisions. Not everything needs a design doc. Simple features go straight from intent to festival. Complex work -- multi-system changes, API redesigns, platform migrations -- benefits from design time first.
+
+Design docs are freeform. Create a directory for the topic, add markdown files, diagrams, and notes. When the design is solid, it feeds directly into festival creation.
+
+### Festival Promotion
+
+When an intent is ready, promote it to a festival:
+
+```bash
+camp intent promote auth-refactor    # Creates festival in planning/
+```
+
+The intent moves to `done` status with a reference to the created festival. The festival starts in `festivals/planning/` and progresses through the lifecycle:
+
+```bash
+fest promote    # planning -> ready -> active -> completed
+```
+
+Keep festivals in `planning/` and `ready/` so there's always queued work.
+
+---
+
+## Running Festivals in Parallel
+
+Each festival is self-contained. One agent session runs one festival via `fest next`. Run N festivals by running N agent sessions. No coordination needed between them -- each festival has its own goal, phases, tasks, and rules.
+
+```bash
+fest list              # See all festivals in current campaign
+fgo <name>             # Jump to a specific festival
+fest status            # Check progress on current festival
+```
+
+Three active festivals means three agent sessions running independently. Five means five. Scale is limited by token budget, not methodology.
+
+---
+
+## Across Campaigns
+
+Campaigns are independent workspaces -- different projects, different domains, different teams. Each campaign has its own festivals, intents, projects, and design docs.
+
+```bash
+camp list              # See all registered campaigns
+camp switch <name>     # Switch active campaign
+```
+
+One campaign might have three active festivals while another has one. The portfolio spans campaigns. `camp list` shows the full picture.
+
+---
+
+## Keeping the Pipeline Full
+
+These patterns prevent the bottleneck:
+
+**Capture constantly.** Run `camp intent add` whenever an idea hits. Mid-festival, between sessions, during code review. Intents are cheap -- creating one takes seconds. Losing an idea because you were busy executing costs more.
+
+**Gather related intents.** Small ideas accumulate. `camp intent gather` combines them into coherent work items that are large enough to become festivals. Three intents about auth improvements become one "auth system overhaul" festival.
+
+**Promote in batches.** When a festival completes and capacity opens, check what's ready: `camp intent list --status ready`. Promote the highest-priority item to a festival and move it through planning.
+
+**Use `ready/` as a buffer.** Fully planned festivals waiting in `ready/` mean zero delay when agent capacity opens up. One `fest promote` and the next session can start immediately.
+
+**Check the queue regularly.** `fest list` shows festivals by lifecycle status. `camp intent list` shows the upstream pipeline. If `ready/` is empty and `active/` is finishing, you're about to hit the bottleneck.
+
+---
+
+## Within a Festival
+
+When a single festival is large enough to benefit from internal parallelism, sequences provide it.
+
+### Parallel Sequences
+
+Sequences within a phase that share the same number prefix can run simultaneously:
+
+- `01_backend/` and `01_frontend/` -- same prefix, no dependency, run in parallel
+- `02_integration/` -- depends on both, runs after
+
+Within a single sequence, tasks with the same number are also parallel:
 
 ```
 01_backend/
 ├── 01_user_model.md         # Parallel
 ├── 01_api_endpoints.md      # Parallel
-├── 01_database_schema.md    # Parallel
 ├── 02_integration.md        # After all 01_ tasks
-├── 03_testing.md
-├── 04_review.md
-└── 05_iterate.md
+├── 03_testing.md            # Quality gate
+├── 04_review.md             # Quality gate
+└── 05_iterate.md            # Quality gate
 ```
 
-This gives you two levels of parallelism: across sequences and within them. Use both when your team has the capacity.
+### Quality Gates
 
----
-
-## Quality Gates as Sync Points
-
-The `testing -> review -> iterate` quality gates at the end of each sequence serve as natural sync points. Before starting the next sequence, verify the previous one passed its gates. This prevents compounding errors across dependent work.
-
-If sequence `01_backend/` fails its review gate, do not start `02_integration/`. Fix the issues in the iterate step first. Quality gates exist to catch problems early -skipping them defeats the entire purpose of structured planning.
-
----
-
-## Multi-Agent Workflows
-
-When using multiple AI agents:
-
-- **Assign each agent a sequence to own.** One agent, one sequence. Clear ownership eliminates coordination overhead.
-- **Agents work autonomously within their sequence** using `fest next` to progress through tasks.
-- **Quality gates force review before proceeding.** No agent skips testing or review, regardless of how confident it is.
-- **`fest status` shows the coordinator which sequences are complete.** The team lead (human or lead agent) uses this to track overall progress.
-- **Phase-level `PHASE_GOAL.md` gives each agent context** about the broader objective without requiring them to read every other sequence.
-
----
-
-## Coordination Patterns
-
-### Sequential Handoff
-
-Agent A completes sequence `01_setup/`, Agent B picks up sequence `02_implement/`. Each agent gets a clean, tested starting point from the previous sequence's quality gates.
-
-### Parallel Execution
-
-Agents A and B work on `01_backend/` and `01_frontend/` simultaneously. Neither blocks the other. Both must pass their quality gates before `02_integration/` begins.
-
-### Specialist Assignment
-
-A research agent handles the entire `RESEARCH` phase. An implementation agent handles `IMPLEMENT`. Each agent operates in its area of strength across the full phase rather than splitting phases across generalists.
-
-### Review Cycles
-
-One agent implements tasks within a sequence. A different agent handles the review and iterate tasks at the end. This separation catches blind spots that self-review misses.
+The testing-review-iterate gates at the end of each sequence are sync points. If a sequence fails its review gate, fix the issues before starting dependent sequences. Gates exist to catch problems early -- skipping them moves the cost downstream where fixes are harder.
 
 ---
 
 ## Festival Rules for Teams
 
-`FESTIVAL_RULES.md` is especially important for teams. It codifies the quality standards, coding conventions, and process requirements that all team members must follow. Without it, different agents or humans will make inconsistent decisions about:
+`FESTIVAL_RULES.md` matters more when multiple agents or humans work on the same festival. It codifies quality standards, coding conventions, and process requirements that all workers follow. Without it, different agents make inconsistent decisions about code style, error handling, test coverage, and what "done" means.
 
-- Code style and patterns
-- Error handling conventions
-- Testing requirements
-- Commit message format
-- What "done" means for a task
-
-Write your festival rules before assigning sequences. Every team member reads the rules before starting work. If a quality gate fails because someone ignored the rules, that is a rules enforcement problem, not a planning problem.
-
----
-
-## Putting It Together
-
-A typical team workflow:
-
-1. **Plan the festival.** Define phases, sequences, and tasks. Write `FESTIVAL_RULES.md`.
-2. **Assign sequences.** Each team member gets one or more sequences to own.
-3. **Execute in parallel** where numbering allows, sequentially where it doesn't.
-4. **Gate at every boundary.** Quality gates between sequences, phase goals between phases.
-5. **Track with `fest status`.** The coordinator monitors progress and unblocks dependencies.
-6. **Iterate when gates fail.** Fix issues before moving forward. Never skip gates.
+Write festival rules before execution starts. Every agent reads them before its first `fest next`. The rules template in `.festival/templates/` can be customized to match your team's standards -- see [Agent Workflows]({{< ref "/docs/guides/agent-workflows#customizing-templates" >}}) for details.
