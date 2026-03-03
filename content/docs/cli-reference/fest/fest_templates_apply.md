@@ -11,8 +11,10 @@ Variables can be provided as:
   - File reference: --vars @variables.json
 
 Examples:
+```bash
   fest templates apply component_test --vars '{"name": "UserService"}'
   fest templates apply api_endpoint -o ./api.md --vars @vars.json
+```
 
 ```
 fest templates apply <name> [flags]

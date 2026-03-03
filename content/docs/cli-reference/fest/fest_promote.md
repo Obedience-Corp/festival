@@ -12,9 +12,11 @@ Each transition validates readiness:
   active → completed:  All tasks must be completed
 
 Use --dungeon to send a festival directly to a dungeon status:
+```bash
   fest promote --dungeon someday     Shelve for later
   fest promote --dungeon archived    Archive the festival
   fest promote --dungeon completed   Mark as completed (skips task validation)
+```
 
 ```
 fest promote [flags]

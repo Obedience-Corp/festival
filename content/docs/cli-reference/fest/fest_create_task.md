@@ -21,6 +21,7 @@ TEMPLATE VARIABLES (automatically set from --name):
   {{ full_path }}            Complete path from festival root
 
 EXAMPLES:
+```bash
   # Create single task in current sequence
   fest create task --name "design endpoints" --json
 
@@ -34,8 +35,10 @@ EXAMPLES:
 
   # Create task in specific sequence
   fest create task --name "setup" --path ./002_IMPLEMENT/01_api --json
+```
 
 MARKER FILLING (for AI agents):
+```bash
   # Fill all REPLACE markers in one command
   fest create task --name "setup" --markers '{"Brief description": "Auth middleware", "Yes/No": "Yes"}'
 
@@ -44,6 +47,7 @@ MARKER FILLING (for AI agents):
 
   # Skip marker filling (leave REPLACE tags)
   fest create task --name "setup" --skip-markers
+```
 
 Run 'fest understand tasks' for detailed guidance on task file creation.
 Run 'fest validate tasks' to verify task files exist in implementation sequences.

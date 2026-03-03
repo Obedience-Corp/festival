@@ -1,7 +1,7 @@
 {{ define "main" }}
 <div class="hero">
   <h1>Festival</h1>
-  <p>Mission-based AI workspace management for developers using AI coding tools.</p>
+  <p>The workspace and planning layer for AI-native development.</p>
   <div class="hero__actions">
     {{ with site.GetPage "/docs/getting-started/quickstart" }}
       <a href="{{ .RelPermalink }}" class="btn btn--primary">Get Started</a>
@@ -14,47 +14,28 @@
 
 <div style="max-width: 800px; margin: 0 auto; padding: 0 2rem 4rem;">
 
-<h2 style="border: none; text-align: center;">The Multiple Missions Problem</h2>
+<h2 style="border: none; text-align: center;">The Problem</h2>
 
-<p>Most developers juggle several missions at once. Your day job has a backend service, a frontend app, and infrastructure. Your side project has its own repos and research. Maybe you're building a startup on nights and weekends, or contributing to open source.</p>
+<p>AI coding tools made writing code 10–100x faster. But they operate in a vacuum — no understanding of the larger goal, no memory across sessions, no structure for multi-step work. Every new chat starts from zero. The agent is fast but contextless.</p>
 
-<p>Each mission accumulates context — project repos, planning documents, research notes, design decisions, AI conversation history. Without structure, this context scatters across your filesystem, gets lost between sessions, and lives in your head instead of somewhere durable.</p>
+<p>This gets worse when you're running multiple missions in parallel — your day job, a side project, a startup, open source. Context that lives only in your head (or in expired chat sessions) doesn't scale.</p>
 
-<p>AI coding tools (Claude Code, Cursor, Codex) make you dramatically faster at writing code. But they operate at the file and project level. They don't help you organize across projects, plan multi-step work, or maintain context between sessions. You end up re-explaining the same architecture, re-discovering the same decisions, and re-planning work that was already planned.</p>
+<p>You need two things traditional tools don't give you:</p>
 
-<p>Festival solves this with two concepts: <strong>campaigns</strong> for workspace isolation and <strong>festivals</strong> for structured planning.</p>
+<ol>
+  <li><strong>Isolated workspaces</strong> — one per mission, with all projects, docs, and planning in one place</li>
+  <li><strong>Structured plans</strong> — that AI agents can pick up, execute, and resume without losing context</li>
+</ol>
 
-<h2 style="border: none;">Two CLIs, One Product</h2>
+<h2 style="border: none;">What Festival Does</h2>
 
-<h3>camp — workspace management</h3>
+<p><strong><code>camp</code></strong> manages campaigns: isolated workspaces that hold all the projects, docs, research, and planning for a single mission. It gives you instant navigation across everything in the workspace, project lifecycle management, and shell shortcuts that make <code>cd</code> obsolete.</p>
 
-<p>Camp creates and manages <strong>campaigns</strong> — isolated workspaces for individual missions. Each campaign has a standard directory layout for projects, documentation, planning, and research.</p>
+<p><strong><code>fest</code></strong> manages festivals: structured plans that break complex work into phases, sequences, and tasks — a hierarchy designed for AI agents to execute autonomously, pause, and resume without context loss. Run <code>fest next</code> and the agent gets its next task with full surrounding context. Run <code>fest commit</code> and every commit traces back to the plan.</p>
 
-<ul>
-  <li>Create campaigns with <code>camp init</code> and navigate with <code>cgo</code> shell shortcuts</li>
-  <li>Add projects as git submodules with <code>camp project add</code></li>
-  <li>Navigate between projects, festivals, docs, and worktrees with single-letter shortcuts</li>
-  <li>Health check workspaces with <code>camp doctor</code>, sync submodules with <code>camp sync</code></li>
-  <li>Register campaigns globally and switch between them with <code>camp switch</code></li>
-</ul>
+<h3>Where Festival Fits</h3>
 
-<h3>fest — hierarchical planning</h3>
-
-<p>Fest creates and manages <strong>festivals</strong> — structured plans that break complex work into phases, sequences, and tasks. The hierarchy is designed for AI agents to execute autonomously.</p>
-
-<ul>
-  <li>Create festivals with <code>fest create festival</code> and scaffold structure interactively</li>
-  <li>Get the next task with full inline context using <code>fest next</code></li>
-  <li>Track progress across all levels with <code>fest status</code> and <code>fest progress</code></li>
-  <li>Teach AI agents the methodology on-demand with <code>fest intro</code> and <code>fest understand</code></li>
-  <li>Commit with festival tracking using <code>fest commit</code></li>
-</ul>
-
-<h3>How They Work Together</h3>
-
-<p>Camp gives you the workspace. Fest gives you the plan. Together, they create a structured environment where you can organize multiple missions, plan complex work, and hand off execution to AI agents that can pick up exactly where you (or another agent) left off.</p>
-
-<p>A typical workflow: <code>camp init</code> creates your workspace, <code>camp project add</code> brings in your repos, <code>fest create festival</code> defines what you're building, and <code>fest next</code> tells your AI agent exactly what to do next — with full context about the goal, the current phase, and the specific task requirements.</p>
+<p>Festival is a <strong>planning and context layer</strong>, not a runtime orchestrator. It doesn't spawn agents or manage their processes — it gives them the structure, context, and goals they need to work autonomously. The context model is persistent and filesystem-based — plans survive across sessions, days, and weeks. And it's agent-agnostic: it works with Claude Code, Cursor, Codex, Aider, or any tool that can read files and run commands.</p>
 
 <h2 style="border: none;">Next Steps</h2>
 
@@ -76,7 +57,7 @@
   {{ with site.GetPage "/docs/guides/agent-workflows" }}
   <a href="{{ .RelPermalink }}" class="card">
     <div class="card__title">Using AI Agents?</div>
-    <div class="card__description">How Festival integrates with Claude Code, Cursor, and other AI tools.</div>
+    <div class="card__description">How Festival integrates with AI coding tools.</div>
     <span class="card__arrow">→ Agent Workflows</span>
   </a>
   {{ end }}

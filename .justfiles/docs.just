@@ -42,3 +42,10 @@ serve:
 [no-cd]
 build:
     hugo --minify --source . --baseURL "{{base_url}}"
+    npx pagefind --site public
+
+# Index docs for search (run after 'just docs build' or for local dev)
+[no-cd]
+index:
+    hugo --minify --source .
+    npx pagefind --site public

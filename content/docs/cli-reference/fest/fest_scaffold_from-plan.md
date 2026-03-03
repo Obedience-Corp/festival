@@ -10,6 +10,7 @@ The plan document should follow the STRUCTURE.md format with a hierarchy section
 containing phases, sequences, and tasks.
 
 Examples:
+```bash
   # Generate from a plan document
   fest scaffold from-plan --plan path/to/STRUCTURE.md --name my-festival
 
@@ -18,6 +19,7 @@ Examples:
 
   # Agent mode with JSON output
   fest scaffold from-plan --plan STRUCTURE.md --name my-fest --agent
+```
 
 ```
 fest scaffold from-plan [flags]

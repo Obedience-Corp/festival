@@ -8,14 +8,16 @@ params:
 
 markup:
   highlight:
-    style: github
+    style: dracula
     lineNos: false
-    noClasses: false
+    noClasses: true
   goldmark:
     renderer:
       unsafe: true
     extensions:
       table: true
+      typographer:
+        disable: true
 
 menu:
   docs:
@@ -70,7 +72,7 @@ menu:
       parent: guides
       url: /docs/guides/agent-workflows/
       weight: 31
-    - name: Team Planning
+    - name: Work Pipeline
       parent: guides
       url: /docs/guides/team-planning/
       weight: 32

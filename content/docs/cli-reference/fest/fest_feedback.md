@@ -10,10 +10,12 @@ Feedback allows agents to record observations based on defined criteria
 for later aggregation and analysis.
 
 Examples:
+```bash
   fest feedback init --criteria "Code quality" --criteria "Performance"
   fest feedback add --criteria "Code quality" --observation "Found duplication"
   fest feedback view
   fest feedback export --format markdown
+```
 
 ### Options
 

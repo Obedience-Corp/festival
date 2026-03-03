@@ -9,11 +9,13 @@ View collected feedback observations.
 Filter by criteria or severity, or view a summary of all feedback.
 
 Examples:
+```bash
   fest feedback view
   fest feedback view --criteria "Code quality"
   fest feedback view --severity high
   fest feedback view --summary
   fest feedback view --json
+```
 
 ```
 fest feedback view [flags]

@@ -13,6 +13,7 @@ current directory:
   - In linked project: moves TO festival
 
 Examples:
+```bash
   # In project directory, move file to festival
   fest move ./analysis.md
 
@@ -24,6 +25,7 @@ Examples:
 
   # Force overwrite existing files
   fest move --force ./config.yml
+```
 
 Requirements:
   - Festival must have project_path set in fest.yaml

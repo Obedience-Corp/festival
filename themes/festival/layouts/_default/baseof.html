@@ -3,10 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} — {{ .Site.Title }}{{ end }}</title>
+  <title>{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} - {{ .Site.Title }}{{ end }}</title>
   <meta name="description" content="{{ with .Description }}{{ . }}{{ else }}{{ .Site.Params.description }}{{ end }}">
   {{ $css := resources.Get "css/main.css" | minify | fingerprint }}
   <link rel="stylesheet" href="{{ $css.RelPermalink }}">
+  <link href="{{ "pagefind/pagefind-ui.css" | relURL }}" rel="stylesheet">
 </head>
 <body>
   {{ partial "header.html" . }}
@@ -35,10 +36,11 @@
     </footer>
   {{ end }}
 
+  <script src="{{ "pagefind/pagefind-ui.js" | relURL }}"></script>
   <script>
   // Theme toggle
   (function() {
-    var theme = localStorage.getItem('theme') || 'light';
+    var theme = localStorage.getItem('theme') || 'dark';
     document.documentElement.setAttribute('data-theme', theme);
   })();
 
@@ -65,14 +67,38 @@
     document.querySelector('.sidebar-overlay').classList.toggle('open');
   }
 
-  // Code copy buttons
+  // Code blocks — terminal window treatment
   document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('pre').forEach(function(pre) {
       var wrapper = document.createElement('div');
       wrapper.className = 'code-block';
       pre.parentNode.insertBefore(wrapper, pre);
-      wrapper.appendChild(pre);
 
+      // Build terminal header
+      var header = document.createElement('div');
+      header.className = 'code-block__header';
+
+      // Traffic light dots
+      var dots = document.createElement('div');
+      dots.className = 'code-block__dots';
+      ['red', 'yellow', 'green'].forEach(function(c) {
+        var dot = document.createElement('span');
+        dot.className = 'code-block__dot code-block__dot--' + c;
+        dots.appendChild(dot);
+      });
+      header.appendChild(dots);
+
+      // Language label
+      var codeEl = pre.querySelector('code');
+      var lang = codeEl ? codeEl.getAttribute('data-lang') : null;
+      if (lang) {
+        var langLabel = document.createElement('span');
+        langLabel.className = 'code-block__lang';
+        langLabel.textContent = lang;
+        header.appendChild(langLabel);
+      }
+
+      // Copy button
       var btn = document.createElement('button');
       btn.className = 'copy-btn';
       btn.textContent = 'Copy';
@@ -87,7 +113,10 @@
           }, 2000);
         });
       });
-      wrapper.appendChild(btn);
+      header.appendChild(btn);
+
+      wrapper.appendChild(header);
+      wrapper.appendChild(pre);
     });
   });
 
@@ -107,6 +136,50 @@
       });
     });
   });
+
+  // Search modal
+  document.addEventListener('DOMContentLoaded', function() {
+    var overlay = document.getElementById('search-overlay');
+    if (!overlay) return;
+
+    new PagefindUI({
+      element: '#search-container',
+      showSubResults: true,
+      showImages: false
+    });
+
+    function openSearch() {
+      overlay.classList.add('open');
+      var input = overlay.querySelector('.pagefind-ui__search-input');
+      if (input) setTimeout(function() { input.focus(); }, 50);
+    }
+
+    function closeSearch() {
+      overlay.classList.remove('open');
+    }
+
+    document.querySelectorAll('.search-trigger').forEach(function(btn) {
+      btn.addEventListener('click', openSearch);
+    });
+
+    overlay.addEventListener('click', function(e) {
+      if (e.target === overlay) closeSearch();
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        overlay.classList.contains('open') ? closeSearch() : openSearch();
+      }
+      if (e.key === 'Escape') closeSearch();
+    });
+  });
   </script>
+
+  <div id="search-overlay" class="search-overlay">
+    <div class="search-modal">
+      <div id="search-container"></div>
+    </div>
+  </div>
 </body>
 </html>

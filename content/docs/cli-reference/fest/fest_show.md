@@ -10,6 +10,7 @@ When run inside a festival directory, shows the current festival's details.
 When run with a status argument, lists all festivals with that status.
 
 SUBCOMMANDS:
+```bash
   fest show              Show current festival (detect from cwd)
   fest show active       List festivals in active/ directory
   fest show planning     List festivals in planning/ directory
@@ -17,6 +18,7 @@ SUBCOMMANDS:
   fest show dungeon      List festivals in dungeon/ directory
   fest show all          List all festivals grouped by status
   fest show <name>       Show details of a specific festival by name
+```
 
 ```
 fest show [status|festival-name] [flags]

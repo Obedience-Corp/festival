@@ -27,18 +27,16 @@ The key properties that make this work:
 
 ## The Agent Loop
 
-The typical agent workflow is a tight loop. An agent session picks up work, executes it, records progress, and hands off cleanly to the next session.
+The typical agent workflow is a tight loop:
 
 ```
-fest intro            → Agent learns the methodology
-fest next             → Gets next task with full context
-[execute the task]    → Agent does the work
-fest task complete    → Marks task done
-fest commit -m "..."  → Commits with festival tracking
-fest next             → Gets the next task (repeat)
+fest intro   → Agent learns the methodology (first session only)
+fest next    → Gets next task with full context, executes it (repeat)
 ```
 
-On first contact, run `fest intro` once. After that, the loop is just `fest next`, work, complete, commit. An agent can execute this loop indefinitely across multiple sessions without losing state.
+`fest next` is the entire loop. It returns the next task with full inline context, and the task document itself tells the agent what commands to run when done -- `fest task complete`, `fest commit`, quality gates, whatever the task requires. The agent reads the task, does the work, follows the completion steps, and runs `fest next` again.
+
+On first contact, run `fest intro` once. After that, an agent can run `fest next` indefinitely across multiple sessions without losing state.
 
 ---
 
@@ -79,7 +77,7 @@ Claude Code is the primary development environment for Festival workflows. These
 
 ## Working with Other Agents
 
-Festival is tool-agnostic. Any agent that can run bash commands can use it - Cursor, Codex, Windsurf, Aider, or anything else with shell access.
+Festival is tool-agnostic. Any agent that can run bash commands can use it.
 
 There is no API integration required. Everything is bash commands and markdown files:
 
@@ -89,7 +87,7 @@ There is no API integration required. Everything is bash commands and markdown f
 
 The filesystem IS the state. Task documents are markdown files. Progress is tracked by file location and status markers. An agent reads task documents, writes code, and records completion - all through standard file operations and CLI commands.
 
-This means Festival works the same way regardless of which AI tool is driving the session. Switch from Claude Code to Cursor mid-festival and nothing breaks. The state is in the files, not in any tool's memory.
+This means Festival works the same way regardless of which AI tool is driving the session. Switch tools mid-festival and nothing breaks. The state is in the files, not in any tool's memory.
 
 ---
 
@@ -106,3 +104,40 @@ The hardest problem in agent workflows is handoff - when one session ends and an
 **CONTEXT.md files** capture decisions and rationale across sessions. Why was this approach chosen? What alternatives were considered? What gotchas were discovered? This is the institutional memory that prevents the next session from re-learning hard-won lessons.
 
 Nothing is lost between sessions. The plan is in the filesystem. The progress is in the filesystem. The context is in the filesystem. A new agent session with `fest next` is fully operational in under 30 seconds.
+
+---
+
+## Customizing Templates
+
+When `fest create` scaffolds a festival, phase, sequence, or task, it copies markdown templates from the `.festival/templates/` directory inside your festivals workspace.
+
+```
+festivals/.festival/templates/
+├── festival/              # Festival-level documents
+│   ├── GOAL.md            # FESTIVAL_GOAL.md template
+│   ├── OVERVIEW.md        # FESTIVAL_OVERVIEW.md template
+│   ├── RULES.md           # FESTIVAL_RULES.md template
+│   └── TODO.md            # FESTIVAL_TODO.md template
+├── phases/                # Phase templates by type
+│   ├── implementation/
+│   ├── planning/
+│   ├── research/
+│   ├── review/
+│   ├── ingest/
+│   └── non_coding_action/
+├── sequences/             # Sequence goal templates
+│   ├── GOAL.md
+│   └── GOAL_MINIMAL.md
+└── tasks/                 # Task document template
+    └── TASK.md
+```
+
+These are your templates. Edit them to match your workflow, coding standards, and team conventions. Changes apply to every new festival, phase, sequence, or task created after the edit.
+
+**Common customizations:**
+
+- **FESTIVAL_RULES.md** - Add your team's coding standards, test coverage requirements, and review criteria so every new festival inherits them automatically.
+- **TASK.md** - Add sections your agents need (e.g., "Files to modify", "Commands to verify", "Dependencies") so task authors fill them in consistently.
+- **Phase templates** - Adjust the default gate structure or add phase-specific sections for your domain (security review gates, performance benchmarks, etc.).
+
+Templates use `[REPLACE: hint]` markers for values that must be filled in during creation. `fest` processes these markers interactively or via `--markers` flags. See `fest understand templates` for the full marker system.

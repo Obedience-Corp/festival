@@ -10,8 +10,10 @@ Works from inside a festival directory or from a project linked to one.
 The ID is read from fest.yaml metadata, falling back to the directory name.
 
 Examples:
+```bash
   fest id          # Print the festival ID (e.g., SR0001)
   fest id --json   # Output as JSON with id, name, and path
+```
 
 ```
 fest id [flags]

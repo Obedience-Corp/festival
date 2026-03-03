@@ -305,6 +305,10 @@ a:hover {
   justify-content: center;
 }
 
+.content-area--home {
+  margin-left: 0;
+}
+
 .content {
   max-width: var(--content-max-width);
   width: 100%;
@@ -377,72 +381,127 @@ a:hover {
   padding-left: 0.75rem;
 }
 
-/* Code */
+/* Code — Inline */
 code {
-  font-family: 'SF Mono', 'Fira Code', 'Fira Mono', 'Roboto Mono', monospace;
-  font-size: 0.875em;
-  background: var(--festival-100);
-  padding: 0.15em 0.4em;
-  border-radius: 4px;
-  color: var(--festival-800);
+  font-family: 'Berkeley Mono', 'SF Mono', 'Fira Code', 'JetBrains Mono', monospace;
+  font-size: 0.85em;
+  background: #f0ede8;
+  padding: 0.2em 0.45em;
+  border-radius: 5px;
+  color: #1a1523;
+  border: 1px solid #e0dcd4;
+  font-variant-ligatures: none;
 }
 
 [data-theme="dark"] code {
-  background: var(--festival-800);
-  color: var(--festival-200);
+  background: rgba(255, 255, 255, 0.08);
+  color: #e2dfd8;
+  border-color: rgba(255, 255, 255, 0.1);
 }
 
+/* Code — Block: Terminal aesthetic */
 pre {
-  background: var(--festival-950);
-  color: var(--festival-200);
-  padding: 1.25rem 1.5rem;
-  border-radius: 12px;
+  background: #0d0d11 !important;
+  color: #f8f8f2 !important;
+  padding: 0 !important;
+  border-radius: 0 0 10px 10px;
   overflow-x: auto;
-  margin: 1rem 0 1.5rem;
-  line-height: 1.6;
+  margin: 0;
+  line-height: 1.65;
   position: relative;
-  border: 1px solid var(--festival-800);
+  border: none;
 }
 
 pre code {
-  background: none;
-  padding: 0;
+  display: block;
+  background: none !important;
+  padding: 1.1rem 1.4rem 1.25rem;
   border-radius: 0;
+  border: none;
   color: inherit;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
+  font-family: 'Berkeley Mono', 'SF Mono', 'Fira Code', 'JetBrains Mono', monospace;
+  font-variant-ligatures: none;
 }
 
-/* Copy button for code blocks */
+/* Code block container — terminal window */
 .code-block {
   position: relative;
+  margin: 1rem 0 1.5rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.15),
+    0 0 0 1px rgba(0, 0, 0, 0.05);
 }
 
+[data-theme="dark"] .code-block {
+  border-color: rgba(255, 255, 255, 0.06);
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
+/* Terminal header bar */
+.code-block__header {
+  display: flex;
+  align-items: center;
+  background: #16161a;
+  padding: 0.55rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  user-select: none;
+}
+
+.code-block__dots {
+  display: flex;
+  gap: 6px;
+}
+
+.code-block__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  opacity: 0.7;
+}
+
+.code-block__dot--red { background: #ff5f57; }
+.code-block__dot--yellow { background: #febc2e; }
+.code-block__dot--green { background: #28c840; }
+
+.code-block__lang {
+  margin-left: auto;
+  font-family: 'Berkeley Mono', 'SF Mono', monospace;
+  font-size: 0.65rem;
+  color: rgba(255, 255, 255, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* Copy button — in header */
 .copy-btn {
-  position: absolute;
-  top: 0.75rem;
-  right: 0.75rem;
-  background: var(--festival-800);
-  border: 1px solid var(--festival-700);
-  border-radius: 6px;
-  color: var(--festival-400);
-  padding: 0.3rem 0.5rem;
-  font-size: 0.75rem;
+  margin-left: 0.75rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 5px;
+  color: rgba(255, 255, 255, 0.35);
+  padding: 0.2rem 0.5rem;
+  font-family: 'Berkeley Mono', 'SF Mono', monospace;
+  font-size: 0.65rem;
   cursor: pointer;
-  opacity: 0;
-  transition: all 0.2s;
-}
-
-.code-block:hover .copy-btn {
-  opacity: 1;
+  transition: all 0.15s;
+  letter-spacing: 0.03em;
 }
 
 .copy-btn:hover {
-  background: var(--festival-700);
-  color: var(--festival-200);
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.7);
+  border-color: rgba(255, 255, 255, 0.15);
 }
 
 .copy-btn.copied {
-  color: #4ade80;
+  color: #50fa7b;
+  border-color: rgba(80, 250, 123, 0.3);
 }
 
 /* Tables */
@@ -805,6 +864,103 @@ summary {
   gap: 0.75rem;
   justify-content: center;
   flex-wrap: wrap;
+}
+
+/* Search trigger button */
+.search-trigger {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: 1px solid var(--festival-200);
+  border-radius: 8px;
+  padding: 0.35rem 0.6rem;
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  color: var(--festival-400);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.search-trigger:hover {
+  border-color: var(--festival-400);
+  color: var(--festival-600);
+}
+
+[data-theme="dark"] .search-trigger {
+  border-color: var(--festival-700);
+}
+
+[data-theme="dark"] .search-trigger:hover {
+  border-color: var(--festival-500);
+  color: var(--festival-300);
+}
+
+.search-trigger__kbd {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 0.7rem;
+  background: var(--festival-100);
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+  border: 1px solid var(--festival-200);
+  color: var(--festival-500);
+}
+
+[data-theme="dark"] .search-trigger__kbd {
+  background: var(--festival-800);
+  border-color: var(--festival-700);
+  color: var(--festival-400);
+}
+
+/* Search overlay */
+.search-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 200;
+  justify-content: center;
+  padding-top: 10vh;
+}
+
+.search-overlay.open {
+  display: flex;
+}
+
+.search-modal {
+  background: var(--surface-raised);
+  border: 1px solid var(--festival-200);
+  border-radius: 12px;
+  width: 90%;
+  max-width: 640px;
+  max-height: 70vh;
+  overflow-y: auto;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+[data-theme="dark"] .search-modal {
+  background: var(--festival-900);
+  border-color: var(--festival-800);
+}
+
+/* Pagefind UI overrides */
+.search-modal .pagefind-ui {
+  --pagefind-ui-scale: 0.9;
+  --pagefind-ui-primary: var(--festival-900);
+  --pagefind-ui-text: var(--festival-700);
+  --pagefind-ui-background: transparent;
+  --pagefind-ui-border: var(--festival-200);
+  --pagefind-ui-tag: var(--festival-100);
+  --pagefind-ui-border-width: 1px;
+  --pagefind-ui-border-radius: 8px;
+  --pagefind-ui-font: var(--font-sans);
+}
+
+[data-theme="dark"] .search-modal .pagefind-ui {
+  --pagefind-ui-primary: var(--festival-100);
+  --pagefind-ui-text: var(--festival-300);
+  --pagefind-ui-border: var(--festival-700);
+  --pagefind-ui-tag: var(--festival-800);
 }
 
 /* Footer */

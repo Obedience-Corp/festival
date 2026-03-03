@@ -9,9 +9,9 @@ Festivals are the core planning unit in the Festival Methodology. Everything els
 
 ## What is a Festival?
 
-A festival is a goal-oriented project plan. It defines what needs to be accomplished and breaks the work into phases, sequences, and tasks. Think of it as a project spec that AI agents can execute autonomously.
+A festival is a hierarchical plan that decomposes complex work into phases, sequences, and tasks -- all the way down to individual file changes. Think Jira epics, not tickets. A festival can cover what would otherwise take a dozen or more chained agent plans.
 
-Every festival has a clear, concrete objective. The scope can range from a single bug fix to a major product launch. What matters is that the goal is specific, outcome-focused, and measurable. If you can describe what "done" looks like, you can create a festival for it.
+Start with whatever direction you have. A rough goal like "overhaul the auth system" is enough. Standard festivals auto-scaffold INGEST and PLAN phases with structured WORKFLOW.md files that guide agents through requirements extraction, gap analysis, and decomposition into the full task hierarchy. The planning phases produce the specificity -- you don't need it upfront.
 
 Festivals use a three-level hierarchy to organize work:
 
@@ -94,9 +94,7 @@ Four documents define a festival.
 
 ### FESTIVAL_GOAL.md
 
-The objective. The single most important document. States what the festival will achieve in outcome-focused terms. "Users can register and log in via email" is a goal. "Implement authentication" is not.
-
-Includes a clear statement of the desired outcome, success criteria (how you know the goal is met), and scope boundaries (what is explicitly out of scope).
+The objective. States the direction and desired outcome. Can start rough -- "overhaul the auth system" or "build user onboarding" is enough. INGEST and PLAN phases refine this into concrete requirements and success criteria. The goal sharpens as the festival progresses through its planning phases.
 
 ### FESTIVAL_OVERVIEW.md
 
@@ -139,7 +137,7 @@ Use `fest promote` to move festivals through lifecycle stages. Use `fest status`
 
 Festivals scale from simple to complex. The structure adapts to scope.
 
-**Simple** -- An implementation-type festival with a single IMPLEMENT phase. Good for bug fixes or small features where requirements are already clear.
+**Simple** -- An implementation-type festival with a single IMPLEMENT phase. Good for well-scoped features where requirements are already clear.
 
 ```
 festival_fix_login_bug/
@@ -182,4 +180,4 @@ festival_platform_migration/
 └── 007_VALIDATE/
 ```
 
-The number of phases is not fixed. Add specialized phases like `SECURITY_AUDIT`, `PERFORMANCE_OPTIMIZATION`, or `MIGRATION` as the work demands. Phases emerge as requirements become clear -- do not pre-plan the entire structure upfront.
+The number of phases is not fixed. Add specialized phases like `SECURITY_AUDIT`, `PERFORMANCE_OPTIMIZATION`, or `MIGRATION` as the work demands. Standard festivals use INGEST and PLAN phases to discover and decompose requirements into whatever phase structure the work needs.

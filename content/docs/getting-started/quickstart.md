@@ -39,9 +39,11 @@ This creates the campaign directory structure with `projects/`, `festivals/`, `d
 cgo              # Jump to campaign root
 cgo p            # Jump to projects/
 cgo f            # Jump to festivals/
+csw              # Interactive campaign picker -- switch between campaigns
+csw my-project   # Switch directly by name
 ```
 
-Single-letter shortcuts make navigation instant. `cgo p api` fuzzy-matches project names so you never type full paths.
+Single-letter shortcuts make navigation instant. `cgo p api` fuzzy-matches project names so you never type full paths. `csw` switches between campaigns -- use it when you're managing multiple campaigns.
 
 ## 4. Add a Project (Optional)
 
@@ -118,5 +120,5 @@ fest progress      # Detailed execution progress with phase/sequence breakdown
 
 - [Methodology Overview]({{< ref "/docs/methodology/overview" >}}) -- Understand the full phase-sequence-task system
 - [First Festival Tutorial]({{< ref "/docs/tutorials/first-festival" >}}) -- Detailed end-to-end tutorial with real examples
-- [Agent Workflows]({{< ref "/docs/guides/agent-workflows" >}}) -- Using Festival with AI coding tools like Claude Code
+- [Agent Workflows]({{< ref "/docs/guides/agent-workflows" >}}) -- Using Festival with AI coding tools
 - [Best Practices]({{< ref "/docs/guides/best-practices" >}}) -- Patterns for effective planning and execution

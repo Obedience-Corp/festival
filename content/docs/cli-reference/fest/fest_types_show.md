@@ -10,9 +10,11 @@ Shows the type's level, description, number of markers, template files,
 and example usage.
 
 Examples:
+```bash
   fest types show feature                   # Show feature type details
   fest types show implementation --level phase  # Show phase-level implementation
   fest types show simple --level task --json    # JSON output
+```
 
 ```
 fest types show <type-name> [flags]

@@ -11,6 +11,7 @@ This command outputs shell-specific code that creates helper functions:
 - fls: Wraps 'fest list' for quick festival listing
 
 SETUP (one-time):
+```bash
   # For zsh, add to ~/.zshrc:
   eval "$(fest shell-init zsh)"
 
@@ -19,6 +20,7 @@ SETUP (one-time):
 
   # For fish, add to ~/.config/fish/config.fish:
   fest shell-init fish | source
+```
 
 After setup, reload your shell or run: source ~/.zshrc
 

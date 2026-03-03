@@ -32,6 +32,7 @@ BATCH WORKFLOW (for agents):
   3. Apply:      fest wizard fill --batch-input markers.json
 
 EXAMPLES:
+```bash
   # Interactive with buffer mode (default)
   fest wizard fill .
 
@@ -51,6 +52,7 @@ EXAMPLES:
 
   # Output results as JSON
   fest wizard fill PHASE_GOAL.md --json
+```
 
 The fill wizard transforms tedious manual editing into a guided experience,
 ensuring all template markers are properly completed.

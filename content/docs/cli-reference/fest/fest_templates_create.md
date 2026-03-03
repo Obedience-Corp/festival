@@ -9,6 +9,7 @@ Create a new agent template in the current festival.
 The template will be stored in .templates/<name>.md
 
 Example template content:
+```bash
   # {{component_name}} Test
 
   ## Setup
@@ -17,6 +18,7 @@ Example template content:
   ## Test Cases
   - {{test_case_1}}
   - {{test_case_2}}
+```
 
 ```
 fest templates create <name> [flags]

@@ -11,15 +11,25 @@ Patterns and recommendations for getting the most out of Festival Methodology. F
 
 ## Planning
 
-**Set concrete, outcome-focused goals.** A festival goal like "implement JWT auth with 7-day expiry and refresh token rotation" gives agents and collaborators something to verify against. "Add authentication" does not. If you can't tell when the goal is done, rewrite it.
+**Start with whatever you have.** A festival goal can be rough -- "overhaul the auth system" is enough to start. INGEST and PLAN phase workflows exist precisely to take rough ideas and refine them into concrete requirements, architecture decisions, and detailed task breakdowns. You don't need a polished spec to create a festival; you need a direction. The structured planning phases produce the specificity.
 
-**Don't pre-plan phases.** Start with a single phase covering the immediate work. Add phases as requirements emerge during execution. Trying to design the entire festival upfront leads to speculative structure that gets rewritten anyway.
+**Use standard festivals when requirements are unclear.** Standard festivals include INGEST and PLAN phases with WORKFLOW.md files that guide agents through structured thinking -- extracting requirements, gap analysis, decomposition. Let the planning phases do their job rather than trying to front-load all the specificity into the festival goal.
 
 **Choose the right festival type:**
 
-- **Implementation** - Specs already exist. You know what to build.
-- **Standard** - You need a planning phase before implementation.
-- **Research** - Investigation with uncertain outcomes. Deliverables are findings, not code.
+- **Standard** (default) - Full planning and implementation. Auto-scaffolds INGEST and PLAN phases that refine rough ideas into detailed execution plans.
+- **Implementation** - Execution-only. Specs already exist externally. Skips ingestion, goes straight to building.
+- **Research** - Investigation and exploration. Auto-scaffolds INGEST, RESEARCH, and SYNTHESIZE phases. Output is findings and analysis, not code.
+- **Ritual** - Repeatable processes like releases, audits, or maintenance cycles. No default phases -- structure comes from the ritual template. Lives in `ritual/` instead of moving through the standard lifecycle.
+
+**Know the phase types.** Each phase has a type that determines its structure and workflow:
+
+- **ingest** - Transform unstructured input into structured specs. Uses WORKFLOW.md with `input_specs/` and `output_specs/`.
+- **planning** - Architecture decisions, requirements decomposition, task breakdown. Uses WORKFLOW.md with `inputs/`, `decisions/`, `plan/`.
+- **implementation** - Building features. Numbered sequences with task files and auto-appended quality gates.
+- **research** - Investigation and exploration. Uses WORKFLOW.md with `sources/` and `findings/`.
+- **review** - Validation and sign-off on completed work. Freeform with review criteria and checklists.
+- **non_coding_action** - Documentation, releases, configuration, process changes. Freeform with action items.
 
 **Start with the simplest structure that works.** A single phase with one or two sequences is fine for small goals. Don't create three phases because the template has three sections. Structure serves the work, not the other way around.
 
@@ -75,7 +85,7 @@ Test the JWT implementation
 
 ## Organization
 
-**One festival per goal.** If you find yourself writing "and also" in the festival description, split it into two festivals. A festival that tries to "add auth and redesign the dashboard" will deliver neither well.
+**Festivals handle big, complex goals.** A festival decomposes a high-level goal into phases, sequences, and tasks -- all the way down to individual file changes. Think Jira epics, not tickets. You could gather a dozen related intents into one festival and plan them together, or build an entire product feature end-to-end. The only real requirement is that the work is complex enough to warrant the structure. If a single agent plan covers it, you don't need a festival. If it would take a dozen or more chained plans, a festival is the right tool.
 
 **Use `dungeon/` for lifecycle management:**
 
@@ -101,7 +111,7 @@ These are the failure modes that come up repeatedly. Learn to recognize them.
 
 **Skipping quality gates.** The testing-review-iterate cycle exists because implementation sequences reliably produce bugs and gaps. Skipping review doesn't save time - it moves the cost to integration, where fixes are harder.
 
-**Over-planning upfront.** Designing all phases before starting the first one is speculative architecture. You don't have enough information yet. Plan the current phase in detail, sketch the next one loosely, and leave the rest undefined.
+**Planning without structure.** Freeform planning misses requirements and produces inconsistent results. Use INGEST and PLAN phase workflows to guide structured thinking -- they exist precisely to front-load the planning work so execution phases run clean. The hierarchy (phases → sequences → tasks) handles complexity at any scale.
 
 **Giant sequences.** Keep sequences at 3-6 tasks. If you have more than 8, the sequence covers too much scope and should be split. Large sequences are harder to track, harder to review, and harder to recover from when something goes wrong.
 

@@ -10,10 +10,13 @@ When run without flags, shows an overview of festival progress.
 Use flags to update task progress, report blockers, or mark tasks complete.
 
 PROGRESS OVERVIEW:
+```bash
   fest progress              Show festival progress summary
   fest progress --json       Output progress in JSON format
+```
 
 TASK UPDATES:
+```bash
   fest progress --task <id> --update 50%     Update task progress
   fest progress --task <id> --complete       Mark task as complete
   fest progress --task <id> --in-progress    Mark task as in progress
@@ -21,6 +24,7 @@ TASK UPDATES:
   fest progress --task <id> --clear          Clear blocker
   fest progress --path <task_path> --complete
   fest progress --phase <phase> --sequence <seq> --task <id> --complete
+```
 
 Task IDs can be festival-relative paths (e.g. 002_FOUNDATION/01_project_scaffold/01_design.md)
 or absolute paths. Use --path or --phase/--sequence to disambiguate duplicates.
