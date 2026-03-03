@@ -22,6 +22,10 @@
     {{ with .Site.Params.repo }}
       <a href="{{ . }}" class="site-header__link" target="_blank" rel="noopener">GitHub</a>
     {{ end }}
+    <button class="search-trigger" aria-label="Search">
+      <span class="search-trigger__text">Search</span>
+      <kbd class="search-trigger__kbd">⌘K</kbd>
+    </button>
     <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">☾</button>
   </nav>
 </header>

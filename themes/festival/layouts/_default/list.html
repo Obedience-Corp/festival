@@ -1,4 +1,9 @@
 {{ define "main" }}
+  {{ if .Params.redirectTo }}
+  <meta http-equiv="refresh" content="0; url={{ .Params.redirectTo }}">
+  <script>window.location.href = "{{ .Params.redirectTo }}";</script>
+  <p>Redirecting to <a href="{{ .Params.redirectTo }}">{{ .Title }}</a>...</p>
+  {{ else }}
   <article>
     <h1>{{ .Title }}</h1>
     {{ .Content }}
@@ -8,4 +13,5 @@
       </div>
     {{ end }}
   </article>
+  {{ end }}
 {{ end }}

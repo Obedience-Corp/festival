@@ -38,6 +38,7 @@ Auto-Routing:
   - GATES.md if workflow is complete/absent and phase work is done
 
 Examples:
+```
   fest workflow status              # Show workflow or gate progress
   fest workflow status --phase 001_INGEST  # Show specific phase
   fest workflow advance             # Complete current step and move to next
@@ -46,6 +47,7 @@ Examples:
   fest workflow reject              # Reject checkpoint with feedback
   fest workflow reset               # Reset workflow or gate to step 1
   fest workflow show                # Display the current step details
+```
 
 ### Options
 

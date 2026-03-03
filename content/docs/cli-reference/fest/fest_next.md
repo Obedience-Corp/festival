@@ -27,6 +27,7 @@ Output Modes:
   --verbose      Detailed human-readable output
 
 Examples:
+```
   fest next                    # Find next task with full context
   fest next --no-context       # Minimal output without task content
   fest next --sequence         # Only consider current sequence
@@ -35,6 +36,7 @@ Examples:
   fest next --short            # Just the task path
   fest next --cd               # Output directory for shell cd
   fest next --path             # Just the relative file path
+```
 
 ```
 fest next [flags]

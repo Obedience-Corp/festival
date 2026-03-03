@@ -10,10 +10,12 @@ Template types define the structure and purpose of festivals, phases,
 sequences, and tasks. Custom types can be added in .festival/templates/.
 
 Examples:
+```
   fest types list                        # List all available types
   fest types list --level task           # List task-level types only
   fest types show feature                # Show details about a type
   fest types show implementation --level phase
+```
 
 ### Options
 

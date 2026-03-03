@@ -811,6 +811,103 @@ summary {
   flex-wrap: wrap;
 }
 
+/* Search trigger button */
+.search-trigger {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: 1px solid var(--festival-200);
+  border-radius: 8px;
+  padding: 0.35rem 0.6rem;
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  color: var(--festival-400);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.search-trigger:hover {
+  border-color: var(--festival-400);
+  color: var(--festival-600);
+}
+
+[data-theme="dark"] .search-trigger {
+  border-color: var(--festival-700);
+}
+
+[data-theme="dark"] .search-trigger:hover {
+  border-color: var(--festival-500);
+  color: var(--festival-300);
+}
+
+.search-trigger__kbd {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 0.7rem;
+  background: var(--festival-100);
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+  border: 1px solid var(--festival-200);
+  color: var(--festival-500);
+}
+
+[data-theme="dark"] .search-trigger__kbd {
+  background: var(--festival-800);
+  border-color: var(--festival-700);
+  color: var(--festival-400);
+}
+
+/* Search overlay */
+.search-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 200;
+  justify-content: center;
+  padding-top: 10vh;
+}
+
+.search-overlay.open {
+  display: flex;
+}
+
+.search-modal {
+  background: var(--surface-raised);
+  border: 1px solid var(--festival-200);
+  border-radius: 12px;
+  width: 90%;
+  max-width: 640px;
+  max-height: 70vh;
+  overflow-y: auto;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+[data-theme="dark"] .search-modal {
+  background: var(--festival-900);
+  border-color: var(--festival-800);
+}
+
+/* Pagefind UI overrides */
+.search-modal .pagefind-ui {
+  --pagefind-ui-scale: 0.9;
+  --pagefind-ui-primary: var(--festival-900);
+  --pagefind-ui-text: var(--festival-700);
+  --pagefind-ui-background: transparent;
+  --pagefind-ui-border: var(--festival-200);
+  --pagefind-ui-tag: var(--festival-100);
+  --pagefind-ui-border-width: 1px;
+  --pagefind-ui-border-radius: 8px;
+  --pagefind-ui-font: var(--font-sans);
+}
+
+[data-theme="dark"] .search-modal .pagefind-ui {
+  --pagefind-ui-primary: var(--festival-100);
+  --pagefind-ui-text: var(--festival-300);
+  --pagefind-ui-border: var(--festival-700);
+  --pagefind-ui-tag: var(--festival-800);
+}
+
 /* Footer */
 .site-footer {
   border-top: 1px solid var(--festival-200);

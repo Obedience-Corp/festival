@@ -10,6 +10,7 @@ Takes structured JSON input (inline or file) and produces a parseable WORKFLOW.m
 that matches the format expected by the workflow parser.
 
 Examples:
+```
   # From a steps file
   fest create workflow --steps-file steps.json --position after
 
@@ -18,6 +19,7 @@ Examples:
 
   # With explicit phase path
   fest create workflow --steps-file steps.json --path ./004_POLISH
+```
 
 ```
 fest create workflow [flags]

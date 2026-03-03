@@ -10,6 +10,7 @@ This command walks the festival hierarchy and produces structured output
 suitable for external tool integration (e.g., Guild v3, visualization tools).
 
 Examples:
+```
   fest parse                         # Parse current festival as JSON
   fest parse --format yaml           # Output as YAML
   fest parse --type task             # Output flat list of tasks
@@ -18,6 +19,7 @@ Examples:
   fest parse --compact               # Summary only (no children)
   fest parse --full                  # Include document content
   fest parse -o output.json          # Write to file
+```
 
 ```
 fest parse [path] [flags]

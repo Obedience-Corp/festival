@@ -7,6 +7,7 @@
   <meta name="description" content="{{ with .Description }}{{ . }}{{ else }}{{ .Site.Params.description }}{{ end }}">
   {{ $css := resources.Get "css/main.css" | minify | fingerprint }}
   <link rel="stylesheet" href="{{ $css.RelPermalink }}">
+  <link href="/pagefind/pagefind-ui.css" rel="stylesheet">
 </head>
 <body>
   {{ partial "header.html" . }}
@@ -35,6 +36,7 @@
     </footer>
   {{ end }}
 
+  <script src="/pagefind/pagefind-ui.js"></script>
   <script>
   // Theme toggle
   (function() {
@@ -107,6 +109,50 @@
       });
     });
   });
+
+  // Search modal
+  document.addEventListener('DOMContentLoaded', function() {
+    var overlay = document.getElementById('search-overlay');
+    if (!overlay) return;
+
+    new PagefindUI({
+      element: '#search-container',
+      showSubResults: true,
+      showImages: false
+    });
+
+    function openSearch() {
+      overlay.classList.add('open');
+      var input = overlay.querySelector('.pagefind-ui__search-input');
+      if (input) setTimeout(function() { input.focus(); }, 50);
+    }
+
+    function closeSearch() {
+      overlay.classList.remove('open');
+    }
+
+    document.querySelectorAll('.search-trigger').forEach(function(btn) {
+      btn.addEventListener('click', openSearch);
+    });
+
+    overlay.addEventListener('click', function(e) {
+      if (e.target === overlay) closeSearch();
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        overlay.classList.contains('open') ? closeSearch() : openSearch();
+      }
+      if (e.key === 'Escape') closeSearch();
+    });
+  });
   </script>
+
+  <div id="search-overlay" class="search-overlay">
+    <div class="search-modal">
+      <div id="search-container"></div>
+    </div>
+  </div>
 </body>
 </html>

@@ -12,6 +12,7 @@ Available migrations:
   times         Populate time tracking data from file modification times
 
 Examples:
+```
   fest migrate frontmatter              # Add frontmatter to all docs
   fest migrate frontmatter --dry-run    # Preview changes
   fest migrate frontmatter --fix        # Auto-fix existing frontmatter
@@ -19,6 +20,7 @@ Examples:
   fest migrate metadata --dry-run       # Preview ID migrations
   fest migrate times                    # Populate time data from file stats
   fest migrate times --dry-run          # Preview time migrations
+```
 
 ### Options
 

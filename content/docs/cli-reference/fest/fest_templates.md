@@ -10,9 +10,11 @@ Agent templates use simple {{variable}} syntax for substitution.
 Templates are stored in .templates/ within the festival directory.
 
 Examples:
+```
   fest templates create component_test
   fest templates apply component_test --vars '{"name": "UserService"}'
   fest templates list
+```
 
 ### Options
 

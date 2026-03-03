@@ -21,12 +21,14 @@ Task Resolution:
     - Bare filename: 01_design.md (searches for unique match)
 
 Examples:
+```
   fest task show                          # Show current task details
   fest task show 01_design.md             # Show specific task
   fest task edit                          # Open current task in editor
   fest task completed                     # Mark current task complete (Y/n)
   fest task blocked --reason "need API"   # Mark task blocked (Y/n)
   fest task reset                         # Reset task to pending (Y/n)
+```
 
 ### Options
 

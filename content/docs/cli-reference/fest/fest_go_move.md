@@ -13,6 +13,7 @@ current directory:
   - In linked project: moves TO festival
 
 Examples:
+```
   # In project directory, move file to festival
   fest move ./analysis.md
 
@@ -28,6 +29,7 @@ Examples:
 Requirements:
   - Festival must have project_path set in fest.yaml
   - Must be in either festival or linked project directory
+```
 
 ```
 fest go move <source> [destination] [flags]

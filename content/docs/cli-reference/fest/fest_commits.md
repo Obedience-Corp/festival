@@ -10,11 +10,13 @@ Search commits by task ID, sequence, or phase. Uses git log with grep
 to find commits that contain festival references in their messages.
 
 Examples:
+```
   fest commits                           # All commits for current festival
   fest commits --task FEST-a3b2c1        # Commits for specific task
   fest commits --sequence 01_foundation  # Commits for sequence
   fest commits --phase 002_IMPLEMENT     # Commits for phase
   fest commits --limit 20                # Limit results
+```
 
 ```
 fest commits [flags]

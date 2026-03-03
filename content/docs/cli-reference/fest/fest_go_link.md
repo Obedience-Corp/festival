@@ -19,12 +19,14 @@ After linking:
   - 'fgo' in the project jumps to the festival
 
 Examples:
+```
   # Inside a festival, link to project:
   fgo link /path/to/project
   fgo link .                    # Link to current directory (if not in festival)
 
   # Inside a project, show festival picker:
   fgo link
+```
 
 ```
 fest go link [path] [flags]

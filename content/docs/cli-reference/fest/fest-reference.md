@@ -441,6 +441,7 @@ Detection priority:
   4. Explicit --festival flag (name or ID)
 
 Examples:
+```
   fest commit -m "Implement feature"
   # In linked project → [OBEY-FE-CS0001] Implement feature
   # In festival task  → [OBEY-FE-FEST-a3b2c1] Implement feature
@@ -456,6 +457,7 @@ Examples:
 
   fest commit --stage=false -m "Only commit staged"
   # Skip auto-staging, commit only what's already staged
+```
 
 ```
 fest commit [flags]
@@ -502,11 +504,13 @@ Search commits by task ID, sequence, or phase. Uses git log with grep
 to find commits that contain festival references in their messages.
 
 Examples:
+```
   fest commits                           # All commits for current festival
   fest commits --task FEST-a3b2c1        # Commits for specific task
   fest commits --sequence 01_foundation  # Commits for sequence
   fest commits --phase 002_IMPLEMENT     # Commits for phase
   fest commits --limit 20                # Limit results
+```
 
 ```
 fest commits [flags]
@@ -1069,11 +1073,13 @@ Depth levels:
   full      - + All decisions, dependency outputs
 
 Examples:
+```
   fest context                    # Context for current location
   fest context --depth full       # Full context with all details
   fest context --task my_task     # Context for a specific task
   fest context --json             # Output as JSON
   fest context --verbose          # Explanatory output for agents
+```
 
 ```
 fest context [flags]
@@ -1396,6 +1402,7 @@ Takes structured JSON input (inline or file) and produces a parseable WORKFLOW.m
 that matches the format expected by the workflow parser.
 
 Examples:
+```
   # From a steps file
   fest create workflow --steps-file steps.json --position after
 
@@ -1404,6 +1411,7 @@ Examples:
 
   # With explicit phase path
   fest create workflow --steps-file steps.json --path ./004_POLISH
+```
 
 ```
 fest create workflow [flags]
@@ -1450,11 +1458,13 @@ Without arguments, shows the dependency graph for the current sequence.
 With a task name, shows dependencies for that specific task.
 
 Examples:
+```
   fest deps                    # Show all deps in current sequence
   fest deps 02_implement       # Show deps for specific task
   fest deps --all              # Show all deps in festival
   fest deps --json             # Output as JSON
   fest deps --critical-path    # Show critical path through the DAG
+```
 
 ```
 fest deps [task] [flags]
@@ -1676,10 +1686,12 @@ Feedback allows agents to record observations based on defined criteria
 for later aggregation and analysis.
 
 Examples:
+```
   fest feedback init --criteria "Code quality" --criteria "Performance"
   fest feedback add --criteria "Code quality" --observation "Found duplication"
   fest feedback view
   fest feedback export --format markdown
+```
 
 ### Options
 
@@ -1718,9 +1730,11 @@ Add a feedback observation for a defined criteria.
 Use either flags or JSON input to add an observation.
 
 Examples:
+```
   fest feedback add --criteria "Code quality" --observation "Found duplicate logic"
   fest feedback add --json '{"criteria": "Performance", "observation": "N+1 query"}'
   fest feedback add --criteria "Code quality" --observation "..." --severity high --suggestion "Refactor"
+```
 
 ```
 fest feedback add [flags]
@@ -1765,9 +1779,11 @@ Export collected feedback to a file format.
 Supports markdown, JSON, and YAML output formats.
 
 Examples:
+```
   fest feedback export --format markdown > report.md
   fest feedback export --format json > report.json
   fest feedback export --format yaml
+```
 
 ```
 fest feedback export [flags]
@@ -1808,8 +1824,10 @@ Creates a feedback/ directory in the current festival with
 configuration for the specified criteria.
 
 Examples:
+```
   fest feedback init --criteria "Code quality observations"
   fest feedback init --criteria "Performance concerns" --criteria "Methodology suggestions"
+```
 
 ```
 fest feedback init [flags]
@@ -1849,11 +1867,13 @@ View collected feedback observations.
 Filter by criteria or severity, or view a summary of all feedback.
 
 Examples:
+```
   fest feedback view
   fest feedback view --criteria "Code quality"
   fest feedback view --severity high
   fest feedback view --summary
   fest feedback view --json
+```
 
 ```
 fest feedback view [flags]
@@ -2231,12 +2251,14 @@ After linking:
   - 'fgo' in the project jumps to the festival
 
 Examples:
+```
   # Inside a festival, link to project:
   fgo link /path/to/project
   fgo link .                    # Link to current directory (if not in festival)
 
   # Inside a project, show festival picker:
   fgo link
+```
 
 ```
 fest go link [path] [flags]
@@ -2382,6 +2404,7 @@ current directory:
   - In linked project: moves TO festival
 
 Examples:
+```
   # In project directory, move file to festival
   fest move ./analysis.md
 
@@ -2397,6 +2420,7 @@ Examples:
 Requirements:
   - Festival must have project_path set in fest.yaml
   - Must be in either festival or linked project directory
+```
 
 ```
 fest go move <source> [destination] [flags]
@@ -2519,8 +2543,10 @@ Works from inside a festival directory or from a project linked to one.
 The ID is read from fest.yaml metadata, falling back to the directory name.
 
 Examples:
+```
   fest id          # Print the festival ID (e.g., SR0001)
   fest id --json   # Output as JSON with id, name, and path
+```
 
 ```
 fest id [flags]
@@ -3454,6 +3480,7 @@ This allows agents to fill marker values without manually typing hint strings,
 eliminating typos and reducing token usage.
 
 Examples:
+```
   # Generate from built-in template
   fest markers scaffold --template task-simple
 
@@ -3469,6 +3496,7 @@ Available template aliases:
   phase, phase-impl, phase-planning  Phase templates
   festival, festival-overview        Festival templates
   gate-testing, gate-review          Quality gate templates
+```
 
 ```
 fest markers scaffold [flags]
@@ -3519,6 +3547,7 @@ This command checks for:
 In strict mode (--strict), unknown markers cause validation to fail.
 
 Examples:
+```
   # Validate against built-in template
   fest markers validate --file markers.json --template task-simple
 
@@ -3527,6 +3556,7 @@ Examples:
 
   # Strict mode - fail on unknown markers
   fest markers validate --file markers.json --template task --strict
+```
 
 ```
 fest markers validate [flags]
@@ -3574,6 +3604,7 @@ Available migrations:
   times         Populate time tracking data from file modification times
 
 Examples:
+```
   fest migrate frontmatter              # Add frontmatter to all docs
   fest migrate frontmatter --dry-run    # Preview changes
   fest migrate frontmatter --fix        # Auto-fix existing frontmatter
@@ -3581,6 +3612,7 @@ Examples:
   fest migrate metadata --dry-run       # Preview ID migrations
   fest migrate times                    # Populate time data from file stats
   fest migrate times --dry-run          # Preview time migrations
+```
 
 ### Options
 
@@ -3619,10 +3651,12 @@ This command walks through all festival documents and adds frontmatter
 to any that are missing it. Existing frontmatter is preserved.
 
 Examples:
+```
   fest migrate frontmatter              # Add frontmatter to all docs
   fest migrate frontmatter --dry-run    # Preview changes without writing
   fest migrate frontmatter --fix        # Update/fix existing frontmatter
   fest migrate frontmatter --verbose    # Show detailed progress
+```
 
 ```
 fest migrate frontmatter [flags]
@@ -3668,9 +3702,11 @@ This command:
 The migration is idempotent - running it multiple times is safe.
 
 Examples:
+```
   fest migrate metadata                    # Migrate all festivals
   fest migrate metadata ./active/my-fest   # Migrate specific festival
   fest migrate metadata --dry-run          # Preview changes only
+```
 
 ```
 fest migrate metadata [path] [flags]
@@ -3769,6 +3805,7 @@ current directory:
   - In linked project: moves TO festival
 
 Examples:
+```
   # In project directory, move file to festival
   fest move ./analysis.md
 
@@ -3784,6 +3821,7 @@ Examples:
 Requirements:
   - Festival must have project_path set in fest.yaml
   - Must be in either festival or linked project directory
+```
 
 ```
 fest move <source> [destination] [flags]
@@ -3844,6 +3882,7 @@ Output Modes:
   --verbose      Detailed human-readable output
 
 Examples:
+```
   fest next                    # Find next task with full context
   fest next --no-context       # Minimal output without task content
   fest next --sequence         # Only consider current sequence
@@ -3852,6 +3891,7 @@ Examples:
   fest next --short            # Just the task path
   fest next --cd               # Output directory for shell cd
   fest next --path             # Just the relative file path
+```
 
 ```
 fest next [flags]
@@ -3899,6 +3939,7 @@ This command walks the festival hierarchy and produces structured output
 suitable for external tool integration (e.g., Guild v3, visualization tools).
 
 Examples:
+```
   fest parse                         # Parse current festival as JSON
   fest parse --format yaml           # Output as YAML
   fest parse --type task             # Output flat list of tasks
@@ -3907,6 +3948,7 @@ Examples:
   fest parse --compact               # Summary only (no children)
   fest parse --full                  # Include document content
   fest parse -o output.json          # Write to file
+```
 
 ```
 fest parse [path] [flags]
@@ -4963,9 +5005,11 @@ generates the corresponding festival directory structure with phases, sequences,
 and tasks pre-populated from the plan.
 
 Examples:
+```
   fest scaffold from-plan --plan path/to/STRUCTURE.md --name my-festival
   fest scaffold from-plan --plan STRUCTURE.md --dry-run
   fest scaffold from-plan --plan STRUCTURE.md --name my-fest --json
+```
 
 ### Options
 
@@ -5002,6 +5046,7 @@ The plan document should follow the STRUCTURE.md format with a hierarchy section
 containing phases, sequences, and tasks.
 
 Examples:
+```
   # Generate from a plan document
   fest scaffold from-plan --plan path/to/STRUCTURE.md --name my-festival
 
@@ -5010,6 +5055,7 @@ Examples:
 
   # Agent mode with JSON output
   fest scaffold from-plan --plan STRUCTURE.md --name my-fest --agent
+```
 
 ```
 fest scaffold from-plan [flags]
@@ -5895,12 +5941,14 @@ Task Resolution:
     - Bare filename: 01_design.md (searches for unique match)
 
 Examples:
+```
   fest task show                          # Show current task details
   fest task show 01_design.md             # Show specific task
   fest task edit                          # Open current task in editor
   fest task completed                     # Mark current task complete (Y/n)
   fest task blocked --reason "need API"   # Mark task blocked (Y/n)
   fest task reset                         # Reset task to pending (Y/n)
+```
 
 ### Options
 
@@ -6097,9 +6145,11 @@ Agent templates use simple {{variable}} syntax for substitution.
 Templates are stored in .templates/ within the festival directory.
 
 Examples:
+```
   fest templates create component_test
   fest templates apply component_test --vars '{"name": "UserService"}'
   fest templates list
+```
 
 ### Options
 
@@ -6139,8 +6189,10 @@ Variables can be provided as:
   - File reference: --vars @variables.json
 
 Examples:
+```
   fest templates apply component_test --vars '{"name": "UserService"}'
   fest templates apply api_endpoint -o ./api.md --vars @vars.json
+```
 
 ```
 fest templates apply <name> [flags]
@@ -6297,10 +6349,12 @@ Template types define the structure and purpose of festivals, phases,
 sequences, and tasks. Custom types can be added in .festival/templates/.
 
 Examples:
+```
   fest types list                        # List all available types
   fest types list --level task           # List task-level types only
   fest types show feature                # Show details about a type
   fest types show implementation --level phase
+```
 
 ### Options
 
@@ -6343,12 +6397,14 @@ Festival types define the workflow structure for different kinds of projects:
   - ritual: Simple repeating patterns
 
 Examples:
+```
   fest types festival                    # List all festival types
   fest types festival list               # Same as above
   fest types festival standard           # Show details for standard type
   fest types festival show implementation # Show details for implementation type
   fest types festival --phases standard  # Show only phases for standard type
   fest types festival --json             # Machine-readable JSON output
+```
 
 ```
 fest types festival [type-name] [flags]
@@ -6391,8 +6447,10 @@ List all available festival types with their descriptions.
 Shows all festival types defined in the configuration, marking the default type.
 
 Examples:
+```
   fest types festival list        # List all festival types
   fest types festival list --json # JSON output
+```
 
 ```
 fest types festival list [flags]
@@ -6433,10 +6491,12 @@ Shows the type's description, phase structure, auto-scaffolded phases,
 and manually-created phases.
 
 Examples:
+```
   fest types festival show standard           # Show standard type details
   fest types festival show implementation     # Show implementation type
   fest types festival show standard --phases  # Show only phases
   fest types festival show quick --json       # JSON output
+```
 
 ```
 fest types festival show <type-name> [flags]
@@ -6479,11 +6539,13 @@ Types are discovered from:
   - Custom templates (.festival/templates/ in a festival)
 
 Examples:
+```
   fest types list                  # List all types grouped by level
   fest types list --level task     # List task-level types only
   fest types list --custom         # Show only custom types
   fest types list --all            # Include marker counts
   fest types list --json           # Machine-readable output
+```
 
 ```
 fest types list [flags]
@@ -6527,9 +6589,11 @@ Shows the type's level, description, number of markers, template files,
 and example usage.
 
 Examples:
+```
   fest types show feature                   # Show feature type details
   fest types show implementation --level phase  # Show phase-level implementation
   fest types show simple --level task --json    # JSON output
+```
 
 ```
 fest types show <type-name> [flags]
@@ -7521,9 +7585,11 @@ Show version information
 Show fest version, build information, and runtime details.
 
 Examples:
+```
   fest version           Show full version info
   fest version --short   Show only version number
   fest version --json    Output as JSON
+```
 
 ```
 fest version [flags]
@@ -7729,6 +7795,7 @@ Auto-Routing:
   - GATES.md if workflow is complete/absent and phase work is done
 
 Examples:
+```
   fest workflow status              # Show workflow or gate progress
   fest workflow status --phase 001_INGEST  # Show specific phase
   fest workflow advance             # Complete current step and move to next
@@ -7737,6 +7804,7 @@ Examples:
   fest workflow reject              # Reject checkpoint with feedback
   fest workflow reset               # Reset workflow or gate to step 1
   fest workflow show                # Display the current step details
+```
 
 ### Options
 
