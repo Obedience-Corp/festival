@@ -8,7 +8,7 @@ params:
 
 markup:
   highlight:
-    style: monokai
+    style: dracula
     lineNos: false
     noClasses: true
   goldmark:

@@ -67,14 +67,38 @@
     document.querySelector('.sidebar-overlay').classList.toggle('open');
   }
 
-  // Code copy buttons
+  // Code blocks — terminal window treatment
   document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('pre').forEach(function(pre) {
       var wrapper = document.createElement('div');
       wrapper.className = 'code-block';
       pre.parentNode.insertBefore(wrapper, pre);
-      wrapper.appendChild(pre);
 
+      // Build terminal header
+      var header = document.createElement('div');
+      header.className = 'code-block__header';
+
+      // Traffic light dots
+      var dots = document.createElement('div');
+      dots.className = 'code-block__dots';
+      ['red', 'yellow', 'green'].forEach(function(c) {
+        var dot = document.createElement('span');
+        dot.className = 'code-block__dot code-block__dot--' + c;
+        dots.appendChild(dot);
+      });
+      header.appendChild(dots);
+
+      // Language label
+      var codeEl = pre.querySelector('code');
+      var lang = codeEl ? codeEl.getAttribute('data-lang') : null;
+      if (lang) {
+        var langLabel = document.createElement('span');
+        langLabel.className = 'code-block__lang';
+        langLabel.textContent = lang;
+        header.appendChild(langLabel);
+      }
+
+      // Copy button
       var btn = document.createElement('button');
       btn.className = 'copy-btn';
       btn.textContent = 'Copy';
@@ -89,7 +113,10 @@
           }, 2000);
         });
       });
-      wrapper.appendChild(btn);
+      header.appendChild(btn);
+
+      wrapper.appendChild(header);
+      wrapper.appendChild(pre);
     });
   });
 
