@@ -70,6 +70,7 @@ camp [flags]
 * [camp clone](camp_clone.md)	 - Clone a campaign with full submodule setup
 * [camp commit](camp_commit.md)	 - Commit changes in the campaign root
 * [camp completion](camp_completion.md)	 - Generate the autocompletion script for the specified shell
+* [camp concepts](camp_concepts.md)	 - List configured concepts
 * [camp copy](camp_copy.md)	 - Copy a file or directory within the campaign
 * [camp date](camp_date.md)	 - Append date suffix to file or directory name
 * [camp doctor](camp_doctor.md)	 - Diagnose and fix campaign health issues
@@ -626,6 +627,35 @@ camp completion zsh [flags]
 
 ---
 
+## camp concepts
+
+List configured concepts
+
+```
+camp concepts [flags]
+```
+
+### Options
+
+```
+  -h, --help   help for concepts
+```
+
+### Options inherited from parent commands
+
+```
+      --config string   config file (default: ~/.obey/campaign/config.yaml)
+      --no-color        disable colored output
+      --verbose         enable verbose output
+```
+
+### SEE ALSO
+
+* [camp](camp.md)	 - Campaign management CLI for multi-project AI workspaces
+
+
+---
+
 ## camp copy
 
 Copy a file or directory within the campaign
@@ -747,6 +777,7 @@ CHECKS PERFORMED:
   head        HEAD states (detached with local work)
   working     Working directory cleanliness
   commits     Parent-submodule commit alignment
+  lock        Stale git index.lock files
 
 EXIT CODES:
   0  All checks passed (no warnings or errors)
@@ -777,7 +808,7 @@ camp doctor [flags]
 ### Options
 
 ```
-  -c, --check strings     Run specific check(s) only (orphan, url, integrity, head, working, commits)
+  -c, --check strings     Run specific check(s) only (orphan, url, integrity, head, working, commits, lock)
   -f, --fix               Attempt automatic fixes for detected issues
   -h, --help              help for doctor
       --json              Output results as JSON
@@ -2087,7 +2118,7 @@ ACTIONS
 
 GATHER (Multi-Select)
   Space         Toggle selection / enter gather mode
-  Ctrl+g        Gather selected intents
+  ga            Gather selected intents
   Escape        Exit multi-select mode
 
 FILTERS

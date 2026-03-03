@@ -47,6 +47,7 @@ camp [flags]
 * [camp clone](camp_clone.md)	 - Clone a campaign with full submodule setup
 * [camp commit](camp_commit.md)	 - Commit changes in the campaign root
 * [camp completion](camp_completion.md)	 - Generate the autocompletion script for the specified shell
+* [camp concepts](camp_concepts.md)	 - List configured concepts
 * [camp copy](camp_copy.md)	 - Copy a file or directory within the campaign
 * [camp date](camp_date.md)	 - Append date suffix to file or directory name
 * [camp doctor](camp_doctor.md)	 - Diagnose and fix campaign health issues

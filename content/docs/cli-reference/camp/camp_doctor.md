@@ -13,6 +13,7 @@ CHECKS PERFORMED:
   head        HEAD states (detached with local work)
   working     Working directory cleanliness
   commits     Parent-submodule commit alignment
+  lock        Stale git index.lock files
 
 EXIT CODES:
   0  All checks passed (no warnings or errors)
@@ -43,7 +44,7 @@ camp doctor [flags]
 ### Options
 
 ```
-  -c, --check strings     Run specific check(s) only (orphan, url, integrity, head, working, commits)
+  -c, --check strings     Run specific check(s) only (orphan, url, integrity, head, working, commits, lock)
   -f, --fix               Attempt automatic fixes for detected issues
   -h, --help              help for doctor
       --json              Output results as JSON
