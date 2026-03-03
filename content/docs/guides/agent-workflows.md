@@ -79,7 +79,7 @@ Claude Code is the primary development environment for Festival workflows. These
 
 ## Working with Other Agents
 
-Festival is tool-agnostic. Any agent that can run bash commands can use it - Cursor, Codex, Windsurf, Aider, or anything else with shell access.
+Festival is tool-agnostic. Any agent that can run bash commands can use it.
 
 There is no API integration required. Everything is bash commands and markdown files:
 
@@ -89,7 +89,7 @@ There is no API integration required. Everything is bash commands and markdown f
 
 The filesystem IS the state. Task documents are markdown files. Progress is tracked by file location and status markers. An agent reads task documents, writes code, and records completion - all through standard file operations and CLI commands.
 
-This means Festival works the same way regardless of which AI tool is driving the session. Switch from Claude Code to Cursor mid-festival and nothing breaks. The state is in the files, not in any tool's memory.
+This means Festival works the same way regardless of which AI tool is driving the session. Switch tools mid-festival and nothing breaks. The state is in the files, not in any tool's memory.
 
 ---
 

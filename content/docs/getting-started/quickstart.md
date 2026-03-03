@@ -118,5 +118,5 @@ fest progress      # Detailed execution progress with phase/sequence breakdown
 
 - [Methodology Overview]({{< ref "/docs/methodology/overview" >}}) -- Understand the full phase-sequence-task system
 - [First Festival Tutorial]({{< ref "/docs/tutorials/first-festival" >}}) -- Detailed end-to-end tutorial with real examples
-- [Agent Workflows]({{< ref "/docs/guides/agent-workflows" >}}) -- Using Festival with AI coding tools like Claude Code
+- [Agent Workflows]({{< ref "/docs/guides/agent-workflows" >}}) -- Using Festival with AI coding tools
 - [Best Practices]({{< ref "/docs/guides/best-practices" >}}) -- Patterns for effective planning and execution
