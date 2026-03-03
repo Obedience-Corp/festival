@@ -17,9 +17,19 @@ Patterns and recommendations for getting the most out of Festival Methodology. F
 
 **Choose the right festival type:**
 
-- **Implementation** - Specs already exist. You know what to build.
-- **Standard** - You need a planning phase before implementation.
-- **Research** - Investigation with uncertain outcomes. Deliverables are findings, not code.
+- **Standard** (default) - Full planning and implementation. Auto-scaffolds INGEST and PLAN phases that refine rough ideas into detailed execution plans.
+- **Implementation** - Execution-only. Specs already exist externally. Skips ingestion, goes straight to building.
+- **Research** - Investigation and exploration. Auto-scaffolds INGEST, RESEARCH, and SYNTHESIZE phases. Output is findings and analysis, not code.
+- **Ritual** - Repeatable processes like releases, audits, or maintenance cycles. No default phases -- structure comes from the ritual template. Lives in `ritual/` instead of moving through the standard lifecycle.
+
+**Know the phase types.** Each phase has a type that determines its structure and workflow:
+
+- **ingest** - Transform unstructured input into structured specs. Uses WORKFLOW.md with `input_specs/` and `output_specs/`.
+- **planning** - Architecture decisions, requirements decomposition, task breakdown. Uses WORKFLOW.md with `inputs/`, `decisions/`, `plan/`.
+- **implementation** - Building features. Numbered sequences with task files and auto-appended quality gates.
+- **research** - Investigation and exploration. Uses WORKFLOW.md with `sources/` and `findings/`.
+- **review** - Validation and sign-off on completed work. Freeform with review criteria and checklists.
+- **non_coding_action** - Documentation, releases, configuration, process changes. Freeform with action items.
 
 **Start with the simplest structure that works.** A single phase with one or two sequences is fine for small goals. Don't create three phases because the template has three sections. Structure serves the work, not the other way around.
 

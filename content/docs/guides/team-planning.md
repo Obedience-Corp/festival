@@ -89,8 +89,10 @@ The power feature is structured planning. Festivals with INGEST and PLAN phases 
 This structured approach produces detailed, executable plans faster than freeform planning. The agent follows a defined thinking process rather than improvising, which means fewer missed requirements and more consistent output.
 
 ```bash
-fest create festival --type standard         # Includes INGEST + PLAN phases
+fest create festival --type standard         # INGEST + PLAN phases (default)
 fest create festival --type implementation   # Skip planning -- requirements already exist
+fest create festival --type research         # INGEST + RESEARCH + SYNTHESIZE phases
+fest create festival --type ritual           # Repeatable processes, custom structure
 ```
 
 **Best for:** features, sprints, product launches, anything needing quality gates and traceability.
