@@ -13,23 +13,17 @@ How to keep the work pipeline full when AI agents execute faster than you can pl
 
 AI agents execute festivals fast. Work that would take a team days finishes in hours. A well-structured festival with clear tasks and acceptance criteria runs through `fest next` loops at a pace that surprises even experienced users.
 
-This creates a new bottleneck: **keeping enough planned work queued so there's always something ready to execute when capacity opens up.** The coordination challenge isn't within a single festival -- it's maintaining a pipeline of ideas, designs, and planned festivals so agent sessions never sit idle.
+This creates a new bottleneck: **keeping enough planned work queued so there's always something ready to execute when capacity opens up.** The coordination challenge isn't within a single festival -- it's maintaining a steady flow of work so agent sessions never sit idle.
+
+Three complementary workflows feed the pipeline. You pick the right one based on the nature of the work.
 
 ---
 
-## The Work Pipeline
+## Three Ways to Generate Work
 
-Work flows through a pipeline from raw idea to completed festival:
+### Quick Capture: Intents
 
-```
-Idea -> Intent -> Design -> Festival -> Done
-```
-
-Each stage refines the work. Not every item passes through every stage -- a simple bug fix can go from intent straight to festival. Complex work benefits from design time before festival creation.
-
-### Intents
-
-Intents are the entry point. Capture ideas, bugs, features, and research topics as they come -- don't lose them while executing other work.
+Intents are fast idea capture. Bugs, features, research topics -- grab them as they come so nothing gets lost while you're executing other work.
 
 ```bash
 camp intent add "Add WebSocket support to chat"        # Fast capture
@@ -54,29 +48,52 @@ Related intents can be gathered into a single unified work item:
 camp intent gather auth-refactor token-rotation session-mgmt
 ```
 
-This combines scattered ideas into a coherent scope before promotion.
-
-### Design Docs
-
-`workflow/design/` holds architectural thinking, specs, and decisions. Not everything needs a design doc. Simple features go straight from intent to festival. Complex work -- multi-system changes, API redesigns, platform migrations -- benefits from design time first.
-
-Design docs are freeform. Create a directory for the topic, add markdown files, diagrams, and notes. When the design is solid, it feeds directly into festival creation.
-
-### Festival Promotion
-
-When an intent is ready, promote it to a festival:
+This combines scattered ideas into a coherent scope before promotion. When an intent is ready, promote it directly to a festival:
 
 ```bash
 camp intent promote auth-refactor    # Creates festival in planning/
 ```
 
-The intent moves to `done` status with a reference to the created festival. The festival starts in `festivals/planning/` and progresses through the lifecycle:
+**Best for:** things you notice while doing other work, small scoped items, backlog management.
+
+### Structured Design: Design Docs
+
+`workflow/design/` holds architectural thinking that needs exploration before committing to a plan. Ask an agent to design something out -- architecture, API specs, system analysis -- and the output feeds festival creation or stands alone as a reference.
+
+Design docs are freeform. Create a directory for the topic, add markdown files, diagrams, and notes. When the design is solid, it becomes input for a festival's INGEST phase or provides reference material during execution.
+
+Not everything needs a design doc. Simple features go straight from intent to festival. Use design docs when the problem space needs exploration first.
+
+**Best for:** architectural decisions, API design, system analysis that needs thinking before committing to an execution plan.
+
+### Complex Execution: Festivals
+
+Festivals are for multi-step work that needs structure, quality gates, and reproducible workflow. They're the execution engine.
+
+The power feature is structured planning. Festivals with INGEST and PLAN phases include `WORKFLOW.md` files that guide agents through rigorous thinking:
+
+**INGEST phase workflow:**
+- Read all input documents and context
+- Extract requirements, constraints, and goals
+- Structure output specifications
+- Present findings for approval before proceeding
+
+**PLAN phase workflow:**
+- Review ingested inputs
+- Gap analysis -- what's missing, what needs clarification
+- Decompose work into phases, sequences, and tasks
+- Make architecture and design decisions
+- Scaffold the full festival structure with `fest` CLI
+- Validate the plan against requirements
+
+This structured approach produces detailed, executable plans faster than freeform planning. The agent follows a defined thinking process rather than improvising, which means fewer missed requirements and more consistent output.
 
 ```bash
-fest promote    # planning -> ready -> active -> completed
+fest create festival --type standard         # Includes INGEST + PLAN phases
+fest create festival --type implementation   # Skip planning -- requirements already exist
 ```
 
-Keep festivals in `planning/` and `ready/` so there's always queued work.
+**Best for:** features, sprints, product launches, anything needing quality gates and traceability.
 
 ---
 
@@ -109,17 +126,19 @@ One campaign might have three active festivals while another has one. The portfo
 
 ## Keeping the Pipeline Full
 
-These patterns prevent the bottleneck:
+Each workflow feeds the pipeline differently. Use all three to prevent the bottleneck:
 
-**Capture constantly.** Run `camp intent add` whenever an idea hits. Mid-festival, between sessions, during code review. Intents are cheap -- creating one takes seconds. Losing an idea because you were busy executing costs more.
+**Capture intents constantly.** Run `camp intent add` whenever an idea hits. Mid-festival, between sessions, during code review. Intents are cheap -- creating one takes seconds. Losing an idea because you were busy executing costs more.
 
-**Gather related intents.** Small ideas accumulate. `camp intent gather` combines them into coherent work items that are large enough to become festivals. Three intents about auth improvements become one "auth system overhaul" festival.
+**Use design docs when something needs thinking.** Not every problem is ready for a festival. If you need to explore architecture, compare approaches, or work through an API design, put it in `workflow/design/`. The output becomes high-quality input for festival creation.
 
-**Promote in batches.** When a festival completes and capacity opens, check what's ready: `camp intent list --status ready`. Promote the highest-priority item to a festival and move it through planning.
+**Use festival planning phases to produce execution plans fast.** The INGEST and PLAN phase workflows guide agents through structured thinking -- reading inputs, extracting requirements, gap analysis, decomposition. This produces detailed plans faster than freeform planning because the agent follows a defined process instead of improvising.
 
-**Use `ready/` as a buffer.** Fully planned festivals waiting in `ready/` mean zero delay when agent capacity opens up. One `fest promote` and the next session can start immediately.
+**Gather and promote intents in batches.** When capacity opens, check what's ready: `camp intent list --status ready`. Use `camp intent gather` to combine related intents. Promote the highest-priority item to a festival and move it through planning.
 
-**Check the queue regularly.** `fest list` shows festivals by lifecycle status. `camp intent list` shows the upstream pipeline. If `ready/` is empty and `active/` is finishing, you're about to hit the bottleneck.
+**Keep `ready/` stocked.** Fully planned festivals waiting in `ready/` mean zero delay when agent capacity opens up. One `fest promote` and the next session can start immediately.
+
+**Check the queue regularly.** `fest list` shows festivals by lifecycle status. `camp intent list` shows upstream ideas. If `ready/` is empty and `active/` is finishing, you're about to hit the bottleneck.
 
 ---
 
