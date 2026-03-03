@@ -11,9 +11,9 @@ How to keep the work pipeline full when AI agents execute faster than you can pl
 
 ## The Pipeline Problem
 
-AI agents execute festivals fast. Work that would take a team days finishes in hours. A well-structured festival with clear tasks and acceptance criteria runs through `fest next` loops at a pace that surprises even experienced users.
+AI agents execute festivals fast. Work that would take a team months finishes in hours. A well-structured festival with clear tasks and acceptance criteria runs through `fest next` loops at a pace that keeps surprising even experienced users -- and it compounds. A single template tweak, a model upgrade, or a better workflow pattern can collapse what took two weeks into thirty minutes. Your capacity to finish work is constantly and unpredictably improving.
 
-This creates a new bottleneck: **keeping enough planned work queued so there's always something ready to execute when capacity opens up.** The coordination challenge isn't within a single festival -- it's maintaining a steady flow of work so agent sessions never sit idle.
+This creates a new bottleneck: **keeping enough planned work queued so there's always something ready to execute when capacity opens up.** The coordination challenge isn't within a single festival -- it's maintaining a steady flow of work so agent sessions never sit idle. And because execution speed keeps accelerating, you need more planned work in the pipeline than you think.
 
 Three complementary workflows feed the pipeline. You pick the right one based on the nature of the work.
 
