@@ -9,7 +9,7 @@ Export collected feedback to a file format.
 Supports markdown, JSON, and YAML output formats.
 
 Examples:
-```
+```bash
   fest feedback export --format markdown > report.md
   fest feedback export --format json > report.json
   fest feedback export --format yaml

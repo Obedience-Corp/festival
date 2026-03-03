@@ -19,7 +19,7 @@ After linking:
   - 'fgo' in the project jumps to the festival
 
 Examples:
-```
+```bash
   # Inside a festival, link to project:
   fgo link /path/to/project
   fgo link .                    # Link to current directory (if not in festival)

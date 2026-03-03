@@ -8,14 +8,18 @@ Learn about Festival Methodology - a goal-oriented project management
 system designed for AI agent development workflows.
 
 START HERE if you're new to Festival Methodology:
+```bash
   fest understand methodology    Core principles and philosophy
   fest understand structure      3-level hierarchy explained
   fest understand tasks          CRITICAL: When to create task files
+```
 
 QUICK REFERENCE:
+```bash
   fest understand checklist      Validation checklist before starting
   fest understand rules          Naming conventions for automation
   fest understand workflow       Just-in-time reading pattern
+```
 
 The understand command helps you grasp WHEN and WHY to use specific
 approaches. For command syntax, use --help on any command.

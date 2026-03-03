@@ -10,7 +10,7 @@ This command walks through all festival documents and adds frontmatter
 to any that are missing it. Existing frontmatter is preserved.
 
 Examples:
-```
+```bash
   fest migrate frontmatter              # Add frontmatter to all docs
   fest migrate frontmatter --dry-run    # Preview changes without writing
   fest migrate frontmatter --fix        # Update/fix existing frontmatter

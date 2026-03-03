@@ -12,7 +12,7 @@ Available migrations:
   times         Populate time tracking data from file modification times
 
 Examples:
-```
+```bash
   fest migrate frontmatter              # Add frontmatter to all docs
   fest migrate frontmatter --dry-run    # Preview changes
   fest migrate frontmatter --fix        # Auto-fix existing frontmatter

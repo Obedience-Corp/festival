@@ -11,7 +11,7 @@ Types are discovered from:
   - Custom templates (.festival/templates/ in a festival)
 
 Examples:
-```
+```bash
   fest types list                  # List all types grouped by level
   fest types list --level task     # List task-level types only
   fest types list --custom         # Show only custom types

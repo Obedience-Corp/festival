@@ -11,8 +11,10 @@ Covers goal-oriented development, requirements-driven implementation,
 and quality gates.
 
 After reading this, proceed to:
+```bash
   fest understand structure   - Learn the 3-level hierarchy
   fest understand tasks       - Learn when to create task files
+```
 
 ```
 fest understand methodology [flags]

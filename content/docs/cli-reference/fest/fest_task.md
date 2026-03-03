@@ -21,7 +21,7 @@ Task Resolution:
     - Bare filename: 01_design.md (searches for unique match)
 
 Examples:
-```
+```bash
   fest task show                          # Show current task details
   fest task show 01_design.md             # Show specific task
   fest task edit                          # Open current task in editor

@@ -10,7 +10,7 @@ Shows the type's description, phase structure, auto-scaffolded phases,
 and manually-created phases.
 
 Examples:
-```
+```bash
   fest types festival show standard           # Show standard type details
   fest types festival show implementation     # Show implementation type
   fest types festival show standard --phases  # Show only phases

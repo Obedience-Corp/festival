@@ -8,20 +8,26 @@ fest manages Festival Methodology - a goal-oriented project management
 system designed for AI agent development workflows.
 
 GETTING STARTED (for AI agents):
+```bash
   fest understand methodology    Learn core principles first
   fest understand structure      Understand the 3-level hierarchy
   fest understand tasks          Learn when/how to create task files
   fest validate                  Check if a festival is properly structured
+```
 
 COMMON WORKFLOWS:
+```bash
   fest create festival           Create a new festival (interactive TUI)
   fest create phase/sequence     Add phases or sequences to existing festival
   fest validate --fix            Fix common structure issues automatically
   fest go                        Navigate to festivals directory
+```
 
 SYSTEM MAINTENANCE:
+```bash
   fest system sync               Download latest templates from source
   fest system update             Update .festival/ methodology files
+```
 
 Run 'fest understand' to learn the methodology before executing tasks.
 

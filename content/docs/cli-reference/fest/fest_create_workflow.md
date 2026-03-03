@@ -10,7 +10,7 @@ Takes structured JSON input (inline or file) and produces a parseable WORKFLOW.m
 that matches the format expected by the workflow parser.
 
 Examples:
-```
+```bash
   # From a steps file
   fest create workflow --steps-file steps.json --position after
 

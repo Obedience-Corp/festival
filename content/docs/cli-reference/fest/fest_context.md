@@ -18,7 +18,7 @@ Depth levels:
   full      - + All decisions, dependency outputs
 
 Examples:
-```
+```bash
   fest context                    # Context for current location
   fest context --depth full       # Full context with all details
   fest context --task my_task     # Context for a specific task

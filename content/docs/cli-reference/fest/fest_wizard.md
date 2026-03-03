@@ -10,6 +10,7 @@ SUBCOMMANDS:
   fill <file>    Interactively fill REPLACE markers in a file
 
 EXAMPLES:
+```bash
   # Fill markers in a specific file
   fest wizard fill PHASE_GOAL.md
 
@@ -18,6 +19,7 @@ EXAMPLES:
 
   # Preview changes without writing
   fest wizard fill FESTIVAL_GOAL.md --dry-run
+```
 
 The wizard subcommands help automate tedious tasks and guide users
 through the festival creation process step by step.

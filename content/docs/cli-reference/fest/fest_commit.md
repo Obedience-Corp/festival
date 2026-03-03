@@ -25,7 +25,7 @@ Detection priority:
   4. Explicit --festival flag (name or ID)
 
 Examples:
-```
+```bash
   fest commit -m "Implement feature"
   # In linked project → [OBEY-FE-CS0001] Implement feature
   # In festival task  → [OBEY-FE-FEST-a3b2c1] Implement feature

@@ -14,7 +14,7 @@ This command checks for:
 In strict mode (--strict), unknown markers cause validation to fail.
 
 Examples:
-```
+```bash
   # Validate against built-in template
   fest markers validate --file markers.json --template task-simple
 

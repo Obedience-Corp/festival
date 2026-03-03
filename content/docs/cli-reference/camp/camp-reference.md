@@ -3,6 +3,18 @@ title: "camp Reference"
 weight: 1
 ---
 
+# camp CLI Reference
+
+---
+
+---
+title: "camp CLI"
+weight: 52
+redirectTo: "docs/cli-reference/camp/camp-reference/"
+---
+
+---
+
 ## camp
 
 Campaign management CLI for multi-project AI workspaces

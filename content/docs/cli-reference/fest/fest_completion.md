@@ -12,6 +12,7 @@ tab completion for commands, flags, and arguments.
 SETUP:
 
   Bash:
+```bash
     # Add to ~/.bashrc:
     source <(fest completion bash)
 
@@ -33,13 +34,16 @@ SETUP:
 
   PowerShell:
     fest completion powershell | Out-String | Invoke-Expression
+```
 
 CUSTOM COMPLETIONS:
 
 After setup, you can tab-complete:
+```bash
   fest status act<TAB>     → fest status active/
   fest show pla<TAB>       → fest show plan
   fest create <TAB>        → festival, phase, sequence, task
+```
 
 ```
 fest completion [bash|zsh|fish|powershell]

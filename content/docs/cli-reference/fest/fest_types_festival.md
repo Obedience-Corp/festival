@@ -14,7 +14,7 @@ Festival types define the workflow structure for different kinds of projects:
   - ritual: Simple repeating patterns
 
 Examples:
-```
+```bash
   fest types festival                    # List all festival types
   fest types festival list               # Same as above
   fest types festival standard           # Show details for standard type

@@ -10,7 +10,7 @@ Creates a feedback/ directory in the current festival with
 configuration for the specified criteria.
 
 Examples:
-```
+```bash
   fest feedback init --criteria "Code quality observations"
   fest feedback init --criteria "Performance concerns" --criteria "Methodology suggestions"
 ```

@@ -22,9 +22,9 @@ For bash, replace `zsh` with `bash`. For fish, replace with `fish`.
 
 ### fest shell functions
 
-- `fgo` — Navigate to festival directories
-- `fls` — List festivals
+- `fgo` - Navigate to festival directories
+- `fls` - List festivals
 
 ### camp shell functions
 
-- `cgo` — Navigate between campaign projects with fuzzy finding
+- `cgo` - Navigate between campaign projects with fuzzy finding

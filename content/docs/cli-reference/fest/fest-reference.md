@@ -3,6 +3,10 @@ title: "fest Reference"
 weight: 1
 ---
 
+# fest CLI Reference
+
+---
+
 ## fest
 
 Festival Methodology CLI - goal-oriented project management for AI agents
@@ -13,20 +17,26 @@ fest manages Festival Methodology - a goal-oriented project management
 system designed for AI agent development workflows.
 
 GETTING STARTED (for AI agents):
+```bash
   fest understand methodology    Learn core principles first
   fest understand structure      Understand the 3-level hierarchy
   fest understand tasks          Learn when/how to create task files
   fest validate                  Check if a festival is properly structured
+```
 
 COMMON WORKFLOWS:
+```bash
   fest create festival           Create a new festival (interactive TUI)
   fest create phase/sequence     Add phases or sequences to existing festival
   fest validate --fix            Fix common structure issues automatically
   fest go                        Navigate to festivals directory
+```
 
 SYSTEM MAINTENANCE:
+```bash
   fest system sync               Download latest templates from source
   fest system update             Update .festival/ methodology files
+```
 
 Run 'fest understand' to learn the methodology before executing tasks.
 
@@ -441,7 +451,7 @@ Detection priority:
   4. Explicit --festival flag (name or ID)
 
 Examples:
-```
+```bash
   fest commit -m "Implement feature"
   # In linked project → [OBEY-FE-CS0001] Implement feature
   # In festival task  → [OBEY-FE-FEST-a3b2c1] Implement feature
@@ -504,7 +514,7 @@ Search commits by task ID, sequence, or phase. Uses git log with grep
 to find commits that contain festival references in their messages.
 
 Examples:
-```
+```bash
   fest commits                           # All commits for current festival
   fest commits --task FEST-a3b2c1        # Commits for specific task
   fest commits --sequence 01_foundation  # Commits for sequence
@@ -557,6 +567,7 @@ tab completion for commands, flags, and arguments.
 SETUP:
 
   Bash:
+```bash
     # Add to ~/.bashrc:
     source <(fest completion bash)
 
@@ -578,13 +589,16 @@ SETUP:
 
   PowerShell:
     fest completion powershell | Out-String | Invoke-Expression
+```
 
 CUSTOM COMPLETIONS:
 
 After setup, you can tab-complete:
+```bash
   fest status act<TAB>     → fest status active/
   fest show pla<TAB>       → fest show plan
   fest create <TAB>        → festival, phase, sequence, task
+```
 
 ```
 fest completion [bash|zsh|fish|powershell]
@@ -1073,7 +1087,7 @@ Depth levels:
   full      - + All decisions, dependency outputs
 
 Examples:
-```
+```bash
   fest context                    # Context for current location
   fest context --depth full       # Full context with all details
   fest context --task my_task     # Context for a specific task
@@ -1250,19 +1264,23 @@ TEMPLATE VARIABLES (automatically set):
   {{ parent_phase_id }}      Parent phase ID
 
 EXAMPLES:
+```bash
   # Create sequence in current phase
   fest create sequence --name "api endpoints" --json
 
   # Create sequence at specific position
   fest create sequence --name "frontend" --after 2 --json
+```
 
 NEXT STEPS after creating a sequence:
+```bash
   # Add task files (required for implementation sequences)
   fest create task --name "design" --json
   fest create task --name "implement" --json
 
   # Add quality gates
   fest gates apply --approve
+```
 
 Run 'fest validate tasks' to verify task files exist.
 
@@ -1327,6 +1345,7 @@ TEMPLATE VARIABLES (automatically set from --name):
   {{ full_path }}            Complete path from festival root
 
 EXAMPLES:
+```bash
   # Create single task in current sequence
   fest create task --name "design endpoints" --json
 
@@ -1340,8 +1359,10 @@ EXAMPLES:
 
   # Create task in specific sequence
   fest create task --name "setup" --path ./002_IMPLEMENT/01_api --json
+```
 
 MARKER FILLING (for AI agents):
+```bash
   # Fill all REPLACE markers in one command
   fest create task --name "setup" --markers '{"Brief description": "Auth middleware", "Yes/No": "Yes"}'
 
@@ -1350,6 +1371,7 @@ MARKER FILLING (for AI agents):
 
   # Skip marker filling (leave REPLACE tags)
   fest create task --name "setup" --skip-markers
+```
 
 Run 'fest understand tasks' for detailed guidance on task file creation.
 Run 'fest validate tasks' to verify task files exist in implementation sequences.
@@ -1402,7 +1424,7 @@ Takes structured JSON input (inline or file) and produces a parseable WORKFLOW.m
 that matches the format expected by the workflow parser.
 
 Examples:
-```
+```bash
   # From a steps file
   fest create workflow --steps-file steps.json --position after
 
@@ -1458,7 +1480,7 @@ Without arguments, shows the dependency graph for the current sequence.
 With a task name, shows dependencies for that specific task.
 
 Examples:
-```
+```bash
   fest deps                    # Show all deps in current sequence
   fest deps 02_implement       # Show deps for specific task
   fest deps --all              # Show all deps in festival
@@ -1686,7 +1708,7 @@ Feedback allows agents to record observations based on defined criteria
 for later aggregation and analysis.
 
 Examples:
-```
+```bash
   fest feedback init --criteria "Code quality" --criteria "Performance"
   fest feedback add --criteria "Code quality" --observation "Found duplication"
   fest feedback view
@@ -1730,7 +1752,7 @@ Add a feedback observation for a defined criteria.
 Use either flags or JSON input to add an observation.
 
 Examples:
-```
+```bash
   fest feedback add --criteria "Code quality" --observation "Found duplicate logic"
   fest feedback add --json '{"criteria": "Performance", "observation": "N+1 query"}'
   fest feedback add --criteria "Code quality" --observation "..." --severity high --suggestion "Refactor"
@@ -1779,7 +1801,7 @@ Export collected feedback to a file format.
 Supports markdown, JSON, and YAML output formats.
 
 Examples:
-```
+```bash
   fest feedback export --format markdown > report.md
   fest feedback export --format json > report.json
   fest feedback export --format yaml
@@ -1824,7 +1846,7 @@ Creates a feedback/ directory in the current festival with
 configuration for the specified criteria.
 
 Examples:
-```
+```bash
   fest feedback init --criteria "Code quality observations"
   fest feedback init --criteria "Performance concerns" --criteria "Methodology suggestions"
 ```
@@ -1867,7 +1889,7 @@ View collected feedback observations.
 Filter by criteria or severity, or view a summary of all feedback.
 
 Examples:
-```
+```bash
   fest feedback view
   fest feedback view --criteria "Code quality"
   fest feedback view --severity high
@@ -2138,8 +2160,10 @@ By default, outputs 'cd /path' for human-friendly display.
 Use --print to output just the bare path (for scripts, tools, and agents).
 
 SHELL INTEGRATION (recommended):
+```bash
   # Add to ~/.zshrc or ~/.bashrc:
   eval "$(fest shell-init zsh)"
+```
 
 Then use 'fgo' to navigate:
   fgo              Navigate to festivals root
@@ -2251,7 +2275,7 @@ After linking:
   - 'fgo' in the project jumps to the festival
 
 Examples:
-```
+```bash
   # Inside a festival, link to project:
   fgo link /path/to/project
   fgo link .                    # Link to current directory (if not in festival)
@@ -2404,7 +2428,7 @@ current directory:
   - In linked project: moves TO festival
 
 Examples:
-```
+```bash
   # In project directory, move file to festival
   fest move ./analysis.md
 
@@ -2416,11 +2440,11 @@ Examples:
 
   # Force overwrite existing files
   fest move --force ./config.yml
+```
 
 Requirements:
   - Festival must have project_path set in fest.yaml
   - Must be in either festival or linked project directory
-```
 
 ```
 fest go move <source> [destination] [flags]
@@ -2543,7 +2567,7 @@ Works from inside a festival directory or from a project linked to one.
 The ID is read from fest.yaml metadata, falling back to the directory name.
 
 Examples:
-```
+```bash
   fest id          # Print the festival ID (e.g., SR0001)
   fest id --json   # Output as JSON with id, name, and path
 ```
@@ -3063,13 +3087,17 @@ This command provides essential information for quickly becoming productive
 with Festival Methodology and the fest CLI commands.
 
 SUBCOMMANDS:
+```bash
   fest intro             Show the getting started guide
   fest intro workflows   Show common workflow patterns
+```
 
 After reading the intro, explore deeper with:
+```bash
   fest understand methodology    Core principles and philosophy
   fest understand structure      3-level hierarchy explained
   fest understand tasks          When to create task files
+```
 
 ```
 fest intro [flags]
@@ -3480,7 +3508,7 @@ This allows agents to fill marker values without manually typing hint strings,
 eliminating typos and reducing token usage.
 
 Examples:
-```
+```bash
   # Generate from built-in template
   fest markers scaffold --template task-simple
 
@@ -3489,6 +3517,7 @@ Examples:
 
   # Output as YAML to a file
   fest markers scaffold --template sequence --format yaml --output markers.yaml
+```
 
 Available template aliases:
   task, task-simple, task-minimal    Task templates
@@ -3496,7 +3525,6 @@ Available template aliases:
   phase, phase-impl, phase-planning  Phase templates
   festival, festival-overview        Festival templates
   gate-testing, gate-review          Quality gate templates
-```
 
 ```
 fest markers scaffold [flags]
@@ -3547,7 +3575,7 @@ This command checks for:
 In strict mode (--strict), unknown markers cause validation to fail.
 
 Examples:
-```
+```bash
   # Validate against built-in template
   fest markers validate --file markers.json --template task-simple
 
@@ -3604,7 +3632,7 @@ Available migrations:
   times         Populate time tracking data from file modification times
 
 Examples:
-```
+```bash
   fest migrate frontmatter              # Add frontmatter to all docs
   fest migrate frontmatter --dry-run    # Preview changes
   fest migrate frontmatter --fix        # Auto-fix existing frontmatter
@@ -3651,7 +3679,7 @@ This command walks through all festival documents and adds frontmatter
 to any that are missing it. Existing frontmatter is preserved.
 
 Examples:
-```
+```bash
   fest migrate frontmatter              # Add frontmatter to all docs
   fest migrate frontmatter --dry-run    # Preview changes without writing
   fest migrate frontmatter --fix        # Update/fix existing frontmatter
@@ -3702,7 +3730,7 @@ This command:
 The migration is idempotent - running it multiple times is safe.
 
 Examples:
-```
+```bash
   fest migrate metadata                    # Migrate all festivals
   fest migrate metadata ./active/my-fest   # Migrate specific festival
   fest migrate metadata --dry-run          # Preview changes only
@@ -3805,7 +3833,7 @@ current directory:
   - In linked project: moves TO festival
 
 Examples:
-```
+```bash
   # In project directory, move file to festival
   fest move ./analysis.md
 
@@ -3817,11 +3845,11 @@ Examples:
 
   # Force overwrite existing files
   fest move --force ./config.yml
+```
 
 Requirements:
   - Festival must have project_path set in fest.yaml
   - Must be in either festival or linked project directory
-```
 
 ```
 fest move <source> [destination] [flags]
@@ -3882,7 +3910,7 @@ Output Modes:
   --verbose      Detailed human-readable output
 
 Examples:
-```
+```bash
   fest next                    # Find next task with full context
   fest next --no-context       # Minimal output without task content
   fest next --sequence         # Only consider current sequence
@@ -3939,7 +3967,7 @@ This command walks the festival hierarchy and produces structured output
 suitable for external tool integration (e.g., Guild v3, visualization tools).
 
 Examples:
-```
+```bash
   fest parse                         # Parse current festival as JSON
   fest parse --format yaml           # Output as YAML
   fest parse --type task             # Output flat list of tasks
@@ -3995,10 +4023,13 @@ When run without flags, shows an overview of festival progress.
 Use flags to update task progress, report blockers, or mark tasks complete.
 
 PROGRESS OVERVIEW:
+```bash
   fest progress              Show festival progress summary
   fest progress --json       Output progress in JSON format
+```
 
 TASK UPDATES:
+```bash
   fest progress --task <id> --update 50%     Update task progress
   fest progress --task <id> --complete       Mark task as complete
   fest progress --task <id> --in-progress    Mark task as in progress
@@ -4006,6 +4037,7 @@ TASK UPDATES:
   fest progress --task <id> --clear          Clear blocker
   fest progress --path <task_path> --complete
   fest progress --phase <phase> --sequence <seq> --task <id> --complete
+```
 
 Task IDs can be festival-relative paths (e.g. 002_FOUNDATION/01_project_scaffold/01_design.md)
 or absolute paths. Use --path or --phase/--sequence to disambiguate duplicates.
@@ -4076,9 +4108,11 @@ Each transition validates readiness:
   active → completed:  All tasks must be completed
 
 Use --dungeon to send a festival directly to a dungeon status:
+```bash
   fest promote --dungeon someday     Shelve for later
   fest promote --dungeon archived    Archive the festival
   fest promote --dungeon completed   Mark as completed (skips task validation)
+```
 
 ```
 fest promote [flags]
@@ -5005,7 +5039,7 @@ generates the corresponding festival directory structure with phases, sequences,
 and tasks pre-populated from the plan.
 
 Examples:
-```
+```bash
   fest scaffold from-plan --plan path/to/STRUCTURE.md --name my-festival
   fest scaffold from-plan --plan STRUCTURE.md --dry-run
   fest scaffold from-plan --plan STRUCTURE.md --name my-fest --json
@@ -5046,7 +5080,7 @@ The plan document should follow the STRUCTURE.md format with a hierarchy section
 containing phases, sequences, and tasks.
 
 Examples:
-```
+```bash
   # Generate from a plan document
   fest scaffold from-plan --plan path/to/STRUCTURE.md --name my-festival
 
@@ -5155,6 +5189,7 @@ This command outputs shell-specific code that creates helper functions:
 - fls: Wraps 'fest list' for quick festival listing
 
 SETUP (one-time):
+```bash
   # For zsh, add to ~/.zshrc:
   eval "$(fest shell-init zsh)"
 
@@ -5163,6 +5198,7 @@ SETUP (one-time):
 
   # For fish, add to ~/.config/fish/config.fish:
   fest shell-init fish | source
+```
 
 After setup, reload your shell or run: source ~/.zshrc
 
@@ -5234,6 +5270,7 @@ When run inside a festival directory, shows the current festival's details.
 When run with a status argument, lists all festivals with that status.
 
 SUBCOMMANDS:
+```bash
   fest show              Show current festival (detect from cwd)
   fest show active       List festivals in active/ directory
   fest show planning     List festivals in planning/ directory
@@ -5241,6 +5278,7 @@ SUBCOMMANDS:
   fest show dungeon      List festivals in dungeon/ directory
   fest show all          List all festivals grouped by status
   fest show <name>       Show details of a specific festival by name
+```
 
 ```
 fest show [status|festival-name] [flags]
@@ -5454,15 +5492,19 @@ When run without arguments, shows the status of the current entity based on
 your working directory location.
 
 EXAMPLES:
+```bash
   fest status                                  # Status from current directory
   fest status ./festivals/active/my-festival   # Status for specific path
   fest status active/my-festival               # Relative to festivals/ root
+```
 
 SUBCOMMANDS:
+```bash
   fest status              Show current entity status
   fest status set <status> Change entity status
   fest status list         List entities by status
   fest status history      View status change history
+```
 
 ```
 fest status [path] [flags]
@@ -5941,7 +5983,7 @@ Task Resolution:
     - Bare filename: 01_design.md (searches for unique match)
 
 Examples:
-```
+```bash
   fest task show                          # Show current task details
   fest task show 01_design.md             # Show specific task
   fest task edit                          # Open current task in editor
@@ -6145,7 +6187,7 @@ Agent templates use simple {{variable}} syntax for substitution.
 Templates are stored in .templates/ within the festival directory.
 
 Examples:
-```
+```bash
   fest templates create component_test
   fest templates apply component_test --vars '{"name": "UserService"}'
   fest templates list
@@ -6189,7 +6231,7 @@ Variables can be provided as:
   - File reference: --vars @variables.json
 
 Examples:
-```
+```bash
   fest templates apply component_test --vars '{"name": "UserService"}'
   fest templates apply api_endpoint -o ./api.md --vars @vars.json
 ```
@@ -6234,6 +6276,7 @@ Create a new agent template in the current festival.
 The template will be stored in .templates/<name>.md
 
 Example template content:
+```bash
   # {{component_name}} Test
 
   ## Setup
@@ -6242,6 +6285,7 @@ Example template content:
   ## Test Cases
   - {{test_case_1}}
   - {{test_case_2}}
+```
 
 ```
 fest templates create <name> [flags]
@@ -6349,7 +6393,7 @@ Template types define the structure and purpose of festivals, phases,
 sequences, and tasks. Custom types can be added in .festival/templates/.
 
 Examples:
-```
+```bash
   fest types list                        # List all available types
   fest types list --level task           # List task-level types only
   fest types show feature                # Show details about a type
@@ -6397,7 +6441,7 @@ Festival types define the workflow structure for different kinds of projects:
   - ritual: Simple repeating patterns
 
 Examples:
-```
+```bash
   fest types festival                    # List all festival types
   fest types festival list               # Same as above
   fest types festival standard           # Show details for standard type
@@ -6447,7 +6491,7 @@ List all available festival types with their descriptions.
 Shows all festival types defined in the configuration, marking the default type.
 
 Examples:
-```
+```bash
   fest types festival list        # List all festival types
   fest types festival list --json # JSON output
 ```
@@ -6491,7 +6535,7 @@ Shows the type's description, phase structure, auto-scaffolded phases,
 and manually-created phases.
 
 Examples:
-```
+```bash
   fest types festival show standard           # Show standard type details
   fest types festival show implementation     # Show implementation type
   fest types festival show standard --phases  # Show only phases
@@ -6539,7 +6583,7 @@ Types are discovered from:
   - Custom templates (.festival/templates/ in a festival)
 
 Examples:
-```
+```bash
   fest types list                  # List all types grouped by level
   fest types list --level task     # List task-level types only
   fest types list --custom         # Show only custom types
@@ -6589,7 +6633,7 @@ Shows the type's level, description, number of markers, template files,
 and example usage.
 
 Examples:
-```
+```bash
   fest types show feature                   # Show feature type details
   fest types show implementation --level phase  # Show phase-level implementation
   fest types show simple --level task --json    # JSON output
@@ -6634,14 +6678,18 @@ Learn about Festival Methodology - a goal-oriented project management
 system designed for AI agent development workflows.
 
 START HERE if you're new to Festival Methodology:
+```bash
   fest understand methodology    Core principles and philosophy
   fest understand structure      3-level hierarchy explained
   fest understand tasks          CRITICAL: When to create task files
+```
 
 QUICK REFERENCE:
+```bash
   fest understand checklist      Validation checklist before starting
   fest understand rules          Naming conventions for automation
   fest understand workflow       Just-in-time reading pattern
+```
 
 The understand command helps you grasp WHEN and WHY to use specific
 approaches. For command syntax, use --help on any command.
@@ -6871,8 +6919,10 @@ Covers goal-oriented development, requirements-driven implementation,
 and quality gates.
 
 After reading this, proceed to:
+```bash
   fest understand structure   - Learn the 3-level hierarchy
   fest understand tasks       - Learn when to create task files
+```
 
 ```
 fest understand methodology [flags]
@@ -7585,7 +7635,7 @@ Show version information
 Show fest version, build information, and runtime details.
 
 Examples:
-```
+```bash
   fest version           Show full version info
   fest version --short   Show only version number
   fest version --json    Output as JSON
@@ -7631,6 +7681,7 @@ SUBCOMMANDS:
   fill <file>    Interactively fill REPLACE markers in a file
 
 EXAMPLES:
+```bash
   # Fill markers in a specific file
   fest wizard fill PHASE_GOAL.md
 
@@ -7639,6 +7690,7 @@ EXAMPLES:
 
   # Preview changes without writing
   fest wizard fill FESTIVAL_GOAL.md --dry-run
+```
 
 The wizard subcommands help automate tedious tasks and guide users
 through the festival creation process step by step.
@@ -7700,6 +7752,7 @@ BATCH WORKFLOW (for agents):
   3. Apply:      fest wizard fill --batch-input markers.json
 
 EXAMPLES:
+```bash
   # Interactive with buffer mode (default)
   fest wizard fill .
 
@@ -7719,6 +7772,7 @@ EXAMPLES:
 
   # Output results as JSON
   fest wizard fill PHASE_GOAL.md --json
+```
 
 The fill wizard transforms tedious manual editing into a guided experience,
 ensuring all template markers are properly completed.
@@ -7795,7 +7849,7 @@ Auto-Routing:
   - GATES.md if workflow is complete/absent and phase work is done
 
 Examples:
-```
+```bash
   fest workflow status              # Show workflow or gate progress
   fest workflow status --phase 001_INGEST  # Show specific phase
   fest workflow advance             # Complete current step and move to next

@@ -10,13 +10,17 @@ This command provides essential information for quickly becoming productive
 with Festival Methodology and the fest CLI commands.
 
 SUBCOMMANDS:
+```bash
   fest intro             Show the getting started guide
   fest intro workflows   Show common workflow patterns
+```
 
 After reading the intro, explore deeper with:
+```bash
   fest understand methodology    Core principles and philosophy
   fest understand structure      3-level hierarchy explained
   fest understand tasks          When to create task files
+```
 
 ```
 fest intro [flags]

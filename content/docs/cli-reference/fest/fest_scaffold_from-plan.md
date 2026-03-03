@@ -10,7 +10,7 @@ The plan document should follow the STRUCTURE.md format with a hierarchy section
 containing phases, sequences, and tasks.
 
 Examples:
-```
+```bash
   # Generate from a plan document
   fest scaffold from-plan --plan path/to/STRUCTURE.md --name my-festival
 

@@ -10,7 +10,7 @@ This allows agents to fill marker values without manually typing hint strings,
 eliminating typos and reducing token usage.
 
 Examples:
-```
+```bash
   # Generate from built-in template
   fest markers scaffold --template task-simple
 
@@ -19,6 +19,7 @@ Examples:
 
   # Output as YAML to a file
   fest markers scaffold --template sequence --format yaml --output markers.yaml
+```
 
 Available template aliases:
   task, task-simple, task-minimal    Task templates
@@ -26,7 +27,6 @@ Available template aliases:
   phase, phase-impl, phase-planning  Phase templates
   festival, festival-overview        Festival templates
   gate-testing, gate-review          Quality gate templates
-```
 
 ```
 fest markers scaffold [flags]

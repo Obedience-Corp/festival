@@ -7,7 +7,7 @@ Show version information
 Show fest version, build information, and runtime details.
 
 Examples:
-```
+```bash
   fest version           Show full version info
   fest version --short   Show only version number
   fest version --json    Output as JSON

@@ -10,7 +10,7 @@ Without arguments, shows the dependency graph for the current sequence.
 With a task name, shows dependencies for that specific task.
 
 Examples:
-```
+```bash
   fest deps                    # Show all deps in current sequence
   fest deps 02_implement       # Show deps for specific task
   fest deps --all              # Show all deps in festival

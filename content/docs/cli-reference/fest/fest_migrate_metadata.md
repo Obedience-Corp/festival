@@ -14,7 +14,7 @@ This command:
 The migration is idempotent - running it multiple times is safe.
 
 Examples:
-```
+```bash
   fest migrate metadata                    # Migrate all festivals
   fest migrate metadata ./active/my-fest   # Migrate specific festival
   fest migrate metadata --dry-run          # Preview changes only

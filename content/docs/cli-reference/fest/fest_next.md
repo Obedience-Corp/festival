@@ -27,7 +27,7 @@ Output Modes:
   --verbose      Detailed human-readable output
 
 Examples:
-```
+```bash
   fest next                    # Find next task with full context
   fest next --no-context       # Minimal output without task content
   fest next --sequence         # Only consider current sequence

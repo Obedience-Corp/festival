@@ -9,7 +9,7 @@ List all available festival types with their descriptions.
 Shows all festival types defined in the configuration, marking the default type.
 
 Examples:
-```
+```bash
   fest types festival list        # List all festival types
   fest types festival list --json # JSON output
 ```
