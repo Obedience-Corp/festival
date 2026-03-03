@@ -38,9 +38,11 @@ Intents have a lifecycle:
 |--------|---------|
 | `inbox` | Captured, not yet reviewed |
 | `active` | Being enriched with details and context |
-| `ready` | Fully scoped, ready to become a festival |
-| `done` | Promoted to festival or resolved |
+| `ready` | Fully scoped, ready to act on |
+| `done` | Completed, promoted, or resolved |
 | `killed` | Abandoned |
+
+Many intents are actionable on their own -- an agent can pick up a well-scoped intent and execute it directly without any festival structure. Not everything needs a festival. Festivals are for work that's too complex for an agent to reliably implement in a single session, or where you need a specific process followed.
 
 Related intents can be gathered into a single unified work item:
 
@@ -48,27 +50,25 @@ Related intents can be gathered into a single unified work item:
 camp intent gather auth-refactor token-rotation session-mgmt
 ```
 
-This combines scattered ideas into a coherent scope before promotion. When an intent is ready, promote it directly to a festival:
+This combines scattered ideas into a coherent scope. If the combined scope is complex enough to warrant a festival, promote it:
 
 ```bash
 camp intent promote auth-refactor    # Creates festival in planning/
 ```
 
-**Best for:** things you notice while doing other work, small scoped items, backlog management.
+**Best for:** things you notice while doing other work, small scoped items, backlog management. Often executable directly by an agent without further structure.
 
 ### Structured Design: Design Docs
 
-`workflow/design/` holds architectural thinking that needs exploration before committing to a plan. Ask an agent to design something out -- architecture, API specs, system analysis -- and the output feeds festival creation or stands alone as a reference.
+`workflow/design/` holds architectural thinking that needs exploration. Ask an agent to design something out -- architecture, API specs, system analysis -- and the output is often enough for an agent to execute directly. A design doc can also feed a festival's INGEST phase if the work turns out to be complex enough to warrant one.
 
-Design docs are freeform. Create a directory for the topic, add markdown files, diagrams, and notes. When the design is solid, it becomes input for a festival's INGEST phase or provides reference material during execution.
+Design docs are freeform. Create a directory for the topic, add markdown files, diagrams, and notes. The output stands alone as a reference, guides direct agent execution, or becomes input for a festival -- whatever the work calls for.
 
-Not everything needs a design doc. Simple features go straight from intent to festival. Use design docs when the problem space needs exploration first.
-
-**Best for:** architectural decisions, API design, system analysis that needs thinking before committing to an execution plan.
+**Best for:** architectural decisions, API design, system analysis that needs exploration. Often sufficient on its own for agent execution without a festival.
 
 ### Complex Execution: Festivals
 
-Festivals are for multi-step work that needs structure, quality gates, and reproducible workflow. They're the execution engine.
+Festivals are for work that agents can't reliably implement in a single session, or where you need a specific process followed with quality gates and traceability. If an agent can handle the work from an intent or design doc alone, you don't need a festival.
 
 The power feature is structured planning. Festivals with INGEST and PLAN phases include `WORKFLOW.md` files that guide agents through rigorous thinking:
 
@@ -95,7 +95,7 @@ fest create festival --type research         # INGEST + RESEARCH + SYNTHESIZE ph
 fest create festival --type ritual           # Repeatable processes, custom structure
 ```
 
-**Best for:** features, sprints, product launches, anything needing quality gates and traceability.
+**Best for:** work too complex for a single agent session, multi-system changes, anything needing enforced process and quality gates. Don't reach for a festival when an intent or design doc is enough.
 
 ---
 
@@ -132,11 +132,11 @@ Each workflow feeds the pipeline differently. Use all three to prevent the bottl
 
 **Capture intents constantly.** Run `camp intent add` whenever an idea hits. Mid-festival, between sessions, during code review. Intents are cheap -- creating one takes seconds. Losing an idea because you were busy executing costs more.
 
-**Use design docs when something needs thinking.** Not every problem is ready for a festival. If you need to explore architecture, compare approaches, or work through an API design, put it in `workflow/design/`. The output becomes high-quality input for festival creation.
+**Use design docs when something needs thinking.** If you need to explore architecture, compare approaches, or work through an API design, put it in `workflow/design/`. Often the design doc is enough for an agent to execute from directly. If the work turns out to be too complex, the design doc becomes high-quality input for a festival.
 
 **Use festival planning phases to produce execution plans fast.** The INGEST and PLAN phase workflows guide agents through structured thinking -- reading inputs, extracting requirements, gap analysis, decomposition. This produces detailed plans faster than freeform planning because the agent follows a defined process instead of improvising.
 
-**Gather and promote intents in batches.** When capacity opens, check what's ready: `camp intent list --status ready`. Use `camp intent gather` to combine related intents. Promote the highest-priority item to a festival and move it through planning.
+**Gather and promote when complexity warrants it.** When intents accumulate into something too complex for a single agent session, use `camp intent gather` to combine them and `camp intent promote` to create a festival. Not every intent needs promotion -- many are directly actionable.
 
 **Keep `ready/` stocked.** Fully planned festivals waiting in `ready/` mean zero delay when agent capacity opens up. One `fest promote` and the next session can start immediately.
 
