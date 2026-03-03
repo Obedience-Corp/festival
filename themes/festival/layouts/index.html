@@ -1,41 +1,28 @@
 {{ define "main" }}
 <div class="hero">
   <h1>Festival</h1>
-  <p>The workspace and planning layer for AI-native development.</p>
+  <p>Mission-based AI workspace management for developers using AI coding tools.</p>
   <div class="hero__actions">
     {{ with site.GetPage "/docs/getting-started/quickstart" }}
       <a href="{{ .RelPermalink }}" class="btn btn--primary">Get Started</a>
     {{ end }}
     {{ with site.GetPage "/docs/getting-started/installation" }}
-      <a href="{{ .RelPermalink }}" class="btn" style="border: 1px solid var(--festival-200);">Install</a>
+      <a href="{{ .RelPermalink }}" class="btn btn--secondary">Install</a>
     {{ end }}
   </div>
 </div>
 
 <div style="max-width: 800px; margin: 0 auto; padding: 0 2rem 4rem;">
 
-<h2 style="border: none; text-align: center;">The Problem</h2>
+<h2 style="border: none; text-align: center;">The Multiple Missions Problem</h2>
 
-<p>AI coding tools made writing code 10–100x faster. But they operate in a vacuum — no understanding of the larger goal, no memory across sessions, no structure for multi-step work. Every new chat starts from zero. The agent is fast but contextless.</p>
+<p>Most developers juggle several missions at once. Your day job has a backend service, a frontend app, and infrastructure. Your side project has its own repos and research. Maybe you're building a startup on nights and weekends, or contributing to open source.</p>
 
-<p>This gets worse when you're running multiple missions in parallel — your day job, a side project, a startup, open source. Context that lives only in your head (or in expired chat sessions) doesn't scale.</p>
+<p>Each mission accumulates context - project repos, planning documents, research notes, design decisions, AI conversation history. Without structure, this context scatters across your filesystem, gets lost between sessions, and lives in your head instead of somewhere durable.</p>
 
-<p>You need two things traditional tools don't give you:</p>
+<p>AI coding tools make you dramatically faster at writing code. But they operate at the file and project level. They don't help you organize across projects, plan multi-step work, or maintain context between sessions. You end up re-explaining the same architecture, re-discovering the same decisions, and re-planning work that was already planned.</p>
 
-<ol>
-  <li><strong>Isolated workspaces</strong> — one per mission, with all projects, docs, and planning in one place</li>
-  <li><strong>Structured plans</strong> — that AI agents can pick up, execute, and resume without losing context</li>
-</ol>
-
-<h2 style="border: none;">What Festival Does</h2>
-
-<p><strong><code>camp</code></strong> manages campaigns: isolated workspaces that hold all the projects, docs, research, and planning for a single mission. It gives you instant navigation across everything in the workspace, project lifecycle management, and shell shortcuts that make <code>cd</code> obsolete.</p>
-
-<p><strong><code>fest</code></strong> manages festivals: structured plans that break complex work into phases, sequences, and tasks — a hierarchy designed for AI agents to execute autonomously, pause, and resume without context loss. Run <code>fest next</code> and the agent gets its next task with full surrounding context. Run <code>fest commit</code> and every commit traces back to the plan.</p>
-
-<h3>Where Festival Fits</h3>
-
-<p>Festival is a <strong>planning and context layer</strong>, not a runtime orchestrator. It doesn't spawn agents or manage their processes — it gives them the structure, context, and goals they need to work autonomously. The context model is persistent and filesystem-based — plans survive across sessions, days, and weeks. And it's agent-agnostic: it works with Claude Code, Cursor, Codex, Aider, or any tool that can read files and run commands.</p>
+<p>Festival solves this with two concepts: <strong>campaigns</strong> for workspace isolation and <strong>festivals</strong> for structured planning.</p>
 
 <h2 style="border: none;">Next Steps</h2>
 

@@ -1,8 +1,3 @@
----
-title: "camp Reference"
-weight: 1
----
-
 # camp CLI Reference
 
 ---
