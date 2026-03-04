@@ -94,7 +94,7 @@ fest next                              # Get the next task with full context
 Do the work described in the task, then:
 
 ```bash
-fest task complete                     # Mark the current task done
+fest task completed                     # Mark the current task done
 fest commit -m "implement user model"  # Commit with festival tracking
 ```
 

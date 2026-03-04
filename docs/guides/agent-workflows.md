@@ -28,7 +28,7 @@ The typical agent workflow is a tight loop. An agent session picks up work, exec
 fest intro            → Agent learns the methodology
 fest next             → Gets next task with full context
 [execute the task]    → Agent does the work
-fest task complete    → Marks task done
+fest task completed    → Marks task done
 fest commit -m "..."  → Commits with festival tracking
 fest next             → Gets the next task (repeat)
 ```
@@ -49,7 +49,7 @@ These are the commands agents use most. They are designed to return agent-readab
 | `fest next` | Get the next incomplete task with full inline context: task document, phase goal, festival goal. |
 | `fest status` | Overview of festival progress - phases, sequences, completion percentages. |
 | `fest progress` | Detailed progress breakdown across the entire festival. |
-| `fest task complete` | Mark the current task as done. |
+| `fest task completed` | Mark the current task as done. |
 | `fest commit -m "msg"` | Git commit with festival metadata for traceability. |
 
 `fest next` is the most important command. Its output includes everything an agent needs to start working - the task document content, the phase it belongs to, and the overall festival goal. No additional file reads required.
@@ -79,7 +79,7 @@ Festival is tool-agnostic. Any agent that can run bash commands can use it - Cur
 There is no API integration required. Everything is bash commands and markdown files:
 
 - `fest next` returns a task. The agent reads it and works.
-- `fest task complete` marks progress. The agent moves on.
+- `fest task completed` marks progress. The agent moves on.
 - `fest status` shows the state of the world. The agent orients itself.
 
 The filesystem IS the state. Task documents are markdown files. Progress is tracked by file location and status markers. An agent reads task documents, writes code, and records completion - all through standard file operations and CLI commands.

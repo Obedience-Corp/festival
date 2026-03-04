@@ -124,14 +124,14 @@ This checks for missing goal documents, improper numbering, and sequences withou
 ```bash
 fest next
 # ... do the work ...
-fest task complete
+fest task completed
 fest commit -m "create users table with auth fields"
 ```
 
 `fest commit` stages changes and includes festival metadata for traceability. Use it instead of raw `git commit`. Run `fest next` again to advance to the next task. This loop is the entire execution model:
 
 ```
-fest next → work → fest task complete → fest commit → repeat
+fest next → work → fest task completed → fest commit → repeat
 ```
 
 ## Run Quality Gates
@@ -166,7 +166,7 @@ This moves the festival from `active/` to `dungeon/completed/`. The work is pres
 - Designed a sequence as a cohesive unit of work
 - Wrote implementation-ready tasks with verification steps
 - Added quality gates for testing, review, and iteration
-- Executed with the loop: `fest next` / work / `fest task complete` / `fest commit`
+- Executed with the loop: `fest next` / work / `fest task completed` / `fest commit`
 - Tracked progress and promoted the festival to completed
 
 ## Next Steps
