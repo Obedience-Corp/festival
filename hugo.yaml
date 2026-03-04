@@ -74,7 +74,7 @@ menu:
       weight: 31
     - name: Work Pipeline
       parent: guides
-      url: /docs/guides/team-planning/
+      url: /docs/guides/work-pipeline/
       weight: 32
     - name: Best Practices
       parent: guides
