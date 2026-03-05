@@ -4,17 +4,17 @@ Archive an intent
 
 ### Synopsis
 
-Archive an intent by moving it to the killed status.
+Archive an intent by moving it to dungeon/archived.
 
 This is a convenience command equivalent to:
-  camp intent move <id> killed
+  camp intent move <id> archived --reason "..."
 
-Archived intents are retained but hidden from default listings.
+Dungeon moves require a reason and append a decision record to the intent body.
 Use 'camp intent move <id> inbox' to un-archive if needed.
 
 Examples:
-  camp intent archive add-dark           Archive by partial ID
-  camp intent archive 20260119-153412    Archive by full ID
+  camp intent archive add-dark --reason "superseded by broader initiative"
+  camp intent archive 20260119-153412 --reason "preserve as reference"
 
 ```
 camp intent archive <id> [flags]
@@ -23,8 +23,9 @@ camp intent archive <id> [flags]
 ### Options
 
 ```
-  -h, --help        help for archive
-      --no-commit   Don't create a git commit
+  -h, --help            help for archive
+      --no-commit       Don't create a git commit
+      --reason string   Reason for archiving (required)
 ```
 
 ### Options inherited from parent commands

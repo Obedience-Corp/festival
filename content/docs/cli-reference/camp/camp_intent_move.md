@@ -7,23 +7,25 @@ Move intent to a different status
 Transition an intent between lifecycle statuses.
 
 VALID STATUSES:
-  inbox    Captured, not yet reviewed
-  active   Being enriched with details
-  ready    Ready for Festival promotion
-  done     Resolved
-  killed   Abandoned
+  inbox      Captured, not yet reviewed
+  ready      Reviewed/enriched, ready to be promoted
+  active     Promoted to festival/design, work in progress
+  done       Resolved (dungeon)
+  killed     Abandoned (dungeon)
+  archived   Preserved but inactive (dungeon)
+  someday    Deferred (dungeon)
 
-VALID TRANSITIONS:
-  inbox  → active, killed
-  active → ready, inbox, killed
-  ready  → done, active, killed
-  killed → inbox (un-kill)
+PIPELINE ORDER:
+  inbox → ready → active → dungeon/done
+
+Move is an escape hatch that allows any-to-any transitions.
+Dungeon moves require a --reason flag.
+You can use short dungeon names (done) or canonical paths (dungeon/done).
 
 Examples:
-  camp intent move add-dark active        Move to active status
-  camp intent move add-dark ready         Mark as ready for promotion
-  camp intent move add-dark done          Mark as complete
-  camp intent move add-dark killed        Archive/abandon intent
+  camp intent move add-dark ready                         Mark as ready
+  camp intent move add-dark done --reason "completed"     Mark as done
+  camp intent move add-dark killed --reason "superseded"  Kill intent
 
 ```
 camp intent move <id> <status> [flags]
@@ -32,8 +34,9 @@ camp intent move <id> <status> [flags]
 ### Options
 
 ```
-  -h, --help        help for move
-      --no-commit   Don't create a git commit
+  -h, --help            help for move
+      --no-commit       Don't create a git commit
+      --reason string   Reason for the move (required for dungeon targets)
 ```
 
 ### Options inherited from parent commands
