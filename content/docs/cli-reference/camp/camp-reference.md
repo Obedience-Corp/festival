@@ -780,6 +780,7 @@ Without flags, auto-detects what to crawl:
 Use --triage or --inner to force a specific mode.
 
 For each item, you'll be prompted to decide its fate.
+Triage mode includes a route-to-docs action for existing campaign-root docs/<subdirectory>.
 Statistics are gathered when available (requires scc or fest).
 All decisions are logged to crawl.jsonl for history.
 
@@ -819,6 +820,8 @@ List items in the dungeon or parent items eligible for triage.
 
 By default, lists items at the dungeon root (items already in the dungeon).
 Use --triage to list parent directory items that could be moved into the dungeon.
+The command resolves dungeon context by walking from the current directory up to
+campaign root and using the nearest available dungeon.
 
 OUTPUT FORMATS:
   table (default)   Human-readable table with columns
@@ -828,6 +831,7 @@ OUTPUT FORMATS:
 Examples:
   camp dungeon list                  List dungeon root items
   camp dungeon list --triage         List parent items eligible for triage
+  cd workflow/design/subdir && camp dungeon list  Uses nearest dungeon context from nested path
   camp dungeon list -f json          JSON output for scripting
   camp dungeon list -f simple        Names only, pipe to other commands
 
@@ -862,6 +866,7 @@ Move items within the dungeon or from the parent directory into the dungeon.
 
 Without --triage, moves an item already in the dungeon root to a status directory.
 With --triage, moves an item from the parent directory into the dungeon.
+With --triage and --to-docs, routes an item to an existing campaign-root docs/<subdirectory>.
 
 Statuses: completed, archived, someday
 
@@ -870,6 +875,7 @@ Examples:
   camp dungeon move stale-doc completed          Move dungeon item to completed
   camp dungeon move old-project --triage         Move parent item into dungeon root
   camp dungeon move old-project archived --triage Move parent item directly to archived
+  camp dungeon move stale-note.md --triage --to-docs architecture/api Route to docs subdirectory
 
 ```
 camp dungeon move <item> [status] [flags]
@@ -878,9 +884,10 @@ camp dungeon move <item> [status] [flags]
 ### Options
 
 ```
-  -h, --help        help for move
-      --no-commit   Don't create a git commit
-      --triage      Move from parent directory (not from dungeon root)
+  -h, --help             help for move
+      --no-commit        Don't create a git commit
+      --to-docs string   Route triage item into an existing campaign-root docs/<subdir> (requires --triage)
+      --triage           Move from parent directory (not from dungeon root)
 ```
 
 ### Options inherited from parent commands
