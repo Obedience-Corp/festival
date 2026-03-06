@@ -9,7 +9,7 @@
   var labels = {
     macos: "macOS detected",
     linux: "Linux detected",
-    windows: "Windows detected",
+    windows: "Windows detected (support temporarily paused)",
     other: "Could not detect your OS"
   };
 

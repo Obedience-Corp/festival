@@ -57,20 +57,13 @@ Festival includes two CLI tools: **fest** (festival planning) and **camp** (camp
     sudo mv fest camp /usr/local/bin/
     ```
 
-=== "Windows"
+=== "Windows (Temporarily Paused)"
 
-    ### Scoop (Recommended)
+    Stable Windows packages are temporarily paused while Windows support is being hardened.
 
-    ```powershell
-    scoop bucket add obey https://github.com/Obedience-Corp/scoop-bucket
-    scoop install festival
-    ```
+    For now, use WSL2 and follow the Linux installation methods above.
 
-    ### Direct Download
-
-    Download the `.zip` from
-    [GitHub Releases](https://github.com/Obedience-Corp/festival/releases/latest),
-    extract, and add the directory to your PATH.
+    Scoop and direct `.zip` downloads will return once Windows support is marked stable.
 
 ## Other Methods
 

@@ -1563,10 +1563,9 @@ CAPTURE MODES:
 
 INTENT LIFECYCLE:
   inbox  → Captured, not yet reviewed
-  active → Being enriched with details
-  ready  → Ready for Festival promotion
-  done   → Resolved
-  killed → Abandoned
+  ready  → Reviewed/enriched, ready for promotion
+  active → Promoted to festival/design doc, work in progress
+  dungeon/* → Terminal statuses (done, killed, archived, someday)
 
 Examples:
   camp intent add "Add dark mode toggle"         Fast capture to inbox
@@ -1575,8 +1574,8 @@ Examples:
   camp intent list --status active               List active intents
   camp intent edit add-dark                      Edit intent (fuzzy match)
   camp intent show 20260119-153412-add-dark      Show intent details
-  camp intent move add-dark active               Move to active status
-  camp intent promote add-dark                   Promote to Festival
+  camp intent move add-dark ready                Mark as ready
+  camp intent promote add-dark                   Promote to active via festival
   camp intent archive add-dark                   Archive intent
 
 ```
@@ -1652,17 +1651,17 @@ Archive an intent
 
 ### Synopsis
 
-Archive an intent by moving it to the killed status.
+Archive an intent by moving it to dungeon/archived.
 
 This is a convenience command equivalent to:
-  camp intent move <id> killed
+  camp intent move <id> archived --reason "..."
 
-Archived intents are retained but hidden from default listings.
+Dungeon moves require a reason and append a decision record to the intent body.
 Use 'camp intent move <id> inbox' to un-archive if needed.
 
 Examples:
-  camp intent archive add-dark           Archive by partial ID
-  camp intent archive 20260119-153412    Archive by full ID
+  camp intent archive add-dark --reason "superseded by broader initiative"
+  camp intent archive 20260119-153412 --reason "preserve as reference"
 
 ```
 camp intent archive <id> [flags]
@@ -1671,8 +1670,9 @@ camp intent archive <id> [flags]
 ### Options
 
 ```
-  -h, --help        help for archive
-      --no-commit   Don't create a git commit
+  -h, --help            help for archive
+      --no-commit       Don't create a git commit
+      --reason string   Reason for archiving (required)
 ```
 
 ### Options inherited from parent commands
@@ -1957,7 +1957,7 @@ List intents in the campaign
 List intents with filtering, sorting, and output format options.
 
 By default, lists intents in inbox, active, and ready status.
-Use --all to include done and killed intents.
+Use --all to include dungeon intents.
 
 OUTPUT FORMATS:
   table (default)   Human-readable table with columns
@@ -1978,7 +1978,7 @@ camp intent list [flags]
 ### Options
 
 ```
-  -a, --all              Include done/killed intents
+  -a, --all              Include dungeon intents
   -f, --format string    Output format: table, simple, json (default "table")
   -h, --help             help for list
       --horizon string   Filter by horizon
@@ -2007,23 +2007,25 @@ Move intent to a different status
 Transition an intent between lifecycle statuses.
 
 VALID STATUSES:
-  inbox    Captured, not yet reviewed
-  active   Being enriched with details
-  ready    Ready for Festival promotion
-  done     Resolved
-  killed   Abandoned
+  inbox      Captured, not yet reviewed
+  ready      Reviewed/enriched, ready to be promoted
+  active     Promoted to festival/design, work in progress
+  done       Resolved (dungeon)
+  killed     Abandoned (dungeon)
+  archived   Preserved but inactive (dungeon)
+  someday    Deferred (dungeon)
 
-VALID TRANSITIONS:
-  inbox  → active, killed
-  active → ready, inbox, killed
-  ready  → done, active, killed
-  killed → inbox (un-kill)
+PIPELINE ORDER:
+  inbox → ready → active → dungeon/done
+
+Move is an escape hatch that allows any-to-any transitions.
+Dungeon moves require a --reason flag.
+You can use short dungeon names (done) or canonical paths (dungeon/done).
 
 Examples:
-  camp intent move add-dark active        Move to active status
-  camp intent move add-dark ready         Mark as ready for promotion
-  camp intent move add-dark done          Mark as complete
-  camp intent move add-dark killed        Archive/abandon intent
+  camp intent move add-dark ready                         Mark as ready
+  camp intent move add-dark done --reason "completed"     Mark as done
+  camp intent move add-dark killed --reason "superseded"  Kill intent
 
 ```
 camp intent move <id> <status> [flags]
@@ -2032,8 +2034,9 @@ camp intent move <id> <status> [flags]
 ### Options
 
 ```
-  -h, --help        help for move
-      --no-commit   Don't create a git commit
+  -h, --help            help for move
+      --no-commit       Don't create a git commit
+      --reason string   Reason for the move (required for dungeon targets)
 ```
 
 ### Options inherited from parent commands
@@ -2047,22 +2050,25 @@ camp intent move <id> <status> [flags]
 
 ## camp intent promote
 
-Promote an intent to a Festival
+Promote an intent through the pipeline
 
 ### Synopsis
 
-Promote a ready intent to a Festival.
+Promote an intent to the next pipeline stage.
 
-The intent should be in 'ready' status before promotion. Use --force to
-promote from any status.
+TARGETS:
+  ready      Move from inbox to ready (reviewed/enriched)
+  festival   Move from ready to active + create festival (default)
+  design     Move from ready to active + create design doc
 
-After promotion, the intent will be moved to 'done' status with a reference
-to the created Festival.
+The intent moves to active status when promoted to festival or design,
+because work is just beginning. Use --force to bypass status checks.
 
 Examples:
-  camp intent promote add-dark           Promote by partial ID
-  camp intent promote add-dark --force   Force promote from any status
-  camp intent promote add-dark --dry-run Preview without changes
+  camp intent promote add-dark                       Promote ready → festival
+  camp intent promote add-dark --target design       Promote ready → design doc
+  camp intent promote add-dark --target ready         Promote inbox → ready
+  camp intent promote add-dark --force                Force promote from any status
 
 ```
 camp intent promote <id> [flags]
@@ -2071,10 +2077,11 @@ camp intent promote <id> [flags]
 ### Options
 
 ```
-      --dry-run     Preview promotion without making changes
-      --force       Promote even if not in ready status
-  -h, --help        help for promote
-      --no-commit   Don't create a git commit
+      --dry-run         Preview promotion without making changes
+      --force           Promote even if not in expected status
+  -h, --help            help for promote
+      --no-commit       Don't create a git commit
+      --target string   Promote target: ready, festival, design (default "festival")
 ```
 
 ### Options inherited from parent commands

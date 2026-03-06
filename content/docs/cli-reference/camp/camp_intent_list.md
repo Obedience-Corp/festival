@@ -7,7 +7,7 @@ List intents in the campaign
 List intents with filtering, sorting, and output format options.
 
 By default, lists intents in inbox, active, and ready status.
-Use --all to include done and killed intents.
+Use --all to include dungeon intents.
 
 OUTPUT FORMATS:
   table (default)   Human-readable table with columns
@@ -28,7 +28,7 @@ camp intent list [flags]
 ### Options
 
 ```
-  -a, --all              Include done/killed intents
+  -a, --all              Include dungeon intents
   -f, --format string    Output format: table, simple, json (default "table")
   -h, --help             help for list
       --horizon string   Filter by horizon

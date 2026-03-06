@@ -16,10 +16,9 @@ CAPTURE MODES:
 
 INTENT LIFECYCLE:
   inbox  → Captured, not yet reviewed
-  active → Being enriched with details
-  ready  → Ready for Festival promotion
-  done   → Resolved
-  killed → Abandoned
+  ready  → Reviewed/enriched, ready for promotion
+  active → Promoted to festival/design doc, work in progress
+  dungeon/* → Terminal statuses (done, killed, archived, someday)
 
 Examples:
   camp intent add "Add dark mode toggle"         Fast capture to inbox
@@ -28,8 +27,8 @@ Examples:
   camp intent list --status active               List active intents
   camp intent edit add-dark                      Edit intent (fuzzy match)
   camp intent show 20260119-153412-add-dark      Show intent details
-  camp intent move add-dark active               Move to active status
-  camp intent promote add-dark                   Promote to Festival
+  camp intent move add-dark ready                Mark as ready
+  camp intent promote add-dark                   Promote to active via festival
   camp intent archive add-dark                   Archive intent
 
 ```
@@ -62,6 +61,6 @@ camp intent [flags]
 * [camp intent gather](camp_intent_gather.md)	 - Gather related intents into a unified document
 * [camp intent list](camp_intent_list.md)	 - List intents in the campaign
 * [camp intent move](camp_intent_move.md)	 - Move intent to a different status
-* [camp intent promote](camp_intent_promote.md)	 - Promote an intent to a Festival
+* [camp intent promote](camp_intent_promote.md)	 - Promote an intent through the pipeline
 * [camp intent show](camp_intent_show.md)	 - Show detailed intent information
 

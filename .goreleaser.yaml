@@ -17,13 +17,17 @@ builds:
     goos:
       - linux
       - darwin
-      - windows
+      # Windows is intentionally disabled for stable releases until
+      # fest+camp Windows runtime behavior is production-ready.
+      # Re-enable by uncommenting:
+      # - windows
     goarch:
       - amd64
       - arm64
-    ignore:
-      - goos: windows
-        goarch: arm64
+    # When Windows is re-enabled, keep arm64 ignored until supported:
+    # ignore:
+    #   - goos: windows
+    #     goarch: arm64
     ldflags:
       - -s -w
       - -X github.com/Obedience-Corp/fest/internal/version.Version={{.Version}}
@@ -39,13 +43,17 @@ builds:
     goos:
       - linux
       - darwin
-      - windows
+      # Windows is intentionally disabled for stable releases until
+      # fest+camp Windows runtime behavior is production-ready.
+      # Re-enable by uncommenting:
+      # - windows
     goarch:
       - amd64
       - arm64
-    ignore:
-      - goos: windows
-        goarch: arm64
+    # When Windows is re-enabled, keep arm64 ignored until supported:
+    # ignore:
+    #   - goos: windows
+    #     goarch: arm64
     ldflags:
       - -s -w
       - -X github.com/Obedience-Corp/camp/internal/version.Version={{.Version}}
@@ -63,9 +71,10 @@ archives:
       {{- if eq .Arch "amd64" }}x86_64
       {{- else if eq .Arch "386" }}i386
       {{- else }}{{ .Arch }}{{ end }}
-    format_overrides:
-      - goos: windows
-        format: zip
+    # When Windows builds are re-enabled, keep Windows archives as .zip:
+    # format_overrides:
+    #   - goos: windows
+    #     format: zip
     files:
       - README.md
       - LICENSE
@@ -132,16 +141,18 @@ aurs:
       install -Dm644 "./completions/fest.fish" "${pkgdir}/usr/share/fish/vendor_completions.d/fest.fish"
     commit_msg_template: "Update to {{ .Tag }}"
 
-scoops:
-  - name: festival
-    repository:
-      owner: Obedience-Corp
-      name: scoop-bucket
-      branch: main
-      token: "{{ .Env.SCOOP_GITHUB_TOKEN }}"
-    homepage: "https://fest.build"
-    description: "Festival Methodology CLI suite (fest + camp) - AI-native project planning"
-    license: "BUSL-1.1"
+# Scoop publishing is temporarily disabled while Windows support is stabilized.
+# Re-enable by uncommenting this block after Windows artifacts are re-enabled.
+# scoops:
+#   - name: festival
+#     repository:
+#       owner: Obedience-Corp
+#       name: scoop-bucket
+#       branch: main
+#       token: "{{ .Env.SCOOP_GITHUB_TOKEN }}"
+#     homepage: "https://fest.build"
+#     description: "Festival Methodology CLI suite (fest + camp) - AI-native project planning"
+#     license: "BUSL-1.1"
 
 checksum:
   name_template: 'checksums.txt'
@@ -223,7 +234,7 @@ release:
     | Arch Linux | `yay -S festival-bin` |
     | Debian/Ubuntu | Download `.deb` from assets below |
     | Fedora/RHEL | Download `.rpm` from assets below |
-    | Windows | `scoop bucket add obey https://github.com/Obedience-Corp/scoop-bucket && scoop install festival` |
+    | Windows | Temporarily paused while Windows support is stabilized |
 
 # macOS signing and notarization — disabled until Apple Developer account is configured.
 # To enable: set MACOS_SIGN_P12, MACOS_SIGN_PASSWORD, MACOS_NOTARY_KEY,

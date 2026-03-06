@@ -39,16 +39,11 @@ Choose your distribution's package format:
 
 ## Windows
 
-Install with Scoop:
+Stable Windows packages are temporarily paused while Windows support is being hardened.
 
-```powershell
-scoop bucket add obey https://github.com/Obedience-Corp/scoop-bucket
-scoop install festival
-```
+For now, use WSL2 and the Linux install methods from this page.
 
-Or download the `.zip` directly:
-
-[Download for Windows](https://github.com/Obedience-Corp/festival/releases/latest){ .md-button .md-button--primary }
+Scoop and direct `.zip` downloads will return once Windows support is marked stable.
 
 </div>
 

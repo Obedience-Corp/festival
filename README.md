@@ -175,12 +175,8 @@ yay -S festival-bin
 
 **Debian/Ubuntu:** Download `.deb` from [releases](https://github.com/Obedience-Corp/festival/releases/latest)
 
-**Windows:**
-
-```powershell
-scoop bucket add obey https://github.com/Obedience-Corp/scoop-bucket
-scoop install festival
-```
+**Windows:** Stable Windows packages are temporarily paused while support is being hardened.
+For now, use WSL2 and the Linux install method above.
 
 After installing, see the [quick start guide](https://fest.build/getting-started/quickstart/) for shell setup and first steps.
 
