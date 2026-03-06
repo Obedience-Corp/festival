@@ -204,6 +204,10 @@ fest create festival my-first-feature
 fest next
 ```
 
+## Submodules
+
+> **Note:** The `camp` and `fest` source repositories are private. Binaries are distributed via the install methods above — you do not need to clone the submodules.
+
 ## Documentation
 
 Full documentation at **[fest.build](https://fest.build)**:

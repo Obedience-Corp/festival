@@ -96,11 +96,15 @@ This downloads pre-built binaries to `~/.local/bin`.
 
 ### From Source
 
+{{< note >}}
+The `fest` and `camp` source repositories are private. Building from source requires access to the private repos. Most users should use the package manager or binary download methods above.
+{{< /note >}}
+
 Requires Go 1.25+:
 
 ```bash
 go install github.com/Obedience-Corp/fest/cmd/fest@latest
-go install github.com/obediencecorp/camp/cmd/camp@latest
+go install github.com/Obedience-Corp/camp/cmd/camp@latest
 ```
 
 ## Verify Installation

@@ -49,61 +49,6 @@ Run 'fest understand' to learn the methodology before executing tasks.
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest apply](fest_apply.md)	 - Apply a local template to a destination file (copy or render)
-* [fest chain](fest_chain.md)	 - Manage festival chains (inter-festival dependencies)
-* [fest commit](fest_commit.md)	 - Create git commit with task reference
-* [fest commits](fest_commits.md)	 - Query commits by festival element
-* [fest completion](fest_completion.md)	 - Generate shell completion scripts
-* [fest config](fest_config.md)	 - Manage fest configuration repositories
-* [fest context](fest_context.md)	 - Get context for the current location or task
-* [fest create](fest_create.md)	 - Create festivals, phases, sequences, or tasks (TUI)
-* [fest deps](fest_deps.md)	 - Show task dependencies
-* [fest explore](fest_explore.md)	 - Interactive festival explorer with hierarchy drilldown
-* [fest feedback](fest_feedback.md)	 - Manage structured feedback collection
-* [fest gates](fest_gates.md)	 - Manage quality gates - validation steps at sequence end
-* [fest go](fest_go.md)	 - Navigate to festivals/ - use 'fgo' after shell-init setup
-* [fest id](fest_id.md)	 - Show the festival ID for the current context
-* [fest index](fest_index.md)	 - Manage festival indices
-* [fest init](fest_init.md)	 - Initialize a new festival directory structure
-* [fest insert](fest_insert.md)	 - Insert new festival elements
-* [fest intro](fest_intro.md)	 - Getting started guide for fest CLI and common workflows
-* [fest link](fest_link.md)	 - Link festival to project directory (context-aware)
-* [fest links](fest_links.md)	 - List all festival-project links
-* [fest list](fest_list.md)	 - List festivals by status
-* [fest markers](fest_markers.md)	 - Manage template markers in festival files
-* [fest migrate](fest_migrate.md)	 - Migrate festival documents
-* [fest move](fest_move.md)	 - Move files between festival and linked project
-* [fest next](fest_next.md)	 - Find the next task to work on
-* [fest parse](fest_parse.md)	 - Parse festival documents into structured output
-* [fest progress](fest_progress.md)	 - Track and display festival execution progress
-* [fest promote](fest_promote.md)	 - Promote a festival to the next lifecycle status
-* [fest remove](fest_remove.md)	 - Remove festival elements and renumber
-* [fest renumber](fest_renumber.md)	 - Renumber festival elements
-* [fest reorder](fest_reorder.md)	 - Reorder festival elements
-* [fest research](fest_research.md)	 - Manage research phase documents
-* [fest ritual](fest_ritual.md)	 - Manage repeatable ritual festivals
-* [fest rules](fest_rules.md)	 - Display festival rules for the current festival
-* [fest scaffold](fest_scaffold.md)	 - Generate festival structures from plans
-* [fest search](fest_search.md)	 - Search festivals by name, ID, or goal text
-* [fest shell-init](fest_shell-init.md)	 - Output shell integration code for festival helpers
-* [fest show](fest_show.md)	 - Display festival information
-* [fest status](fest_status.md)	 - Manage and query festival entity statuses
-* [fest system](fest_system.md)	 - Manage fest tool configuration and templates
-* [fest task](fest_task.md)	 - Manage task status (show, edit, complete, block, reset)
-* [fest templates](fest_templates.md)	 - Manage agent-created templates within a festival
-* [fest tui](fest_tui.md)	 - Interactive UI (Charm) for festival creation and editing
-* [fest types](fest_types.md)	 - Discover and explore template types
-* [fest understand](fest_understand.md)	 - Learn methodology FIRST - run before executing festival tasks
-* [fest unlink](fest_unlink.md)	 - Remove festival-project link (context-aware)
-* [fest validate](fest_validate.md)	 - Check festival structure - find missing task files and issues
-* [fest version](fest_version.md)	 - Show version information
-* [fest wizard](fest_wizard.md)	 - Interactive guidance and assistance for festival creation
-* [fest workflow](fest_workflow.md)	 - Manage workflow-based phase execution
-
-
 ---
 
 ## fest apply
@@ -137,12 +82,6 @@ fest apply [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-
-
 ---
 
 ## fest chain
@@ -167,19 +106,6 @@ Create, validate, and track chains of dependent festivals.
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-* [fest chain check](fest_chain_check.md)	 - Check if a festival is unblocked within its chain
-* [fest chain complete](fest_chain_complete.md)	 - Complete and archive a chain
-* [fest chain create](fest_chain_create.md)	 - Create a new festival chain
-* [fest chain graph](fest_chain_graph.md)	 - Visualize chain dependency graph
-* [fest chain list](fest_chain_list.md)	 - List all festival chains
-* [fest chain status](fest_chain_status.md)	 - Show chain status and progress
-* [fest chain validate](fest_chain_validate.md)	 - Validate a festival chain
-
-
 ---
 
 ## fest chain check
@@ -209,12 +135,6 @@ fest chain check <ref-or-id> [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest chain](fest_chain.md)	 - Manage festival chains (inter-festival dependencies)
-
-
 ---
 
 ## fest chain complete
@@ -247,12 +167,6 @@ fest chain complete <chain-id> [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest chain](fest_chain.md)	 - Manage festival chains (inter-festival dependencies)
-
-
 ---
 
 ## fest chain create
@@ -283,12 +197,6 @@ fest chain create [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest chain](fest_chain.md)	 - Manage festival chains (inter-festival dependencies)
-
-
 ---
 
 ## fest chain graph
@@ -319,12 +227,6 @@ fest chain graph <chain-id> [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest chain](fest_chain.md)	 - Manage festival chains (inter-festival dependencies)
-
-
 ---
 
 ## fest chain list
@@ -350,12 +252,6 @@ fest chain list [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest chain](fest_chain.md)	 - Manage festival chains (inter-festival dependencies)
-
-
 ---
 
 ## fest chain status
@@ -380,12 +276,6 @@ fest chain status <chain-id> [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest chain](fest_chain.md)	 - Manage festival chains (inter-festival dependencies)
-
-
 ---
 
 ## fest chain validate
@@ -416,12 +306,6 @@ fest chain validate <chain-id> [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest chain](fest_chain.md)	 - Manage festival chains (inter-festival dependencies)
-
-
 ---
 
 ## fest commit
@@ -494,12 +378,6 @@ fest commit [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-
-
 ---
 
 ## fest commits
@@ -545,12 +423,6 @@ fest commits [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-
-
 ---
 
 ## fest completion
@@ -618,12 +490,6 @@ fest completion [bash|zsh|fish|powershell]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-
-
 ---
 
 ## fest config
@@ -651,19 +517,6 @@ that override or extend the built-in fest methodology resources.
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-* [fest config add](fest_config_add.md)	 - Add a configuration repository
-* [fest config list](fest_config_list.md)	 - List all configuration repositories
-* [fest config remove](fest_config_remove.md)	 - Remove a configuration repository
-* [fest config show](fest_config_show.md)	 - Show active configuration
-* [fest config sync](fest_config_sync.md)	 - Sync configuration repository
-* [fest config theme](fest_config_theme.md)	 - Manage TUI color theme
-* [fest config use](fest_config_use.md)	 - Set active configuration repository
-
-
 ---
 
 ## fest config add
@@ -703,12 +556,6 @@ fest config add <name> <source> [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest config](fest_config.md)	 - Manage fest configuration repositories
-
-
 ---
 
 ## fest config list
@@ -738,12 +585,6 @@ fest config list [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest config](fest_config.md)	 - Manage fest configuration repositories
-
-
 ---
 
 ## fest config remove
@@ -782,12 +623,6 @@ fest config remove <name> [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest config](fest_config.md)	 - Manage fest configuration repositories
-
-
 ---
 
 ## fest config show
@@ -817,12 +652,6 @@ fest config show [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest config](fest_config.md)	 - Manage fest configuration repositories
-
-
 ---
 
 ## fest config sync
@@ -860,12 +689,6 @@ fest config sync [name] [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest config](fest_config.md)	 - Manage fest configuration repositories
-
-
 ---
 
 ## fest config theme
@@ -898,15 +721,6 @@ Use 'fest config theme test' to preview all themes on your terminal.
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest config](fest_config.md)	 - Manage fest configuration repositories
-* [fest config theme set](fest_config_theme_set.md)	 - Set the TUI theme
-* [fest config theme show](fest_config_theme_show.md)	 - Show current theme setting
-* [fest config theme test](fest_config_theme_test.md)	 - Preview all themes side by side
-
-
 ---
 
 ## fest config theme set
@@ -948,12 +762,6 @@ fest config theme set <theme> [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest config theme](fest_config_theme.md)	 - Manage TUI color theme
-
-
 ---
 
 ## fest config theme show
@@ -978,12 +786,6 @@ fest config theme show [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest config theme](fest_config_theme.md)	 - Manage TUI color theme
-
-
 ---
 
 ## fest config theme test
@@ -1015,12 +817,6 @@ fest config theme test [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest config theme](fest_config_theme.md)	 - Manage TUI color theme
-
-
 ---
 
 ## fest config use
@@ -1059,12 +855,6 @@ fest config use <name> [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest config](fest_config.md)	 - Manage fest configuration repositories
-
-
 ---
 
 ## fest context
@@ -1116,12 +906,6 @@ fest context [flags]
       --debug           enable debug logging
       --no-color        disable colored output
 ```
-
-### SEE ALSO
-
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-
-
 ---
 
 ## fest create
@@ -1146,17 +930,6 @@ fest create [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-* [fest create festival](fest_create_festival.md)	 - Create a new festival scaffold under festivals/planning
-* [fest create phase](fest_create_phase.md)	 - Insert a new phase and render its goal file
-* [fest create sequence](fest_create_sequence.md)	 - Insert a new sequence and render its goal file
-* [fest create task](fest_create_task.md)	 - Insert a new task file in a sequence
-* [fest create workflow](fest_create_workflow.md)	 - Create a WORKFLOW.md for a phase from structured step definitions
-
-
 ---
 
 ## fest create festival
@@ -1194,12 +967,6 @@ fest create festival [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest create](fest_create.md)	 - Create festivals, phases, sequences, or tasks (TUI)
-
-
 ---
 
 ## fest create phase
@@ -1237,12 +1004,6 @@ fest create phase [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest create](fest_create.md)	 - Create festivals, phases, sequences, or tasks (TUI)
-
-
 ---
 
 ## fest create sequence
@@ -1314,12 +1075,6 @@ fest create sequence [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest create](fest_create.md)	 - Create festivals, phases, sequences, or tasks (TUI)
-
-
 ---
 
 ## fest create task
@@ -1404,12 +1159,6 @@ fest create task [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest create](fest_create.md)	 - Create festivals, phases, sequences, or tasks (TUI)
-
-
 ---
 
 ## fest create workflow
@@ -1460,12 +1209,6 @@ fest create workflow [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest create](fest_create.md)	 - Create festivals, phases, sequences, or tasks (TUI)
-
-
 ---
 
 ## fest deps
@@ -1509,12 +1252,6 @@ fest deps [task] [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-
-
 ---
 
 ## fest explore
@@ -1560,16 +1297,6 @@ fest explore [status] [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-* [fest explore active](fest_explore_active.md)	 - Explore active festivals
-* [fest explore completed](fest_explore_completed.md)	 - Explore completed festivals
-* [fest explore dungeon](fest_explore_dungeon.md)	 - Explore dungeon festivals
-* [fest explore planning](fest_explore_planning.md)	 - Explore planning festivals
-
-
 ---
 
 ## fest explore active
@@ -1595,12 +1322,6 @@ fest explore active [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest explore](fest_explore.md)	 - Interactive festival explorer with hierarchy drilldown
-
-
 ---
 
 ## fest explore completed
@@ -1626,12 +1347,6 @@ fest explore completed [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest explore](fest_explore.md)	 - Interactive festival explorer with hierarchy drilldown
-
-
 ---
 
 ## fest explore dungeon
@@ -1657,12 +1372,6 @@ fest explore dungeon [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest explore](fest_explore.md)	 - Interactive festival explorer with hierarchy drilldown
-
-
 ---
 
 ## fest explore planning
@@ -1688,12 +1397,6 @@ fest explore planning [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest explore](fest_explore.md)	 - Interactive festival explorer with hierarchy drilldown
-
-
 ---
 
 ## fest feedback
@@ -1729,16 +1432,6 @@ Examples:
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-* [fest feedback add](fest_feedback_add.md)	 - Add a feedback observation
-* [fest feedback export](fest_feedback_export.md)	 - Export collected feedback
-* [fest feedback init](fest_feedback_init.md)	 - Initialize feedback collection
-* [fest feedback view](fest_feedback_view.md)	 - View collected feedback
-
-
 ---
 
 ## fest feedback add
@@ -1782,12 +1475,6 @@ fest feedback add [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest feedback](fest_feedback.md)	 - Manage structured feedback collection
-
-
 ---
 
 ## fest feedback export
@@ -1826,12 +1513,6 @@ fest feedback export [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest feedback](fest_feedback.md)	 - Manage structured feedback collection
-
-
 ---
 
 ## fest feedback init
@@ -1870,12 +1551,6 @@ fest feedback init [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest feedback](fest_feedback.md)	 - Manage structured feedback collection
-
-
 ---
 
 ## fest feedback view
@@ -1919,12 +1594,6 @@ fest feedback view [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest feedback](fest_feedback.md)	 - Manage structured feedback collection
-
-
 ---
 
 ## fest gates
@@ -1957,15 +1626,6 @@ Available Commands:
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-* [fest gates apply](fest_gates_apply.md)	 - Apply quality gates to sequences
-* [fest gates remove](fest_gates_remove.md)	 - Remove quality gate files from sequences
-* [fest gates show](fest_gates_show.md)	 - Show effective gate policy
-
-
 ---
 
 ## fest gates apply
@@ -2027,12 +1687,6 @@ fest gates apply [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest gates](fest_gates.md)	 - Manage quality gates - validation steps at sequence end
-
-
 ---
 
 ## fest gates remove
@@ -2091,12 +1745,6 @@ fest gates remove [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest gates](fest_gates.md)	 - Manage quality gates - validation steps at sequence end
-
-
 ---
 
 ## fest gates show
@@ -2137,12 +1785,6 @@ fest gates show [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest gates](fest_gates.md)	 - Manage quality gates - validation steps at sequence end
-
-
 ---
 
 ## fest go
@@ -2202,19 +1844,6 @@ fest go [target] [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-* [fest go fest](fest_go_fest.md)	 - Navigate back to festival from linked project
-* [fest go link](fest_go_link.md)	 - Link current festival to a project directory (or vice versa)
-* [fest go list](fest_go_list.md)	 - List navigation shortcuts and links
-* [fest go map](fest_go_map.md)	 - Create a navigation shortcut
-* [fest go move](fest_go_move.md)	 - Move files between festival and linked project
-* [fest go project](fest_go_project.md)	 - Navigate to linked project directory
-* [fest go unmap](fest_go_unmap.md)	 - Remove a navigation shortcut
-
-
 ---
 
 ## fest go fest
@@ -2246,12 +1875,6 @@ fest go fest [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest go](fest_go.md)	 - Navigate to festivals/ - use 'fgo' after shell-init setup
-
-
 ---
 
 ## fest go link
@@ -2302,12 +1925,6 @@ fest go link [path] [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest go](fest_go.md)	 - Navigate to festivals/ - use 'fgo' after shell-init setup
-
-
 ---
 
 ## fest go list
@@ -2353,12 +1970,6 @@ fest go list [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest go](fest_go.md)	 - Navigate to festivals/ - use 'fgo' after shell-init setup
-
-
 ---
 
 ## fest go map
@@ -2405,12 +2016,6 @@ fest go map <name> [path] [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest go](fest_go.md)	 - Navigate to festivals/ - use 'fgo' after shell-init setup
-
-
 ---
 
 ## fest go move
@@ -2468,12 +2073,6 @@ fest go move <source> [destination] [flags]
       --debug           enable debug logging
       --no-color        disable colored output
 ```
-
-### SEE ALSO
-
-* [fest go](fest_go.md)	 - Navigate to festivals/ - use 'fgo' after shell-init setup
-
-
 ---
 
 ## fest go project
@@ -2505,12 +2104,6 @@ fest go project [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest go](fest_go.md)	 - Navigate to festivals/ - use 'fgo' after shell-init setup
-
-
 ---
 
 ## fest go unmap
@@ -2547,12 +2140,6 @@ fest go unmap <name> [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest go](fest_go.md)	 - Navigate to festivals/ - use 'fgo' after shell-init setup
-
-
 ---
 
 ## fest id
@@ -2591,12 +2178,6 @@ fest id [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-
-
 ---
 
 ## fest index
@@ -2626,17 +2207,6 @@ For workspace-wide indexing (Guild v3), use the 'tree' subcommand.
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-* [fest index diff](fest_index_diff.md)	 - Compare tree indexes to detect changes
-* [fest index show](fest_index_show.md)	 - Show festival index contents
-* [fest index tree](fest_index_tree.md)	 - Generate workspace-wide tree index
-* [fest index validate](fest_index_validate.md)	 - Validate festival index against filesystem
-* [fest index write](fest_index_write.md)	 - Generate festival index
-
-
 ---
 
 ## fest index diff
@@ -2670,12 +2240,6 @@ fest index diff [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest index](fest_index.md)	 - Manage festival indices
-
-
 ---
 
 ## fest index show
@@ -2705,12 +2269,6 @@ fest index show [festival-path] [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest index](fest_index.md)	 - Manage festival indices
-
-
 ---
 
 ## fest index tree
@@ -2744,12 +2302,6 @@ fest index tree [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest index](fest_index.md)	 - Manage festival indices
-
-
 ---
 
 ## fest index validate
@@ -2784,12 +2336,6 @@ fest index validate [festival-path] [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest index](fest_index.md)	 - Manage festival indices
-
-
 ---
 
 ## fest index write
@@ -2823,12 +2369,6 @@ fest index write [festival-path] [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest index](fest_index.md)	 - Manage festival indices
-
-
 ---
 
 ## fest init
@@ -2884,12 +2424,6 @@ fest init [path] [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-
-
 ---
 
 ## fest insert
@@ -2919,15 +2453,6 @@ following elements to maintain proper ordering.
       --debug           enable debug logging
       --no-color        disable colored output
 ```
-
-### SEE ALSO
-
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-* [fest insert phase](fest_insert_phase.md)	 - Insert a new phase
-* [fest insert sequence](fest_insert_sequence.md)	 - Insert a new sequence within a phase
-* [fest insert task](fest_insert_task.md)	 - Insert a new task within a sequence
-
-
 ---
 
 ## fest insert phase
@@ -2970,12 +2495,6 @@ fest insert phase [festival-dir] [flags]
       --no-color        disable colored output
       --verbose         show detailed output
 ```
-
-### SEE ALSO
-
-* [fest insert](fest_insert.md)	 - Insert new festival elements
-
-
 ---
 
 ## fest insert sequence
@@ -3018,12 +2537,6 @@ fest insert sequence [flags]
       --no-color        disable colored output
       --verbose         show detailed output
 ```
-
-### SEE ALSO
-
-* [fest insert](fest_insert.md)	 - Insert new festival elements
-
-
 ---
 
 ## fest insert task
@@ -3067,12 +2580,6 @@ fest insert task [flags]
       --no-color        disable colored output
       --verbose         show detailed output
 ```
-
-### SEE ALSO
-
-* [fest insert](fest_insert.md)	 - Insert new festival elements
-
-
 ---
 
 ## fest intro
@@ -3117,13 +2624,6 @@ fest intro [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-* [fest intro workflows](fest_intro_workflows.md)	 - Common fest workflow patterns
-
-
 ---
 
 ## fest intro workflows
@@ -3160,12 +2660,6 @@ fest intro workflows [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest intro](fest_intro.md)	 - Getting started guide for fest CLI and common workflows
-
-
 ---
 
 ## fest link
@@ -3220,12 +2714,6 @@ fest link [path] [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-
-
 ---
 
 ## fest links
@@ -3264,12 +2752,6 @@ fest links [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-
-
 ---
 
 ## fest list
@@ -3326,12 +2808,6 @@ fest list [status] [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-
-
 ---
 
 ## fest markers
@@ -3366,17 +2842,6 @@ Use subcommands to list markers or fill them interactively.
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-* [fest markers count](fest_markers_count.md)	 - Count unfilled template markers
-* [fest markers list](fest_markers_list.md)	 - List all unfilled template markers
-* [fest markers next](fest_markers_next.md)	 - Show the next file with unfilled markers
-* [fest markers scaffold](fest_markers_scaffold.md)	 - Generate marker JSON from template
-* [fest markers validate](fest_markers_validate.md)	 - Validate marker JSON against template
-
-
 ---
 
 ## fest markers count
@@ -3407,12 +2872,6 @@ fest markers count [flags]
       --path string     Festival path (default: current directory)
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest markers](fest_markers.md)	 - Manage template markers in festival files
-
-
 ---
 
 ## fest markers list
@@ -3443,12 +2902,6 @@ fest markers list [flags]
       --path string     Festival path (default: current directory)
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest markers](fest_markers.md)	 - Manage template markers in festival files
-
-
 ---
 
 ## fest markers next
@@ -3488,12 +2941,6 @@ fest markers next [flags]
       --path string     Festival path (default: current directory)
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest markers](fest_markers.md)	 - Manage template markers in festival files
-
-
 ---
 
 ## fest markers scaffold
@@ -3551,12 +2998,6 @@ fest markers scaffold [flags]
       --path string     Festival path (default: current directory)
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest markers](fest_markers.md)	 - Manage template markers in festival files
-
-
 ---
 
 ## fest markers validate
@@ -3610,12 +3051,6 @@ fest markers validate [flags]
       --path string     Festival path (default: current directory)
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest markers](fest_markers.md)	 - Manage template markers in festival files
-
-
 ---
 
 ## fest migrate
@@ -3656,15 +3091,6 @@ Examples:
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-* [fest migrate frontmatter](fest_migrate_frontmatter.md)	 - Add YAML frontmatter to existing documents
-* [fest migrate metadata](fest_migrate_metadata.md)	 - Add metadata to existing festivals
-* [fest migrate times](fest_migrate_times.md)	 - Populate time tracking data from file modification times
-
-
 ---
 
 ## fest migrate frontmatter
@@ -3706,12 +3132,6 @@ fest migrate frontmatter [flags]
       --debug           enable debug logging
       --no-color        disable colored output
 ```
-
-### SEE ALSO
-
-* [fest migrate](fest_migrate.md)	 - Migrate festival documents
-
-
 ---
 
 ## fest migrate metadata
@@ -3755,12 +3175,6 @@ fest migrate metadata [path] [flags]
       --debug           enable debug logging
       --no-color        disable colored output
 ```
-
-### SEE ALSO
-
-* [fest migrate](fest_migrate.md)	 - Migrate festival documents
-
-
 ---
 
 ## fest migrate times
@@ -3810,12 +3224,6 @@ fest migrate times [path] [flags]
       --debug           enable debug logging
       --no-color        disable colored output
 ```
-
-### SEE ALSO
-
-* [fest migrate](fest_migrate.md)	 - Migrate festival documents
-
-
 ---
 
 ## fest move
@@ -3873,12 +3281,6 @@ fest move <source> [destination] [flags]
       --debug           enable debug logging
       --no-color        disable colored output
 ```
-
-### SEE ALSO
-
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-
-
 ---
 
 ## fest next
@@ -3947,12 +3349,6 @@ fest next [flags]
       --debug           enable debug logging
       --no-color        disable colored output
 ```
-
-### SEE ALSO
-
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-
-
 ---
 
 ## fest parse
@@ -4003,12 +3399,6 @@ fest parse [path] [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-
-
 ---
 
 ## fest progress
@@ -4086,12 +3476,6 @@ fest progress [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-
-
 ---
 
 ## fest promote
@@ -4136,12 +3520,6 @@ fest promote [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-
-
 ---
 
 ## fest remove
@@ -4172,15 +3550,6 @@ for all following elements in the hierarchy.
       --debug           enable debug logging
       --no-color        disable colored output
 ```
-
-### SEE ALSO
-
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-* [fest remove phase](fest_remove_phase.md)	 - Remove a phase and renumber subsequent phases
-* [fest remove sequence](fest_remove_sequence.md)	 - Remove a sequence and renumber subsequent sequences
-* [fest remove task](fest_remove_task.md)	 - Remove a task and renumber subsequent tasks
-
-
 ---
 
 ## fest remove phase
@@ -4222,12 +3591,6 @@ fest remove phase [phase-number|phase-path] [flags]
       --no-color        disable colored output
       --verbose         show detailed output
 ```
-
-### SEE ALSO
-
-* [fest remove](fest_remove.md)	 - Remove festival elements and renumber
-
-
 ---
 
 ## fest remove sequence
@@ -4273,12 +3636,6 @@ fest remove sequence [sequence-number|sequence-name] [flags]
       --no-color        disable colored output
       --verbose         show detailed output
 ```
-
-### SEE ALSO
-
-* [fest remove](fest_remove.md)	 - Remove festival elements and renumber
-
-
 ---
 
 ## fest remove task
@@ -4325,12 +3682,6 @@ fest remove task [task-number|task-name] [flags]
       --no-color        disable colored output
       --verbose         show detailed output
 ```
-
-### SEE ALSO
-
-* [fest remove](fest_remove.md)	 - Remove festival elements and renumber
-
-
 ---
 
 ## fest renumber
@@ -4362,15 +3713,6 @@ removed, or reordered in the festival hierarchy.
       --debug           enable debug logging
       --no-color        disable colored output
 ```
-
-### SEE ALSO
-
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-* [fest renumber phase](fest_renumber_phase.md)	 - Renumber phases in a festival
-* [fest renumber sequence](fest_renumber_sequence.md)	 - Renumber sequences within a phase
-* [fest renumber task](fest_renumber_task.md)	 - Renumber tasks within a sequence
-
-
 ---
 
 ## fest renumber phase
@@ -4414,12 +3756,6 @@ fest renumber phase [festival-dir] [flags]
       --start int       starting number for renumbering (default 1)
       --verbose         show detailed output
 ```
-
-### SEE ALSO
-
-* [fest renumber](fest_renumber.md)	 - Renumber festival elements
-
-
 ---
 
 ## fest renumber sequence
@@ -4467,12 +3803,6 @@ fest renumber sequence [flags]
       --start int       starting number for renumbering (default 1)
       --verbose         show detailed output
 ```
-
-### SEE ALSO
-
-* [fest renumber](fest_renumber.md)	 - Renumber festival elements
-
-
 ---
 
 ## fest renumber task
@@ -4523,12 +3853,6 @@ fest renumber task [flags]
       --start int       starting number for renumbering (default 1)
       --verbose         show detailed output
 ```
-
-### SEE ALSO
-
-* [fest renumber](fest_renumber.md)	 - Renumber festival elements
-
-
 ---
 
 ## fest reorder
@@ -4560,15 +3884,6 @@ accordingly to maintain proper ordering.
       --debug           enable debug logging
       --no-color        disable colored output
 ```
-
-### SEE ALSO
-
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-* [fest reorder phase](fest_reorder_phase.md)	 - Reorder phases in a festival
-* [fest reorder sequence](fest_reorder_sequence.md)	 - Reorder sequences within a phase
-* [fest reorder task](fest_reorder_task.md)	 - Reorder tasks within a sequence
-
-
 ---
 
 ## fest reorder phase
@@ -4612,12 +3927,6 @@ fest reorder phase <from> <to> [festival-dir] [flags]
       --skip-dry-run    skip preview and apply changes immediately
       --verbose         show detailed output
 ```
-
-### SEE ALSO
-
-* [fest reorder](fest_reorder.md)	 - Reorder festival elements
-
-
 ---
 
 ## fest reorder sequence
@@ -4664,12 +3973,6 @@ fest reorder sequence <from> <to> [flags]
       --skip-dry-run    skip preview and apply changes immediately
       --verbose         show detailed output
 ```
-
-### SEE ALSO
-
-* [fest reorder](fest_reorder.md)	 - Reorder festival elements
-
-
 ---
 
 ## fest reorder task
@@ -4718,12 +4021,6 @@ fest reorder task <from> <to> [flags]
       --skip-dry-run    skip preview and apply changes immediately
       --verbose         show detailed output
 ```
-
-### SEE ALSO
-
-* [fest reorder](fest_reorder.md)	 - Reorder festival elements
-
-
 ---
 
 ## fest research
@@ -4757,15 +4054,6 @@ Available Commands:
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-* [fest research create](fest_research_create.md)	 - Create a new research document from template
-* [fest research link](fest_research_link.md)	 - Link research findings to implementation phases/tasks
-* [fest research summary](fest_research_summary.md)	 - Generate summary/index of research documents
-
-
 ---
 
 ## fest research create
@@ -4813,12 +4101,6 @@ fest research create [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest research](fest_research.md)	 - Manage research phase documents
-
-
 ---
 
 ## fest research link
@@ -4865,12 +4147,6 @@ fest research link <research-doc> [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest research](fest_research.md)	 - Manage research phase documents
-
-
 ---
 
 ## fest research summary
@@ -4916,12 +4192,6 @@ fest research summary [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest research](fest_research.md)	 - Manage research phase documents
-
-
 ---
 
 ## fest ritual
@@ -4942,13 +4212,6 @@ Manage repeatable ritual festivals
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-* [fest ritual run](fest_ritual_run.md)	 - Create a new run of a ritual festival in active/
-
-
 ---
 
 ## fest ritual run
@@ -4984,12 +4247,6 @@ fest ritual run <ritual-name-or-id> [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest ritual](fest_ritual.md)	 - Manage repeatable ritual festivals
-
-
 ---
 
 ## fest rules
@@ -5018,12 +4275,6 @@ fest rules [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-
-
 ---
 
 ## fest scaffold
@@ -5059,13 +4310,6 @@ Examples:
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-* [fest scaffold from-plan](fest_scaffold_from-plan.md)	 - Generate festival structure from a plan document
-
-
 ---
 
 ## fest scaffold from-plan
@@ -5115,12 +4359,6 @@ fest scaffold from-plan [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest scaffold](fest_scaffold.md)	 - Generate festival structures from plans
-
-
 ---
 
 ## fest search
@@ -5168,12 +4406,6 @@ fest search <query> [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-
-
 ---
 
 ## fest shell-init
@@ -5250,12 +4482,6 @@ fest shell-init <shell> [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-
-
 ---
 
 ## fest show
@@ -5307,17 +4533,6 @@ fest show [status|festival-name] [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-* [fest show active](fest_show_active.md)	 - List festivals in active/ directory
-* [fest show all](fest_show_all.md)	 - List all festivals grouped by status
-* [fest show completed](fest_show_completed.md)	 - List completed festivals
-* [fest show dungeon](fest_show_dungeon.md)	 - List festivals in dungeon/ directory
-* [fest show planning](fest_show_planning.md)	 - List festivals in planning/ directory
-
-
 ---
 
 ## fest show active
@@ -5343,12 +4558,6 @@ fest show active [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest show](fest_show.md)	 - Display festival information
-
-
 ---
 
 ## fest show all
@@ -5374,12 +4583,6 @@ fest show all [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest show](fest_show.md)	 - Display festival information
-
-
 ---
 
 ## fest show completed
@@ -5405,12 +4608,6 @@ fest show completed [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest show](fest_show.md)	 - Display festival information
-
-
 ---
 
 ## fest show dungeon
@@ -5443,12 +4640,6 @@ fest show dungeon [substatus] [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest show](fest_show.md)	 - Display festival information
-
-
 ---
 
 ## fest show planning
@@ -5474,12 +4665,6 @@ fest show planning [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest show](fest_show.md)	 - Display festival information
-
-
 ---
 
 ## fest status
@@ -5528,15 +4713,6 @@ fest status [path] [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-* [fest status history](fest_status_history.md)	 - View status change history
-* [fest status list](fest_status_list.md)	 - List entities by status
-* [fest status set](fest_status_set.md)	 - Change entity status
-
-
 ---
 
 ## fest status history
@@ -5576,12 +4752,6 @@ fest status history [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest status](fest_status.md)	 - Manage and query festival entity statuses
-
-
 ---
 
 ## fest status list
@@ -5623,12 +4793,6 @@ fest status list [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest status](fest_status.md)	 - Manage and query festival entity statuses
-
-
 ---
 
 ## fest status set
@@ -5705,12 +4869,6 @@ fest status set <status> [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest status](fest_status.md)	 - Manage and query festival entity statuses
-
-
 ---
 
 ## fest system
@@ -5744,16 +4902,6 @@ Available subcommands:
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-* [fest system config](fest_system_config.md)	 - Manage fest configuration settings
-* [fest system repair](fest_system_repair.md)	 - Fix festival directory layout issues
-* [fest system sync](fest_system_sync.md)	 - System: Download latest fest templates from GitHub
-* [fest system update](fest_system_update.md)	 - System: Update fest methodology files from templates
-
-
 ---
 
 ## fest system config
@@ -5795,12 +4943,6 @@ fest system config [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest system](fest_system.md)	 - Manage fest tool configuration and templates
-
-
 ---
 
 ## fest system repair
@@ -5842,12 +4984,6 @@ fest system repair [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest system](fest_system.md)	 - Manage fest tool configuration and templates
-
-
 ---
 
 ## fest system sync
@@ -5896,12 +5032,6 @@ fest system sync [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest system](fest_system.md)	 - Manage fest tool configuration and templates
-
-
 ---
 
 ## fest system update
@@ -5954,12 +5084,6 @@ fest system update [path] [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest system](fest_system.md)	 - Manage fest tool configuration and templates
-
-
 ---
 
 ## fest task
@@ -6008,17 +5132,6 @@ Examples:
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-* [fest task blocked](fest_task_blocked.md)	 - Mark a task as blocked (requires confirmation)
-* [fest task completed](fest_task_completed.md)	 - Mark a task as complete (requires confirmation)
-* [fest task edit](fest_task_edit.md)	 - Open the current task in your editor
-* [fest task reset](fest_task_reset.md)	 - Reset a task to pending (requires confirmation)
-* [fest task show](fest_task_show.md)	 - Show task details and status
-
-
 ---
 
 ## fest task blocked
@@ -6045,12 +5158,6 @@ fest task blocked [task] [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest task](fest_task.md)	 - Manage task status (show, edit, complete, block, reset)
-
-
 ---
 
 ## fest task completed
@@ -6076,12 +5183,6 @@ fest task completed [task] [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest task](fest_task.md)	 - Manage task status (show, edit, complete, block, reset)
-
-
 ---
 
 ## fest task edit
@@ -6106,12 +5207,6 @@ fest task edit [task] [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest task](fest_task.md)	 - Manage task status (show, edit, complete, block, reset)
-
-
 ---
 
 ## fest task reset
@@ -6137,12 +5232,6 @@ fest task reset [task] [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest task](fest_task.md)	 - Manage task status (show, edit, complete, block, reset)
-
-
 ---
 
 ## fest task show
@@ -6169,12 +5258,6 @@ fest task show [task] [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest task](fest_task.md)	 - Manage task status (show, edit, complete, block, reset)
-
-
 ---
 
 ## fest templates
@@ -6209,15 +5292,6 @@ Examples:
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-* [fest templates apply](fest_templates_apply.md)	 - Apply a template with variables
-* [fest templates create](fest_templates_create.md)	 - Create a new template
-* [fest templates list](fest_templates_list.md)	 - List available templates
-
-
 ---
 
 ## fest templates apply
@@ -6259,12 +5333,6 @@ fest templates apply <name> [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest templates](fest_templates.md)	 - Manage agent-created templates within a festival
-
-
 ---
 
 ## fest templates create
@@ -6308,12 +5376,6 @@ fest templates create <name> [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest templates](fest_templates.md)	 - Manage agent-created templates within a festival
-
-
 ---
 
 ## fest templates list
@@ -6345,12 +5407,6 @@ fest templates list [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest templates](fest_templates.md)	 - Manage agent-created templates within a festival
-
-
 ---
 
 ## fest tui
@@ -6375,12 +5431,6 @@ fest tui [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-
-
 ---
 
 ## fest types
@@ -6416,15 +5466,6 @@ Examples:
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-* [fest types festival](fest_types_festival.md)	 - Discover festival types
-* [fest types list](fest_types_list.md)	 - List available template types
-* [fest types show](fest_types_show.md)	 - Show details about a template type
-
-
 ---
 
 ## fest types festival
@@ -6472,14 +5513,6 @@ fest types festival [type-name] [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest types](fest_types.md)	 - Discover and explore template types
-* [fest types festival list](fest_types_festival_list.md)	 - List all festival types
-* [fest types festival show](fest_types_festival_show.md)	 - Show details for a festival type
-
-
 ---
 
 ## fest types festival list
@@ -6517,12 +5550,6 @@ fest types festival list [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest types festival](fest_types_festival.md)	 - Discover festival types
-
-
 ---
 
 ## fest types festival show
@@ -6564,12 +5591,6 @@ fest types festival show <type-name> [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest types festival](fest_types_festival.md)	 - Discover festival types
-
-
 ---
 
 ## fest types list
@@ -6615,12 +5636,6 @@ fest types list [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest types](fest_types.md)	 - Discover and explore template types
-
-
 ---
 
 ## fest types show
@@ -6662,12 +5677,6 @@ fest types show <type-name> [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest types](fest_types.md)	 - Discover and explore template types
-
-
 ---
 
 ## fest understand
@@ -6717,25 +5726,6 @@ fest understand [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-* [fest understand checklist](fest_understand_checklist.md)	 - Quick festival validation checklist
-* [fest understand context](fest_understand_context.md)	 - CONTEXT.md - session memory for AI agents (CREATE FIRST)
-* [fest understand extensions](fest_understand_extensions.md)	 - Show loaded extensions
-* [fest understand gates](fest_understand_gates.md)	 - Show quality gate configuration
-* [fest understand methodology](fest_understand_methodology.md)	 - Core principles - START HERE for new agents
-* [fest understand nodeids](fest_understand_nodeids.md)	 - Node reference system for code traceability
-* [fest understand plugins](fest_understand_plugins.md)	 - Show discovered plugins
-* [fest understand resources](fest_understand_resources.md)	 - What's in the .festival/ directory
-* [fest understand rules](fest_understand_rules.md)	 - MANDATORY structure rules for automation
-* [fest understand structure](fest_understand_structure.md)	 - 3-level hierarchy: Festival → Phase → Sequence → Task
-* [fest understand tasks](fest_understand_tasks.md)	 - When and how to create task files (CRITICAL)
-* [fest understand templates](fest_understand_templates.md)	 - Template variables that save tokens
-* [fest understand workflow](fest_understand_workflow.md)	 - Just-in-time reading and execution patterns
-
-
 ---
 
 ## fest understand checklist
@@ -6774,12 +5764,6 @@ fest understand checklist [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest understand](fest_understand.md)	 - Learn methodology FIRST - run before executing festival tasks
-
-
 ---
 
 ## fest understand context
@@ -6812,12 +5796,6 @@ fest understand context [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest understand](fest_understand.md)	 - Learn methodology FIRST - run before executing festival tasks
-
-
 ---
 
 ## fest understand extensions
@@ -6856,12 +5834,6 @@ fest understand extensions [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest understand](fest_understand.md)	 - Learn methodology FIRST - run before executing festival tasks
-
-
 ---
 
 ## fest understand gates
@@ -6900,12 +5872,6 @@ fest understand gates [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest understand](fest_understand.md)	 - Learn methodology FIRST - run before executing festival tasks
-
-
 ---
 
 ## fest understand methodology
@@ -6944,12 +5910,6 @@ fest understand methodology [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest understand](fest_understand.md)	 - Learn methodology FIRST - run before executing festival tasks
-
-
 ---
 
 ## fest understand nodeids
@@ -6982,12 +5942,6 @@ fest understand nodeids [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest understand](fest_understand.md)	 - Learn methodology FIRST - run before executing festival tasks
-
-
 ---
 
 ## fest understand plugins
@@ -7026,12 +5980,6 @@ fest understand plugins [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest understand](fest_understand.md)	 - Learn methodology FIRST - run before executing festival tasks
-
-
 ---
 
 ## fest understand resources
@@ -7060,12 +6008,6 @@ fest understand resources [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest understand](fest_understand.md)	 - Learn methodology FIRST - run before executing festival tasks
-
-
 ---
 
 ## fest understand rules
@@ -7094,12 +6036,6 @@ fest understand rules [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest understand](fest_understand.md)	 - Learn methodology FIRST - run before executing festival tasks
-
-
 ---
 
 ## fest understand structure
@@ -7136,12 +6072,6 @@ fest understand structure [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest understand](fest_understand.md)	 - Learn methodology FIRST - run before executing festival tasks
-
-
 ---
 
 ## fest understand tasks
@@ -7179,12 +6109,6 @@ fest understand tasks [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest understand](fest_understand.md)	 - Learn methodology FIRST - run before executing festival tasks
-
-
 ---
 
 ## fest understand templates
@@ -7213,12 +6137,6 @@ fest understand templates [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest understand](fest_understand.md)	 - Learn methodology FIRST - run before executing festival tasks
-
-
 ---
 
 ## fest understand workflow
@@ -7247,12 +6165,6 @@ fest understand workflow [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest understand](fest_understand.md)	 - Learn methodology FIRST - run before executing festival tasks
-
-
 ---
 
 ## fest unlink
@@ -7294,12 +6206,6 @@ fest unlink [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-
-
 ---
 
 ## fest validate
@@ -7344,18 +6250,6 @@ fest validate [festival-path] [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-* [fest validate checklist](fest_validate_checklist.md)	 - Post-completion questionnaire
-* [fest validate completeness](fest_validate_completeness.md)	 - Validate required files exist
-* [fest validate ordering](fest_validate_ordering.md)	 - Validate sequential numbering (gap detection)
-* [fest validate quality-gates](fest_validate_quality-gates.md)	 - Validate quality gates exist
-* [fest validate structure](fest_validate_structure.md)	 - Validate naming conventions and hierarchy
-* [fest validate tasks](fest_validate_tasks.md)	 - Validate task files exist (CRITICAL)
-
-
 ---
 
 ## fest validate checklist
@@ -7392,12 +6286,6 @@ fest validate checklist [festival-path] [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest validate](fest_validate.md)	 - Check festival structure - find missing task files and issues
-
-
 ---
 
 ## fest validate completeness
@@ -7432,12 +6320,6 @@ fest validate completeness [festival-path] [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest validate](fest_validate.md)	 - Check festival structure - find missing task files and issues
-
-
 ---
 
 ## fest validate ordering
@@ -7479,12 +6361,6 @@ fest validate ordering [festival-path] [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest validate](fest_validate.md)	 - Check festival structure - find missing task files and issues
-
-
 ---
 
 ## fest validate quality-gates
@@ -7526,12 +6402,6 @@ fest validate quality-gates [festival-path] [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest validate](fest_validate.md)	 - Check festival structure - find missing task files and issues
-
-
 ---
 
 ## fest validate structure
@@ -7565,12 +6435,6 @@ fest validate structure [festival-path] [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest validate](fest_validate.md)	 - Check festival structure - find missing task files and issues
-
-
 ---
 
 ## fest validate tasks
@@ -7620,12 +6484,6 @@ fest validate tasks [festival-path] [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest validate](fest_validate.md)	 - Check festival structure - find missing task files and issues
-
-
 ---
 
 ## fest version
@@ -7663,12 +6521,6 @@ fest version [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-
-
 ---
 
 ## fest wizard
@@ -7711,13 +6563,6 @@ through the festival creation process step by step.
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-* [fest wizard fill](fest_wizard_fill.md)	 - Interactively fill REPLACE markers in festival files
-
-
 ---
 
 ## fest wizard fill
@@ -7803,12 +6648,6 @@ fest wizard fill [file-or-directory] [flags]
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest wizard](fest_wizard.md)	 - Interactive guidance and assistance for festival creation
-
-
 ---
 
 ## fest workflow
@@ -7877,19 +6716,6 @@ Examples:
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-* [fest workflow advance](fest_workflow_advance.md)	 - Complete current step and move to next
-* [fest workflow approve](fest_workflow_approve.md)	 - Approve a blocking checkpoint
-* [fest workflow reject](fest_workflow_reject.md)	 - Reject checkpoint with feedback
-* [fest workflow reset](fest_workflow_reset.md)	 - Reset workflow to step 1
-* [fest workflow show](fest_workflow_show.md)	 - Display current step details
-* [fest workflow skip](fest_workflow_skip.md)	 - Operator override: mark workflow steps as skipped/completed
-* [fest workflow status](fest_workflow_status.md)	 - Show workflow progress
-
-
 ---
 
 ## fest workflow advance
@@ -7926,12 +6752,6 @@ fest workflow advance [flags]
       --phase string    specify phase directory (e.g., 001_INGEST)
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest workflow](fest_workflow.md)	 - Manage workflow-based phase execution
-
-
 ---
 
 ## fest workflow approve
@@ -7968,12 +6788,6 @@ fest workflow approve [flags]
       --phase string    specify phase directory (e.g., 001_INGEST)
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest workflow](fest_workflow.md)	 - Manage workflow-based phase execution
-
-
 ---
 
 ## fest workflow reject
@@ -8009,12 +6823,6 @@ fest workflow reject [flags]
       --phase string    specify phase directory (e.g., 001_INGEST)
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest workflow](fest_workflow.md)	 - Manage workflow-based phase execution
-
-
 ---
 
 ## fest workflow reset
@@ -8048,12 +6856,6 @@ fest workflow reset [flags]
       --phase string    specify phase directory (e.g., 001_INGEST)
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest workflow](fest_workflow.md)	 - Manage workflow-based phase execution
-
-
 ---
 
 ## fest workflow show
@@ -8093,12 +6895,6 @@ fest workflow show [step] [flags]
       --phase string    specify phase directory (e.g., 001_INGEST)
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest workflow](fest_workflow.md)	 - Manage workflow-based phase execution
-
-
 ---
 
 ## fest workflow skip
@@ -8139,12 +6935,6 @@ fest workflow skip [flags]
       --phase string    specify phase directory (e.g., 001_INGEST)
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest workflow](fest_workflow.md)	 - Manage workflow-based phase execution
-
-
 ---
 
 ## fest workflow status
@@ -8180,8 +6970,3 @@ fest workflow status [flags]
       --phase string    specify phase directory (e.g., 001_INGEST)
       --verbose         enable verbose output
 ```
-
-### SEE ALSO
-
-* [fest workflow](fest_workflow.md)	 - Manage workflow-based phase execution
-
