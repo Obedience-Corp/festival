@@ -55,4 +55,4 @@ Releases are tag-triggered via GitHub Actions:
 
 ## License
 
-BSL 1.1 (Business Source License)
+FSL-1.1-ALv2 (Functional Source License)

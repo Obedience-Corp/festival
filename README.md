@@ -214,6 +214,6 @@ Full documentation at **[fest.build](https://fest.build)**:
 
 ## License
 
-[Business Source License 1.1](LICENSE)
+[Functional Source License 1.1 (FSL-1.1-ALv2)](LICENSE)
 
 Built by [Obedience Corp](https://obediencecorp.com) - AI that does what you want, the way you want it done.
