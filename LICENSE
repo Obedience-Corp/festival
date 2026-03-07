@@ -5,7 +5,27 @@ License text copyright © 2017 MariaDB Corporation Ab, All Rights Reserved.
 
 Licensor: Obedience Corp
 Licensed Work: Festival (c) 2026 Obedience Corp. (all versions)
-Additional Use Grant: Personal development, non-production use, and testing.
+Additional Use Grant:
+
+  You may use the Licensed Work in production for your own internal
+  business purposes, including commercial projects developed using the
+  Licensed Work as a tool.
+
+  You may NOT:
+  (a) offer the Licensed Work, or any substantial portion or derivative
+      of it, to third parties as a hosted service, managed service, or
+      software-as-a-service product;
+  (b) sell, sublicense, or distribute the Licensed Work, or any
+      substantial portion or derivative of it, as a standalone product
+      or as a component of a competing product;
+  (c) use the Licensed Work to create a product or service that
+      replicates the core functionality of the Licensed Work for the
+      purpose of offering it to third parties.
+
+  For clarity: software, applications, and other works you create
+  using the Licensed Work as a development tool are your own
+  property and are not subject to this license.
+
 Change Date: 2030-01-01
 Change License: Apache License, Version 2.0
 
