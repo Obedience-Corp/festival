@@ -215,6 +215,7 @@ Full documentation at **[fest.build](https://fest.build)**:
 - [Methodology Overview](https://fest.build/methodology/overview/) - Core principles and concepts
 - [Agent Workflows](https://fest.build/guides/agent-workflows/) - Using Festival with AI coding tools
 - [First Festival Tutorial](https://fest.build/tutorials/first-festival/) - End-to-end walkthrough
+- [CI Integration](https://fest.build/tutorials/ci-integration/) - Release smoke ownership and launch-path verification
 
 ## License
 

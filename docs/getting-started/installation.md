@@ -105,3 +105,4 @@ eval "$(camp shell-init zsh)"
 ```
 
 See [Shell Setup](shell-setup.md) for details.
+Then continue with the [Quick Start](quickstart.md) to follow the validated beginner path through first `fest next`.
