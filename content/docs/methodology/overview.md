@@ -114,16 +114,18 @@ See: [Phases]({{< ref "/docs/methodology/phases" >}}) | [Sequences]({{< ref "/do
 
 | Type | Purpose | Auto-Generated Phases | When to Use |
 |------|---------|----------------------|-------------|
-| **standard** | Full planning + implementation | INGEST, PLAN | Most projects. Requirements need discovery. |
-| **implementation** | Execution-only | IMPLEMENT | Requirements fully defined. Skip to building. |
+| **standard** | Full planning + implementation | INGEST, PLAN | Most projects, including the beginner path. Gather requirements, then plan. |
+| **implementation** | Execution-only | IMPLEMENT | Requirements already defined. Use when you only need execution scaffolding. |
 | **research** | Investigation and exploration | INGEST, RESEARCH, SYNTHESIZE | Exploring a problem space, evaluating options. |
 | **ritual** | Recurring processes | Custom structure | Code reviews, releases, recurring maintenance. |
 
 ```bash
-fest create festival --type standard "my-project"
+fest create festival --name "my-project" --type standard
 fest types festival                    # discover all types
 fest types festival show <type>        # see type details
 ```
+
+For a first festival, use `--type standard` explicitly. When you use flags, `fest create festival --help` expects the festival name via `--name`.
 
 ---
 

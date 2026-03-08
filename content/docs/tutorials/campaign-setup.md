@@ -104,7 +104,7 @@ Fuzzy matching means you only need to type enough characters to uniquely identif
 A festival is a goal-oriented project plan with phases, sequences, and tasks:
 
 ```bash
-fest create festival --type standard my-first-feature
+fest create festival --name "my-first-feature" --type standard
 ```
 
 Navigate to it with either command:
@@ -113,6 +113,8 @@ Navigate to it with either command:
 fgo my-first-feature   # Jump directly to the festival
 cgo f                  # Jump to the festivals directory
 ```
+
+Fill the generated `REPLACE` markers, then run `fest validate` before your first `fest next`.
 
 ## Link Festival to Project
 
