@@ -137,6 +137,7 @@ camp dungeon         # Archive deprioritized work
 ```
 
 Use these to decide what deserves a festival and what belongs in the dungeon.
+If you are unsure whether to start with an intent, a design doc in `workflow/design/`, or a festival, use [Intent vs Design vs Festival]({{< ref "/docs/guides/intent-design-festival" >}}) as the canonical decision guide.
 
 ## Health Check
 

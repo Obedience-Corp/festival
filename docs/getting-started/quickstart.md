@@ -54,6 +54,8 @@ fest create festival --name "my-first-feature" --type standard
 
 Use `standard` for the beginner path. It scaffolds the ingest and planning phases you need before implementation. Use `implementation` only when requirements are already defined and you want to skip that planning structure.
 
+If you are not sure whether this work should start as an intent, a design doc, or a festival, read [Intent vs Design vs Festival](../guides/intent-design-festival.md) before creating more planning artifacts.
+
 ## 6. Fill Required Markers
 
 Open the generated festival files and replace the required `REPLACE` markers with real content. Do not skip this step.
