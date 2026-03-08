@@ -15,6 +15,11 @@ all: fest camp
 doc-sync:
     bash scripts/check-doc-sync.sh
 
+# Run the no-network beginner path smoke against repo-local camp and fest binaries
+[no-cd]
+beginner-path-smoke:
+    bash scripts/smoke_beginner_path.sh
+
 # Test fest
 [no-cd]
 fest:
