@@ -63,7 +63,8 @@ cgo p            # projects/
 cgo f            # festivals/
 cgo d            # docs/
 cgo a            # ai_docs/
-cgo w            # worktrees/
+cgo w            # workflow/
+cgo wt           # worktrees/
 ```
 
 No more typing long paths. Every important directory is one shortcut away.
@@ -97,25 +98,6 @@ cgo              # Back to campaign root
 ```
 
 Fuzzy matching means you only need to type enough characters to uniquely identify the project.
-
-## Initialize Festival Planning
-
-Set up the festivals directory for structured project planning:
-
-```bash
-fest init
-```
-
-This creates the festival lifecycle subdirectories:
-
-```
-festivals/
-├── planning/      # Festivals being designed
-├── active/        # Currently executing
-├── ready/         # Prepared, awaiting execution
-├── ritual/        # Recurring or special festivals
-└── dungeon/       # Terminal statuses (completed, archived, someday)
-```
 
 ## Create Your First Festival
 
