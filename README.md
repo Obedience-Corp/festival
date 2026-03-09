@@ -10,13 +10,13 @@ To use AI to solve hard problems you need three things: **context**, **direction
 
 ```mermaid
 graph TD
-    HP["Hard, multi-faceted problem"]
+    HP["<b>Hard, multi-faceted problem</b>"]
 
-    HP --> C["Context<br/>a campaign workspace with<br/>all projects, docs, and research"]
-    HP --> D["Direction<br/>a structured plan that AI agents<br/>can execute, pause, and resume"]
-    HP --> V["Verification<br/>all work captured in reviewable<br/>files you can trace and audit"]
+    HP --> C["<b>Context</b><br/><br/>a campaign workspace with<br/>all projects, docs, and research"]
+    HP --> D["<b>Direction</b><br/><br/>a structured plan that AI agents<br/>can execute, pause, and resume"]
+    HP --> V["<b>Verification</b><br/><br/>all work captured in reviewable<br/>files you can trace and audit"]
 
-    C --> O["Fewer tokens, less time,<br/>better outcomes"]
+    C --> O["<b>Fewer tokens · less time · better outcomes</b>"]
     D --> O
     V --> O
 ```
