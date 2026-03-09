@@ -38,9 +38,9 @@ refresh:
 # Pin submodules to latest prerelease tags and regenerate CLI docs
 refresh-dev:
     just release refresh-dev
-    just docs all
+    CLI_PROFILE=dev just docs all
 
-# Sync submodules to latest main for development work and regenerate CLI docs
+# Sync submodules to latest main for development work and regenerate dev CLI docs
 refresh-main:
     just git sync
-    just docs all
+    CLI_PROFILE=dev just docs all
