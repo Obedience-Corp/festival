@@ -216,7 +216,15 @@ fest commit -m "implement auth"  # Git commit with automatic festival/task refer
 fest understand                  # Teach an AI agent the full methodology
 ```
 
-`fest next` is the entry point for agents. It resolves what to do next, includes surrounding context from every level of the hierarchy, and respects workflow ordering and completion criteria. An agent session is: `fest next` -> do the work -> `fest task completed` -> `fest commit` -> `fest next`.
+`fest next` is the entry point for agents. It resolves what to do next, includes surrounding context from every level of the hierarchy, and respects workflow ordering and completion criteria.
+
+```mermaid
+graph LR
+    A[fest next] --> B[Do the work]
+    B --> C[fest task completed]
+    C --> D[fest commit]
+    D --> A
+```
 
 ## Documentation
 
