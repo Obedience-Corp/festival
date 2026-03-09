@@ -148,7 +148,7 @@ camp leverage                    # Measure productivity leverage across projects
 The core workflow: create a festival, then let `fest next` drive execution.
 
 ```bash
-fest create festival my-feature  # Scaffold a structured plan (phases, sequences, tasks)
+fest create festival --name "my-feature" --type standard  # Scaffold the beginner path
 fest next                        # Get the next task with layered context (festival -> phase -> sequence -> task)
 fest task completed              # Mark the current task done
 fest workflow advance            # Complete a workflow step and move to the next
@@ -157,7 +157,7 @@ fest commit -m "implement auth"  # Git commit with automatic festival/task refer
 fest understand                  # Teach an AI agent the full methodology
 ```
 
-`fest next` is the entry point for agents - it resolves what to do next, includes surrounding context from every level of the hierarchy, and respects workflow ordering and quality gates. An agent session is: `fest next` -> do the work -> `fest commit` -> `fest task completed` -> `fest next`.
+`fest next` is the entry point for agents - it resolves what to do next, includes surrounding context from every level of the hierarchy, and respects workflow ordering and quality gates. An agent session is: `fest next` -> do the work -> `fest task completed` -> `fest commit` -> `fest next`.
 
 ## Install
 
@@ -194,7 +194,11 @@ camp init my-project && cd my-project
 camp project add https://github.com/you/your-repo
 
 # Create your first festival
-fest create festival my-first-feature
+fest create festival --name "my-first-feature" --type standard
+
+# Fill the generated REPLACE markers in the new festival files
+# Then validate before execution
+fest validate
 
 # Start working
 fest next
@@ -211,6 +215,7 @@ Full documentation at **[fest.build](https://fest.build)**:
 - [Methodology Overview](https://fest.build/methodology/overview/) - Core principles and concepts
 - [Agent Workflows](https://fest.build/guides/agent-workflows/) - Using Festival with AI coding tools
 - [First Festival Tutorial](https://fest.build/tutorials/first-festival/) - End-to-end walkthrough
+- [CI Integration](https://fest.build/tutorials/ci-integration/) - Release smoke ownership and launch-path verification
 
 ## License
 

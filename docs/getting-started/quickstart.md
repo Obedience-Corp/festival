@@ -49,41 +49,41 @@ Projects are added as git submodules under `projects/`.
 ## 5. Create Your First Festival
 
 ```bash
-fest create festival --type implementation my-first-feature
+fest create festival --name "my-first-feature" --type standard
 ```
 
-This scaffolds a festival with an IMPLEMENT phase already included. Use `--type standard` if you need planning phases (PLAN, DESIGN) before implementation.
+Use `standard` for the beginner path. It scaffolds the ingest and planning phases you need before implementation. Use `implementation` only when requirements are already defined and you want to skip that planning structure.
 
-## 6. Add a Phase
+If you are not sure whether this work should start as an intent, a design doc, or a festival, read [Intent vs Design vs Festival](../guides/intent-design-festival.md) before creating more planning artifacts.
+
+## 6. Fill Required Markers
+
+Open the generated festival files and replace the required `REPLACE` markers with real content. Do not skip this step.
+
+## 7. Validate the Festival
 
 ```bash
-fest create phase --name "001_IMPLEMENT" --type implementation
+fest validate
 ```
 
-For implementation festivals, the IMPLEMENT phase is auto-scaffolded in step 5. You only need this when adding extra phases to a standard festival.
-
-## 7. Add a Sequence
-
-```bash
-fest create sequence
-```
-
-An interactive TUI guides you through naming and placing the sequence within the current phase.
+Validation catches unfinished markers and structure issues before execution. Keep running it until the new festival passes cleanly.
 
 ## 8. Write a Task
 
-Tasks are markdown files inside the sequence directory. Each file follows a simple structure:
+When `standard` scaffolding is valid, your first useful work starts in `001_INGEST/`. Implementation tasks later live directly inside the sequence directory, not under a `tasks/` subdirectory:
 
 ```
-sequences/
-  001_setup-database/
-    tasks/
-      001_create-schema.md
-      002_write-migrations.md
-      003_seed-test-data.md
+01_setup-database/
+  01_create-schema.md
+  02_write-migrations.md
+  03_seed-test-data.md
 ```
 
-Open any task file and fill in the description, acceptance criteria, and any notes. The filename ordering determines execution order.
+If you later create implementation sequences manually, add the standard quality gates explicitly:
+
+```bash
+fest gates apply --approve
+```
 
 ## 9. Start Working
 
@@ -91,7 +91,7 @@ Open any task file and fill in the description, acceptance criteria, and any not
 fest next                              # Get the next task with full context
 ```
 
-Do the work described in the task, then:
+On a first-run `standard` festival, `fest next` should take you into the ingest workflow after marker fill and validation. Once you reach implementation tasks later, do the work described and then:
 
 ```bash
 fest task completed                     # Mark the current task done

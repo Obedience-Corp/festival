@@ -39,6 +39,12 @@ jobs:
         env:
           AUR_SSH_KEY: ${{ secrets.AUR_SSH_KEY }}
 
+      - name: Build CLIs for smoke test
+        run: just build all
+
+      - name: Run beginner path smoke
+        run: just test beginner-path-smoke
+
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v6
         with:

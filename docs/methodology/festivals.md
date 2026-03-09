@@ -20,13 +20,13 @@ A simple festival might have one phase with two sequences. A complex festival mi
 
 Every festival has a type that determines its default phase scaffolding.
 
-### standard (default)
+### standard
 
-Full planning and implementation. Auto-scaffolds INGEST and PLAN phases. IMPLEMENT and POLISH phases are created as requirements emerge. Use for most projects needing both planning and implementation -- when you have a goal but requirements still need discovery.
+Full planning and implementation. Auto-scaffolds INGEST and PLAN phases. IMPLEMENT and POLISH phases are created as requirements emerge. Use for most projects, including the beginner path, when you have a goal but requirements still need discovery.
 
 ### implementation
 
-Execution-only. Auto-scaffolds an IMPLEMENT phase with `skip_ingestion=true`. Use when requirements already exist externally -- specs, Jira tickets, detailed plans. You know what to build; you just need to build it.
+Execution-only. Auto-scaffolds an IMPLEMENT phase with `skip_ingestion=true`. Use when requirements already exist externally -- specs, Jira tickets, detailed plans. You know what to build; you just need execution scaffolding.
 
 ### research
 
@@ -39,13 +39,13 @@ Recurring and repeatable. No default phases -- structure determined by the ritua
 ### Creation Commands
 
 ```bash
-fest create festival --type standard my-festival-name
-fest create festival --type implementation my-feature
-fest create festival --type research my-investigation
-fest create festival --type ritual my-recurring-process
+fest create festival --name "my-festival-name" --type standard
+fest create festival --name "my-feature" --type implementation
+fest create festival --name "my-investigation" --type research
+fest create festival --name "my-recurring-process" --type ritual
 ```
 
-The `--type` flag defaults to `standard` if omitted.
+For a first festival, use `fest create festival --name "<name>" --type standard` explicitly. Choose `implementation` only when requirements are already defined and you only need execution scaffolding. When you use flags, `fest create festival --help` expects the festival name via `--name`.
 
 ## Festival Directory Structure
 
