@@ -15,6 +15,11 @@ all: fest camp
 doc-sync:
     bash scripts/check-doc-sync.sh
 
+# Verify stable/dev CLI doc generation uses the intended command surface
+[no-cd]
+docs-profile:
+    bash scripts/test_cli_docs_profile.sh
+
 # Run the no-network beginner path smoke against repo-local camp and fest binaries
 [no-cd]
 beginner-path-smoke:
