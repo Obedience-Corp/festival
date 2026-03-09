@@ -53,6 +53,10 @@ preflight:
         echo ""
     fi
 
+    echo "Building CLIs for smoke test:"
+    just build all
+    echo ""
+
     echo "Beginner-path smoke:"
     just test beginner-path-smoke
     echo ""
