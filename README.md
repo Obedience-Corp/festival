@@ -120,7 +120,7 @@ obey-campaign/
 
 Every project, every plan, every piece of context for this mission lives here. `cgo p fest` jumps to the fest project. `fgo` toggles between a festival and its linked project. Everything is navigable by both humans and AI agents.
 
-## Navigation: the killer feature
+## Navigation
 
 Shell integration gives you shorthand functions that make navigating a campaign instant. Add these to your shell config:
 
