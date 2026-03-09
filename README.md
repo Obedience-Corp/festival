@@ -10,19 +10,15 @@ To use AI to solve hard problems you need three things: **context**, **direction
 
 ```mermaid
 graph TD
-    HP["Hard Problem"]
+    HP["Hard, multi-faceted problem"]
 
-    HP --> C["Context<br/>campaigns hold all projects,<br/>docs, research, and planning"]
-    HP --> D["Direction<br/>festivals break work into<br/>phases, sequences, and tasks"]
-    HP --> V["Verification<br/>all work lives in reviewable<br/>files across the campaign"]
+    HP --> C["Context<br/>a campaign workspace with<br/>all projects, docs, and research"]
+    HP --> D["Direction<br/>a structured plan that AI agents<br/>can execute, pause, and resume"]
+    HP --> V["Verification<br/>all work captured in reviewable<br/>files you can trace and audit"]
 
-    C --> S["Solved"]
-    D --> S
-    V --> S
-
-    C -.- CT["camp init · camp project add<br/>camp dungeon crawl"]
-    D -.- DT["fest create · fest next<br/>fest commit"]
-    V -.- VT["fest status · fest validate<br/>structured markdown output"]
+    C --> O["Fewer tokens, less time,<br/>better outcomes"]
+    D --> O
+    V --> O
 ```
 
 ## Install
