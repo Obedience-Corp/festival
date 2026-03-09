@@ -218,10 +218,6 @@ fest understand                  # Teach an AI agent the full methodology
 
 `fest next` is the entry point for agents. It resolves what to do next, includes surrounding context from every level of the hierarchy, and respects workflow ordering and completion criteria. An agent session is: `fest next` -> do the work -> `fest task completed` -> `fest commit` -> `fest next`.
 
-## Submodules
-
-> **Note:** The `camp` and `fest` source repositories are private. Binaries are distributed via the install methods above. You do not need to clone the submodules.
-
 ## Documentation
 
 Full documentation at **[fest.build](https://fest.build)**:
