@@ -7,6 +7,74 @@ subs := "fest camp"
 default:
     @just --list --unsorted --justfile {{source_file()}}
 
+[private]
+[no-cd]
+pin-from-latest mode="stable":
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    mode="{{mode}}"
+    case "${mode}" in
+        stable|dev) ;;
+        *)
+            echo "ERROR: mode must be 'stable' or 'dev' (got: ${mode})"
+            exit 1
+            ;;
+    esac
+
+    if [ -n "$(git status --porcelain)" ]; then
+        echo "ERROR: festival repo has uncommitted changes."
+        echo "Commit/stash first, then rerun."
+        exit 1
+    fi
+
+    git fetch --tags
+    git -C fest fetch --tags
+    git -C camp fetch --tags
+
+    latest_tag() {
+        repo="$1"
+        tag_mode="$2"
+        if [ "${tag_mode}" = "stable" ]; then
+            git -C "${repo}" tag -l 'v*' --sort=-v:refname | grep -E '^v[0-9]+(\.[0-9]+)*$' | head -1 || true
+        else
+            git -C "${repo}" tag -l 'v*' --sort=-v:refname | grep -E '^v[0-9]+(\.[0-9]+)*-[0-9A-Za-z][0-9A-Za-z.-]*$' | head -1 || true
+        fi
+    }
+
+    fest_tag="$(latest_tag fest "${mode}")"
+    camp_tag="$(latest_tag camp "${mode}")"
+
+    if [ -z "${fest_tag}" ] || [ -z "${camp_tag}" ]; then
+        echo "ERROR: Missing ${mode} tags."
+        echo "fest latest ${mode}: ${fest_tag:-<none>}"
+        echo "camp latest ${mode}: ${camp_tag:-<none>}"
+        if [ "${mode}" = "stable" ]; then
+            echo "For a first release, run:"
+            echo "  just release draft-bootstrap <festival_version> <fest_version> <camp_version>"
+        else
+            echo "Create dev tags in fest/camp first, then rerun with mode=dev."
+        fi
+        exit 1
+    fi
+
+    git -C fest checkout --detach "${fest_tag}"
+    git -C camp checkout --detach "${camp_tag}"
+    git add fest camp
+
+    echo "Pinned fest to: ${fest_tag}"
+    echo "Pinned camp to: ${camp_tag}"
+
+# Pin submodules to latest stable tags without creating a festival release
+[no-cd]
+refresh-stable:
+    just --justfile {{source_file()}} pin-from-latest stable
+
+# Pin submodules to latest dev/prerelease tags without creating a festival release
+[no-cd]
+refresh-dev:
+    just --justfile {{source_file()}} pin-from-latest dev
+
 # Pre-release checks: show submodule versions, dirty state, and build validation
 [no-cd]
 preflight:
@@ -176,46 +244,15 @@ draft-from-latest version mode="stable" rc="1":
         release_tag="v{{version}}-rc.{{rc}}"
     fi
 
-    # Require clean festival working tree for safe release automation.
-    if [ -n "$(git status --porcelain)" ]; then
-        echo "ERROR: festival repo has uncommitted changes."
-        echo "Commit/stash first, then rerun."
-        exit 1
-    fi
+    just --justfile {{source_file()}} pin-from-latest "${mode}"
 
-    git fetch --tags
-    git -C fest fetch --tags
-    git -C camp fetch --tags
-
-    latest_tag() {
-        repo="$1"
-        tag_mode="$2"
-        if [ "${tag_mode}" = "stable" ]; then
-            git -C "${repo}" tag -l 'v*' --sort=-v:refname | grep -E '^v[0-9]+(\.[0-9]+)*$' | head -1 || true
-        else
-            git -C "${repo}" tag -l 'v*' --sort=-v:refname | grep -E '^v[0-9]+(\.[0-9]+)*-[0-9A-Za-z][0-9A-Za-z.-]*$' | head -1 || true
-        fi
-    }
-
-    fest_tag="$(latest_tag fest "${mode}")"
-    camp_tag="$(latest_tag camp "${mode}")"
+    fest_tag="$(cd fest && git describe --tags --exact-match HEAD 2>/dev/null || true)"
+    camp_tag="$(cd camp && git describe --tags --exact-match HEAD 2>/dev/null || true)"
 
     if [ -z "${fest_tag}" ] || [ -z "${camp_tag}" ]; then
-        echo "ERROR: Missing ${mode} tags."
-        echo "fest latest ${mode}: ${fest_tag:-<none>}"
-        echo "camp latest ${mode}: ${camp_tag:-<none>}"
-        if [ "${mode}" = "stable" ]; then
-            echo "For a first release, run:"
-            echo "  just release draft-bootstrap <festival_version> <fest_version> <camp_version>"
-        else
-            echo "Create dev tags in fest/camp first, then rerun with mode=dev."
-        fi
+        echo "ERROR: Submodules are not pinned to exact ${mode} tags after refresh."
         exit 1
     fi
-
-    git -C fest checkout --detach "${fest_tag}"
-    git -C camp checkout --detach "${camp_tag}"
-    git add fest camp
 
     if git diff --cached --quiet -- fest camp; then
         echo "Submodule pointers already at fest=${fest_tag}, camp=${camp_tag}; no pointer commit needed."
