@@ -63,7 +63,8 @@ cgo p            # projects/
 cgo f            # festivals/
 cgo d            # docs/
 cgo a            # ai_docs/
-cgo w            # worktrees/
+cgo w            # workflow/
+cgo wt           # worktrees/
 ```
 
 No more typing long paths. Every important directory is one shortcut away.
@@ -98,31 +99,12 @@ cgo              # Back to campaign root
 
 Fuzzy matching means you only need to type enough characters to uniquely identify the project.
 
-## Initialize Festival Planning
-
-Set up the festivals directory for structured project planning:
-
-```bash
-fest init
-```
-
-This creates the festival lifecycle subdirectories:
-
-```
-festivals/
-├── planning/      # Festivals being designed
-├── active/        # Currently executing
-├── ready/         # Prepared, awaiting execution
-├── ritual/        # Recurring or special festivals
-└── dungeon/       # Terminal statuses (completed, archived, someday)
-```
-
 ## Create Your First Festival
 
 A festival is a goal-oriented project plan with phases, sequences, and tasks:
 
 ```bash
-fest create festival --type standard my-first-feature
+fest create festival --name "my-first-feature" --type standard
 ```
 
 Navigate to it with either command:
@@ -131,6 +113,8 @@ Navigate to it with either command:
 fgo my-first-feature   # Jump directly to the festival
 cgo f                  # Jump to the festivals directory
 ```
+
+Fill the generated `REPLACE` markers, then run `fest validate` before your first `fest next`.
 
 ## Link Festival to Project
 
@@ -153,6 +137,7 @@ camp dungeon         # Archive deprioritized work
 ```
 
 Use these to decide what deserves a festival and what belongs in the dungeon.
+If you are unsure whether to start with an intent, a design doc in `workflow/design/`, or a festival, use [Intent vs Design vs Festival]({{< ref "/docs/guides/intent-design-festival" >}}) as the canonical decision guide.
 
 ## Health Check
 

@@ -61,5 +61,6 @@ Scoop and direct `.zip` downloads will return once Windows support is marked sta
 <summary>Show all platforms and methods</summary>
 
 See the [full installation guide](getting-started/installation.md) for every platform, package manager, and installation method.
+After installing, use the [quick start guide](getting-started/quickstart.md) for the validated beginner path through first `fest next`.
 
 </details>

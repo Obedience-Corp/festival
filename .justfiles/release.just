@@ -53,6 +53,10 @@ preflight:
         echo ""
     fi
 
+    echo "Beginner-path smoke:"
+    just test beginner-path-smoke
+    echo ""
+
     # Show existing tags for context
     echo "Recent tags:"
     git tag -l --sort=-v:refname | head -5 || echo "  (none)"

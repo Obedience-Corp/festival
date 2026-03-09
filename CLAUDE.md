@@ -44,6 +44,15 @@ just docs serve   # Serve at localhost:1313
 just docs build   # Build for production
 ```
 
+## Beginner Doc Ownership
+
+- `projects/camp` owns Camp behavior docs and scaffold templates.
+- `projects/festival/camp/**` is a mirrored sync target.
+- `projects/fest` owns Fest methodology and embedded guidance docs.
+- `projects/festival/fest/**` is a mirrored sync target.
+- `projects/festival/docs/**` and `projects/festival/content/docs/**` are paired public docs that must be updated together where both variants exist, but they are not raw mirrors.
+- `festivals/README.md` and `festivals/.festival/README.md` are workspace-owned methodology docs.
+
 ## Releases
 
 Releases are tag-triggered via GitHub Actions:

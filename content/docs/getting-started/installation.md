@@ -7,7 +7,7 @@ weight: 11
 
 Festival includes two CLI tools: **fest** (festival planning) and **camp** (campaign management). All installation methods install both.
 
-{{< tabs names="macOS, Linux, Windows" >}}
+{{< tabs names="macOS, Linux, Windows (Temporarily Paused)" >}}
 
 ### Homebrew (Recommended)
 
@@ -64,18 +64,11 @@ sudo mv fest camp /usr/local/bin/
 
 <!-- tab -->
 
-### Scoop (Recommended)
+Stable Windows packages are temporarily paused while Windows support is being hardened.
 
-```powershell
-scoop bucket add obey https://github.com/Obedience-Corp/scoop-bucket
-scoop install festival
-```
+For now, use WSL2 and follow the Linux installation methods above.
 
-### Direct Download
-
-Download the `.zip` from
-[GitHub Releases](https://github.com/Obedience-Corp/festival/releases/latest),
-extract, and add the directory to your PATH.
+Scoop and direct `.zip` downloads will return once Windows support is marked stable.
 
 {{< /tabs >}}
 
@@ -124,3 +117,4 @@ eval "$(camp shell-init zsh)"
 ```
 
 See [Shell Setup]({{< ref "/docs/getting-started/shell-setup" >}}) for details.
+Then continue with the [Quick Start]({{< ref "/docs/getting-started/quickstart" >}}) to follow the validated beginner path through first `fest next`.
