@@ -38,7 +38,7 @@ cleanup() {
 }
 trap cleanup EXIT
 
-json_escape() {
+escape_marker_value() {
     local value="$1"
     value=${value//\\/\\\\}
     value=${value//\"/\\\"}
@@ -266,7 +266,7 @@ write_markers_file() {
                 printf ',\n'
             fi
 
-            printf '  "%s": "%s"' "$(json_escape "$hint")" "$(json_escape "$value")"
+            printf '  "%s": "%s"' "$(escape_marker_value "$hint")" "$(escape_marker_value "$value")"
 
             first=0
             count=$((count + 1))
@@ -373,7 +373,7 @@ run_step_quiet "festival-validate" bash -lc "
     '$fest_bin' validate
 "
 
-run_step_capture_stdout "festival-next" "$next_output_file" bash -lc "
+run_step_capture_stdout "festival-next" "$next_output_file" timeout 30 bash -lc "
     set -euo pipefail
     cd '$festival_dir'
     '$fest_bin' next

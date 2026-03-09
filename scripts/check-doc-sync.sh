@@ -4,6 +4,14 @@ set -euo pipefail
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 projects_root="$(cd "${repo_root}/.." && pwd)"
 
+if [[ ! -d "$projects_root/camp" || ! -d "$projects_root/fest" ]]; then
+    echo "skip: doc sync requires campaign workspace layout (../camp and ../fest)" >&2
+    exit 0
+fi
+
+tmp_dir="$(mktemp -d)"
+trap 'rm -rf "$tmp_dir"' EXIT
+
 failures=0
 
 normalize_readme() {
@@ -39,8 +47,8 @@ check_pair() {
     fi
 
     if [[ "$label" == *"README"* ]]; then
-        left_tmp="$(mktemp)"
-        right_tmp="$(mktemp)"
+        left_tmp="$tmp_dir/left-$(echo "$label" | tr ' ' '-')"
+        right_tmp="$tmp_dir/right-$(echo "$label" | tr ' ' '-')"
         normalize_readme "$left" "$left_tmp"
         normalize_readme "$right" "$right_tmp"
         left_cmp="$left_tmp"
@@ -50,13 +58,6 @@ check_pair() {
     if ! diff -u "$left_cmp" "$right_cmp"; then
         echo "doc sync drift: $label" >&2
         failures=$((failures + 1))
-    fi
-
-    if [[ -n "$left_tmp" ]]; then
-        rm -f "$left_tmp"
-    fi
-    if [[ -n "$right_tmp" ]]; then
-        rm -f "$right_tmp"
     fi
 }
 
