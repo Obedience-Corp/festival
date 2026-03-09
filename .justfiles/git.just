@@ -72,14 +72,14 @@ push-all:
     git push -u origin HEAD
     echo "All pushed"
 
-# Pull and update submodules
+# Pull festival and update submodules from their tracked branches (development-only)
 [no-cd]
 pull:
     git pull
     git submodule update --remote --merge
     @echo "Pulled and updated submodules"
 
-# Sync all submodules to latest main from origin
+# Sync all submodules to latest main from origin for development work
 [no-cd]
 sync:
     #!/usr/bin/env bash
