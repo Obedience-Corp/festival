@@ -6,6 +6,7 @@ camp_bin="${CAMP_BIN:-$repo_root/camp/bin/camp}"
 fest_bin="${FEST_BIN:-$repo_root/fest/bin/fest}"
 festival_name="${FESTIVAL_NAME:-beginner-path-smoke}"
 keep_workdir="${KEEP_SMOKE_WORKDIR:-0}"
+fest_next_timeout_seconds="${FEST_NEXT_TIMEOUT_SECONDS:-30}"
 
 step="startup"
 tmp_root=""
@@ -243,6 +244,59 @@ run_step_capture_stdout() {
     fi
 }
 
+run_step_capture_stdout_with_timeout() {
+    local step_name="$1"
+    local stdout_file="$2"
+    local timeout_seconds="$3"
+    shift 3
+
+    step="$step_name"
+    local log_file="$log_dir/${step_name}.log"
+    local timeout_bin=""
+
+    if command -v timeout >/dev/null 2>&1; then
+        timeout_bin="timeout"
+    elif command -v gtimeout >/dev/null 2>&1; then
+        timeout_bin="gtimeout"
+    fi
+
+    echo
+    echo "==> [$step_name]"
+
+    if [[ -n "$timeout_bin" ]]; then
+        if ! "$timeout_bin" "$timeout_seconds" "$@" > >(tee "$stdout_file" "$log_file") 2> >(tee -a "$log_file" >&2); then
+            echo "step failed: $step_name" >&2
+            echo "log: $log_file" >&2
+            return 1
+        fi
+        return
+    fi
+
+    "$@" > >(tee "$stdout_file" "$log_file") 2> >(tee -a "$log_file" >&2) &
+    local command_pid=$!
+    (
+        sleep "$timeout_seconds"
+        if kill -0 "$command_pid" 2>/dev/null; then
+            echo "step timed out after ${timeout_seconds}s: $step_name" | tee -a "$log_file" >&2
+            kill -TERM "$command_pid" 2>/dev/null || true
+            sleep 2
+            kill -KILL "$command_pid" 2>/dev/null || true
+        fi
+    ) &
+    local watchdog_pid=$!
+
+    if ! wait "$command_pid"; then
+        kill "$watchdog_pid" 2>/dev/null || true
+        wait "$watchdog_pid" 2>/dev/null || true
+        echo "step failed: $step_name" >&2
+        echo "log: $log_file" >&2
+        return 1
+    fi
+
+    kill "$watchdog_pid" 2>/dev/null || true
+    wait "$watchdog_pid" 2>/dev/null || true
+}
+
 write_markers_file() {
     local dryrun_json="$1"
     local markers_json="$2"
@@ -373,7 +427,7 @@ run_step_quiet "festival-validate" bash -lc "
     '$fest_bin' validate
 "
 
-run_step_capture_stdout "festival-next" "$next_output_file" timeout 30 bash -lc "
+run_step_capture_stdout_with_timeout "festival-next" "$next_output_file" "$fest_next_timeout_seconds" bash -lc "
     set -euo pipefail
     cd '$festival_dir'
     '$fest_bin' next

@@ -30,8 +30,17 @@ default:
     echo ""
     just --list --unsorted
 
-# Sync all submodules to latest main and regenerate CLI docs
+# Pin submodules to latest stable tags and regenerate CLI docs
 refresh:
-    just git sync
+    just release refresh-stable
     just docs all
 
+# Pin submodules to latest prerelease tags and regenerate CLI docs
+refresh-dev:
+    just release refresh-dev
+    just docs all
+
+# Sync submodules to latest main for development work and regenerate CLI docs
+refresh-main:
+    just git sync
+    just docs all
