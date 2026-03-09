@@ -9,18 +9,11 @@ To use AI to solve hard problems you need three things: **context**, **direction
 > [Get started](https://fest.build/getting-started/quickstart) (takes ~5 minutes).
 
 ```mermaid
-graph LR
-    C["<b>Context</b><br/><i>camp</i> · campaigns<br/>projects, docs, research"]
-    D["<b>Direction</b><br/><i>fest</i> · festivals<br/>phases → sequences → tasks"]
-    V["<b>Verification</b><br/>quality gates<br/>completion criteria"]
-
-    C -->|"understanding<br/>informs planning"| D
-    D -->|"structure enables<br/>precise checks"| V
-    V -->|"verified results become<br/>trusted knowledge"| C
-
-    style C fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
-    style D fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    style V fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+graph TD
+    P["Hard Problem"] --> N["What AI needs to solve it"]
+    N --> C["Context\ncamp · campaigns"]
+    N --> D["Direction\nfest · festivals"]
+    N --> V["Verification\nquality gates"]
 ```
 
 ## Install
