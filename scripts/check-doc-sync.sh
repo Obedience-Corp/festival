@@ -3,8 +3,23 @@ set -euo pipefail
 
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 projects_root="$(cd "${repo_root}/.." && pwd)"
+tmp_dir=""
 
 failures=0
+
+cleanup() {
+    if [[ -n "$tmp_dir" && -d "$tmp_dir" ]]; then
+        rm -rf "$tmp_dir"
+    fi
+}
+trap cleanup EXIT
+
+if [[ ! -f "$projects_root/camp/README.md" || ! -f "$projects_root/fest/README.md" ]]; then
+    echo "skip: doc sync requires campaign workspace layout (../camp and ../fest)" >&2
+    exit 0
+fi
+
+tmp_dir="$(mktemp -d)"
 
 normalize_readme() {
     local input="$1"
@@ -39,8 +54,8 @@ check_pair() {
     fi
 
     if [[ "$label" == *"README"* ]]; then
-        left_tmp="$(mktemp)"
-        right_tmp="$(mktemp)"
+        left_tmp="$(mktemp "$tmp_dir/doc-sync-left.XXXXXX")"
+        right_tmp="$(mktemp "$tmp_dir/doc-sync-right.XXXXXX")"
         normalize_readme "$left" "$left_tmp"
         normalize_readme "$right" "$right_tmp"
         left_cmp="$left_tmp"
@@ -52,12 +67,6 @@ check_pair() {
         failures=$((failures + 1))
     fi
 
-    if [[ -n "$left_tmp" ]]; then
-        rm -f "$left_tmp"
-    fi
-    if [[ -n "$right_tmp" ]]; then
-        rm -f "$right_tmp"
-    fi
 }
 
 check_pair "$projects_root/camp/README.md" "$repo_root/camp/README.md" "camp README"
