@@ -38,6 +38,7 @@ pin-from-latest mode="stable":
         if [ "${tag_mode}" = "stable" ]; then
             git -C "${repo}" tag -l 'v*' --sort=-v:refname | grep -E '^v[0-9]+(\.[0-9]+)*$' | head -1 || true
         else
+            # Match any prerelease tag (dev, alpha, beta, rc, etc.).
             git -C "${repo}" tag -l 'v*' --sort=-v:refname | grep -E '^v[0-9]+(\.[0-9]+)*-[0-9A-Za-z][0-9A-Za-z.-]*$' | head -1 || true
         fi
     }
@@ -60,6 +61,7 @@ pin-from-latest mode="stable":
 
     git -C fest checkout --detach "${fest_tag}"
     git -C camp checkout --detach "${camp_tag}"
+    # Stages submodule pointer updates; caller decides whether and when to commit them.
     git add fest camp
 
     echo "Pinned fest to: ${fest_tag}"
