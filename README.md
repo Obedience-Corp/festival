@@ -2,38 +2,84 @@
 
 ![Festival Banner](docs/images/festival_banner.png)
 
-**The workspace and planning layer for AI-native development.**
+**A standardized workspace and workflow for solving difficult, multi-faceted problems with AI.**
 
-→ [Get started](https://fest.build/getting-started/quickstart) (takes ~5 minutes).
+To use AI to solve hard problems you need three things: **context**, **direction**, and **verification**. Festival provides a structured layer for each, resulting in dramatically fewer tokens and less time spent getting to the outcome you want.
+
+> [Get started](https://fest.build/getting-started/quickstart) (takes ~5 minutes).
+
+## Install
+
+**macOS:**
+
+```bash
+brew install Obedience-Corp/tap/festival
+```
+
+**Arch Linux:**
+
+```bash
+yay -S festival-bin
+```
+
+**Debian/Ubuntu:** Download `.deb` from [releases](https://github.com/Obedience-Corp/festival/releases/latest)
+
+**Windows:** Stable Windows packages are temporarily paused while support is being hardened.
+For now, use WSL2 and the Linux install method above.
+
+## Quick Start
+
+```bash
+# Shell integration (add to ~/.zshrc)
+eval "$(camp shell-init zsh)"
+eval "$(fest shell-init zsh)"
+
+# Create a campaign
+camp init my-project && cd my-project
+
+# Add a project
+camp project add https://github.com/you/your-repo
+
+# Create your first festival
+fest create festival --name "my-first-feature" --type standard
+
+# Fill the generated REPLACE markers in the new festival files
+# Then validate before execution
+fest validate
+
+# Start working
+fest next
+```
+
+After installing, see the [quick start guide](https://fest.build/getting-started/quickstart/) for shell setup and first steps.
 
 ## The Problem
 
-AI coding tools made writing code 10–100x faster. But they operate in a vacuum — no understanding of the larger goal, no memory across sessions, no structure for multi-step work. Every new chat starts from zero. The agent is fast but contextless.
+AI coding tools are fast. But speed without context and direction just means you burn tokens faster. Every new session starts from zero -- no memory of the larger goal, no structure for multi-step work, no way to pick up where you left off. You end up re-explaining the same context, getting inconsistent results, and losing coherence across sessions.
 
-This gets worse when you're running multiple missions in parallel — your day job, a side project, a startup, an open-source contribution. Context that lives only in your head (or in expired chat sessions) doesn't scale.
+Traditional tools don't solve this because they weren't designed for it. You need:
 
-You need two things traditional tools don't give you:
-
-1. **Isolated workspaces** — one per mission, with all projects, docs, and planning in one place
-2. **Structured plans** — that AI agents can pick up, execute, and resume without losing context
+1. **Context** -- a workspace that holds all projects, docs, and planning for a mission in one place
+2. **Direction** -- structured plans that AI agents can pick up, execute, and resume without losing the thread
+3. **Verification** -- quality gates and completion criteria baked into the workflow, not bolted on after
 
 ## What Festival Does
 
-Festival ships two CLIs - `camp` and `fest` - that solve the two problems above.
+Festival ships two CLIs -- `camp` and `fest` -- that solve the three problems above.
 
 **`camp`** manages campaigns: isolated workspaces that hold all the projects, docs, research, and planning for a single mission. It gives you instant navigation across everything in the workspace, project lifecycle management, and shell shortcuts that make `cd` obsolete.
 
-**`fest`** manages festivals: structured plans that break work into phases, sequences, and tasks - a hierarchy designed for AI agents to execute autonomously, pause, and resume without context loss. Run `fest next` and the agent gets its next task with full surrounding context. Run `fest commit` and every commit traces back to the plan.
+**`fest`** manages festivals: structured plans that break work into phases, sequences, and tasks -- a hierarchy designed for AI agents to execute autonomously, pause, and resume without context loss. Run `fest next` and the agent gets its next task with full surrounding context. Run `fest commit` and every commit traces back to the plan.
 
 ### Where Festival Fits
 
-Festival is a **planning and context layer**, not a runtime orchestrator. It doesn't spawn agents or manage their processes — it gives them the structure, context, and goals they need to work autonomously. Runtime orchestrators tell agents what to do next. Festival gives agents the context to understand *why* they're doing it, what success looks like, and where they are in a larger mission.
+Festival is a **planning and context layer**, not a runtime orchestrator. It doesn't spawn agents or manage their processes -- it gives them the structure, context, and goals they need to work autonomously. Runtime orchestrators tell agents what to do next. Festival tells agents *why* they're doing it, what success looks like, and where they are in a larger mission.
 
-The context model is persistent and filesystem-based — plans survive across sessions, days, and weeks, not just a single agent run. And Festival is agent-agnostic: it works with Claude Code, Cursor, Codex, Aider, or any tool that can read files and run commands. These layers are composable — use an orchestrator to manage parallel agents, and Festival to give each agent the plan and context it needs.
+The context model is persistent and filesystem-based -- plans survive across sessions, days, and weeks, not just a single agent run. Festival is agent-agnostic: it works with Claude Code, Cursor, Codex, Aider, or any tool that can read files and run commands. Use an orchestrator to manage parallel agents, and Festival to give each agent the plan and context it needs.
 
 ### Real Example
 
-Here's what `obey-campaign` looks like - a real campaign that orchestrates Obedience Corp's internal platform and product stack:
+Here's what `obey-campaign` looks like -- a real campaign that orchestrates Obedience Corp's internal platform and product stack:
 
 ```
 obey-campaign/
@@ -61,7 +107,7 @@ obey-campaign/
 
 Every project, every plan, every piece of context for this mission lives here. `cgo p fest` jumps to the fest project. `fgo` toggles between a festival and its linked project. Everything is navigable by both humans and AI agents.
 
-## Navigation - the killer feature
+## Navigation -- the killer feature
 
 Shell integration gives you shorthand functions that make navigating a campaign instant. Add these to your shell config:
 
@@ -70,7 +116,7 @@ eval "$(camp shell-init zsh)"   # gives you: cgo, cr, csw, cint
 eval "$(fest shell-init zsh)"   # gives you: fgo, fls
 ```
 
-### cgo - jump anywhere in your workspace
+### cgo -- jump anywhere in your workspace
 
 `cgo` wraps `camp go` with real `cd` behavior. It's the fastest way to move around:
 
@@ -83,7 +129,7 @@ cgo w                 # Jump to workflow/
 cgo wt api@feat       # Jump to a worktree branch
 ```
 
-Single-letter category shortcuts (`p`, `f`, `w`, `a`, `d`, `i`, `wt`, `du`, `cr`, `de`) map to top-level campaign directories. After the category, any additional argument is a fuzzy search - `cgo p mono` lands you in `obey-platform-monorepo/`. Tab completion works at every level.
+Single-letter category shortcuts (`p`, `f`, `w`, `a`, `d`, `i`, `wt`, `du`, `cr`, `de`) map to top-level campaign directories. After the category, any additional argument is a fuzzy search -- `cgo p mono` lands you in `obey-platform-monorepo/`. Tab completion works at every level.
 
 You can also run a command without leaving your current directory:
 
@@ -92,7 +138,7 @@ cgo -c p api ls       # Run ls inside projects/api-* without cd'ing
 cr just build         # Run "just build" from campaign root
 ```
 
-### fgo - toggle between a festival and its linked project
+### fgo -- toggle between a festival and its linked project
 
 `fgo` wraps `fest go`. Its standout feature is bidirectional toggling:
 
@@ -106,7 +152,7 @@ fgo active            # Jump to festivals/active/
 fgo active my-fest    # Jump to a specific active festival
 ```
 
-Link a festival to a project once (`fgo link`) and `fgo` with no args toggles between them forever. Named shortcuts work too - `fest go map n` bookmarks the current directory, then `fgo -n` jumps there.
+Link a festival to a project once (`fgo link`) and `fgo` with no args toggles between them forever. Named shortcuts work too -- `fest go map n` bookmarks the current directory, then `fgo -n` jumps there.
 
 ### Other shorthands
 
@@ -131,7 +177,7 @@ camp p list                   # Same as: camp project list
 
 Full reference: [fest CLI](https://fest.build/cli-reference/fest/) | [camp CLI](https://fest.build/cli-reference/camp/)
 
-### camp - workspace management
+### camp -- workspace management
 
 ```bash
 camp init my-startup             # Create a campaign
@@ -143,7 +189,7 @@ camp intent add "idea"           # Capture an idea to the inbox
 camp leverage                    # Measure productivity leverage across projects
 ```
 
-### fest - planning and execution
+### fest -- planning and execution
 
 The core workflow: create a festival, then let `fest next` drive execution.
 
@@ -157,68 +203,23 @@ fest commit -m "implement auth"  # Git commit with automatic festival/task refer
 fest understand                  # Teach an AI agent the full methodology
 ```
 
-`fest next` is the entry point for agents - it resolves what to do next, includes surrounding context from every level of the hierarchy, and respects workflow ordering and quality gates. An agent session is: `fest next` -> do the work -> `fest task completed` -> `fest commit` -> `fest next`.
-
-## Install
-
-**macOS:**
-
-```bash
-brew install Obedience-Corp/tap/festival
-```
-
-**Arch Linux:**
-
-```bash
-yay -S festival-bin
-```
-
-**Debian/Ubuntu:** Download `.deb` from [releases](https://github.com/Obedience-Corp/festival/releases/latest)
-
-**Windows:** Stable Windows packages are temporarily paused while support is being hardened.
-For now, use WSL2 and the Linux install method above.
-
-After installing, see the [quick start guide](https://fest.build/getting-started/quickstart/) for shell setup and first steps.
-
-## Quick Start
-
-```bash
-# Shell integration (add to ~/.zshrc)
-eval "$(camp shell-init zsh)"
-eval "$(fest shell-init zsh)"
-
-# Create a campaign
-camp init my-project && cd my-project
-
-# Add a project
-camp project add https://github.com/you/your-repo
-
-# Create your first festival
-fest create festival --name "my-first-feature" --type standard
-
-# Fill the generated REPLACE markers in the new festival files
-# Then validate before execution
-fest validate
-
-# Start working
-fest next
-```
+`fest next` is the entry point for agents -- it resolves what to do next, includes surrounding context from every level of the hierarchy, and respects workflow ordering and quality gates. An agent session is: `fest next` -> do the work -> `fest task completed` -> `fest commit` -> `fest next`.
 
 ## Submodules
 
-> **Note:** The `camp` and `fest` source repositories are private. Binaries are distributed via the install methods above — you do not need to clone the submodules.
+> **Note:** The `camp` and `fest` source repositories are private. Binaries are distributed via the install methods above -- you do not need to clone the submodules.
 
 ## Documentation
 
 Full documentation at **[fest.build](https://fest.build)**:
 
-- [Methodology Overview](https://fest.build/methodology/overview/) - Core principles and concepts
-- [Agent Workflows](https://fest.build/guides/agent-workflows/) - Using Festival with AI coding tools
-- [First Festival Tutorial](https://fest.build/tutorials/first-festival/) - End-to-end walkthrough
-- [CI Integration](https://fest.build/tutorials/ci-integration/) - Release smoke ownership and launch-path verification
+- [Methodology Overview](https://fest.build/methodology/overview/) -- Core principles and concepts
+- [Agent Workflows](https://fest.build/guides/agent-workflows/) -- Using Festival with AI coding tools
+- [First Festival Tutorial](https://fest.build/tutorials/first-festival/) -- End-to-end walkthrough
+- [CI Integration](https://fest.build/tutorials/ci-integration/) -- Release smoke ownership and launch-path verification
 
 ## License
 
 [Functional Source License 1.1 (FSL-1.1-ALv2)](LICENSE)
 
-Built by [Obedience Corp](https://obediencecorp.com) - AI that does what you want, the way you want it done.
+Built by [Obedience Corp](https://obediencecorp.com) -- AI that does what you want, the way you want it done.
