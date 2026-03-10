@@ -15,6 +15,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
+          token: ${{ secrets.GO_PRIVATE_TOKEN }}
           submodules: recursive
           fetch-depth: 0
 
