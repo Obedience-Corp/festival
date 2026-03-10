@@ -15,7 +15,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GO_PRIVATE_TOKEN }}
           submodules: recursive
           fetch-depth: 0
 
@@ -25,9 +24,11 @@ jobs:
           go-version: '1.25'
 
       - name: Configure private Go modules
+        if: env.GO_PRIVATE_TOKEN != ''
         run: |
-          git config --global url."https://${{ secrets.GO_PRIVATE_TOKEN }}@github.com/".insteadOf "https://github.com/"
+          git config --global url."https://${GO_PRIVATE_TOKEN}@github.com/".insteadOf "https://github.com/"
         env:
+          GO_PRIVATE_TOKEN: ${{ secrets.GO_PRIVATE_TOKEN }}
           GOPRIVATE: github.com/Obedience-Corp/*
 
       - name: Import AUR SSH key
