@@ -403,7 +403,7 @@ run_step_quiet "project-add-local" bash -lc "
 run_step_capture_stdout_quiet "festival-dry-run" "$dryrun_json" bash -lc "
     set -euo pipefail
     cd '$campaign_dir'
-    '$fest_bin' create festival --name '$festival_name' --type standard --dry-run --json
+    CAMP_ROOT='$campaign_dir' '$fest_bin' create festival --name '$festival_name' --type standard --dry-run --json
 "
 
 write_markers_file "$dryrun_json" "$markers_json"
@@ -411,7 +411,7 @@ write_markers_file "$dryrun_json" "$markers_json"
 run_step_quiet "festival-create" bash -lc "
     set -euo pipefail
     cd '$campaign_dir'
-    '$fest_bin' create festival --name '$festival_name' --type standard --markers-file '$markers_json'
+    CAMP_ROOT='$campaign_dir' '$fest_bin' create festival --name '$festival_name' --type standard --markers-file '$markers_json'
 "
 
 festival_dir="$(find "$campaign_dir/festivals/planning" -maxdepth 1 -type d -name "${festival_name}-*" | head -n 1)"
@@ -424,13 +424,13 @@ fi
 run_step_quiet "festival-validate" bash -lc "
     set -euo pipefail
     cd '$festival_dir'
-    '$fest_bin' validate
+    CAMP_ROOT='$campaign_dir' '$fest_bin' validate
 "
 
 run_step_capture_stdout_with_timeout "festival-next" "$next_output_file" "$fest_next_timeout_seconds" bash -lc "
     set -euo pipefail
     cd '$festival_dir'
-    '$fest_bin' next
+    CAMP_ROOT='$campaign_dir' '$fest_bin' next
 "
 
 assert_fest_next_reaches_ingest "$next_output_file"
