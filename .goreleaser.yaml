@@ -3,8 +3,6 @@ version: 2
 
 before:
   hooks:
-    - cd fest && go mod tidy
-    - cd camp && go mod tidy
     - bash scripts/completions.sh
 
 builds:
