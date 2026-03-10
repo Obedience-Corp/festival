@@ -91,7 +91,7 @@ refresh-dev:
 
 # Pre-release checks: show submodule versions, dirty state, and build validation
 [no-cd]
-preflight:
+preflight mode="stable":
     #!/usr/bin/env bash
     set -euo pipefail
     echo "=== Release Preflight ==="
@@ -134,6 +134,10 @@ preflight:
         echo "Commit/stash first, then rerun."
         exit 1
     fi
+
+    echo "Checking tagged release pins:"
+    just test release-pins "{{mode}}"
+    echo ""
 
     echo "Checking mirrored docs:"
     just test doc-sync
@@ -215,7 +219,7 @@ draft-bootstrap version fest_version camp_version:
     # Pin submodules to the tags just created.
     git -C fest checkout --detach "${fest_tag}"
     git -C camp checkout --detach "${camp_tag}"
-    just docs all
+    CLI_RELEASE_CHANNEL=stable just docs all
     git add fest camp content/docs/cli-reference
 
     # Commit and push submodule pointer changes.
@@ -273,17 +277,17 @@ draft-from-latest version mode="stable" n="1":
     case "${mode}" in
         stable)
             release_tag="v{{version}}"
-            docs_cmd="just docs all"
+            docs_cmd="CLI_RELEASE_CHANNEL=stable just docs all"
             release_label="stable"
             ;;
         rc)
             release_tag="v{{version}}-rc.{{n}}"
-            docs_cmd="just docs all"
+            docs_cmd="CLI_RELEASE_CHANNEL=rc just docs all"
             release_label="rc"
             ;;
         dev)
             release_tag="v{{version}}-dev.{{n}}"
-            docs_cmd="CLI_PROFILE=dev just docs all"
+            docs_cmd="CLI_PROFILE=dev CLI_RELEASE_CHANNEL=dev just docs all"
             release_label="dev"
             ;;
     esac
@@ -316,7 +320,7 @@ draft-from-latest version mode="stable" n="1":
         exit 1
     fi
 
-    just release preflight
+    just release preflight "${mode}"
 
     echo ""
     echo "=== Creating ${release_label} release ${release_tag} ==="
@@ -336,7 +340,7 @@ draft version:
     set -euo pipefail
 
     # Run preflight
-    just release preflight
+    just release preflight stable
 
     echo ""
     echo "=== Creating stable release v{{version}} ==="
@@ -353,7 +357,7 @@ draft-rc version n="1":
     #!/usr/bin/env bash
     set -euo pipefail
 
-    just release preflight
+    just release preflight rc
 
     tag="v{{version}}-rc.{{n}}"
     echo ""
@@ -371,7 +375,7 @@ draft-dev version n="1":
     #!/usr/bin/env bash
     set -euo pipefail
 
-    just release preflight
+    just release preflight dev
 
     tag="v{{version}}-dev.{{n}}"
     echo ""

@@ -20,6 +20,11 @@ doc-sync:
 docs-profile:
     bash scripts/test_cli_docs_profile.sh
 
+# Verify bundled camp/fest submodules are pinned to exact tags for the selected release channel
+[no-cd]
+release-pins mode="stable":
+    bash scripts/check_release_channel_tags.sh "{{mode}}"
+
 # Run the no-network beginner path smoke against repo-local camp and fest binaries
 [no-cd]
 beginner-path-smoke:

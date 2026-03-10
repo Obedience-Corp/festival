@@ -33,17 +33,17 @@ default:
 # Pin submodules to latest stable tags and regenerate CLI docs
 refresh:
     just release refresh-stable
-    just docs all
+    CLI_RELEASE_CHANNEL=stable just docs all
 
 # Pin submodules to latest rc tags and regenerate stable-profile CLI docs
 refresh-rc:
     just release refresh-rc
-    just docs all
+    CLI_RELEASE_CHANNEL=rc just docs all
 
 # Pin submodules to latest prerelease tags and regenerate CLI docs
 refresh-dev:
     just release refresh-dev
-    CLI_PROFILE=dev just docs all
+    CLI_PROFILE=dev CLI_RELEASE_CHANNEL=dev just docs all
 
 # Sync submodules to latest main for development work and regenerate dev CLI docs
 refresh-main:

@@ -2,6 +2,7 @@
 
 docs_root := env("CLI_DOCS_ROOT", "content/docs/cli-reference")
 cli_profile := env("CLI_PROFILE", "stable")
+cli_release_channel := env("CLI_RELEASE_CHANNEL", "")
 base_url := env("HUGO_BASEURL", "https://fest.build")
 
 # Show available docs commands
@@ -19,6 +20,9 @@ all: fest camp
 fest:
     #!/usr/bin/env bash
     set -euo pipefail
+    if [ -n "{{cli_release_channel}}" ]; then
+        bash scripts/check_release_channel_tags.sh "{{cli_release_channel}}"
+    fi
     fest_gendocs_flags=()
     case "{{cli_profile}}" in
         stable)
@@ -42,6 +46,9 @@ fest:
 camp:
     #!/usr/bin/env bash
     set -euo pipefail
+    if [ -n "{{cli_release_channel}}" ]; then
+        bash scripts/check_release_channel_tags.sh "{{cli_release_channel}}"
+    fi
     case "{{cli_profile}}" in
         stable) (cd camp && BUILD_TAGS='' just build) ;;
         dev) (cd camp && BUILD_TAGS=dev just build) ;;

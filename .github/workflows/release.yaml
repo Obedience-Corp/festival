@@ -39,6 +39,22 @@ jobs:
         env:
           AUR_SSH_KEY: ${{ secrets.AUR_SSH_KEY }}
 
+      - name: Detect release channel
+        id: release_channel
+        run: |
+          case "${GITHUB_REF_NAME}" in
+            v*-dev.*) echo "mode=dev" >> "$GITHUB_OUTPUT" ;;
+            v*-rc.*) echo "mode=rc" >> "$GITHUB_OUTPUT" ;;
+            v*) echo "mode=stable" >> "$GITHUB_OUTPUT" ;;
+            *)
+              echo "unsupported tag format: ${GITHUB_REF_NAME}" >&2
+              exit 1
+              ;;
+          esac
+
+      - name: Verify tagged camp/fest pins
+        run: just test release-pins "${{ steps.release_channel.outputs.mode }}"
+
       - name: Check mirrored docs
         run: just test doc-sync
 
