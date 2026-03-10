@@ -26,7 +26,7 @@ graph TD
 **macOS:**
 
 ```bash
-brew install Obedience-Corp/tap/festival
+brew install --cask Obedience-Corp/tap/festival
 ```
 
 **Arch Linux:**

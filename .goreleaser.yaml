@@ -60,7 +60,7 @@ builds:
 
 archives:
   - id: festival-suite
-    builds: [fest, camp]
+    ids: [fest, camp]
     name_template: >-
       festival-
       {{- .Version }}-
@@ -83,7 +83,7 @@ nfpms:
   - id: festival
     package_name: festival
     file_name_template: "{{ .ConventionalFileName }}"
-    builds:
+    ids:
       - fest
       - camp
     vendor: Obedience Corp
@@ -166,7 +166,7 @@ changelog:
       - '^test:'
       - '^chore:'
 
-brews:
+homebrew_casks:
   - repository:
       owner: Obedience-Corp
       name: homebrew-tap
@@ -174,34 +174,38 @@ brews:
       token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
 
     name: festival
-
+    ids:
+      - festival-suite
     homepage: "https://github.com/Obedience-Corp/festival"
     description: "Festival Methodology CLI suite (fest + camp)"
     license: "BUSL-1.1"
     skip_upload: auto
+    directory: Casks
 
-    directory: Formula
+    binaries:
+      - fest
+      - camp
+    completions:
+      bash: completions/fest.bash
+      zsh: completions/_fest
+      fish: completions/fest.fish
 
-    test: |
-      system "#{bin}/fest", "--version"
-      system "#{bin}/camp", "--version"
-
-    install: |
-      bin.install "fest"
-      bin.install "camp"
-      bash_completion.install "completions/fest.bash" => "fest"
-      zsh_completion.install "completions/_fest"
-      fish_completion.install "completions/fest.fish"
+    hooks:
+      post:
+        install: |
+          if OS.mac?
+            system_command "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "#{staged_path}/fest", "#{staged_path}/camp"]
+          end
 
     caveats: |
       To activate shell completions and camp shell integration, add to your shell config:
 
         # bash (~/.bashrc)
-        eval "$(camp shell-init bash)"
+        eval \"$(camp shell-init bash)\"
         source <(fest completion bash)
 
         # zsh (~/.zshrc)
-        eval "$(camp shell-init zsh)"
+        eval \"$(camp shell-init zsh)\"
         source <(fest completion zsh)
 
         # fish (~/.config/fish/config.fish)
@@ -229,7 +233,7 @@ release:
 
     | Platform | Command |
     |----------|---------|
-    | macOS | `brew install Obedience-Corp/tap/festival` |
+    | macOS | `brew install --cask Obedience-Corp/tap/festival` |
     | Arch Linux | `yay -S festival-bin` |
     | Debian/Ubuntu | Download `.deb` from assets below |
     | Fedora/RHEL | Download `.rpm` from assets below |
