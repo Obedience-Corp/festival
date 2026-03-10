@@ -44,7 +44,7 @@ get_latest_version() {
 }
 
 main() {
-    local os arch version archive_name download_url tmp_dir
+    local os arch version archive_name download_url tmp_dir=""
 
     os=$(detect_os)
     arch=$(detect_arch)
@@ -70,7 +70,7 @@ main() {
 
     # Download and extract
     tmp_dir=$(mktemp -d)
-    trap 'rm -rf "$tmp_dir"' EXIT
+    trap 'rm -rf "${tmp_dir:-}"' EXIT
 
     info "Downloading ${archive_name}..."
     if ! curl -fsSL "$download_url" -o "${tmp_dir}/archive.tar.gz"; then
