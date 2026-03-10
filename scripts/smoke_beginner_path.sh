@@ -379,7 +379,7 @@ require_executable "FEST_BIN" "$fest_bin"
 export PATH
 PATH="$(dirname "$camp_bin"):$(dirname "$fest_bin"):$PATH"
 
-run_step_quiet "init-local-source-repo" bash -lc "
+run_step_quiet "init-local-source-repo" bash -c "
     set -euo pipefail
     mkdir -p '$source_repo'
     cd '$source_repo'
@@ -401,13 +401,13 @@ run_step_quiet "camp-init" "$camp_bin" init \
 run_step_quiet "campaign-git-config" git -C "$campaign_dir" config user.name "Smoke Test"
 run_step_quiet "campaign-git-email" git -C "$campaign_dir" config user.email "smoke@example.com"
 
-run_step_quiet "project-add-local" bash -lc "
+run_step_quiet "project-add-local" bash -c "
     set -euo pipefail
     cd '$campaign_dir'
     '$camp_bin' project add '$source_repo' --local '$source_repo' --name sample
 "
 
-run_step_capture_stdout_quiet "festival-dry-run" "$dryrun_json" bash -lc "
+run_step_capture_stdout_quiet "festival-dry-run" "$dryrun_json" bash -c "
     set -euo pipefail
     cd '$campaign_dir'
     CAMP_ROOT='$campaign_dir' '$fest_bin' create festival --name '$festival_name' --type standard --dry-run --json
@@ -418,7 +418,7 @@ write_markers_file "$dryrun_json" "$markers_json"
 planning_dir="$campaign_dir/festivals/planning"
 find "$planning_dir" -maxdepth 1 -type d -name "${festival_name}-*" | sort >"$precreate_listing"
 
-run_step_quiet "festival-create" bash -lc "
+run_step_quiet "festival-create" bash -c "
     set -euo pipefail
     cd '$campaign_dir'
     CAMP_ROOT='$campaign_dir' '$fest_bin' create festival --name '$festival_name' --type standard --markers-file '$markers_json'
@@ -436,13 +436,13 @@ if [[ -z "$festival_dir" ]]; then
     exit 1
 fi
 
-run_step_quiet "festival-validate" bash -lc "
+run_step_quiet "festival-validate" bash -c "
     set -euo pipefail
     cd '$festival_dir'
     CAMP_ROOT='$campaign_dir' '$fest_bin' validate
 "
 
-run_step_capture_stdout_with_timeout "festival-next" "$next_output_file" "$fest_next_timeout_seconds" bash -lc "
+run_step_capture_stdout_with_timeout "festival-next" "$next_output_file" "$fest_next_timeout_seconds" bash -c "
     set -euo pipefail
     cd '$festival_dir'
     CAMP_ROOT='$campaign_dir' '$fest_bin' next
