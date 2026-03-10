@@ -52,7 +52,6 @@ Run 'fest understand' to learn the methodology before executing tasks.
 * [fest context](fest_context.md)	 - Get context for the current location or task
 * [fest create](fest_create.md)	 - Create festivals, phases, sequences, or tasks (TUI)
 * [fest deps](fest_deps.md)	 - Show task dependencies
-* [fest explore](fest_explore.md)	 - Interactive festival explorer with hierarchy drilldown
 * [fest feedback](fest_feedback.md)	 - Manage structured feedback collection
 * [fest gates](fest_gates.md)	 - Manage quality gates - validation steps at sequence end
 * [fest go](fest_go.md)	 - Navigate to festivals/ - use 'fgo' after shell-init setup
