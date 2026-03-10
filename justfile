@@ -35,6 +35,11 @@ refresh:
     just release refresh-stable
     just docs all
 
+# Pin submodules to latest rc tags and regenerate stable-profile CLI docs
+refresh-rc:
+    just release refresh-rc
+    just docs all
+
 # Pin submodules to latest prerelease tags and regenerate CLI docs
 refresh-dev:
     just release refresh-dev

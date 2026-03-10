@@ -19,8 +19,14 @@ all: fest camp
 fest:
     #!/usr/bin/env bash
     set -euo pipefail
+    fest_gendocs_flags=()
     case "{{cli_profile}}" in
-        stable) (cd fest && BUILD_TAGS='' just build) ;;
+        stable)
+            (cd fest && BUILD_TAGS='' just build)
+            if ./fest/bin/fest gendocs --help 2>&1 | rg -q -- '--stable'; then
+                fest_gendocs_flags+=(--stable)
+            fi
+            ;;
         dev) (cd fest && BUILD_TAGS=dev just build) ;;
         *)
             echo "ERROR: CLI_PROFILE must be 'stable' or 'dev' (got: {{cli_profile}})"
@@ -28,7 +34,7 @@ fest:
             ;;
     esac
     mkdir -p {{docs_root}}/fest
-    ./fest/bin/fest gendocs --output {{docs_root}}/fest --format markdown --single
+    ./fest/bin/fest gendocs --output {{docs_root}}/fest --format markdown --single "${fest_gendocs_flags[@]}"
     echo "fest docs generated"
 
 # Generate camp CLI docs

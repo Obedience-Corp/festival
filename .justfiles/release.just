@@ -1,4 +1,8 @@
 # Release management
+# Three channels:
+# - dev: moving prerelease from develop
+# - rc: release candidate prerelease
+# - stable: public release
 
 subs := "fest camp"
 
@@ -15,9 +19,9 @@ pin-from-latest mode="stable":
 
     mode="{{mode}}"
     case "${mode}" in
-        stable|dev) ;;
+        stable|rc|dev) ;;
         *)
-            echo "ERROR: mode must be 'stable' or 'dev' (got: ${mode})"
+            echo "ERROR: mode must be 'stable', 'rc', or 'dev' (got: ${mode})"
             exit 1
             ;;
     esac
@@ -35,12 +39,13 @@ pin-from-latest mode="stable":
     latest_tag() {
         repo="$1"
         tag_mode="$2"
-        if [ "${tag_mode}" = "stable" ]; then
-            git -C "${repo}" tag -l 'v*' --sort=-v:refname | grep -E '^v[0-9]+(\.[0-9]+)*$' | head -1 || true
-        else
-            # Match any prerelease tag (dev, alpha, beta, rc, etc.).
-            git -C "${repo}" tag -l 'v*' --sort=-v:refname | grep -E '^v[0-9]+(\.[0-9]+)*-[0-9A-Za-z][0-9A-Za-z.-]*$' | head -1 || true
-        fi
+        local pattern=""
+        case "${tag_mode}" in
+            stable) pattern='^v[0-9]+(\.[0-9]+)*$' ;;
+            rc) pattern='^v[0-9]+(\.[0-9]+)*-rc\.[0-9]+$' ;;
+            dev) pattern='^v[0-9]+(\.[0-9]+)*-dev\.[0-9]+$' ;;
+        esac
+        git -C "${repo}" tag -l 'v*' --sort=-v:refname | grep -E "${pattern}" | head -1 || true
     }
 
     fest_tag="$(latest_tag fest "${mode}")"
@@ -53,6 +58,8 @@ pin-from-latest mode="stable":
         if [ "${mode}" = "stable" ]; then
             echo "For a first release, run:"
             echo "  just release draft-bootstrap <festival_version> <fest_version> <camp_version>"
+        elif [ "${mode}" = "rc" ]; then
+            echo "Create rc tags in fest/camp first, then rerun with mode=rc."
         else
             echo "Create dev tags in fest/camp first, then rerun with mode=dev."
         fi
@@ -71,6 +78,11 @@ pin-from-latest mode="stable":
 [no-cd]
 refresh-stable:
     just --justfile {{source_file()}} pin-from-latest stable
+
+# Pin submodules to latest rc tags without creating a festival release
+[no-cd]
+refresh-rc:
+    just --justfile {{source_file()}} pin-from-latest rc
 
 # Pin submodules to latest dev/prerelease tags without creating a festival release
 [no-cd]
@@ -116,14 +128,22 @@ preflight:
     fi
     echo ""
 
-    # Check festival repo itself
     if [ -n "$(git status --porcelain)" ]; then
-        echo "WARNING: festival repo has uncommitted changes"
+        echo "ERROR: festival repo has uncommitted changes"
         git status --short
-        echo ""
+        echo "Commit/stash first, then rerun."
+        exit 1
     fi
 
-    echo "Building CLIs for smoke test:"
+    echo "Checking mirrored docs:"
+    just test doc-sync
+    echo ""
+
+    echo "Checking stable/dev docs profile:"
+    just test docs-profile
+    echo ""
+
+    echo "Building CLIs:"
     just build all
     echo ""
 
@@ -135,7 +155,7 @@ preflight:
     echo "Recent tags:"
     git tag -l --sort=-v:refname | head -5 || echo "  (none)"
     echo ""
-    echo "Preflight complete. Run 'just release draft <version>' or 'just release draft-dev <version>' to proceed."
+    echo "Preflight complete. Run 'just release draft <version>', 'just release draft-rc <version> <n>', or 'just release draft-dev <version> <n>' to proceed."
 
 # Run GoReleaser dry run (no publish)
 [no-cd]
@@ -195,11 +215,12 @@ draft-bootstrap version fest_version camp_version:
     # Pin submodules to the tags just created.
     git -C fest checkout --detach "${fest_tag}"
     git -C camp checkout --detach "${camp_tag}"
-    git add fest camp
+    just docs all
+    git add fest camp content/docs/cli-reference
 
     # Commit and push submodule pointer changes.
-    if git diff --cached --quiet -- fest camp; then
-        echo "Submodule pointers already match ${fest_tag}/${camp_tag}; no pointer commit needed."
+    if git diff --cached --quiet -- fest camp content/docs/cli-reference; then
+        echo "Submodule pointers and docs already match ${fest_tag}/${camp_tag}; no release commit needed."
     else
         git commit -m "Release: pin fest ${fest_tag} and camp ${camp_tag}"
         git push origin HEAD
@@ -230,31 +251,46 @@ draft-bootstrap version fest_version camp_version:
 
 # Unified release automation from latest submodule tags:
 # - mode=stable: latest stable tags (vX.Y.Z)
-# - mode=dev: latest prerelease tags (vX.Y.Z-*)
-# - pin submodules, commit/push pointer update if needed
-# - create/push festival release tag (stable or dev)
+# - mode=rc: latest rc tags (vX.Y.Z-rc.N)
+# - mode=dev: latest dev tags (vX.Y.Z-dev.N)
+# - pin submodules, refresh docs, commit/push pointer update if needed
+# - create/push festival release tag for the selected channel
 [no-cd]
 [confirm("This will pin fest/camp to latest tags for the selected mode and create/push a festival release tag. Continue?")]
-draft-from-latest version mode="stable" rc="1":
+draft-from-latest version mode="stable" n="1":
     #!/usr/bin/env bash
     set -euo pipefail
 
     mode="{{mode}}"
     case "${mode}" in
-        stable|dev) ;;
+        stable|rc|dev) ;;
         *)
-            echo "ERROR: mode must be 'stable' or 'dev' (got: ${mode})"
+            echo "ERROR: mode must be 'stable', 'rc', or 'dev' (got: ${mode})"
             exit 1
             ;;
     esac
 
-    if [ "${mode}" = "stable" ]; then
-        release_tag="v{{version}}"
-    else
-        release_tag="v{{version}}-rc.{{rc}}"
-    fi
+    case "${mode}" in
+        stable)
+            release_tag="v{{version}}"
+            docs_cmd="just docs all"
+            release_label="stable"
+            ;;
+        rc)
+            release_tag="v{{version}}-rc.{{n}}"
+            docs_cmd="just docs all"
+            release_label="rc"
+            ;;
+        dev)
+            release_tag="v{{version}}-dev.{{n}}"
+            docs_cmd="CLI_PROFILE=dev just docs all"
+            release_label="dev"
+            ;;
+    esac
 
     just --justfile {{source_file()}} pin-from-latest "${mode}"
+    eval "${docs_cmd}"
+    git add fest camp content/docs/cli-reference
 
     fest_tag="$(cd fest && git describe --tags --exact-match HEAD 2>/dev/null || true)"
     camp_tag="$(cd camp && git describe --tags --exact-match HEAD 2>/dev/null || true)"
@@ -264,8 +300,8 @@ draft-from-latest version mode="stable" rc="1":
         exit 1
     fi
 
-    if git diff --cached --quiet -- fest camp; then
-        echo "Submodule pointers already at fest=${fest_tag}, camp=${camp_tag}; no pointer commit needed."
+    if git diff --cached --quiet -- fest camp content/docs/cli-reference; then
+        echo "Submodule pointers and docs already at fest=${fest_tag}, camp=${camp_tag}; no release commit needed."
     else
         git commit -m "Release: pin fest ${fest_tag} and camp ${camp_tag}"
         git push origin HEAD
@@ -283,19 +319,11 @@ draft-from-latest version mode="stable" rc="1":
     just release preflight
 
     echo ""
-    if [ "${mode}" = "stable" ]; then
-        echo "=== Creating stable release ${release_tag} ==="
-    else
-        echo "=== Creating dev release ${release_tag} ==="
-    fi
+    echo "=== Creating ${release_label} release ${release_tag} ==="
     git tag -a "${release_tag}" -m "Release ${release_tag}"
     git push origin "${release_tag}"
     echo ""
-    if [ "${mode}" = "stable" ]; then
-        echo "Stable release ${release_tag} pushed."
-    else
-        echo "Dev release ${release_tag} pushed."
-    fi
+    echo "${release_label} release ${release_tag} pushed."
     echo "fest pinned to: ${fest_tag}"
     echo "camp pinned to: ${camp_tag}"
     echo "Monitor: gh run watch --repo Obedience-Corp/festival"
@@ -318,17 +346,34 @@ draft version:
     echo "Stable release v{{version}} pushed. CI will build and publish."
     echo "Monitor: gh run watch --repo Obedience-Corp/festival"
 
-# Draft a dev/prerelease: preflight + rc tag + push (triggers CI, marked as prerelease)
+# Draft an RC release: preflight + rc tag + push (triggers CI, marked as prerelease)
 [no-cd]
-[confirm("This will create and push a DEV/prerelease tag. Continue?")]
-draft-dev version rc="1":
+[confirm("This will create and push an RC release tag. Continue?")]
+draft-rc version n="1":
     #!/usr/bin/env bash
     set -euo pipefail
 
-    # Run preflight
     just release preflight
 
-    tag="v{{version}}-rc.{{rc}}"
+    tag="v{{version}}-rc.{{n}}"
+    echo ""
+    echo "=== Creating rc release ${tag} ==="
+    git tag -a "${tag}" -m "RC release ${tag}"
+    git push origin "${tag}"
+    echo ""
+    echo "RC release ${tag} pushed. CI will build and publish as prerelease."
+    echo "Monitor: gh run watch --repo Obedience-Corp/festival"
+
+# Draft a dev release: preflight + dev tag + push (triggers CI, marked as prerelease)
+[no-cd]
+[confirm("This will create and push a DEV release tag. Continue?")]
+draft-dev version n="1":
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    just release preflight
+
+    tag="v{{version}}-dev.{{n}}"
     echo ""
     echo "=== Creating dev release ${tag} ==="
     git tag -a "${tag}" -m "Dev release ${tag}"

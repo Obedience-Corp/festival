@@ -39,6 +39,12 @@ jobs:
         env:
           AUR_SSH_KEY: ${{ secrets.AUR_SSH_KEY }}
 
+      - name: Check mirrored docs
+        run: just test doc-sync
+
+      - name: Check docs profile
+        run: just test docs-profile
+
       - name: Build CLIs for smoke test
         run: just build all
 
