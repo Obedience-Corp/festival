@@ -27,7 +27,7 @@ fest:
     case "{{cli_profile}}" in
         stable)
             (cd fest && just build quick-stable)
-            if ./fest/bin/fest gendocs --help 2>&1 | rg -q -- '--stable'; then
+            if ./fest/bin/fest gendocs --help 2>&1 | grep -q -- '--stable'; then
                 fest_gendocs_flags+=(--stable)
             fi
             ;;
