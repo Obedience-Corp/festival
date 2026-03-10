@@ -238,7 +238,402 @@ preflight mode="stable":
     echo "Recent tags:"
     git tag -l --sort=-v:refname | head -5 || echo "  (none)"
     echo ""
-    echo "Preflight complete. Run 'just release draft <version>', 'just release draft-rc <version> <n>', or 'just release draft-dev <version> <n>' to proceed."
+    echo "Preflight complete."
+    echo "  One-command: just release go <dev|rc|stable> [version]"
+    echo "  Manual:      just release draft <version> | draft-rc <version> <n> | draft-dev <version> <n>"
+
+# Internal: create festival tag from already-tagged camp/fest submodules
+# Called by `go` after delegating tagging to camp/fest's own recipes.
+# Does NOT have [confirm] — the caller handles confirmation or the sub-recipes already confirm.
+[private]
+[no-cd]
+_draft-festival-tag version mode="stable" n="1":
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    mode="{{mode}}"
+    case "${mode}" in
+        stable) release_tag="v{{version}}" ;;
+        rc)     release_tag="v{{version}}-rc.{{n}}" ;;
+        dev)    release_tag="v{{version}}-dev.{{n}}" ;;
+        *)      echo "ERROR: mode must be stable, rc, or dev (got: ${mode})"; exit 1 ;;
+    esac
+
+    case "${mode}" in
+        stable) docs_cmd="CLI_RELEASE_CHANNEL=stable just docs all" ;;
+        rc)     docs_cmd="CLI_RELEASE_CHANNEL=rc just docs all" ;;
+        dev)    docs_cmd="CLI_PROFILE=dev CLI_RELEASE_CHANNEL=dev just docs all" ;;
+    esac
+
+    # Pin submodules to whatever tags camp/fest now have
+    just --justfile {{source_file()}} pin-from-latest "${mode}"
+
+    # Refresh docs
+    eval "${docs_cmd}"
+    git add fest camp content/docs/cli-reference
+
+    fest_tag="$(cd fest && git describe --tags --exact-match HEAD 2>/dev/null || true)"
+    camp_tag="$(cd camp && git describe --tags --exact-match HEAD 2>/dev/null || true)"
+
+    if [ -z "${fest_tag}" ] || [ -z "${camp_tag}" ]; then
+        echo "ERROR: Submodules are not pinned to exact ${mode} tags after refresh."
+        exit 1
+    fi
+
+    # Commit submodule pointer + docs changes if needed
+    if git diff --cached --quiet -- fest camp content/docs/cli-reference; then
+        echo "Submodule pointers and docs already at fest=${fest_tag}, camp=${camp_tag}; no release commit needed."
+    else
+        git commit -m "Release: pin fest ${fest_tag} and camp ${camp_tag}"
+        git push origin HEAD
+    fi
+
+    # Ensure festival tag is available
+    if git rev-parse -q --verify "refs/tags/${release_tag}" >/dev/null; then
+        echo "ERROR: festival tag ${release_tag} already exists locally."
+        exit 1
+    fi
+    if [ -n "$(git ls-remote --tags origin "refs/tags/${release_tag}")" ]; then
+        echo "ERROR: festival tag ${release_tag} already exists on origin."
+        exit 1
+    fi
+
+    # Preflight
+    just release preflight "${mode}"
+
+    echo ""
+    echo "=== Creating ${mode} release ${release_tag} ==="
+    git tag -a "${release_tag}" -m "Release ${release_tag}"
+    git push origin "${release_tag}"
+    echo ""
+    echo "${mode} release ${release_tag} pushed."
+    echo "  fest pinned to: ${fest_tag}"
+    echo "  camp pinned to: ${camp_tag}"
+    echo "Monitor: gh run watch --repo Obedience-Corp/festival"
+
+# One-command release: delegate tagging to camp/fest's own recipes, then create festival release
+# Channels: dev, rc, stable
+# Each repo tags independently using its own safeguards (duplicate checks, gh release create, etc.)
+[no-cd]
+go channel version="" n="" level="":
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    channel="{{channel}}"
+    version="{{version}}"
+    n="{{n}}"
+    level="{{level}}"
+
+    # --- helpers ---
+
+    latest_tag_for() {
+        local repo="$1" mode="$2" pattern=""
+        case "${mode}" in
+            stable) pattern='^v[0-9]+(\.[0-9]+)*$' ;;
+            rc)     pattern='^v[0-9]+(\.[0-9]+)*-rc\.[0-9]+$' ;;
+            dev)    pattern='^v[0-9]+(\.[0-9]+)*-dev\.[0-9]+$' ;;
+        esac
+        git -C "${repo}" tag -l 'v*' --sort=-v:refname | grep -E "${pattern}" | head -1 || true
+    }
+
+    # --- validate ---
+
+    case "${channel}" in
+        dev|rc|stable) ;;
+        *) echo "ERROR: channel must be 'dev', 'rc', or 'stable' (got: ${channel})"; exit 1 ;;
+    esac
+
+    if [ -n "$(git status --porcelain)" ]; then
+        echo "ERROR: festival repo has uncommitted changes."
+        echo "Commit/stash first, then rerun."
+        exit 1
+    fi
+
+    for sub in fest camp; do
+        if [ -n "$(git -C "${sub}" status --porcelain)" ]; then
+            echo "ERROR: ${sub} has uncommitted changes."
+            exit 1
+        fi
+    done
+
+    # --- fetch ---
+
+    echo "Fetching tags..."
+    git fetch --tags >/dev/null 2>&1
+    git -C fest fetch --tags >/dev/null 2>&1
+    git -C camp fetch --tags >/dev/null 2>&1
+
+    # --- show current state ---
+
+    echo ""
+    echo "== Current State =="
+    echo "  festival branch: $(git rev-parse --abbrev-ref HEAD)"
+    echo "  fest latest dev:    $(latest_tag_for fest dev)"
+    echo "  camp latest dev:    $(latest_tag_for camp dev)"
+    echo "  fest latest rc:     $(latest_tag_for fest rc)"
+    echo "  camp latest rc:     $(latest_tag_for camp rc)"
+    echo "  fest latest stable: $(latest_tag_for fest stable)"
+    echo "  camp latest stable: $(latest_tag_for camp stable)"
+    echo ""
+
+    # --- execute per channel ---
+
+    case "${channel}" in
+        dev)
+            echo "== Dev Release =="
+            echo "Delegating to camp and fest's own release recipes..."
+            echo ""
+
+            echo "=== camp: just release dev ${level} ==="
+            (cd camp && just release dev "${level}")
+            echo ""
+
+            echo "=== fest: just release dev ${level} ==="
+            (cd fest && just release dev "${level}")
+            echo ""
+
+            # Read back what tags were created
+            camp_new="$(latest_tag_for camp dev)"
+            fest_new="$(latest_tag_for fest dev)"
+            echo "Camp created: ${camp_new}"
+            echo "Fest created: ${fest_new}"
+
+            # Derive festival version from fest's tag (primary product)
+            fest_base="${fest_new%-dev.*}"
+            fest_base="${fest_base#v}"
+            fest_n="${fest_new##*-dev.}"
+
+            echo ""
+            echo "=== Festival: draft-dev-from-latest ${fest_base} dev ${fest_n} ==="
+            just --justfile {{source_file()}} _draft-festival-tag "${fest_base}" dev "${fest_n}"
+            ;;
+
+        rc)
+            # Auto-detect version from release branch name if not provided
+            if [ -z "${version}" ]; then
+                branch="$(git rev-parse --abbrev-ref HEAD)"
+                if [[ "${branch}" =~ ^release/v([0-9]+\.[0-9]+\.[0-9]+)$ ]]; then
+                    version="${BASH_REMATCH[1]}"
+                    echo "Auto-detected version ${version} from branch ${branch}"
+                else
+                    echo "ERROR: No version provided and branch '${branch}' doesn't match release/vX.Y.Z"
+                    echo "Usage: just release go rc <version> [n]"
+                    exit 1
+                fi
+            fi
+
+            # Auto-increment N if not provided
+            if [ -z "${n}" ]; then
+                # Check both repos for the highest existing RC number
+                fest_existing="$(git -C fest tag -l "v${version}-rc.*" --sort=-v:refname | head -1 || true)"
+                camp_existing="$(git -C camp tag -l "v${version}-rc.*" --sort=-v:refname | head -1 || true)"
+                max_n=0
+                if [ -n "${fest_existing}" ]; then
+                    fest_prev="${fest_existing##*-rc.}"
+                    [ "${fest_prev}" -gt "${max_n}" ] && max_n="${fest_prev}"
+                fi
+                if [ -n "${camp_existing}" ]; then
+                    camp_prev="${camp_existing##*-rc.}"
+                    [ "${camp_prev}" -gt "${max_n}" ] && max_n="${camp_prev}"
+                fi
+                n=$((max_n + 1))
+                echo "Auto-detected N=${n}"
+            fi
+
+            echo "== RC Release: v${version}-rc.${n} =="
+            echo ""
+
+            echo "=== camp: just release rc ${version} ${n} ==="
+            (cd camp && just release rc "${version}" "${n}")
+            echo ""
+
+            echo "=== fest: just release rc ${version} ${n} ==="
+            (cd fest && just release rc "${version}" "${n}")
+            echo ""
+
+            echo "=== Festival: draft-rc-from-latest ${version} rc ${n} ==="
+            just --justfile {{source_file()}} _draft-festival-tag "${version}" rc "${n}"
+            ;;
+
+        stable)
+            # Auto-detect version from latest RC series if not provided
+            if [ -z "${version}" ]; then
+                fest_rc="$(latest_tag_for fest rc)"
+                camp_rc="$(latest_tag_for camp rc)"
+                if [ -n "${fest_rc}" ]; then
+                    version="${fest_rc%-rc.*}"
+                    version="${version#v}"
+                    echo "Auto-detected version ${version} from fest RC ${fest_rc}"
+                elif [ -n "${camp_rc}" ]; then
+                    version="${camp_rc%-rc.*}"
+                    version="${version#v}"
+                    echo "Auto-detected version ${version} from camp RC ${camp_rc}"
+                else
+                    echo "ERROR: No version provided and no RC tags found to derive from."
+                    echo "Usage: just release go stable <version>"
+                    exit 1
+                fi
+            fi
+
+            echo "== Stable Release: v${version} =="
+            echo ""
+
+            echo "=== camp: just release promote-rc ${version} ==="
+            (cd camp && just release promote-rc "${version}")
+            echo ""
+
+            echo "=== fest: just release promote-rc ${version} ==="
+            (cd fest && just release promote-rc "${version}")
+            echo ""
+
+            echo "=== Festival: draft-stable-from-latest ${version} ==="
+            just --justfile {{source_file()}} _draft-festival-tag "${version}" stable
+            ;;
+    esac
+
+    echo ""
+    if [ "${channel}" != "stable" ]; then
+        echo "To clean up later:"
+        echo "  just release cleanup <tag>"
+    fi
+
+# Preview what a release would do without executing it
+[no-cd]
+go-dry-run channel version="" n="" level="":
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    channel="{{channel}}"
+    version="{{version}}"
+    n="{{n}}"
+    level="{{level}}"
+
+    latest_tag_for() {
+        local repo="$1" mode="$2" pattern=""
+        case "${mode}" in
+            stable) pattern='^v[0-9]+(\.[0-9]+)*$' ;;
+            rc)     pattern='^v[0-9]+(\.[0-9]+)*-rc\.[0-9]+$' ;;
+            dev)    pattern='^v[0-9]+(\.[0-9]+)*-dev\.[0-9]+$' ;;
+        esac
+        git -C "${repo}" tag -l 'v*' --sort=-v:refname | grep -E "${pattern}" | head -1 || true
+    }
+
+    case "${channel}" in
+        dev|rc|stable) ;;
+        *) echo "ERROR: channel must be 'dev', 'rc', or 'stable'"; exit 1 ;;
+    esac
+
+    git fetch --tags >/dev/null 2>&1 || true
+    git -C fest fetch --tags >/dev/null 2>&1 || true
+    git -C camp fetch --tags >/dev/null 2>&1 || true
+
+    fest_dev="$(latest_tag_for fest dev)"
+    camp_dev="$(latest_tag_for camp dev)"
+    fest_rc="$(latest_tag_for fest rc)"
+    camp_rc="$(latest_tag_for camp rc)"
+    fest_stable="$(latest_tag_for fest stable)"
+    camp_stable="$(latest_tag_for camp stable)"
+
+    echo ""
+    echo "== DRY RUN: Release Plan =="
+    echo "Channel:  ${channel}"
+    echo ""
+    echo "Current state:"
+    echo "  festival branch: $(git rev-parse --abbrev-ref HEAD)"
+    echo "  fest:  dev=${fest_dev:-none}  rc=${fest_rc:-none}  stable=${fest_stable:-none}"
+    echo "  camp:  dev=${camp_dev:-none}  rc=${camp_rc:-none}  stable=${camp_stable:-none}"
+    echo ""
+
+    case "${channel}" in
+        dev)
+            echo "Commands that WOULD run:"
+            echo "  1. (cd camp && just release dev ${level})"
+            echo "     camp owns its own version bump and gh release"
+            echo "  2. (cd fest && just release dev ${level})"
+            echo "     fest owns its own version bump and gh release"
+            echo "  3. just release _draft-festival-tag <fest_version> dev <fest_n>"
+            echo "     pins submodules, refreshes docs, creates festival tag"
+            echo ""
+            echo "Note: camp and fest will independently compute their next dev tags."
+            echo "  fest next dev would bump from: ${fest_dev:-v0.1.0-dev.0}"
+            echo "  camp next dev would bump from: ${camp_dev:-v0.1.0-dev.0}"
+            ;;
+        rc)
+            if [ -z "${version}" ]; then
+                branch="$(git rev-parse --abbrev-ref HEAD)"
+                if [[ "${branch}" =~ ^release/v([0-9]+\.[0-9]+\.[0-9]+)$ ]]; then
+                    version="${BASH_REMATCH[1]}"
+                    echo "Auto-detected version: ${version} (from branch ${branch})"
+                else
+                    echo "ERROR: No version provided and branch doesn't match release/vX.Y.Z"
+                    exit 1
+                fi
+            fi
+            if [ -z "${n}" ]; then
+                fest_existing="$(git -C fest tag -l "v${version}-rc.*" --sort=-v:refname | head -1 || true)"
+                camp_existing="$(git -C camp tag -l "v${version}-rc.*" --sort=-v:refname | head -1 || true)"
+                max_n=0
+                [ -n "${fest_existing}" ] && { prev="${fest_existing##*-rc.}"; [ "${prev}" -gt "${max_n}" ] && max_n="${prev}"; }
+                [ -n "${camp_existing}" ] && { prev="${camp_existing##*-rc.}"; [ "${prev}" -gt "${max_n}" ] && max_n="${prev}"; }
+                n=$((max_n + 1))
+                echo "Auto-detected N: ${n}"
+            fi
+            rc_tag="v${version}-rc.${n}"
+            echo ""
+            echo "Commands that WOULD run:"
+            echo "  1. (cd camp && just release rc ${version} ${n})"
+            echo "     → camp tag: ${rc_tag}"
+            echo "  2. (cd fest && just release rc ${version} ${n})"
+            echo "     → fest tag: ${rc_tag}"
+            echo "  3. just release _draft-festival-tag ${version} rc ${n}"
+            echo "     → festival tag: ${rc_tag}"
+            echo ""
+            # Check for conflicts
+            for repo in fest camp; do
+                if git -C "${repo}" rev-parse -q --verify "refs/tags/${rc_tag}" >/dev/null 2>&1; then
+                    echo "  CONFLICT: ${repo} tag ${rc_tag} already exists"
+                fi
+            done
+            if git rev-parse -q --verify "refs/tags/${rc_tag}" >/dev/null 2>&1; then
+                echo "  CONFLICT: festival tag ${rc_tag} already exists"
+            fi
+            ;;
+        stable)
+            if [ -z "${version}" ]; then
+                if [ -n "${fest_rc}" ]; then
+                    version="${fest_rc%-rc.*}"; version="${version#v}"
+                    echo "Auto-detected version: ${version} (from fest RC ${fest_rc})"
+                elif [ -n "${camp_rc}" ]; then
+                    version="${camp_rc%-rc.*}"; version="${version#v}"
+                    echo "Auto-detected version: ${version} (from camp RC ${camp_rc})"
+                else
+                    echo "ERROR: No version and no RC tags found"
+                    exit 1
+                fi
+            fi
+            stable_tag="v${version}"
+            echo ""
+            echo "Commands that WOULD run:"
+            echo "  1. (cd camp && just release promote-rc ${version})"
+            echo "     → camp tag: ${stable_tag}"
+            echo "  2. (cd fest && just release promote-rc ${version})"
+            echo "     → fest tag: ${stable_tag}"
+            echo "  3. just release _draft-festival-tag ${version} stable"
+            echo "     → festival tag: ${stable_tag}"
+            echo ""
+            for repo in fest camp; do
+                if git -C "${repo}" rev-parse -q --verify "refs/tags/${stable_tag}" >/dev/null 2>&1; then
+                    echo "  CONFLICT: ${repo} tag ${stable_tag} already exists"
+                fi
+            done
+            if git rev-parse -q --verify "refs/tags/${stable_tag}" >/dev/null 2>&1; then
+                echo "  CONFLICT: festival tag ${stable_tag} already exists"
+            fi
+            ;;
+    esac
+
+    echo ""
+    echo "To execute: just release go ${channel}$([ -n '{{version}}' ] && echo ' {{version}}')$([ -n '{{n}}' ] && echo ' {{n}}')"
 
 # Run GoReleaser dry run (no publish)
 [no-cd]
