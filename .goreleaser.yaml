@@ -178,6 +178,7 @@ brews:
     homepage: "https://github.com/Obedience-Corp/festival"
     description: "Festival Methodology CLI suite (fest + camp)"
     license: "BUSL-1.1"
+    skip_upload: auto
 
     directory: Formula
 
