@@ -89,6 +89,75 @@ refresh-rc:
 refresh-dev:
     just --justfile {{source_file()}} pin-from-latest dev
 
+[private]
+[no-cd]
+require-homebrew-token:
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    if ! command -v gh >/dev/null 2>&1; then
+        echo "ERROR: gh is required to verify stable Homebrew publishing readiness."
+        exit 1
+    fi
+
+    if ! gh auth status >/dev/null 2>&1; then
+        echo "ERROR: gh is not authenticated."
+        echo "Authenticate with: gh auth login"
+        exit 1
+    fi
+
+    if ! gh secret list --repo Obedience-Corp/festival | awk '{print $1}' | grep -qx 'HOMEBREW_TAP_GITHUB_TOKEN'; then
+        echo "ERROR: HOMEBREW_TAP_GITHUB_TOKEN is not configured for Obedience-Corp/festival."
+        echo "Stable release would fail when publishing the Homebrew formula."
+        echo "Add it with:"
+        echo "  gh secret set HOMEBREW_TAP_GITHUB_TOKEN --repo Obedience-Corp/festival"
+        exit 1
+    fi
+
+    echo "Homebrew publish token is configured."
+
+# Show operator-facing release readiness for current branch and latest tags
+[no-cd]
+status:
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    latest_tag() {
+        repo="$1"
+        tag_mode="$2"
+        local pattern=""
+        case "${tag_mode}" in
+            stable) pattern='^v[0-9]+(\.[0-9]+)*$' ;;
+            rc) pattern='^v[0-9]+(\.[0-9]+)*-rc\.[0-9]+$' ;;
+            dev) pattern='^v[0-9]+(\.[0-9]+)*-dev\.[0-9]+$' ;;
+        esac
+        git -C "${repo}" tag -l 'v*' --sort=-v:refname | grep -E "${pattern}" | head -1 || true
+    }
+
+    git fetch --tags >/dev/null 2>&1 || true
+    git -C fest fetch --tags >/dev/null 2>&1 || true
+    git -C camp fetch --tags >/dev/null 2>&1 || true
+
+    echo "festival branch: $(git rev-parse --abbrev-ref HEAD)"
+    echo ""
+    echo "Current submodule pins:"
+    for sub in {{subs}}; do
+        sha=$(cd "$sub" && git rev-parse --short HEAD)
+        tag=$(cd "$sub" && git describe --tags --exact-match HEAD 2>/dev/null || echo "no tag")
+        echo "  $sub: $sha ($tag)"
+    done
+    echo ""
+    echo "Latest available tags:"
+    for mode in stable rc dev; do
+        echo "  ${mode}: fest=$(latest_tag fest "$mode" || true) camp=$(latest_tag camp "$mode" || true)"
+    done
+    echo ""
+    if gh auth status >/dev/null 2>&1 && gh secret list --repo Obedience-Corp/festival 2>/dev/null | awk '{print $1}' | grep -qx 'HOMEBREW_TAP_GITHUB_TOKEN'; then
+        echo "Homebrew stable publish: configured"
+    else
+        echo "Homebrew stable publish: missing HOMEBREW_TAP_GITHUB_TOKEN"
+    fi
+
 # Pre-release checks: show submodule versions, dirty state, and build validation
 [no-cd]
 preflight mode="stable":
@@ -137,6 +206,12 @@ preflight mode="stable":
         git status --short
         echo "Commit/stash first, then rerun."
         exit 1
+    fi
+
+    if [ "{{mode}}" = "stable" ]; then
+        echo "Checking stable publisher secrets:"
+        just --justfile {{source_file()}} require-homebrew-token
+        echo ""
     fi
 
     echo "Checking tagged release pins:"
@@ -335,6 +410,19 @@ draft-from-latest version mode="stable" n="1":
     echo "fest pinned to: ${fest_tag}"
     echo "camp pinned to: ${camp_tag}"
     echo "Monitor: gh run watch --repo Obedience-Corp/festival"
+
+# Human-friendly aliases for the most common end-to-end release flows
+[no-cd]
+draft-stable-from-latest version:
+    just --justfile {{source_file()}} draft-from-latest "{{version}}" stable
+
+[no-cd]
+draft-rc-from-latest version n="1":
+    just --justfile {{source_file()}} draft-from-latest "{{version}}" rc "{{n}}"
+
+[no-cd]
+draft-dev-from-latest version n="1":
+    just --justfile {{source_file()}} draft-from-latest "{{version}}" dev "{{n}}"
 
 # Draft a stable release: preflight + tag + push (triggers CI)
 [no-cd]
