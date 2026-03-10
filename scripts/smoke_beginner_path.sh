@@ -372,6 +372,11 @@ echo "workspace: $tmp_root"
 require_executable "CAMP_BIN" "$camp_bin"
 require_executable "FEST_BIN" "$fest_bin"
 
+# Make the repo-local binaries discoverable to commands like `camp init`
+# that shell out to sibling tools via PATH.
+export PATH
+PATH="$(dirname "$camp_bin"):$(dirname "$fest_bin"):$PATH"
+
 run_step_quiet "init-local-source-repo" bash -lc "
     set -euo pipefail
     mkdir -p '$source_repo'
