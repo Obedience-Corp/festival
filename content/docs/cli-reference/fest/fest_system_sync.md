@@ -21,7 +21,7 @@ fest system sync [flags]
 ```
   fest system sync                              # Use defaults (channel-based)
   fest system sync --channel stable               # Sync latest stable tag
-  fest system sync --tag v0.2.0                   # Sync exact tag
+  fest system sync --tag v0.1.0                   # Sync exact tag
   fest system sync --branch main                  # Sync from branch
   fest system sync --source github.com/user/repo  # Sync from specific repo
   fest system sync --force                        # Overwrite existing cache
@@ -37,7 +37,7 @@ fest system sync [flags]
   -h, --help             help for sync
       --retry int        number of retry attempts (default 3)
       --source string    GitHub repository URL
-      --tag string       Exact git tag to sync from (e.g., v0.2.0)
+      --tag string       Exact git tag to sync from (e.g., v0.1.0)
       --timeout int      timeout in seconds (default 30)
 ```
 
