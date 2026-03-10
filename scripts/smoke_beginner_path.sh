@@ -8,6 +8,11 @@ festival_name="${FESTIVAL_NAME:-beginner-path-smoke}"
 keep_workdir="${KEEP_SMOKE_WORKDIR:-0}"
 fest_next_timeout_seconds="${FEST_NEXT_TIMEOUT_SECONDS:-30}"
 
+# Ensure camp's internal `fest init` handoff resolves to the freshly built
+# repo-local binaries instead of depending on whatever happens to be installed
+# globally on the host or CI runner.
+export PATH="$(dirname "$camp_bin"):$(dirname "$fest_bin"):$PATH"
+
 step="startup"
 tmp_root=""
 campaign_dir=""
