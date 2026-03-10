@@ -1254,151 +1254,6 @@ fest deps [task] [flags]
 ```
 ---
 
-## fest explore
-
-Interactive festival explorer with hierarchy drilldown
-
-### Synopsis
-
-Explore festivals interactively with vim-style navigation.
-
-If inside a festival directory, shows that festival's phase/sequence/task hierarchy.
-If in the festivals/ directory, shows a list of festivals for the detected status.
-Otherwise, shows all active festivals by default.
-
-STATUS can be: active, planning, completed, dungeon
-
-```
-fest explore [status] [flags]
-```
-
-### Examples
-
-```
-  fest explore              # Auto-detect context and explore
-  fest explore active       # Explore active festivals
-  fest explore planning     # Explore planning festivals
-  fest explore completed    # Explore completed festivals
-  fest explore dungeon      # Explore dungeon festivals
-```
-
-### Options
-
-```
-  -h, --help   help for explore
-      --json   Output as JSON
-```
-
-### Options inherited from parent commands
-
-```
-      --config string   config file (default: ~/.config/fest/config.json)
-      --debug           enable debug logging
-      --no-color        disable colored output
-      --verbose         enable verbose output
-```
----
-
-## fest explore active
-
-Explore active festivals
-
-```
-fest explore active [flags]
-```
-
-### Options
-
-```
-  -h, --help   help for active
-      --json   Output as JSON
-```
-
-### Options inherited from parent commands
-
-```
-      --config string   config file (default: ~/.config/fest/config.json)
-      --debug           enable debug logging
-      --no-color        disable colored output
-      --verbose         enable verbose output
-```
----
-
-## fest explore completed
-
-Explore completed festivals
-
-```
-fest explore completed [flags]
-```
-
-### Options
-
-```
-  -h, --help   help for completed
-      --json   Output as JSON
-```
-
-### Options inherited from parent commands
-
-```
-      --config string   config file (default: ~/.config/fest/config.json)
-      --debug           enable debug logging
-      --no-color        disable colored output
-      --verbose         enable verbose output
-```
----
-
-## fest explore dungeon
-
-Explore dungeon festivals
-
-```
-fest explore dungeon [flags]
-```
-
-### Options
-
-```
-  -h, --help   help for dungeon
-      --json   Output as JSON
-```
-
-### Options inherited from parent commands
-
-```
-      --config string   config file (default: ~/.config/fest/config.json)
-      --debug           enable debug logging
-      --no-color        disable colored output
-      --verbose         enable verbose output
-```
----
-
-## fest explore planning
-
-Explore planning festivals
-
-```
-fest explore planning [flags]
-```
-
-### Options
-
-```
-  -h, --help   help for planning
-      --json   Output as JSON
-```
-
-### Options inherited from parent commands
-
-```
-      --config string   config file (default: ~/.config/fest/config.json)
-      --debug           enable debug logging
-      --no-color        disable colored output
-      --verbose         enable verbose output
-```
----
-
 ## fest feedback
 
 Manage structured feedback collection
@@ -5007,21 +4862,26 @@ fest system sync [flags]
 ### Examples
 
 ```
-  fest system sync                          # Use defaults from config
+  fest system sync                              # Use defaults (channel-based)
+  fest system sync --channel stable               # Sync latest stable tag
+  fest system sync --tag v0.2.0                   # Sync exact tag
+  fest system sync --branch main                  # Sync from branch
   fest system sync --source github.com/user/repo  # Sync from specific repo
-  fest system sync --force                       # Overwrite existing cache
+  fest system sync --force                        # Overwrite existing cache
 ```
 
 ### Options
 
 ```
-      --branch string   Git branch to sync from (default: from config or 'main')
-      --dry-run         show what would be downloaded
-      --force           overwrite existing files without checking
-  -h, --help            help for sync
-      --retry int       number of retry attempts (default 3)
-      --source string   GitHub repository URL
-      --timeout int     timeout in seconds (default 30)
+      --branch string    Git branch to sync from (default: from config or 'main')
+      --channel string   Release channel: stable or dev
+      --dry-run          show what would be downloaded
+      --force            overwrite existing files without checking
+  -h, --help             help for sync
+      --retry int        number of retry attempts (default 3)
+      --source string    GitHub repository URL
+      --tag string       Exact git tag to sync from (e.g., v0.2.0)
+      --timeout int      timeout in seconds (default 30)
 ```
 
 ### Options inherited from parent commands

@@ -2,6 +2,7 @@
 
 docs_root := env("CLI_DOCS_ROOT", "content/docs/cli-reference")
 cli_profile := env("CLI_PROFILE", "stable")
+cli_release_channel := env("CLI_RELEASE_CHANNEL", "")
 base_url := env("HUGO_BASEURL", "https://fest.build")
 
 # Show available docs commands
@@ -19,16 +20,25 @@ all: fest camp
 fest:
     #!/usr/bin/env bash
     set -euo pipefail
+    if [ -n "{{cli_release_channel}}" ]; then
+        bash scripts/check_release_channel_tags.sh "{{cli_release_channel}}"
+    fi
+    fest_gendocs_flags=()
     case "{{cli_profile}}" in
-        stable) (cd fest && BUILD_TAGS='' just build) ;;
-        dev) (cd fest && BUILD_TAGS=dev just build) ;;
+        stable)
+            (cd fest && just build quick-stable)
+            if ./fest/bin/fest gendocs --help 2>&1 | grep -q -- '--stable'; then
+                fest_gendocs_flags+=(--stable)
+            fi
+            ;;
+        dev) (cd fest && just build quick-dev) ;;
         *)
             echo "ERROR: CLI_PROFILE must be 'stable' or 'dev' (got: {{cli_profile}})"
             exit 1
             ;;
     esac
     mkdir -p {{docs_root}}/fest
-    ./fest/bin/fest gendocs --output {{docs_root}}/fest --format markdown --single
+    ./fest/bin/fest gendocs --output {{docs_root}}/fest --format markdown --single "${fest_gendocs_flags[@]}"
     echo "fest docs generated"
 
 # Generate camp CLI docs
@@ -36,9 +46,12 @@ fest:
 camp:
     #!/usr/bin/env bash
     set -euo pipefail
+    if [ -n "{{cli_release_channel}}" ]; then
+        bash scripts/check_release_channel_tags.sh "{{cli_release_channel}}"
+    fi
     case "{{cli_profile}}" in
-        stable) (cd camp && BUILD_TAGS='' just build) ;;
-        dev) (cd camp && BUILD_TAGS=dev just build) ;;
+        stable) (cd camp && just build quick-stable) ;;
+        dev) (cd camp && just build quick-dev) ;;
         *)
             echo "ERROR: CLI_PROFILE must be 'stable' or 'dev' (got: {{cli_profile}})"
             exit 1

@@ -366,11 +366,18 @@ source_repo="$tmp_root/source-repo"
 dryrun_json="$tmp_root/festival-dry-run.json"
 markers_json="$tmp_root/markers.json"
 next_output_file="$tmp_root/fest-next.out"
+planning_dir=""
+precreate_listing="$tmp_root/precreate-dirs.txt"
 
 step="install-surface"
 echo "workspace: $tmp_root"
 require_executable "CAMP_BIN" "$camp_bin"
 require_executable "FEST_BIN" "$fest_bin"
+
+# Make the repo-local binaries discoverable to commands like `camp init`
+# that shell out to sibling tools via PATH.
+export PATH
+PATH="$(dirname "$camp_bin"):$(dirname "$fest_bin"):$PATH"
 
 run_step_quiet "init-local-source-repo" bash -lc "
     set -euo pipefail
@@ -403,34 +410,42 @@ run_step_quiet "project-add-local" bash -lc "
 run_step_capture_stdout_quiet "festival-dry-run" "$dryrun_json" bash -lc "
     set -euo pipefail
     cd '$campaign_dir'
-    '$fest_bin' create festival --name '$festival_name' --type standard --dry-run --json
+    CAMP_ROOT='$campaign_dir' '$fest_bin' create festival --name '$festival_name' --type standard --dry-run --json
 "
 
 write_markers_file "$dryrun_json" "$markers_json"
 
+planning_dir="$campaign_dir/festivals/planning"
+find "$planning_dir" -maxdepth 1 -type d -name "${festival_name}-*" | sort >"$precreate_listing"
+
 run_step_quiet "festival-create" bash -lc "
     set -euo pipefail
     cd '$campaign_dir'
-    '$fest_bin' create festival --name '$festival_name' --type standard --markers-file '$markers_json'
+    CAMP_ROOT='$campaign_dir' '$fest_bin' create festival --name '$festival_name' --type standard --markers-file '$markers_json'
 "
 
-festival_dir="$(find "$campaign_dir/festivals/planning" -maxdepth 1 -type d -name "${festival_name}-*" | head -n 1)"
+festival_dir="$(
+    comm -13 \
+        <(sort "$precreate_listing") \
+        <(find "$planning_dir" -maxdepth 1 -type d -name "${festival_name}-*" | sort) \
+        | head -n 1
+)"
 if [[ -z "$festival_dir" ]]; then
     step="locate-created-festival"
-    echo "Could not find created festival directory for $festival_name" >&2
+    echo "Could not find the new festival directory created for $festival_name" >&2
     exit 1
 fi
 
 run_step_quiet "festival-validate" bash -lc "
     set -euo pipefail
     cd '$festival_dir'
-    '$fest_bin' validate
+    CAMP_ROOT='$campaign_dir' '$fest_bin' validate
 "
 
 run_step_capture_stdout_with_timeout "festival-next" "$next_output_file" "$fest_next_timeout_seconds" bash -lc "
     set -euo pipefail
     cd '$festival_dir'
-    '$fest_bin' next
+    CAMP_ROOT='$campaign_dir' '$fest_bin' next
 "
 
 assert_fest_next_reaches_ingest "$next_output_file"

@@ -20,9 +20,11 @@ Examples:
   camp leverage --json                       Output as JSON
   camp leverage --people 2                   Override team size
   camp leverage --verbose                    Show diagnostic details
+  camp leverage .                            Score current directory only
+  camp leverage --dir /path/to/repo          Score a specific directory
 
 ```
-camp leverage [flags]
+camp leverage [directory] [flags]
 ```
 
 ### Options
@@ -30,6 +32,7 @@ camp leverage [flags]
 ```
       --author string    filter by author email (git substring match — 'alice@co' matches 'alice@co.com')
       --by-author        show per-author leverage breakdown
+      --dir string       score a specific directory (skips campaign project resolution)
   -h, --help             help for leverage
       --json             output as JSON
       --no-legend        hide the leverage formula legend

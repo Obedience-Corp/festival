@@ -780,6 +780,7 @@ Without flags, auto-detects what to crawl:
 Use --triage or --inner to force a specific mode.
 
 For each item, you'll be prompted to decide its fate.
+Triage mode includes a route-to-docs action for existing campaign-root docs/<subdirectory>.
 Statistics are gathered when available (requires scc or fest).
 All decisions are logged to crawl.jsonl for history.
 
@@ -819,6 +820,8 @@ List items in the dungeon or parent items eligible for triage.
 
 By default, lists items at the dungeon root (items already in the dungeon).
 Use --triage to list parent directory items that could be moved into the dungeon.
+The command resolves dungeon context by walking from the current directory up to
+campaign root and using the nearest available dungeon.
 
 OUTPUT FORMATS:
   table (default)   Human-readable table with columns
@@ -828,6 +831,7 @@ OUTPUT FORMATS:
 Examples:
   camp dungeon list                  List dungeon root items
   camp dungeon list --triage         List parent items eligible for triage
+  cd workflow/design/subdir && camp dungeon list  Uses nearest dungeon context from nested path
   camp dungeon list -f json          JSON output for scripting
   camp dungeon list -f simple        Names only, pipe to other commands
 
@@ -862,6 +866,7 @@ Move items within the dungeon or from the parent directory into the dungeon.
 
 Without --triage, moves an item already in the dungeon root to a status directory.
 With --triage, moves an item from the parent directory into the dungeon.
+With --triage and --to-docs, routes an item to an existing campaign-root docs/<subdirectory>.
 
 Statuses: completed, archived, someday
 
@@ -870,6 +875,7 @@ Examples:
   camp dungeon move stale-doc completed          Move dungeon item to completed
   camp dungeon move old-project --triage         Move parent item into dungeon root
   camp dungeon move old-project archived --triage Move parent item directly to archived
+  camp dungeon move stale-note.md --triage --to-docs architecture/api Route to docs subdirectory
 
 ```
 camp dungeon move <item> [status] [flags]
@@ -878,427 +884,10 @@ camp dungeon move <item> [status] [flags]
 ### Options
 
 ```
-  -h, --help        help for move
-      --no-commit   Don't create a git commit
-      --triage      Move from parent directory (not from dungeon root)
-```
-
-### Options inherited from parent commands
-
-```
-      --config string   config file (default: ~/.obey/campaign/config.yaml)
-      --no-color        disable colored output
-      --verbose         enable verbose output
-```
----
-
-## camp flow
-
-Manage status workflows for organizing work
-
-### Synopsis
-
-Manage status workflows for organizing work.
-
-A workflow defines status directories that items can move between,
-with optional transition rules and history tracking. The workflow is
-configured via a .workflow.yaml file.
-
-GETTING STARTED:
-  camp flow init              Initialize a new workflow
-  camp flow sync              Create missing directories from schema
-  camp flow status            Show workflow statistics
-
-MANAGING ITEMS:
-  camp flow list              List registered flows
-  camp flow items             List items in a status directory
-  camp flow move <item> <to>  Move an item to a new status
-
-RUNNING FLOWS:
-  camp flow run <name>        Execute a registered flow
-  camp flow                   Interactive flow picker
-
-OTHER COMMANDS:
-  camp flow show              Display workflow structure
-  camp flow history           View transition history
-  camp flow migrate           Upgrade legacy dungeon structure
-
-DEFAULT STRUCTURE:
-  active/                Work in progress
-  ready/                 Prepared for action
-  dungeon/
-    completed/           Successfully finished
-    archived/            Preserved but inactive
-    someday/             Maybe later
-
-Customize by editing .workflow.yaml and running 'camp flow sync'.
-
-```
-camp flow [flags]
-```
-
-### Options
-
-```
-  -h, --help   help for flow
-```
-
-### Options inherited from parent commands
-
-```
-      --config string   config file (default: ~/.obey/campaign/config.yaml)
-      --no-color        disable colored output
-      --verbose         enable verbose output
-```
----
-
-## camp flow add
-
-Add workflow tracking to current directory
-
-### Synopsis
-
-Add workflow tracking to the current directory.
-
-Creates a .workflow.yaml file, dungeon/ directory structure, and root OBEY.md.
-Uses workflow schema v2 (dungeon-centric model) where:
-  - Root directory (.) = active work
-  - dungeon/           = all other statuses
-
-If dungeon/ already exists, only creates .workflow.yaml.
-If both exist, displays a notice.
-
-Use --force to overwrite an existing workflow configuration.
-
-Provide name/description via flags, JSON, or interactive TUI:
-  --name/-n and --description/-d   Set via flags
-  --json/-j '{"name":"...","description":"..."}'  Set via JSON
-  --json -   Read JSON from stdin (for piping)
-
-Note: Flows cannot be nested inside other flows. If you're inside a flow,
-navigate to a directory outside of it before running this command.
-
-Examples:
-  camp flow add                                      Interactive TUI
-  camp flow add --name "API" --description "API dev" Via flags
-  camp flow add --json '{"name":"API","description":"API development"}'
-  echo '{"name":"X","description":"Y"}' | camp flow add --json -
-  camp flow add --force                              Overwrite existing
-
-```
-camp flow add [flags]
-```
-
-### Options
-
-```
-  -d, --description string   workflow description/purpose
-  -f, --force                overwrite existing workflow
-  -h, --help                 help for add
-  -j, --json string          JSON input (use "-" for stdin)
-  -n, --name string          workflow name
-```
-
-### Options inherited from parent commands
-
-```
-      --config string   config file (default: ~/.obey/campaign/config.yaml)
-      --no-color        disable colored output
-      --verbose         enable verbose output
-```
----
-
-## camp flow items
-
-List items in a status directory
-
-### Synopsis
-
-List items in a status directory.
-
-If no status is specified, lists items in the default status (usually 'active').
-Use --all to list items in all status directories.
-
-Examples:
-  camp flow items              List items in default status
-  camp flow items active       List items in active/
-  camp flow items dungeon/completed  List items in dungeon/completed/
-  camp flow items --all        List items in all statuses
-
-```
-camp flow items [status] [flags]
-```
-
-### Options
-
-```
-  -a, --all    list all statuses
-  -h, --help   help for items
-      --json   output as JSON
-```
-
-### Options inherited from parent commands
-
-```
-      --config string   config file (default: ~/.obey/campaign/config.yaml)
-      --no-color        disable colored output
-      --verbose         enable verbose output
-```
----
-
-## camp flow list
-
-List registered flows from the registry
-
-### Synopsis
-
-List all flows registered in .campaign/flows/registry.yaml.
-
-Shows flow name, description, and tags in table format.
-
-Examples:
-  camp flow list
-
-```
-camp flow list [flags]
-```
-
-### Options
-
-```
-  -h, --help   help for list
-```
-
-### Options inherited from parent commands
-
-```
-      --config string   config file (default: ~/.obey/campaign/config.yaml)
-      --no-color        disable colored output
-      --verbose         enable verbose output
-```
----
-
-## camp flow migrate
-
-Migrate workflow to latest schema version
-
-### Synopsis
-
-Migrate a workflow to the latest schema version.
-
-Supports two migration paths:
-  - Legacy dungeon → v1 workflow (creates .workflow.yaml)
-  - v1 → v2 (dungeon-centric model)
-
-For v1→v2 migration:
-  - active/ items move to root directory
-  - ready/ items move to dungeon/ready/
-  - Empty active/ and ready/ directories are removed
-  - Schema is updated to version 2
-
-Use --dry-run to preview changes without applying them.
-Use --force to skip confirmation prompts.
-
-Examples:
-  camp flow migrate            Migrate with confirmation
-  camp flow migrate --dry-run  Preview migration
-  camp flow migrate --force    Migrate without confirmation
-
-```
-camp flow migrate [flags]
-```
-
-### Options
-
-```
-  -n, --dry-run   preview migration without making changes
-  -f, --force     skip confirmation
-  -h, --help      help for migrate
-```
-
-### Options inherited from parent commands
-
-```
-      --config string   config file (default: ~/.obey/campaign/config.yaml)
-      --no-color        disable colored output
-      --verbose         enable verbose output
-```
----
-
-## camp flow move
-
-Move an item to a new status
-
-### Synopsis
-
-Move an item from its current status to a new status.
-
-The item is moved from wherever it currently exists to the specified status.
-Transitions are validated against the workflow schema unless --force is used.
-
-Auto-commit behavior is controlled by .workflow.yaml auto_commit settings.
-Use --commit to force a commit or --no-commit to skip it.
-
-Examples:
-  camp flow move project-1 ready             Move to ready/
-  camp flow move old-project dungeon/completed   Move to dungeon/completed/
-  camp flow move project-1 ready --reason "Ready for review"
-  camp flow move project-1 active --force    Force move (skip validation)
-  camp flow move project-1 ready --commit    Force auto-commit
-
-```
-camp flow move <item> <status> [flags]
-```
-
-### Options
-
-```
-      --commit          force auto-commit after move
-  -f, --force           force move (skip transition validation)
-  -h, --help            help for move
-      --no-commit       skip auto-commit even if enabled in config
-  -r, --reason string   reason for the move
-```
-
-### Options inherited from parent commands
-
-```
-      --config string   config file (default: ~/.obey/campaign/config.yaml)
-      --no-color        disable colored output
-      --verbose         enable verbose output
-```
----
-
-## camp flow run
-
-Execute a registered flow by name
-
-### Synopsis
-
-Execute a registered flow from .campaign/flows/registry.yaml.
-
-Extra arguments after -- are appended to the flow's command.
-
-Examples:
-  camp flow run build
-  camp flow run test -- --verbose
-  camp flow run deploy -- production
-
-```
-camp flow run <name> [-- extra-args...] [flags]
-```
-
-### Options
-
-```
-  -h, --help   help for run
-```
-
-### Options inherited from parent commands
-
-```
-      --config string   config file (default: ~/.obey/campaign/config.yaml)
-      --no-color        disable colored output
-      --verbose         enable verbose output
-```
----
-
-## camp flow show
-
-Show workflow structure
-
-### Synopsis
-
-Display the workflow structure and configuration.
-
-Shows the directories defined in the workflow, their descriptions,
-and transition rules.
-
-Use --schema to display the raw .workflow.yaml file.
-
-Examples:
-  camp flow show             Show workflow structure
-  camp flow show --schema    Show raw schema file
-
-```
-camp flow show [flags]
-```
-
-### Options
-
-```
-  -h, --help     help for show
-  -s, --schema   show raw schema file
-  -t, --tree     display as tree
-```
-
-### Options inherited from parent commands
-
-```
-      --config string   config file (default: ~/.obey/campaign/config.yaml)
-      --no-color        disable colored output
-      --verbose         enable verbose output
-```
----
-
-## camp flow status
-
-Show workflow statistics
-
-### Synopsis
-
-Show workflow statistics including item counts per status.
-
-Displays the workflow name, location, and counts for each status directory.
-
-Examples:
-  camp flow status            Show workflow statistics
-
-```
-camp flow status [flags]
-```
-
-### Options
-
-```
-  -h, --help   help for status
-```
-
-### Options inherited from parent commands
-
-```
-      --config string   config file (default: ~/.obey/campaign/config.yaml)
-      --no-color        disable colored output
-      --verbose         enable verbose output
-```
----
-
-## camp flow sync
-
-Sync directories with schema
-
-### Synopsis
-
-Synchronize directories with the workflow schema.
-
-Creates any directories defined in .workflow.yaml that don't exist yet.
-Does not remove directories that aren't in the schema.
-
-Use --dry-run to see what would be created without making changes.
-
-Examples:
-  camp flow sync              Create missing directories
-  camp flow sync --dry-run    Preview changes without creating
-
-```
-camp flow sync [flags]
-```
-
-### Options
-
-```
-  -n, --dry-run   preview changes without creating directories
-  -h, --help      help for sync
+  -h, --help             help for move
+      --no-commit        Don't create a git commit
+      --to-docs string   Route triage item into an existing campaign-root docs/<subdir> (requires --triage)
+      --triage           Move from parent directory (not from dungeon root)
 ```
 
 ### Options inherited from parent commands
@@ -2159,9 +1748,11 @@ Examples:
   camp leverage --json                       Output as JSON
   camp leverage --people 2                   Override team size
   camp leverage --verbose                    Show diagnostic details
+  camp leverage .                            Score current directory only
+  camp leverage --dir /path/to/repo          Score a specific directory
 
 ```
-camp leverage [flags]
+camp leverage [directory] [flags]
 ```
 
 ### Options
@@ -2169,6 +1760,7 @@ camp leverage [flags]
 ```
       --author string    filter by author email (git substring match — 'alice@co' matches 'alice@co.com')
       --by-author        show per-author leverage breakdown
+      --dir string       score a specific directory (skips campaign project resolution)
   -h, --help             help for leverage
       --json             output as JSON
       --no-legend        hide the leverage formula legend
@@ -3595,13 +3187,14 @@ camp run [project | @shortcut] [command | recipe] [args...] [flags]
 
 ```
   # Project just dispatch (first arg matches a project name):
-  camp run fest              # Show just recipes for fest project
-  camp run fest build        # Run 'just build' in projects/fest/
+  camp run camp              # Show just recipes for camp project
   camp run camp test all     # Run 'just test all' in projects/camp/
+  camp run festival build    # Run 'just build' in projects/festival/
 
   # Raw command from campaign root (first arg is not a project):
-  camp run ls -la            # List campaign root contents
   camp run just --list       # Show just recipes from root
+  camp run git status        # Run git status from campaign root
+  camp run ls -la            # List campaign root contents
 
   # Shortcut-based execution:
   camp run @p ls             # List projects/ directory
@@ -4089,9 +3682,10 @@ Displays a table with each submodule's name, branch, clean/dirty state,
 and push status. Results are cached for quick subsequent lookups.
 
 Examples:
-  camp status all           # Show all submodule statuses
-  camp status all --json    # Output as JSON
-  camp status all --no-cache  # Skip cache, refresh all
+  camp status all               # Show all submodule statuses
+  camp status all --remote-url  # Show remote URLs instead of names
+  camp status all --json        # Output as JSON
+  camp status all --no-cache    # Skip cache, refresh all
 
 ```
 camp status all [flags]
@@ -4104,6 +3698,7 @@ camp status all [flags]
       --json         Output as JSON
       --no-cache     Skip cache and refresh
       --no-recurse   Only list top-level submodules
+      --remote-url   Show remote URLs instead of remote names
       --view         Open interactive TUI viewer
 ```
 

@@ -17,7 +17,7 @@ if [ -e "$stable_root/fest/fest_explore.md" ]; then
     exit 1
 fi
 
-if rg -q '^\* \[fest explore\]' "$stable_root/fest/fest.md"; then
+if grep -q '^\* \[fest explore\]' "$stable_root/fest/fest.md"; then
     echo "stable docs unexpectedly referenced fest explore"
     exit 1
 fi
@@ -29,7 +29,7 @@ if [ ! -e "$dev_root/fest/fest_explore.md" ]; then
     exit 1
 fi
 
-if ! rg -q '^\* \[fest explore\]' "$dev_root/fest/fest.md"; then
+if ! grep -q '^\* \[fest explore\]' "$dev_root/fest/fest.md"; then
     echo "dev docs did not reference fest explore"
     exit 1
 fi

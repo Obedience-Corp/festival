@@ -1,4 +1,5 @@
 # Build commands
+cli_profile := env("CLI_PROFILE", "stable")
 
 # Show available build commands
 [private]
@@ -13,9 +14,27 @@ all: fest camp
 # Build fest
 [no-cd]
 fest:
-    cd fest && just build
+    #!/usr/bin/env bash
+    set -euo pipefail
+    case "{{cli_profile}}" in
+        stable) cd fest && just build quick-stable ;;
+        dev) cd fest && just build quick-dev ;;
+        *)
+            echo "ERROR: CLI_PROFILE must be 'stable' or 'dev' (got: {{cli_profile}})"
+            exit 1
+            ;;
+    esac
 
 # Build camp
 [no-cd]
 camp:
-    cd camp && just build
+    #!/usr/bin/env bash
+    set -euo pipefail
+    case "{{cli_profile}}" in
+        stable) cd camp && just build quick-stable ;;
+        dev) cd camp && just build quick-dev ;;
+        *)
+            echo "ERROR: CLI_PROFILE must be 'stable' or 'dev' (got: {{cli_profile}})"
+            exit 1
+            ;;
+    esac

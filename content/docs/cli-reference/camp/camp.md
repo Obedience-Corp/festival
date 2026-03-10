@@ -52,7 +52,6 @@ camp [flags]
 * [camp date](camp_date.md)	 - Append date suffix to file or directory name
 * [camp doctor](camp_doctor.md)	 - Diagnose and fix campaign health issues
 * [camp dungeon](camp_dungeon.md)	 - Manage the campaign dungeon
-* [camp flow](camp_flow.md)	 - Manage status workflows for organizing work
 * [camp gather](camp_gather.md)	 - Import external data into the intent system
 * [camp go](camp_go.md)	 - Navigate to campaign directories
 * [camp init](camp_init.md)	 - Initialize a new campaign
