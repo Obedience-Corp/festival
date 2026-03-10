@@ -403,6 +403,13 @@ run_step_quiet "camp-init" "$camp_bin" init \
     --mission "verify beginner path" \
     "$campaign_dir"
 
+run_step_quiet "ensure-festival-workspace" bash -c "
+    set -euo pipefail
+    if [[ ! -d '$campaign_dir/festivals/.festival' ]]; then
+        '$fest_bin' init '$campaign_dir'
+    fi
+"
+
 run_step_quiet "campaign-git-config" git -C "$campaign_dir" config user.name "Smoke Test"
 run_step_quiet "campaign-git-email" git -C "$campaign_dir" config user.email "smoke@example.com"
 
