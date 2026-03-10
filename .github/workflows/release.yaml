@@ -23,6 +23,9 @@ jobs:
         with:
           go-version: '1.25'
 
+      - name: Set up just
+        uses: extractions/setup-just@v3
+
       - name: Configure private Go modules
         if: env.GO_PRIVATE_TOKEN != ''
         run: |
