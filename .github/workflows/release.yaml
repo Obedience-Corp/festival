@@ -43,9 +43,18 @@ jobs:
         id: release_channel
         run: |
           case "${GITHUB_REF_NAME}" in
-            v*-dev.*) echo "mode=dev" >> "$GITHUB_OUTPUT" ;;
-            v*-rc.*) echo "mode=rc" >> "$GITHUB_OUTPUT" ;;
-            v*) echo "mode=stable" >> "$GITHUB_OUTPUT" ;;
+            v*-dev.*)
+              echo "mode=dev" >> "$GITHUB_OUTPUT"
+              echo "cli_profile=dev" >> "$GITHUB_OUTPUT"
+              ;;
+            v*-rc.*)
+              echo "mode=rc" >> "$GITHUB_OUTPUT"
+              echo "cli_profile=stable" >> "$GITHUB_OUTPUT"
+              ;;
+            v*)
+              echo "mode=stable" >> "$GITHUB_OUTPUT"
+              echo "cli_profile=stable" >> "$GITHUB_OUTPUT"
+              ;;
             *)
               echo "unsupported tag format: ${GITHUB_REF_NAME}" >&2
               exit 1
@@ -62,7 +71,7 @@ jobs:
         run: just test docs-profile
 
       - name: Build CLIs for smoke test
-        run: just build all
+        run: CLI_PROFILE=${{ steps.release_channel.outputs.cli_profile }} just build all
 
       - name: Run beginner path smoke
         run: just test beginner-path-smoke

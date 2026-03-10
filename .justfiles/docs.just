@@ -26,12 +26,12 @@ fest:
     fest_gendocs_flags=()
     case "{{cli_profile}}" in
         stable)
-            (cd fest && BUILD_TAGS='' just build)
+            (cd fest && just build quick-stable)
             if ./fest/bin/fest gendocs --help 2>&1 | rg -q -- '--stable'; then
                 fest_gendocs_flags+=(--stable)
             fi
             ;;
-        dev) (cd fest && BUILD_TAGS=dev just build) ;;
+        dev) (cd fest && just build quick-dev) ;;
         *)
             echo "ERROR: CLI_PROFILE must be 'stable' or 'dev' (got: {{cli_profile}})"
             exit 1
@@ -50,8 +50,8 @@ camp:
         bash scripts/check_release_channel_tags.sh "{{cli_release_channel}}"
     fi
     case "{{cli_profile}}" in
-        stable) (cd camp && BUILD_TAGS='' just build) ;;
-        dev) (cd camp && BUILD_TAGS=dev just build) ;;
+        stable) (cd camp && just build quick-stable) ;;
+        dev) (cd camp && just build quick-dev) ;;
         *)
             echo "ERROR: CLI_PROFILE must be 'stable' or 'dev' (got: {{cli_profile}})"
             exit 1

@@ -53,6 +53,7 @@ camp [flags]
 * [camp doctor](camp_doctor.md)	 - Diagnose and fix campaign health issues
 * [camp dungeon](camp_dungeon.md)	 - Manage the campaign dungeon
 * [camp flow](camp_flow.md)	 - Manage status workflows for organizing work
+* [camp fresh](camp_fresh.md)	 - Post-merge branch cycling: sync to default branch and optionally create a new working branch
 * [camp gather](camp_gather.md)	 - Import external data into the intent system
 * [camp go](camp_go.md)	 - Navigate to campaign directories
 * [camp init](camp_init.md)	 - Initialize a new campaign

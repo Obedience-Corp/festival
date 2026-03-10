@@ -780,6 +780,7 @@ Without flags, auto-detects what to crawl:
 Use --triage or --inner to force a specific mode.
 
 For each item, you'll be prompted to decide its fate.
+Triage mode includes a route-to-docs action for existing campaign-root docs/<subdirectory>.
 Statistics are gathered when available (requires scc or fest).
 All decisions are logged to crawl.jsonl for history.
 
@@ -819,6 +820,8 @@ List items in the dungeon or parent items eligible for triage.
 
 By default, lists items at the dungeon root (items already in the dungeon).
 Use --triage to list parent directory items that could be moved into the dungeon.
+The command resolves dungeon context by walking from the current directory up to
+campaign root and using the nearest available dungeon.
 
 OUTPUT FORMATS:
   table (default)   Human-readable table with columns
@@ -828,6 +831,7 @@ OUTPUT FORMATS:
 Examples:
   camp dungeon list                  List dungeon root items
   camp dungeon list --triage         List parent items eligible for triage
+  cd workflow/design/subdir && camp dungeon list  Uses nearest dungeon context from nested path
   camp dungeon list -f json          JSON output for scripting
   camp dungeon list -f simple        Names only, pipe to other commands
 
@@ -862,6 +866,7 @@ Move items within the dungeon or from the parent directory into the dungeon.
 
 Without --triage, moves an item already in the dungeon root to a status directory.
 With --triage, moves an item from the parent directory into the dungeon.
+With --triage and --to-docs, routes an item to an existing campaign-root docs/<subdirectory>.
 
 Statuses: completed, archived, someday
 
@@ -870,6 +875,7 @@ Examples:
   camp dungeon move stale-doc completed          Move dungeon item to completed
   camp dungeon move old-project --triage         Move parent item into dungeon root
   camp dungeon move old-project archived --triage Move parent item directly to archived
+  camp dungeon move stale-note.md --triage --to-docs architecture/api Route to docs subdirectory
 
 ```
 camp dungeon move <item> [status] [flags]
@@ -878,9 +884,10 @@ camp dungeon move <item> [status] [flags]
 ### Options
 
 ```
-  -h, --help        help for move
-      --no-commit   Don't create a git commit
-      --triage      Move from parent directory (not from dungeon root)
+  -h, --help             help for move
+      --no-commit        Don't create a git commit
+      --to-docs string   Route triage item into an existing campaign-root docs/<subdir> (requires --triage)
+      --triage           Move from parent directory (not from dungeon root)
 ```
 
 ### Options inherited from parent commands
@@ -1306,6 +1313,94 @@ camp flow sync [flags]
 ```
       --config string   config file (default: ~/.obey/campaign/config.yaml)
       --no-color        disable colored output
+      --verbose         enable verbose output
+```
+---
+
+## camp fresh
+
+Post-merge branch cycling: sync to default branch and optionally create a new working branch
+
+### Synopsis
+
+Reset a project to a fresh state after merging a PR.
+
+Performs the post-merge cycle: checkout default branch, pull latest,
+prune merged branches, and optionally create a new working branch.
+
+Auto-detects the current project from your working directory,
+or accepts a project name as a positional argument.
+
+Without configuration, syncs to the default branch and prunes.
+Configure .campaign/settings/fresh.yaml to set a default working branch.
+
+Examples:
+  camp fresh                         # Sync current project (checkout default, pull, prune)
+  camp fresh --branch develop        # Sync and create develop branch
+  camp fresh camp -b feat/new-thing  # Sync camp project, create feature branch
+  camp fresh --no-prune              # Sync without pruning
+  camp fresh --dry-run               # Preview what would happen
+
+```
+camp fresh [project-name] [flags]
+```
+
+### Options
+
+```
+  -b, --branch string    Branch to create after syncing (overrides config)
+  -n, --dry-run          Preview without making changes
+  -h, --help             help for fresh
+      --no-branch        Skip branch creation even if configured
+      --no-prune         Skip pruning merged branches
+      --no-push          Skip pushing the new branch upstream
+  -p, --project string   Project name (auto-detected from cwd)
+```
+
+### Options inherited from parent commands
+
+```
+      --config string   config file (default: ~/.obey/campaign/config.yaml)
+      --no-color        disable colored output
+      --verbose         enable verbose output
+```
+---
+
+## camp fresh all
+
+Run fresh across all project submodules
+
+### Synopsis
+
+Run the fresh cycle (checkout default, pull, prune, optional branch)
+across every project submodule in the campaign.
+
+Examples:
+  camp fresh all                     # Sync all projects
+  camp fresh all --branch develop    # Sync all and create develop branch
+  camp fresh all --dry-run           # Preview across all projects
+  camp fresh all --no-prune          # Sync without pruning
+
+```
+camp fresh all [flags]
+```
+
+### Options
+
+```
+  -h, --help   help for all
+```
+
+### Options inherited from parent commands
+
+```
+  -b, --branch string   Branch to create after syncing (overrides config)
+      --config string   config file (default: ~/.obey/campaign/config.yaml)
+  -n, --dry-run         Preview without making changes
+      --no-branch       Skip branch creation even if configured
+      --no-color        disable colored output
+      --no-prune        Skip pruning merged branches
+      --no-push         Skip pushing the new branch upstream
       --verbose         enable verbose output
 ```
 ---
@@ -2159,9 +2254,11 @@ Examples:
   camp leverage --json                       Output as JSON
   camp leverage --people 2                   Override team size
   camp leverage --verbose                    Show diagnostic details
+  camp leverage .                            Score current directory only
+  camp leverage --dir /path/to/repo          Score a specific directory
 
 ```
-camp leverage [flags]
+camp leverage [directory] [flags]
 ```
 
 ### Options
@@ -2169,6 +2266,7 @@ camp leverage [flags]
 ```
       --author string    filter by author email (git substring match — 'alice@co' matches 'alice@co.com')
       --by-author        show per-author leverage breakdown
+      --dir string       score a specific directory (skips campaign project resolution)
   -h, --help             help for leverage
       --json             output as JSON
       --no-legend        hide the leverage formula legend
@@ -3595,13 +3693,14 @@ camp run [project | @shortcut] [command | recipe] [args...] [flags]
 
 ```
   # Project just dispatch (first arg matches a project name):
-  camp run fest              # Show just recipes for fest project
-  camp run fest build        # Run 'just build' in projects/fest/
+  camp run camp              # Show just recipes for camp project
   camp run camp test all     # Run 'just test all' in projects/camp/
+  camp run festival build    # Run 'just build' in projects/festival/
 
   # Raw command from campaign root (first arg is not a project):
-  camp run ls -la            # List campaign root contents
   camp run just --list       # Show just recipes from root
+  camp run git status        # Run git status from campaign root
+  camp run ls -la            # List campaign root contents
 
   # Shortcut-based execution:
   camp run @p ls             # List projects/ directory
@@ -4089,9 +4188,10 @@ Displays a table with each submodule's name, branch, clean/dirty state,
 and push status. Results are cached for quick subsequent lookups.
 
 Examples:
-  camp status all           # Show all submodule statuses
-  camp status all --json    # Output as JSON
-  camp status all --no-cache  # Skip cache, refresh all
+  camp status all               # Show all submodule statuses
+  camp status all --remote-url  # Show remote URLs instead of names
+  camp status all --json        # Output as JSON
+  camp status all --no-cache    # Skip cache, refresh all
 
 ```
 camp status all [flags]
@@ -4104,6 +4204,7 @@ camp status all [flags]
       --json         Output as JSON
       --no-cache     Skip cache and refresh
       --no-recurse   Only list top-level submodules
+      --remote-url   Show remote URLs instead of remote names
       --view         Open interactive TUI viewer
 ```
 

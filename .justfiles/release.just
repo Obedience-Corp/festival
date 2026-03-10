@@ -94,6 +94,10 @@ refresh-dev:
 preflight mode="stable":
     #!/usr/bin/env bash
     set -euo pipefail
+    build_profile="stable"
+    if [ "{{mode}}" = "dev" ]; then
+        build_profile="dev"
+    fi
     echo "=== Release Preflight ==="
     echo ""
 
@@ -148,7 +152,7 @@ preflight mode="stable":
     echo ""
 
     echo "Building CLIs:"
-    just build all
+    CLI_PROFILE="${build_profile}" just build all
     echo ""
 
     echo "Beginner-path smoke:"
