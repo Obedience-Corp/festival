@@ -238,6 +238,10 @@ preflight mode="stable":
     just test docs-profile
     echo ""
 
+    echo "Testing release operator:"
+    just test release-operator
+    echo ""
+
     echo "Building CLIs:"
     CLI_PROFILE="${build_profile}" just build all
     echo ""
@@ -268,16 +272,19 @@ _bundle channel:
 [no-cd]
 [confirm("This will create a dev festival release from the latest dev tags in camp and fest. Continue?")]
 dev:
+    just test release-operator
     just --justfile {{source_file()}} _bundle dev
 
 [no-cd]
 [confirm("This will create an RC festival release from the latest rc tags in camp and fest. Continue?")]
 rc:
+    just test release-operator
     just --justfile {{source_file()}} _bundle rc
 
 [no-cd]
 [confirm("This will create a stable festival release from the latest stable tags in camp and fest. Continue?")]
 stable:
+    just test release-operator
     just --justfile {{source_file()}} _bundle stable
 
 # Run GoReleaser dry run (no publish)

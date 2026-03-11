@@ -113,8 +113,11 @@ func collectState(repoRoot, channel string) (operator.BundleInput, error) {
 		FestTag:              latestTagForMode(filepath.Join(repoRoot, "fest"), channel),
 		CampTag:              latestTagForMode(filepath.Join(repoRoot, "camp"), channel),
 		LatestFestivalDev:    latestTagForMode(repoRoot, "dev"),
-		LatestFestivalRC:     latestTagForMode(repoRoot, "rc"),
 		LatestFestivalStable: latestTagForMode(repoRoot, "stable"),
+	}
+	state.LatestFestivalPromotableRC, err = latestReachableTagForMode(repoRoot, "rc")
+	if err != nil {
+		return operator.BundleInput{}, err
 	}
 
 	if state.LatestFestivalDev != "" {
@@ -135,14 +138,6 @@ func collectState(repoRoot, channel string) (operator.BundleInput, error) {
 			}
 			state.CurrentCommitTaggedVersionRC = match
 		}
-	}
-
-	if state.LatestFestivalRC != "" {
-		ancestor, err := tagAncestorOfHead(repoRoot, state.LatestFestivalRC)
-		if err != nil {
-			return operator.BundleInput{}, err
-		}
-		state.LatestRCReachableFromHead = ancestor
 	}
 
 	return state, nil
@@ -199,6 +194,26 @@ func latestTagForMode(dir, mode string) string {
 		}
 	}
 	return ""
+}
+
+func latestReachableTagForMode(dir, mode string) (string, error) {
+	tags, err := gitLines(dir, "tag", "-l", "v*", "--sort=-v:refname")
+	if err != nil {
+		return "", err
+	}
+	for _, tag := range tags {
+		if !operator.TagMatchesMode(tag, mode) {
+			continue
+		}
+		ancestor, err := tagAncestorOfHead(dir, tag)
+		if err != nil {
+			return "", err
+		}
+		if ancestor {
+			return tag, nil
+		}
+	}
+	return "", nil
 }
 
 func latestTagForModeVersion(dir, mode, version string) string {

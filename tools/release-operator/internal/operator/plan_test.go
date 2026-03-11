@@ -51,13 +51,12 @@ func TestDeriveBundlePlanRCFromReleaseBranch(t *testing.T) {
 
 func TestDeriveBundlePlanStablePromotesLatestRC(t *testing.T) {
 	plan, err := DeriveBundlePlan(BundleInput{
-		Channel:                   "stable",
-		CurrentBranch:             "main",
-		FestTag:                   "v0.2.0",
-		CampTag:                   "v0.2.1",
-		LatestFestivalRC:          "v0.2.0-rc.3",
-		LatestFestivalStable:      "v0.1.1",
-		LatestRCReachableFromHead: true,
+		Channel:                    "stable",
+		CurrentBranch:              "main",
+		FestTag:                    "v0.2.0",
+		CampTag:                    "v0.2.1",
+		LatestFestivalPromotableRC: "v0.2.0-rc.3",
+		LatestFestivalStable:       "v0.1.1",
 	})
 	if err != nil {
 		t.Fatalf("DeriveBundlePlan returned error: %v", err)
@@ -68,15 +67,26 @@ func TestDeriveBundlePlanStablePromotesLatestRC(t *testing.T) {
 	}
 }
 
+func TestDeriveBundlePlanStableRejectsWhenMainHasNoPromotableRC(t *testing.T) {
+	_, err := DeriveBundlePlan(BundleInput{
+		Channel:       "stable",
+		CurrentBranch: "main",
+		FestTag:       "v0.2.0",
+		CampTag:       "v0.2.1",
+	})
+	if err == nil {
+		t.Fatal("expected error")
+	}
+}
+
 func TestDeriveBundlePlanStableRejectsWhenStableAlreadyCaughtUp(t *testing.T) {
 	_, err := DeriveBundlePlan(BundleInput{
-		Channel:                   "stable",
-		CurrentBranch:             "main",
-		FestTag:                   "v0.2.0",
-		CampTag:                   "v0.2.1",
-		LatestFestivalRC:          "v0.2.0-rc.3",
-		LatestFestivalStable:      "v0.2.0",
-		LatestRCReachableFromHead: true,
+		Channel:                    "stable",
+		CurrentBranch:              "main",
+		FestTag:                    "v0.2.0",
+		CampTag:                    "v0.2.1",
+		LatestFestivalPromotableRC: "v0.2.0-rc.3",
+		LatestFestivalStable:       "v0.2.0",
 	})
 	if err == nil {
 		t.Fatal("expected error")

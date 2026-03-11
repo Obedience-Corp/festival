@@ -78,6 +78,9 @@ jobs:
       - name: Check docs profile
         run: just test docs-profile
 
+      - name: Test release operator
+        run: just test release-operator
+
       - name: Build CLIs for smoke test
         run: CLI_PROFILE=${{ steps.release_channel.outputs.cli_profile }} just build all
 

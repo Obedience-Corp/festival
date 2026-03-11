@@ -7,7 +7,7 @@ default:
 
 # Test all projects
 [no-cd]
-all: fest camp
+all: fest camp release-operator
     @echo "All tests passed"
 
 # Check mirrored camp/fest doc copies against their source repos
@@ -39,3 +39,8 @@ fest:
 [no-cd]
 camp:
     cd camp && just test all
+
+# Test the release operator logic used by just release dev|rc|stable
+[no-cd]
+release-operator:
+    cd tools/release-operator && go test ./...

@@ -60,12 +60,11 @@ type BundleInput struct {
 	FestTag                      string
 	CampTag                      string
 	LatestFestivalDev            string
-	LatestFestivalRC             string
+	LatestFestivalPromotableRC   string
 	LatestFestivalStable         string
 	LatestFestivalVersionRC      string
 	CurrentCommitTaggedLatestDev bool
 	CurrentCommitTaggedVersionRC bool
-	LatestRCReachableFromHead    bool
 }
 
 type BundlePlan struct {
@@ -170,14 +169,11 @@ func planStable(in BundleInput) (BundlePlan, error) {
 	if in.CurrentBranch != "main" {
 		return BundlePlan{}, fmt.Errorf("stable releases must be created from the main branch")
 	}
-	if in.LatestFestivalRC == "" {
-		return BundlePlan{}, fmt.Errorf("no festival rc exists to promote")
-	}
-	if !in.LatestRCReachableFromHead {
-		return BundlePlan{}, fmt.Errorf("main does not contain the latest festival rc commit")
+	if in.LatestFestivalPromotableRC == "" {
+		return BundlePlan{}, fmt.Errorf("main does not contain a festival rc to promote")
 	}
 
-	rc, err := ParseRCTag(in.LatestFestivalRC)
+	rc, err := ParseRCTag(in.LatestFestivalPromotableRC)
 	if err != nil {
 		return BundlePlan{}, err
 	}
@@ -199,7 +195,7 @@ func planStable(in BundleInput) (BundlePlan, error) {
 		ReleaseTag:  "v" + version,
 		DraftRecipe: "draft-stable-from-latest",
 		DraftArgs:   []string{version},
-		Description: fmt.Sprintf("Festival version line: v%s (promoting %s on main)", version, in.LatestFestivalRC),
+		Description: fmt.Sprintf("Festival version line: v%s (promoting %s on main)", version, in.LatestFestivalPromotableRC),
 	}, nil
 }
 
