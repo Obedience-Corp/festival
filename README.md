@@ -40,6 +40,11 @@ yay -S festival-bin
 **Windows:** Stable Windows packages are temporarily paused while support is being hardened.
 For now, use WSL2 and the Linux install method above.
 
+## Requirements
+
+- `git` is required. `camp` and `fest` use git internally for campaign init, project management, template sync, and commit-aware workflows.
+- `scc` is recommended but optional. Without it, `camp leverage` features will not work.
+
 ## Quick Start
 
 ```bash

@@ -16,6 +16,8 @@ Or download the latest macOS release directly:
 
 [Download for macOS](https://github.com/Obedience-Corp/festival/releases/latest){ .md-button .md-button--primary }
 
+`git` is required for Festival. `scc` is recommended for `camp leverage`, but optional.
+
 </div>
 
 <div id="install-linux" class="install-platform" style="display:none" markdown>
@@ -32,6 +34,8 @@ Choose your distribution's package format:
 | Alpine | `sudo apk add --allow-untrusted festival_*.apk` |
 
 [Download Linux Packages](https://github.com/Obedience-Corp/festival/releases/latest){ .md-button .md-button--primary }
+
+`git` is required for Festival. `scc` is recommended for `camp leverage`, but optional.
 
 </div>
 

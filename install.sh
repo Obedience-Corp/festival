@@ -12,11 +12,17 @@ VERSION="${VERSION:-latest}"
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
+YELLOW='\033[1;33m'
 NC='\033[0m'
 
 info() { echo -e "${BLUE}==>${NC} $1"; }
 success() { echo -e "${GREEN}==>${NC} $1"; }
+warning() { echo -e "${YELLOW}Warning:${NC} $1"; }
 error() { echo -e "${RED}Error:${NC} $1" >&2; exit 1; }
+
+command_exists() {
+    command -v "$1" >/dev/null 2>&1
+}
 
 # Detect OS
 detect_os() {
@@ -43,8 +49,67 @@ get_latest_version() {
         | sed -E 's/.*"([^"]+)".*/\1/'
 }
 
+install_hint() {
+    local dep="$1"
+
+    case "$(uname -s)" in
+        Darwin*)
+            if command_exists brew; then
+                echo "brew install ${dep}"
+            elif [ "$dep" = "git" ]; then
+                echo "xcode-select --install  # or install Homebrew, then brew install git"
+            else
+                echo "install Homebrew, then run: brew install ${dep}"
+            fi
+            ;;
+        Linux*)
+            if command_exists apt-get; then
+                echo "sudo apt-get update && sudo apt-get install -y ${dep}"
+            elif command_exists dnf; then
+                echo "sudo dnf install -y ${dep}"
+            elif command_exists yum; then
+                echo "sudo yum install -y ${dep}"
+            elif command_exists pacman; then
+                echo "sudo pacman -S --needed ${dep}"
+            elif command_exists apk; then
+                echo "sudo apk add ${dep}"
+            elif command_exists zypper; then
+                echo "sudo zypper install -y ${dep}"
+            else
+                echo "install '${dep}' with your system package manager"
+            fi
+            ;;
+        *)
+            echo "install '${dep}' and re-run this installer"
+            ;;
+    esac
+}
+
+require_git() {
+    if command_exists git; then
+        return 0
+    fi
+
+    error "Git is required for Festival. Camp and fest use git internally for campaign init, project management, template sync, and commit-aware workflows.\nInstall git first, then re-run this installer:\n  $(install_hint git)"
+}
+
+warn_optional_scc() {
+    if command_exists scc; then
+        success "scc detected ($(scc --version 2>/dev/null | head -n1 || echo installed))"
+        return 0
+    fi
+
+    warning "Recommended dependency missing: scc"
+    echo "  camp leverage features use scc for code statistics and effort estimates."
+    echo "  Festival will still work without it."
+    echo "  To add it later, run:"
+    echo "    $(install_hint scc)"
+}
+
 main() {
     local os arch version archive_name download_url tmp_dir=""
+
+    require_git
 
     os=$(detect_os)
     arch=$(detect_arch)
@@ -101,6 +166,9 @@ main() {
     if command -v camp &>/dev/null; then
         success "camp $(camp --version 2>/dev/null || echo 'installed')"
     fi
+
+    echo ""
+    warn_optional_scc
 
     # Check PATH
     if [[ ":$PATH:" != *":${INSTALL_DIR}:"* ]]; then

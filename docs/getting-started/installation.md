@@ -2,6 +2,11 @@
 
 Festival includes two CLI tools: **fest** (festival planning) and **camp** (campaign management). All installation methods install both.
 
+## Requirements
+
+- `git` is required. Festival depends on it for campaign init, project management, template sync, and commit-aware workflows.
+- `scc` is recommended but optional. Without it, `camp leverage` features will not work.
+
 === "macOS"
 
     ### Homebrew (Recommended)
@@ -77,6 +82,7 @@ curl -fsSL https://raw.githubusercontent.com/Obedience-Corp/festival/main/instal
 
 !!! note
     This downloads pre-built binaries to `~/.local/bin`.
+    The script checks for `git` and stops early if it is missing.
     [Review the script source](https://github.com/Obedience-Corp/festival/blob/main/install.sh) before running.
 
 ### From Source
