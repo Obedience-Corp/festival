@@ -6,6 +6,8 @@
 
 subs := "fest camp"
 
+prune_fetch := "fetch --prune --prune-tags origin '+refs/tags/*:refs/tags/*'"
+
 # Show available release commands
 [private]
 default:
@@ -44,9 +46,9 @@ pin-from-latest mode="stable":
         exit 1
     fi
 
-    git fetch --tags
-    git -C fest fetch --tags
-    git -C camp fetch --tags
+    git {{prune_fetch}}
+    git -C fest {{prune_fetch}}
+    git -C camp {{prune_fetch}}
 
     latest_tag() {
         repo="$1"
@@ -146,9 +148,9 @@ status:
         git -C "${repo}" tag -l 'v*' --sort=-v:refname | grep -E "${pattern}" | head -1 || true
     }
 
-    git fetch --tags >/dev/null 2>&1 || true
-    git -C fest fetch --tags >/dev/null 2>&1 || true
-    git -C camp fetch --tags >/dev/null 2>&1 || true
+    git {{prune_fetch}} >/dev/null 2>&1 || true
+    git -C fest {{prune_fetch}} >/dev/null 2>&1 || true
+    git -C camp {{prune_fetch}} >/dev/null 2>&1 || true
 
     echo "festival branch: $(git rev-parse --abbrev-ref HEAD)"
     echo ""
@@ -316,9 +318,9 @@ draft-bootstrap version fest_version camp_version:
     fi
 
     # Fetch latest refs for root + submodules.
-    git fetch --tags
-    git -C fest fetch --tags
-    git -C camp fetch --tags
+    git {{prune_fetch}}
+    git -C fest {{prune_fetch}}
+    git -C camp {{prune_fetch}}
 
     # Ensure requested tags don't already exist locally or remotely.
     for pair in "fest:${fest_tag}" "camp:${camp_tag}"; do
@@ -388,7 +390,6 @@ draft-bootstrap version fest_version camp_version:
 # - create/push festival release tag for the selected channel
 [private]
 [no-cd]
-[confirm("This will pin fest/camp to latest tags for the selected mode and create/push a festival release tag. Continue?")]
 draft-from-latest version mode="stable" n="1":
     #!/usr/bin/env bash
     set -euo pipefail
