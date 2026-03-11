@@ -87,6 +87,15 @@ jobs:
       - name: Run beginner path smoke
         run: just test beginner-path-smoke
 
+      - name: Generate bundled release notes
+        run: |
+          go run ./tools/release-notes \
+            --repo-root . \
+            --tag "${GITHUB_REF_NAME}" \
+            --output dist/release-notes.md
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v6
         with:
@@ -103,3 +112,11 @@ jobs:
           MACOS_NOTARY_KEY: ${{ secrets.MACOS_NOTARY_KEY }}
           MACOS_NOTARY_KEY_ID: ${{ secrets.MACOS_NOTARY_KEY_ID }}
           MACOS_NOTARY_ISSUER_ID: ${{ secrets.MACOS_NOTARY_ISSUER_ID }}
+
+      - name: Rewrite GitHub release body from bundled component notes
+        run: |
+          gh release edit "${GITHUB_REF_NAME}" \
+            --repo Obedience-Corp/festival \
+            --notes-file dist/release-notes.md
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
