@@ -43,10 +43,107 @@ detect_arch() {
 }
 
 # Get latest release version
-get_latest_version() {
-    curl -fsSL "https://api.github.com/repos/${REPO}/releases/latest" \
+get_release_metadata() {
+    local version="${1:-latest}"
+    local endpoint="releases/latest"
+
+    if [ "$version" != "latest" ]; then
+        endpoint="releases/tags/${version}"
+    fi
+
+    curl -fsSL "https://api.github.com/repos/${REPO}/${endpoint}"
+}
+
+extract_tag_name() {
+    printf '%s\n' "$1" \
         | grep '"tag_name"' \
+        | head -n1 \
         | sed -E 's/.*"([^"]+)".*/\1/'
+}
+
+extract_asset_urls() {
+    printf '%s\n' "$1" \
+        | grep '"browser_download_url"' \
+        | sed -E 's/.*"([^"]+)".*/\1/'
+}
+
+os_asset_aliases() {
+    case "$1" in
+        macOS) echo "macOS darwin" ;;
+        linux) echo "linux Linux" ;;
+        *) echo "$1" ;;
+    esac
+}
+
+arch_asset_aliases() {
+    case "$1" in
+        x86_64) echo "x86_64 amd64" ;;
+        arm64) echo "arm64 aarch64" ;;
+        i386) echo "i386 386" ;;
+        *) echo "$1" ;;
+    esac
+}
+
+find_matching_archive_url() {
+    local release_metadata="$1"
+    local os="$2"
+    local arch="$3"
+    local urls url base
+    local os_aliases arch_aliases os_alias arch_alias
+
+    urls="$(extract_asset_urls "$release_metadata" | grep '\.tar\.gz$' || true)"
+    if [ -z "$urls" ]; then
+        return 1
+    fi
+
+    os_aliases="$(os_asset_aliases "$os")"
+    arch_aliases="$(arch_asset_aliases "$arch")"
+
+    for os_alias in $os_aliases; do
+        for arch_alias in $arch_aliases; do
+            while IFS= read -r url; do
+                base="${url##*/}"
+                if [[ "$base" == *"-${os_alias}-${arch_alias}.tar.gz" ]]; then
+                    printf '%s\n' "$url"
+                    return 0
+                fi
+            done <<< "$urls"
+        done
+    done
+
+    for os_alias in $os_aliases; do
+        while IFS= read -r url; do
+            base="${url##*/}"
+            if [[ "$base" == *"-${os_alias}-all.tar.gz" ]]; then
+                printf '%s\n' "$url"
+                return 0
+            fi
+        done <<< "$urls"
+    done
+
+    for os_alias in $os_aliases; do
+        for arch_alias in $arch_aliases; do
+            while IFS= read -r url; do
+                base="${url##*/}"
+                if [[ "$base" == *"${os_alias}"* && "$base" == *"${arch_alias}"* && "$base" == *.tar.gz ]]; then
+                    printf '%s\n' "$url"
+                    return 0
+                fi
+            done <<< "$urls"
+        done
+    done
+
+    for os_alias in $os_aliases; do
+        while IFS= read -r url; do
+            base="${url##*/}"
+            if [[ "$base" == *"${os_alias}"* && "$base" == *.tar.gz ]]; then
+                printf '%s\n' "$url"
+                return 0
+            fi
+        done <<< "$urls"
+    done
+
+    return 1
 }
 
 install_hint() {
@@ -107,7 +204,7 @@ warn_optional_scc() {
 }
 
 main() {
-    local os arch version archive_name download_url tmp_dir=""
+    local os arch version archive_name download_url release_metadata tmp_dir=""
 
     require_git
 
@@ -119,19 +216,22 @@ main() {
     # Resolve version
     if [ "$VERSION" = "latest" ]; then
         info "Fetching latest version..."
-        version=$(get_latest_version)
+        release_metadata=$(get_release_metadata latest)
+        version=$(extract_tag_name "$release_metadata")
         if [ -z "$version" ]; then
             error "Could not determine latest version. Check https://github.com/${REPO}/releases"
         fi
     else
         version="v${VERSION#v}"
+        release_metadata=$(get_release_metadata "$version") || \
+            error "Could not determine release metadata for ${version}. Check https://github.com/${REPO}/releases"
     fi
 
     info "Installing Festival ${version}"
 
-    # Build archive name
-    archive_name="festival-${version#v}-${os}-${arch}.tar.gz"
-    download_url="https://github.com/${REPO}/releases/download/${version}/${archive_name}"
+    download_url="$(find_matching_archive_url "$release_metadata" "$os" "$arch")" || \
+        error "Could not find a compatible archive for ${version} (${os} ${arch}). Check https://github.com/${REPO}/releases"
+    archive_name="${download_url##*/}"
 
     # Download and extract
     tmp_dir=$(mktemp -d)
