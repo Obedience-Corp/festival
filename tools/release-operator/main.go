@@ -108,12 +108,18 @@ func collectState(repoRoot, channel string) (operator.BundleInput, error) {
 	}
 
 	state := operator.BundleInput{
-		Channel:              channel,
-		CurrentBranch:        branch,
-		FestTag:              latestTagForMode(filepath.Join(repoRoot, "fest"), channel),
-		CampTag:              latestTagForMode(filepath.Join(repoRoot, "camp"), channel),
-		LatestFestivalDev:    latestTagForMode(repoRoot, "dev"),
-		LatestFestivalStable: latestTagForMode(repoRoot, "stable"),
+		Channel:       channel,
+		CurrentBranch: branch,
+		FestTag:       latestTagForMode(filepath.Join(repoRoot, "fest"), channel),
+		CampTag:       latestTagForMode(filepath.Join(repoRoot, "camp"), channel),
+	}
+	state.LatestFestivalDev, err = latestReachableTagForMode(repoRoot, "dev")
+	if err != nil {
+		return operator.BundleInput{}, err
+	}
+	state.LatestFestivalStable, err = latestReachableTagForMode(repoRoot, "stable")
+	if err != nil {
+		return operator.BundleInput{}, err
 	}
 	state.LatestFestivalPromotableRC, err = latestReachableTagForMode(repoRoot, "rc")
 	if err != nil {
