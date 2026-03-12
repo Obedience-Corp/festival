@@ -1,4 +1,4 @@
-<header class="site-header">
+<header class="site-header{{ if .IsHome }} site-header--home{{ end }}">
   <button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="Toggle navigation">☰</button>
   <a href="{{ site.Home.RelPermalink }}" class="site-header__logo">
     <svg width="24" height="24" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
@@ -17,15 +17,18 @@
       <a href="{{ .RelPermalink }}" class="site-header__link">Docs</a>
     {{ end }}
     {{ with site.GetPage "/getting-started/installation" }}
-      <a href="{{ .RelPermalink }}" class="site-header__link">Install</a>
+      <a href="{{ .RelPermalink }}" class="site-header__link site-header__link--desktop">Install</a>
     {{ end }}
     {{ with .Site.Params.repo }}
-      <a href="{{ . }}" class="site-header__link" target="_blank" rel="noopener">GitHub</a>
+      <a href="{{ . }}" class="site-header__link site-header__link--desktop" target="_blank" rel="noopener">GitHub</a>
     {{ end }}
     <button class="search-trigger" aria-label="Search">
       <span class="search-trigger__text">Search</span>
       <kbd class="search-trigger__kbd">⌘K</kbd>
     </button>
     <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">☾</button>
+    {{ with site.GetPage "/getting-started/quickstart" }}
+      <a href="{{ .RelPermalink }}" class="btn btn--primary site-header__cta">Get Started</a>
+    {{ end }}
   </nav>
 </header>
