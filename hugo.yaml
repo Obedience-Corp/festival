@@ -1,6 +1,7 @@
 baseURL: https://fest.build
 title: Festival
 theme: festival
+contentDir: docs
 
 params:
   description: "Mission-based AI workspace management for developers using AI coding tools"
@@ -26,15 +27,15 @@ menu:
       weight: 10
     - name: Installation
       parent: getting-started
-      url: /docs/getting-started/installation/
+      url: /getting-started/installation/
       weight: 11
     - name: Quick Start
       parent: getting-started
-      url: /docs/getting-started/quickstart/
+      url: /getting-started/quickstart/
       weight: 12
     - name: Shell Setup
       parent: getting-started
-      url: /docs/getting-started/shell-setup/
+      url: /getting-started/shell-setup/
       weight: 13
 
     - name: Methodology
@@ -42,27 +43,27 @@ menu:
       weight: 20
     - name: Overview
       parent: methodology
-      url: /docs/methodology/overview/
+      url: /methodology/overview/
       weight: 21
     - name: Campaigns
       parent: methodology
-      url: /docs/methodology/campaigns/
+      url: /methodology/campaigns/
       weight: 22
     - name: Festivals
       parent: methodology
-      url: /docs/methodology/festivals/
+      url: /methodology/festivals/
       weight: 23
     - name: Phases
       parent: methodology
-      url: /docs/methodology/phases/
+      url: /methodology/phases/
       weight: 24
     - name: Sequences
       parent: methodology
-      url: /docs/methodology/sequences/
+      url: /methodology/sequences/
       weight: 25
     - name: Tasks
       parent: methodology
-      url: /docs/methodology/tasks/
+      url: /methodology/tasks/
       weight: 26
 
     - name: Guides
@@ -70,15 +71,15 @@ menu:
       weight: 30
     - name: Agent Workflows
       parent: guides
-      url: /docs/guides/agent-workflows/
+      url: /guides/agent-workflows/
       weight: 31
     - name: Work Pipeline
       parent: guides
-      url: /docs/guides/work-pipeline/
+      url: /guides/work-pipeline/
       weight: 32
     - name: Best Practices
       parent: guides
-      url: /docs/guides/best-practices/
+      url: /guides/best-practices/
       weight: 33
 
     - name: Tutorials
@@ -86,15 +87,15 @@ menu:
       weight: 40
     - name: Your First Festival
       parent: tutorials
-      url: /docs/tutorials/first-festival/
+      url: /tutorials/first-festival/
       weight: 41
     - name: Campaign Setup
       parent: tutorials
-      url: /docs/tutorials/campaign-setup/
+      url: /tutorials/campaign-setup/
       weight: 42
     - name: CI Integration
       parent: tutorials
-      url: /docs/tutorials/ci-integration/
+      url: /tutorials/ci-integration/
       weight: 43
 
     - name: CLI Reference
@@ -102,9 +103,9 @@ menu:
       weight: 50
     - name: fest
       parent: cli-reference
-      url: /docs/cli-reference/fest/
+      url: /cli-reference/fest/
       weight: 51
     - name: camp
       parent: cli-reference
-      url: /docs/cli-reference/camp/
+      url: /cli-reference/camp/
       weight: 52

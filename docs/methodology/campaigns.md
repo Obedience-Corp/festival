@@ -1,3 +1,8 @@
+---
+title: "Campaigns"
+weight: 22
+---
+
 # Campaigns
 
 ## The Multiple Missions Problem

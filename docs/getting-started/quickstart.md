@@ -1,10 +1,15 @@
+---
+title: "Quick Start"
+weight: 12
+---
+
 # Quick Start
 
 Create your first campaign and festival in under 5 minutes.
 
 ## Prerequisites
 
-`fest` and `camp` should already be installed. If not, see the [Installation](installation.md) guide.
+`fest` and `camp` should already be installed. If not, see the [Installation]({{< ref "/getting-started/installation" >}}) guide.
 
 ## 1. Set Up Shell Integration
 
@@ -34,9 +39,11 @@ This creates the campaign directory structure with `projects/`, `festivals/`, `d
 cgo              # Jump to campaign root
 cgo p            # Jump to projects/
 cgo f            # Jump to festivals/
+csw              # Interactive campaign picker -- switch between campaigns
+csw my-project   # Switch directly by name
 ```
 
-Single-letter shortcuts make navigation instant. `cgo p api` fuzzy-matches project names so you never type full paths.
+Single-letter shortcuts make navigation instant. `cgo p api` fuzzy-matches project names so you never type full paths. `csw` switches between campaigns -- use it when you're managing multiple campaigns.
 
 ## 4. Add a Project (Optional)
 
@@ -54,7 +61,7 @@ fest create festival --name "my-first-feature" --type standard
 
 Use `standard` for the beginner path. It scaffolds the ingest and planning phases you need before implementation. Use `implementation` only when requirements are already defined and you want to skip that planning structure.
 
-If you are not sure whether this work should start as an intent, a design doc, or a festival, read [Intent vs Design vs Festival](../guides/intent-design-festival.md) before creating more planning artifacts.
+If you are not sure whether this work should start as an intent, a design doc, or a festival, read [Intent vs Design vs Festival]({{< ref "/guides/intent-design-festival" >}}) before creating more planning artifacts.
 
 ## 6. Fill Required Markers
 
@@ -111,7 +118,7 @@ fest progress      # Detailed execution progress with phase/sequence breakdown
 
 ## What's Next?
 
-- [Methodology Overview](../methodology/overview.md) -- Understand the full phase-sequence-task system
-- [First Festival Tutorial](../tutorials/first-festival.md) -- Detailed end-to-end tutorial with real examples
-- [Agent Workflows](../guides/agent-workflows.md) -- Using Festival with AI coding tools like Claude Code
-- [Best Practices](../guides/best-practices.md) -- Patterns for effective planning and execution
+- [Methodology Overview]({{< ref "/methodology/overview" >}}) -- Understand the full phase-sequence-task system
+- [First Festival Tutorial]({{< ref "/tutorials/first-festival" >}}) -- Detailed end-to-end tutorial with real examples
+- [Agent Workflows]({{< ref "/guides/agent-workflows" >}}) -- Using Festival with AI coding tools
+- [Best Practices]({{< ref "/guides/best-practices" >}}) -- Patterns for effective planning and execution

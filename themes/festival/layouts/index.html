@@ -11,10 +11,10 @@
       </p>
 
       <div class="home-hero__actions">
-        {{ with site.GetPage "/docs/getting-started/installation" }}
+        {{ with site.GetPage "/getting-started/installation" }}
           <a href="{{ .RelPermalink }}" class="btn btn--primary">Install Festival</a>
         {{ end }}
-        {{ with site.GetPage "/docs/getting-started/quickstart" }}
+        {{ with site.GetPage "/getting-started/quickstart" }}
           <a href="{{ .RelPermalink }}" class="btn btn--secondary">Read the Quick Start</a>
         {{ end }}
       </div>
@@ -77,7 +77,7 @@
         <div class="card__description">
           One command gives you a structured place for projects, festivals, documentation, and AI research.
         </div>
-        {{ with site.GetPage "/docs/tutorials/campaign-setup" }}
+        {{ with site.GetPage "/tutorials/campaign-setup" }}
           <a href="{{ .RelPermalink }}" class="card__arrow">→ Campaign setup</a>
         {{ end }}
       </div>
@@ -88,7 +88,7 @@
         <div class="card__description">
           Use phases, sequences, and tasks to turn a goal into concrete steps with verification baked in.
         </div>
-        {{ with site.GetPage "/docs/methodology/overview" }}
+        {{ with site.GetPage "/methodology/overview" }}
           <a href="{{ .RelPermalink }}" class="card__arrow">→ Methodology overview</a>
         {{ end }}
       </div>
@@ -99,7 +99,7 @@
         <div class="card__description">
           `fest next` loads the next scoped task so an agent can continue cleanly across sessions and repos.
         </div>
-        {{ with site.GetPage "/docs/guides/agent-workflows" }}
+        {{ with site.GetPage "/guides/agent-workflows" }}
           <a href="{{ .RelPermalink }}" class="card__arrow">→ Agent workflows</a>
         {{ end }}
       </div>
@@ -110,7 +110,7 @@
         <div class="card__description">
           Parallel festivals, visible progress, and quality gates make multi-project work operable instead of chaotic.
         </div>
-        {{ with site.GetPage "/docs/getting-started/quickstart" }}
+        {{ with site.GetPage "/getting-started/quickstart" }}
           <a href="{{ .RelPermalink }}" class="card__arrow">→ Quick start</a>
         {{ end }}
       </div>
@@ -161,10 +161,10 @@
           <code>brew install --cask Obedience-Corp/tap/festival</code>
         </div>
         <div class="home-install__buttons">
-          {{ with site.GetPage "/docs/getting-started/installation" }}
+          {{ with site.GetPage "/getting-started/installation" }}
             <a href="{{ .RelPermalink }}" class="btn btn--light">Installation</a>
           {{ end }}
-          {{ with site.GetPage "/docs/getting-started/quickstart" }}
+          {{ with site.GetPage "/getting-started/quickstart" }}
             <a href="{{ .RelPermalink }}" class="btn btn--ghost-light">Quick Start</a>
           {{ end }}
         </div>

@@ -1,3 +1,8 @@
+---
+title: "Campaign Setup"
+weight: 42
+---
+
 # Campaign Setup
 
 Set up a campaign workspace from scratch. You will create the workspace, add shell integration, bring in your projects as submodules, navigate efficiently with shortcuts, and connect festival planning to your codebase.
@@ -132,7 +137,7 @@ camp dungeon         # Archive deprioritized work
 ```
 
 Use these to decide what deserves a festival and what belongs in the dungeon.
-If you are unsure whether to start with an intent, a design doc in `workflow/design/`, or a festival, use [Intent vs Design vs Festival](../guides/intent-design-festival.md) as the canonical decision guide.
+If you are unsure whether to start with an intent, a design doc in `workflow/design/`, or a festival, use [Intent vs Design vs Festival]({{< ref "/guides/intent-design-festival" >}}) as the canonical decision guide.
 
 ## Health Check
 
@@ -168,6 +173,6 @@ You now have a fully structured campaign workspace with:
 
 ## Next Steps
 
-- [Your First Festival](first-festival.md) - create phases, sequences, and tasks
-- [Methodology Overview](../methodology/overview.md) - understand the festival lifecycle
-- [Agent Workflows](../guides/agent-workflows.md) - run autonomous agent sessions with festivals
+- [Your First Festival]({{< ref "/tutorials/first-festival" >}}) - create phases, sequences, and tasks
+- [Methodology Overview]({{< ref "/methodology/overview" >}}) - understand the festival lifecycle
+- [Agent Workflows]({{< ref "/guides/agent-workflows" >}}) - run autonomous agent sessions with festivals

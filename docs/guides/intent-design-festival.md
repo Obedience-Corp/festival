@@ -1,3 +1,8 @@
+---
+title: "Intent vs Design vs Festival"
+weight: 30
+---
+
 # Intent vs Design vs Festival
 
 Use this guide when you're about to create planning work and you're not sure which artifact to start with.

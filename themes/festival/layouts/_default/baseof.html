@@ -34,10 +34,10 @@
     <div class="site-footer__inner">
       <a href="{{ site.Home.RelPermalink }}" class="site-footer__brand">{{ .Site.Title }}</a>
       <div class="site-footer__links">
-        {{ with site.GetPage "/docs" }}
+        {{ with site.GetPage "/getting-started/quickstart" }}
           <a href="{{ .RelPermalink }}">Docs</a>
         {{ end }}
-        {{ with site.GetPage "/docs/getting-started/installation" }}
+        {{ with site.GetPage "/getting-started/installation" }}
           <a href="{{ .RelPermalink }}">Install</a>
         {{ end }}
         {{ with .Site.Params.repo }}

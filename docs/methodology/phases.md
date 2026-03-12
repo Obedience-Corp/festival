@@ -1,3 +1,8 @@
+---
+title: "Phases"
+weight: 24
+---
+
 # Phases
 
 Phases are the top-level organizational unit within a festival. They group related work together and execute in order. A festival with three phases runs phase 1, then phase 2, then phase 3.
@@ -6,7 +11,7 @@ Phases are the top-level organizational unit within a festival. They group relat
 
 Phases use 3-digit zero-padded prefixes: `001_`, `002_`, `003_`. This supports up to 999 phases per festival, which is far more than any real project needs but keeps sorting clean.
 
-The key principle: **don't pre-plan all your phases upfront**. Add them as requirements emerge. A festival might start with a single `001_IMPLEMENT` phase and grow a `002_VALIDATE` phase later when the need becomes clear. Over-planning phases before you understand the work is wasted effort.
+Standard festivals auto-scaffold INGEST and PLAN phases. The PLAN phase's WORKFLOW.md guides agents through decomposing the work into whatever additional phases, sequences, and tasks are needed. Implementation festivals skip planning and start with a single IMPLEMENT phase. Either way, the phase structure emerges from structured thinking, not guesswork.
 
 ## Phase Types
 

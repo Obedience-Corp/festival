@@ -1,3 +1,8 @@
+---
+title: "Sequences"
+weight: 25
+---
+
 # Sequences
 
 A sequence is an ordered group of related tasks within a phase. Sequences use 2-digit numbering (`01_`, `02_`) within their parent phase directory. Each sequence represents a cohesive unit of work - like "user authentication" or "API endpoints" - that can be assigned to one person or agent for focused execution.
