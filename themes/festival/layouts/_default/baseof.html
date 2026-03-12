@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="{{ $css.RelPermalink }}">
   <link href="{{ "pagefind/pagefind-ui.css" | relURL }}" rel="stylesheet">
 </head>
-<body>
+<body class="{{ if .IsHome }}site-body--home{{ else }}site-body--docs{{ end }}">
   {{ partial "header.html" . }}
 
   <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
@@ -30,17 +30,29 @@
     {{ end }}
   </div>
 
-  {{ if not .IsHome }}
-    <footer class="site-footer">
-      &copy; {{ now.Year }} Obedience Corp. Built with <a href="https://gohugo.io">Hugo</a>.
-    </footer>
-  {{ end }}
+  <footer class="site-footer{{ if .IsHome }} site-footer--home{{ end }}">
+    <div class="site-footer__inner">
+      <a href="{{ site.Home.RelPermalink }}" class="site-footer__brand">{{ .Site.Title }}</a>
+      <div class="site-footer__links">
+        {{ with site.GetPage "/docs" }}
+          <a href="{{ .RelPermalink }}">Docs</a>
+        {{ end }}
+        {{ with site.GetPage "/docs/getting-started/installation" }}
+          <a href="{{ .RelPermalink }}">Install</a>
+        {{ end }}
+        {{ with .Site.Params.repo }}
+          <a href="{{ . }}" target="_blank" rel="noopener">GitHub</a>
+        {{ end }}
+      </div>
+      <p class="site-footer__meta">&copy; {{ now.Year }} Obedience Corp.</p>
+    </div>
+  </footer>
 
   <script src="{{ "pagefind/pagefind-ui.js" | relURL }}"></script>
   <script>
   // Theme toggle
   (function() {
-    var theme = localStorage.getItem('theme') || 'dark';
+    var theme = localStorage.getItem('theme') || 'light';
     document.documentElement.setAttribute('data-theme', theme);
   })();
 
@@ -66,6 +78,15 @@
     document.querySelector('.sidebar').classList.toggle('open');
     document.querySelector('.sidebar-overlay').classList.toggle('open');
   }
+
+  function syncHeaderState() {
+    var header = document.querySelector('.site-header--home');
+    if (!header) return;
+    header.classList.toggle('site-header--scrolled', window.scrollY > 20);
+  }
+
+  document.addEventListener('DOMContentLoaded', syncHeaderState);
+  window.addEventListener('scroll', syncHeaderState, { passive: true });
 
   // Code blocks — terminal window treatment
   document.addEventListener('DOMContentLoaded', function() {
