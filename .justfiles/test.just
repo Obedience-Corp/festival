@@ -7,7 +7,7 @@ default:
 
 # Test all projects
 [no-cd]
-all: fest camp release-operator
+all: fest camp release-operator release-notes
     @echo "All tests passed"
 
 # Check mirrored camp/fest doc copies against their source repos
@@ -44,3 +44,8 @@ camp:
 [no-cd]
 release-operator:
     cd tools/release-operator && go test ./...
+
+# Test the release notes generator used to rewrite festival GitHub release bodies
+[no-cd]
+release-notes:
+    cd tools/release-notes && go test ./...
