@@ -1,3 +1,8 @@
+---
+title: "Your First Festival"
+weight: 41
+---
+
 # Your First Festival
 
 You are going to create a festival from scratch, prepare it correctly for first execution, and reach a clean first `fest next` without falling into missing-marker or wrong-type confusion.
@@ -101,6 +106,6 @@ This moves the festival from `active/` to `dungeon/completed/`. The work is pres
 
 ## Next Steps
 
-- [Methodology Overview](../methodology/overview.md) -- Phases, sequences, and task design in depth
-- [Campaign Setup](campaign-setup.md) -- Organizing projects within a campaign workspace
-- [Agent Workflows](../guides/agent-workflows.md) -- Using festivals with AI agents for autonomous sessions
+- [Methodology Overview]({{< ref "/methodology/overview" >}}) -- Phases, sequences, and task design in depth
+- [Campaign Setup]({{< ref "/tutorials/campaign-setup" >}}) -- Organizing projects within a campaign workspace
+- [Agent Workflows]({{< ref "/guides/agent-workflows" >}}) -- Using festivals with AI agents for autonomous sessions

@@ -177,4 +177,4 @@ The testing-review-iterate gates at the end of each sequence are sync points. If
 
 `FESTIVAL_RULES.md` matters more when multiple agents or humans work on the same festival. It codifies quality standards, coding conventions, and process requirements that all workers follow. Without it, different agents make inconsistent decisions about code style, error handling, test coverage, and what "done" means.
 
-Write festival rules before execution starts. Every agent reads them before its first `fest next`. The rules template in `.festival/templates/` can be customized to match your team's standards -- see [Agent Workflows]({{< ref "/docs/guides/agent-workflows#customizing-templates" >}}) for details.
+Write festival rules before execution starts. Every agent reads them before its first `fest next`. The rules template in `.festival/templates/` can be customized to match your team's standards -- see [Agent Workflows]({{< ref "/guides/agent-workflows#customizing-templates" >}}) for details.

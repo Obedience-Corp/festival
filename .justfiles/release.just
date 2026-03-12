@@ -349,10 +349,10 @@ draft-bootstrap version fest_version camp_version:
     git -C fest checkout --detach "${fest_tag}"
     git -C camp checkout --detach "${camp_tag}"
     CLI_RELEASE_CHANNEL=stable just docs all
-    git add fest camp content/docs/cli-reference
+    git add fest camp docs/cli-reference
 
     # Commit and push submodule pointer changes.
-    if git diff --cached --quiet -- fest camp content/docs/cli-reference; then
+    if git diff --cached --quiet -- fest camp docs/cli-reference; then
         echo "Submodule pointers and docs already match ${fest_tag}/${camp_tag}; no release commit needed."
     else
         git commit -m "Release: pin fest ${fest_tag} and camp ${camp_tag}"
@@ -432,7 +432,7 @@ draft-from-latest version mode="stable" n="1":
 
     just --justfile {{source_file()}} pin-from-latest "${mode}"
     eval "${docs_cmd}"
-    git add fest camp content/docs/cli-reference
+    git add fest camp docs/cli-reference
 
     fest_tag="$(cd fest && git describe --tags --exact-match HEAD 2>/dev/null || true)"
     camp_tag="$(cd camp && git describe --tags --exact-match HEAD 2>/dev/null || true)"
@@ -442,7 +442,7 @@ draft-from-latest version mode="stable" n="1":
         exit 1
     fi
 
-    if git diff --cached --quiet -- fest camp content/docs/cli-reference; then
+    if git diff --cached --quiet -- fest camp docs/cli-reference; then
         echo "Submodule pointers and docs already at fest=${fest_tag}, camp=${camp_tag}; no release commit needed."
     else
         git commit -m "Release: pin fest ${fest_tag} and camp ${camp_tag}"

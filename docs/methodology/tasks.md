@@ -1,10 +1,15 @@
+---
+title: "Tasks"
+weight: 26
+---
+
 # Tasks
 
 Tasks are the atomic work units of the Festival Methodology, sitting at the bottom of the hierarchy: **Campaign > Festival > Phase > Sequence > Task**.
 
 ## What is a Task?
 
-Tasks are NOT single to-dos. They are comprehensive work units -- think of them like a Claude Code plan. Each task document contains multiple actions, acceptance criteria, context, and testing commands. A task is a self-contained blueprint that tells a developer (human or AI) exactly what to build, how to verify it, and what "done" looks like.
+Tasks are NOT single to-dos. They are comprehensive work units -- think of them like an agent's implementation plan. Each task document contains multiple actions, acceptance criteria, context, and testing commands. A task is a self-contained blueprint that tells a developer (human or AI) exactly what to build, how to verify it, and what "done" looks like.
 
 Tasks use 2-digit numbering within their parent sequence: `01_create_user_model.md`, `02_add_auth_middleware.md`, `03_implement_login_endpoint.md`. The numbering defines execution order. Dependencies between tasks are explicit.
 
