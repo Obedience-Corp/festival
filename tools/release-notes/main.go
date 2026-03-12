@@ -114,6 +114,13 @@ func exactTag(dir string) (string, error) {
 func fetchRelease(repo, tag string) (releaseView, error) {
 	out, err := cmdOutput("", "gh", "release", "view", tag, "--repo", repo, "--json", "tagName,url,body")
 	if err != nil {
+		if isReleaseMissing(err) {
+			return releaseView{
+				TagName: tag,
+				URL:     fmt.Sprintf("https://github.com/%s/tree/%s", repo, tag),
+				Body:    "",
+			}, nil
+		}
 		return releaseView{}, err
 	}
 
@@ -125,6 +132,13 @@ func fetchRelease(repo, tag string) (releaseView, error) {
 		return releaseView{}, fmt.Errorf("release %s in %s returned incomplete metadata", tag, repo)
 	}
 	return view, nil
+}
+
+func isReleaseMissing(err error) bool {
+	msg := err.Error()
+	return strings.Contains(msg, "release not found") ||
+		strings.Contains(msg, "HTTP 404") ||
+		strings.Contains(msg, "Could not find release")
 }
 
 func cmdOutput(dir, name string, args ...string) (string, error) {
