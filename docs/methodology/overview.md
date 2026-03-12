@@ -1,3 +1,8 @@
+---
+title: "Overview"
+weight: 21
+---
+
 # Festival Methodology Overview
 
 Festival Methodology is a collaborative, step-oriented planning system built for
@@ -101,7 +106,7 @@ gate tasks.
 clear instructions, acceptance criteria, and a concrete deliverable. Tasks are
 what AI agents execute.
 
-See: [Phases](phases.md) | [Sequences](sequences.md) | [Tasks](tasks.md)
+See: [Phases]({{< ref "/methodology/phases" >}}) | [Sequences]({{< ref "/methodology/sequences" >}}) | [Tasks]({{< ref "/methodology/tasks" >}})
 
 ---
 

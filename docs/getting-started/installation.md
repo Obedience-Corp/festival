@@ -1,3 +1,8 @@
+---
+title: "Installation"
+weight: 11
+---
+
 # Installation
 
 Festival includes two CLI tools: **fest** (festival planning) and **camp** (campaign management). All installation methods install both.
@@ -7,68 +12,70 @@ Festival includes two CLI tools: **fest** (festival planning) and **camp** (camp
 - `git` is required. Festival depends on it for campaign init, project management, template sync, and commit-aware workflows.
 - `scc` is recommended but optional. Without it, `camp leverage` features will not work.
 
-=== "macOS"
+{{< tabs names="macOS, Linux, Windows (Temporarily Paused)" >}}
 
-    ### Homebrew (Recommended)
+### Homebrew (Recommended)
 
-    ```bash
-    brew install --cask Obedience-Corp/tap/festival
-    ```
+```bash
+brew install --cask Obedience-Corp/tap/festival
+```
 
-    ### Direct Download
+### Direct Download
 
-    Download the latest `.tar.gz` for your Mac from
-    [GitHub Releases](https://github.com/Obedience-Corp/festival/releases/latest),
-    extract, and move to your PATH:
+Download the latest `.tar.gz` for your Mac from
+[GitHub Releases](https://github.com/Obedience-Corp/festival/releases/latest),
+extract, and move to your PATH:
 
-    ```bash
-    tar xzf festival-*-macOS-*.tar.gz
-    sudo mv fest camp /usr/local/bin/
-    ```
+```bash
+tar xzf festival-*-macOS-*.tar.gz
+sudo mv fest camp /usr/local/bin/
+```
 
-=== "Linux"
+<!-- tab -->
 
-    ### Debian / Ubuntu
+### Debian / Ubuntu
 
-    Download the `.deb` package from
-    [GitHub Releases](https://github.com/Obedience-Corp/festival/releases/latest):
+Download the `.deb` package from
+[GitHub Releases](https://github.com/Obedience-Corp/festival/releases/latest):
 
-    ```bash
-    sudo dpkg -i festival_*_amd64.deb
-    ```
+```bash
+sudo dpkg -i festival_*_amd64.deb
+```
 
-    ### Fedora / RHEL
+### Fedora / RHEL
 
-    ```bash
-    sudo rpm -i festival-*.x86_64.rpm
-    ```
+```bash
+sudo rpm -i festival-*.x86_64.rpm
+```
 
-    ### Arch Linux (AUR)
+### Arch Linux (AUR)
 
-    ```bash
-    yay -S festival-bin
-    ```
+```bash
+yay -S festival-bin
+```
 
-    ### Alpine
+### Alpine
 
-    ```bash
-    sudo apk add --allow-untrusted festival_*.apk
-    ```
+```bash
+sudo apk add --allow-untrusted festival_*.apk
+```
 
-    ### Direct Download
+### Direct Download
 
-    ```bash
-    tar xzf festival-*-linux-*.tar.gz
-    sudo mv fest camp /usr/local/bin/
-    ```
+```bash
+tar xzf festival-*-linux-*.tar.gz
+sudo mv fest camp /usr/local/bin/
+```
 
-=== "Windows (Temporarily Paused)"
+<!-- tab -->
 
-    Stable Windows packages are temporarily paused while Windows support is being hardened.
+Stable Windows packages are temporarily paused while Windows support is being hardened.
 
-    For now, use WSL2 and follow the Linux installation methods above.
+For now, use WSL2 and follow the Linux installation methods above.
 
-    Scoop and direct `.zip` downloads will return once Windows support is marked stable.
+Scoop and direct `.zip` downloads will return once Windows support is marked stable.
+
+{{< /tabs >}}
 
 ## Other Methods
 
@@ -80,12 +87,17 @@ A convenience script is available for macOS and Linux:
 curl -fsSL https://raw.githubusercontent.com/Obedience-Corp/festival/main/install.sh | bash
 ```
 
-!!! note
-    This downloads pre-built binaries to `~/.local/bin`.
-    The script checks for `git` and stops early if it is missing.
-    [Review the script source](https://github.com/Obedience-Corp/festival/blob/main/install.sh) before running.
+{{< note >}}
+This downloads pre-built binaries to `~/.local/bin`.
+The installer checks for `git` and stops early if it is missing. If `scc` is not installed, the installer continues and warns that `camp leverage` features will be unavailable until you add it.
+[Review the script source](https://github.com/Obedience-Corp/festival/blob/main/install.sh) before running.
+{{< /note >}}
 
 ### From Source
+
+{{< note >}}
+The `fest` and `camp` source repositories are private. Building from source requires access to the private repos. Most users should use the package manager or binary download methods above.
+{{< /note >}}
 
 Requires Go 1.25+:
 
@@ -110,5 +122,5 @@ eval "$(fest shell-init zsh)"
 eval "$(camp shell-init zsh)"
 ```
 
-See [Shell Setup](shell-setup.md) for details.
-Then continue with the [Quick Start](quickstart.md) to follow the validated beginner path through first `fest next`.
+See [Shell Setup]({{< ref "/getting-started/shell-setup" >}}) for details.
+Then continue with the [Quick Start]({{< ref "/getting-started/quickstart" >}}) to follow the validated beginner path through first `fest next`.

@@ -1,3 +1,8 @@
+---
+title: "CI Integration"
+weight: 43
+---
+
 # CI Integration
 
 How to keep the public Festival release path aligned with the same beginner smoke check local contributors run.

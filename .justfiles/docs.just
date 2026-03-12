@@ -1,6 +1,6 @@
 # Documentation management
 
-docs_root := env("CLI_DOCS_ROOT", "content/docs/cli-reference")
+docs_root := env("CLI_DOCS_ROOT", "docs/cli-reference")
 cli_profile := env("CLI_PROFILE", "stable")
 cli_release_channel := env("CLI_RELEASE_CHANNEL", "")
 base_url := env("HUGO_BASEURL", "https://fest.build")
