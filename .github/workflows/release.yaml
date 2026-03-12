@@ -89,10 +89,11 @@ jobs:
 
       - name: Generate bundled release notes
         run: |
-          go run ./tools/release-notes \
-            --repo-root . \
+          cd tools/release-notes
+          go run . \
+            --repo-root ../.. \
             --tag "${GITHUB_REF_NAME}" \
-            --output dist/release-notes.md
+            --output "${RUNNER_TEMP}/festival-release-notes.md"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -117,6 +118,6 @@ jobs:
         run: |
           gh release edit "${GITHUB_REF_NAME}" \
             --repo Obedience-Corp/festival \
-            --notes-file dist/release-notes.md
+            --notes-file "${RUNNER_TEMP}/festival-release-notes.md"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
