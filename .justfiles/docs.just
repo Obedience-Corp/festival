@@ -5,6 +5,9 @@ cli_profile := env("CLI_PROFILE", "stable")
 cli_release_channel := env("CLI_RELEASE_CHANNEL", "")
 base_url := env("HUGO_BASEURL", "https://fest.build")
 normalize_script := "scripts/normalize_cli_docs.py"
+serve_host := env("HUGO_SERVE_HOST", "127.0.0.1")
+serve_port := env("HUGO_SERVE_PORT", "1313")
+serve_live_reload_port := env("HUGO_LIVERELOAD_PORT", "1314")
 
 # Show available docs commands
 [private]
@@ -67,7 +70,7 @@ camp:
 # Serve docs locally with live reload
 [no-cd]
 serve: all
-    hugo server -D --source .
+    hugo server -D --source . --bind {{serve_host}} --port {{serve_port}} --liveReloadPort {{serve_live_reload_port}}
 
 # Build docs for production (override domain: HUGO_BASEURL="https://example.com" just docs build)
 [no-cd]
