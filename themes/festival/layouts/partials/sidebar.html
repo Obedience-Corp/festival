@@ -1,4 +1,8 @@
-<nav class="sidebar">
+{{ $sidebarScope := "/" }}
+{{ with .CurrentSection }}
+  {{ $sidebarScope = .RelPermalink }}
+{{ end }}
+<nav class="sidebar" data-sidebar-scope="{{ $sidebarScope }}">
   {{ $currentURL := .RelPermalink }}
   {{ range .Site.Menus.docs }}
     {{ if .HasChildren }}
@@ -18,22 +22,13 @@
 
   {{ $currentSection := .CurrentSection }}
   {{ if and $currentSection (strings.HasPrefix $currentSection.RelPermalink "/cli-reference/") (ne $currentSection.RelPermalink "/cli-reference/") }}
-    {{ $cliName := path.Base (strings.TrimSuffix "/" $currentSection.RelPermalink) }}
-    {{ $referenceBase := printf "%s-reference" $cliName }}
-    {{ $referencePages := where $currentSection.RegularPages "File.BaseFileName" $referenceBase }}
-    {{ $commandPages := where $currentSection.RegularPages "File.BaseFileName" "!=" $referenceBase }}
+    {{ $commandPages := $currentSection.RegularPages }}
     <div class="sidebar__section sidebar__section--generated">
       <div class="sidebar__section-title">{{ $currentSection.Title }}</div>
       <a href="{{ $currentSection.RelPermalink }}"
          class="sidebar__link{{ if eq $currentURL $currentSection.RelPermalink }} sidebar__link--active{{ end }}">
         Overview
       </a>
-      {{ range $referencePages }}
-        <a href="{{ .RelPermalink }}"
-           class="sidebar__link{{ if eq $currentURL .RelPermalink }} sidebar__link--active{{ end }}">
-          {{ .LinkTitle }}
-        </a>
-      {{ end }}
       {{ range $commandPages.ByLinkTitle }}
         <a href="{{ .RelPermalink }}"
            class="sidebar__link{{ if eq $currentURL .RelPermalink }} sidebar__link--active{{ end }}">

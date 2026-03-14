@@ -43,7 +43,8 @@ fest:
             ;;
     esac
     mkdir -p {{docs_root}}/fest
-    ./fest/bin/fest gendocs --output {{docs_root}}/fest --format markdown --single "${fest_gendocs_flags[@]}"
+    ./fest/bin/fest gendocs --output {{docs_root}}/fest --format markdown "${fest_gendocs_flags[@]}"
+    rm -f {{docs_root}}/fest/fest-reference.md
     python3 {{normalize_script}} {{docs_root}}/fest
     echo "fest docs generated"
 
@@ -64,7 +65,7 @@ camp:
             ;;
     esac
     mkdir -p {{docs_root}}/camp
-    ./camp/bin/camp gendocs --output {{docs_root}}/camp --format markdown --single
+    ./camp/bin/camp gendocs --output {{docs_root}}/camp --format markdown
     python3 {{normalize_script}} {{docs_root}}/camp
     echo "camp docs generated"
 

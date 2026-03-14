@@ -78,6 +78,49 @@
 
   document.addEventListener('DOMContentLoaded', updateThemeIcon);
 
+  function sidebarScrollStorageKey(sidebar) {
+    if (!sidebar) return null;
+    var scope = sidebar.getAttribute('data-sidebar-scope') || window.location.pathname;
+    return 'festival:sidebar-scroll:' + scope;
+  }
+
+  function saveSidebarScrollPosition() {
+    var sidebar = document.querySelector('.sidebar');
+    var key = sidebarScrollStorageKey(sidebar);
+    if (!sidebar || !key) return;
+    sessionStorage.setItem(key, String(sidebar.scrollTop));
+  }
+
+  function restoreSidebarScrollPosition() {
+    var sidebar = document.querySelector('.sidebar');
+    var key = sidebarScrollStorageKey(sidebar);
+    if (!sidebar || !key) return;
+
+    var saved = sessionStorage.getItem(key);
+    if (saved === null) return;
+
+    var scrollTop = Number(saved);
+    if (!Number.isFinite(scrollTop)) return;
+
+    window.requestAnimationFrame(function() {
+      sidebar.scrollTop = scrollTop;
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    restoreSidebarScrollPosition();
+
+    var sidebar = document.querySelector('.sidebar');
+    if (!sidebar) return;
+
+    sidebar.addEventListener('scroll', saveSidebarScrollPosition, { passive: true });
+    window.addEventListener('beforeunload', saveSidebarScrollPosition);
+
+    sidebar.querySelectorAll('a[href]').forEach(function(link) {
+      link.addEventListener('click', saveSidebarScrollPosition);
+    });
+  });
+
   // Mobile sidebar
   function toggleSidebar() {
     var sidebar = document.querySelector('.sidebar');

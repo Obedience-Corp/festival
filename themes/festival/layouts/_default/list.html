@@ -6,19 +6,7 @@
 
     {{ if $isCliLeaf }}
       {{ $cliName := path.Base (strings.TrimSuffix "/" .RelPermalink) }}
-      {{ $referenceBase := printf "%s-reference" $cliName }}
-      {{ $referencePages := where .RegularPages "File.BaseFileName" $referenceBase }}
-      {{ $commandPages := where .RegularPages "File.BaseFileName" "!=" $referenceBase }}
-
-      {{ if gt (len $referencePages) 0 }}
-        {{ range $referencePages }}
-          <section class="doc-index__featured">
-            <h2>Combined Reference</h2>
-            <p>{{ with .Description }}{{ . }}{{ else }}Full generated reference for {{ $cliName }}.{{ end }}</p>
-            <a href="{{ .RelPermalink }}" class="btn btn--secondary">Open Combined Reference</a>
-          </section>
-        {{ end }}
-      {{ end }}
+      {{ $commandPages := .RegularPages }}
 
       {{ if gt (len $commandPages) 0 }}
         <section class="doc-index">
