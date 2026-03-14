@@ -428,7 +428,6 @@ a:hover {
   border-color: var(--festival-500);
   background: var(--festival-800);
 }
-
 /* Table of Contents */
 .toc {
   position: fixed;
