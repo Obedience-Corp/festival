@@ -1,3 +1,9 @@
+---
+title: "camp move"
+linkTitle: "camp move"
+description: "Move a file or directory within the campaign"
+---
+
 ## camp move
 
 Move a file or directory within the campaign
@@ -44,5 +50,4 @@ camp move <src> <dest> [flags]
 
 ### SEE ALSO
 
-* [camp](camp.md)	 - Campaign management CLI for multi-project AI workspaces
-
+* [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces

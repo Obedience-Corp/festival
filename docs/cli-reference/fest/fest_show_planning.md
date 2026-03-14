@@ -1,3 +1,9 @@
+---
+title: "fest show planning"
+linkTitle: "fest show planning"
+description: "List festivals in planning/ directory"
+---
+
 ## fest show planning
 
 List festivals in planning/ directory
@@ -24,5 +30,4 @@ fest show planning [flags]
 
 ### SEE ALSO
 
-* [fest show](fest_show.md)	 - Display festival information
-
+* [fest show](../fest_show/)	 - Display festival information

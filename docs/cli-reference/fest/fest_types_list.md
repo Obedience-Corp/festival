@@ -1,3 +1,9 @@
+---
+title: "fest types list"
+linkTitle: "fest types list"
+description: "List available template types"
+---
+
 ## fest types list
 
 List available template types
@@ -44,5 +50,4 @@ fest types list [flags]
 
 ### SEE ALSO
 
-* [fest types](fest_types.md)	 - Discover and explore template types
-
+* [fest types](../fest_types/)	 - Discover and explore template types

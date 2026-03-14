@@ -1,3 +1,9 @@
+---
+title: "fest config"
+linkTitle: "fest config"
+description: "Manage fest configuration repositories"
+---
+
 ## fest config
 
 Manage fest configuration repositories
@@ -26,12 +32,11 @@ that override or extend the built-in fest methodology resources.
 
 ### SEE ALSO
 
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-* [fest config add](fest_config_add.md)	 - Add a configuration repository
-* [fest config list](fest_config_list.md)	 - List all configuration repositories
-* [fest config remove](fest_config_remove.md)	 - Remove a configuration repository
-* [fest config show](fest_config_show.md)	 - Show active configuration
-* [fest config sync](fest_config_sync.md)	 - Sync configuration repository
-* [fest config theme](fest_config_theme.md)	 - Manage TUI color theme
-* [fest config use](fest_config_use.md)	 - Set active configuration repository
-
+* [fest](../fest/)	 - Festival Methodology CLI - goal-oriented project management for AI agents
+* [fest config add](../fest_config_add/)	 - Add a configuration repository
+* [fest config list](../fest_config_list/)	 - List all configuration repositories
+* [fest config remove](../fest_config_remove/)	 - Remove a configuration repository
+* [fest config show](../fest_config_show/)	 - Show active configuration
+* [fest config sync](../fest_config_sync/)	 - Sync configuration repository
+* [fest config theme](../fest_config_theme/)	 - Manage TUI color theme
+* [fest config use](../fest_config_use/)	 - Set active configuration repository

@@ -1,3 +1,9 @@
+---
+title: "camp pin"
+linkTitle: "camp pin"
+description: "Bookmark a directory"
+---
+
 ## camp pin
 
 Bookmark a directory
@@ -35,5 +41,4 @@ camp pin <name> [path] [flags]
 
 ### SEE ALSO
 
-* [camp](camp.md)	 - Campaign management CLI for multi-project AI workspaces
-
+* [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces

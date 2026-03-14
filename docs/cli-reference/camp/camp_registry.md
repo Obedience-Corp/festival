@@ -1,3 +1,9 @@
+---
+title: "camp registry"
+linkTitle: "camp registry"
+description: "Manage the campaign registry"
+---
+
 ## camp registry
 
 Manage the campaign registry
@@ -36,8 +42,7 @@ Examples:
 
 ### SEE ALSO
 
-* [camp](camp.md)	 - Campaign management CLI for multi-project AI workspaces
-* [camp registry check](camp_registry_check.md)	 - Check registry integrity
-* [camp registry prune](camp_registry_prune.md)	 - Remove stale registry entries
-* [camp registry sync](camp_registry_sync.md)	 - Sync current campaign with registry
-
+* [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces
+* [camp registry check](../camp_registry_check/)	 - Check registry integrity
+* [camp registry prune](../camp_registry_prune/)	 - Remove stale registry entries
+* [camp registry sync](../camp_registry_sync/)	 - Sync current campaign with registry

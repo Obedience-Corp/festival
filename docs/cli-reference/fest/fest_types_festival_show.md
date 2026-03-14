@@ -1,3 +1,9 @@
+---
+title: "fest types festival show"
+linkTitle: "fest types festival show"
+description: "Show details for a festival type"
+---
+
 ## fest types festival show
 
 Show details for a festival type
@@ -40,5 +46,4 @@ fest types festival show <type-name> [flags]
 
 ### SEE ALSO
 
-* [fest types festival](fest_types_festival.md)	 - Discover festival types
-
+* [fest types festival](../fest_types_festival/)	 - Discover festival types

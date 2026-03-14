@@ -1,3 +1,9 @@
+---
+title: "fest move"
+linkTitle: "fest move"
+description: "Move files between festival and linked project"
+---
+
 ## fest move
 
 Move files between festival and linked project
@@ -56,5 +62,4 @@ fest move <source> [destination] [flags]
 
 ### SEE ALSO
 
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-
+* [fest](../fest/)	 - Festival Methodology CLI - goal-oriented project management for AI agents

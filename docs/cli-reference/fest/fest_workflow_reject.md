@@ -1,3 +1,9 @@
+---
+title: "fest workflow reject"
+linkTitle: "fest workflow reject"
+description: "Reject checkpoint with feedback"
+---
+
 ## fest workflow reject
 
 Reject checkpoint with feedback
@@ -34,5 +40,4 @@ fest workflow reject [flags]
 
 ### SEE ALSO
 
-* [fest workflow](fest_workflow.md)	 - Manage workflow-based phase execution
-
+* [fest workflow](../fest_workflow/)	 - Manage workflow-based phase execution

@@ -1,3 +1,9 @@
+---
+title: "camp project remove"
+linkTitle: "camp project remove"
+description: "Remove a project from campaign"
+---
+
 ## camp project remove
 
 Remove a project from campaign
@@ -42,5 +48,4 @@ camp project remove <name> [flags]
 
 ### SEE ALSO
 
-* [camp project](camp_project.md)	 - Manage campaign projects
-
+* [camp project](../camp_project/)	 - Manage campaign projects

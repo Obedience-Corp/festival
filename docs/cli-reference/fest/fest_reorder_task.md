@@ -1,3 +1,9 @@
+---
+title: "fest reorder task"
+linkTitle: "fest reorder task"
+description: "Reorder tasks within a sequence"
+---
+
 ## fest reorder task
 
 Reorder tasks within a sequence
@@ -47,5 +53,4 @@ fest reorder task <from> <to> [flags]
 
 ### SEE ALSO
 
-* [fest reorder](fest_reorder.md)	 - Reorder festival elements
-
+* [fest reorder](../fest_reorder/)	 - Reorder festival elements

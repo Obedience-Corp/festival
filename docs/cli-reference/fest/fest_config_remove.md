@@ -1,3 +1,9 @@
+---
+title: "fest config remove"
+linkTitle: "fest config remove"
+description: "Remove a configuration repository"
+---
+
 ## fest config remove
 
 Remove a configuration repository
@@ -37,5 +43,4 @@ fest config remove <name> [flags]
 
 ### SEE ALSO
 
-* [fest config](fest_config.md)	 - Manage fest configuration repositories
-
+* [fest config](../fest_config/)	 - Manage fest configuration repositories

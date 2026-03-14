@@ -1,3 +1,9 @@
+---
+title: "fest config use"
+linkTitle: "fest config use"
+description: "Set active configuration repository"
+---
+
 ## fest config use
 
 Set active configuration repository
@@ -37,5 +43,4 @@ fest config use <name> [flags]
 
 ### SEE ALSO
 
-* [fest config](fest_config.md)	 - Manage fest configuration repositories
-
+* [fest config](../fest_config/)	 - Manage fest configuration repositories

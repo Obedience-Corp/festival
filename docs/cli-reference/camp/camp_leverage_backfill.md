@@ -1,3 +1,9 @@
+---
+title: "camp leverage backfill"
+linkTitle: "camp leverage backfill"
+description: "Reconstruct historical leverage data from git history"
+---
+
 ## camp leverage backfill
 
 Reconstruct historical leverage data from git history
@@ -42,5 +48,4 @@ camp leverage backfill [flags]
 
 ### SEE ALSO
 
-* [camp leverage](camp_leverage.md)	 - Compute leverage scores for campaign projects
-
+* [camp leverage](../camp_leverage/)	 - Compute leverage scores for campaign projects

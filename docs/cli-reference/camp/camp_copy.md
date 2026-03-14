@@ -1,3 +1,9 @@
+---
+title: "camp copy"
+linkTitle: "camp copy"
+description: "Copy a file or directory within the campaign"
+---
+
 ## camp copy
 
 Copy a file or directory within the campaign
@@ -45,5 +51,4 @@ camp copy <src> <dest> [flags]
 
 ### SEE ALSO
 
-* [camp](camp.md)	 - Campaign management CLI for multi-project AI workspaces
-
+* [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces

@@ -1,3 +1,9 @@
+---
+title: "camp intent archive"
+linkTitle: "camp intent archive"
+description: "Archive an intent"
+---
+
 ## camp intent archive
 
 Archive an intent
@@ -38,5 +44,4 @@ camp intent archive <id> [flags]
 
 ### SEE ALSO
 
-* [camp intent](camp_intent.md)	 - Manage campaign intents
-
+* [camp intent](../camp_intent/)	 - Manage campaign intents

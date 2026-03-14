@@ -1,3 +1,9 @@
+---
+title: "camp pins"
+linkTitle: "camp pins"
+description: "List all pinned directories"
+---
+
 ## camp pins
 
 List all pinned directories
@@ -26,5 +32,4 @@ camp pins [flags]
 
 ### SEE ALSO
 
-* [camp](camp.md)	 - Campaign management CLI for multi-project AI workspaces
-
+* [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces

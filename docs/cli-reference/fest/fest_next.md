@@ -1,3 +1,9 @@
+---
+title: "fest next"
+linkTitle: "fest next"
+description: "Find the next task to work on"
+---
+
 ## fest next
 
 Find the next task to work on
@@ -67,5 +73,4 @@ fest next [flags]
 
 ### SEE ALSO
 
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-
+* [fest](../fest/)	 - Festival Methodology CLI - goal-oriented project management for AI agents

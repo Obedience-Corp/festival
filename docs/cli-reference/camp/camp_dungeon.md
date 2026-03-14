@@ -1,3 +1,9 @@
+---
+title: "camp dungeon"
+linkTitle: "camp dungeon"
+description: "Manage the campaign dungeon"
+---
+
 ## camp dungeon
 
 Manage the campaign dungeon
@@ -42,9 +48,8 @@ camp dungeon [flags]
 
 ### SEE ALSO
 
-* [camp](camp.md)	 - Campaign management CLI for multi-project AI workspaces
-* [camp dungeon add](camp_dungeon_add.md)	 - Initialize dungeon structure
-* [camp dungeon crawl](camp_dungeon_crawl.md)	 - Interactive dungeon review
-* [camp dungeon list](camp_dungeon_list.md)	 - List dungeon items
-* [camp dungeon move](camp_dungeon_move.md)	 - Move dungeon items between statuses
-
+* [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces
+* [camp dungeon add](../camp_dungeon_add/)	 - Initialize dungeon structure
+* [camp dungeon crawl](../camp_dungeon_crawl/)	 - Interactive dungeon review
+* [camp dungeon list](../camp_dungeon_list/)	 - List dungeon items
+* [camp dungeon move](../camp_dungeon_move/)	 - Move dungeon items between statuses

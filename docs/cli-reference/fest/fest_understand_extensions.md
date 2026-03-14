@@ -1,3 +1,9 @@
+---
+title: "fest understand extensions"
+linkTitle: "fest understand extensions"
+description: "Show loaded extensions"
+---
+
 ## fest understand extensions
 
 Show loaded extensions
@@ -37,5 +43,4 @@ fest understand extensions [flags]
 
 ### SEE ALSO
 
-* [fest understand](fest_understand.md)	 - Learn methodology FIRST - run before executing festival tasks
-
+* [fest understand](../fest_understand/)	 - Learn methodology FIRST - run before executing festival tasks

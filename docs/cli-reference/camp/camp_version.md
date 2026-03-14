@@ -1,3 +1,9 @@
+---
+title: "camp version"
+linkTitle: "camp version"
+description: "Show version information"
+---
+
 ## camp version
 
 Show version information
@@ -33,5 +39,4 @@ camp version [flags]
 
 ### SEE ALSO
 
-* [camp](camp.md)	 - Campaign management CLI for multi-project AI workspaces
-
+* [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces

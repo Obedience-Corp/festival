@@ -1,3 +1,9 @@
+---
+title: "camp unpin"
+linkTitle: "camp unpin"
+description: "Remove a directory bookmark"
+---
+
 ## camp unpin
 
 Remove a directory bookmark
@@ -28,5 +34,4 @@ camp unpin [name] [flags]
 
 ### SEE ALSO
 
-* [camp](camp.md)	 - Campaign management CLI for multi-project AI workspaces
-
+* [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces

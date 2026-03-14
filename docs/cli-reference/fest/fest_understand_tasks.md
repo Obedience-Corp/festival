@@ -1,3 +1,9 @@
+---
+title: "fest understand tasks"
+linkTitle: "fest understand tasks"
+description: "When and how to create task files (CRITICAL)"
+---
+
 ## fest understand tasks
 
 When and how to create task files (CRITICAL)
@@ -36,5 +42,4 @@ fest understand tasks [flags]
 
 ### SEE ALSO
 
-* [fest understand](fest_understand.md)	 - Learn methodology FIRST - run before executing festival tasks
-
+* [fest understand](../fest_understand/)	 - Learn methodology FIRST - run before executing festival tasks

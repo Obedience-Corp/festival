@@ -1,3 +1,9 @@
+---
+title: "fest chain graph"
+linkTitle: "fest chain graph"
+description: "Visualize chain dependency graph"
+---
+
 ## fest chain graph
 
 Visualize chain dependency graph
@@ -29,5 +35,4 @@ fest chain graph <chain-id> [flags]
 
 ### SEE ALSO
 
-* [fest chain](fest_chain.md)	 - Manage festival chains (inter-festival dependencies)
-
+* [fest chain](../fest_chain/)	 - Manage festival chains (inter-festival dependencies)

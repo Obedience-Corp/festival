@@ -1,3 +1,9 @@
+---
+title: "fest reorder phase"
+linkTitle: "fest reorder phase"
+description: "Reorder phases in a festival"
+---
+
 ## fest reorder phase
 
 Reorder phases in a festival
@@ -42,5 +48,4 @@ fest reorder phase <from> <to> [festival-dir] [flags]
 
 ### SEE ALSO
 
-* [fest reorder](fest_reorder.md)	 - Reorder festival elements
-
+* [fest reorder](../fest_reorder/)	 - Reorder festival elements

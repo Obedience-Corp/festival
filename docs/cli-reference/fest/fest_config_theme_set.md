@@ -1,3 +1,9 @@
+---
+title: "fest config theme set"
+linkTitle: "fest config theme set"
+description: "Set the TUI theme"
+---
+
 ## fest config theme set
 
 Set the TUI theme
@@ -40,5 +46,4 @@ fest config theme set <theme> [flags]
 
 ### SEE ALSO
 
-* [fest config theme](fest_config_theme.md)	 - Manage TUI color theme
-
+* [fest config theme](../fest_config_theme/)	 - Manage TUI color theme

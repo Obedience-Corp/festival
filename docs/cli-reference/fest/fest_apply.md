@@ -1,3 +1,9 @@
+---
+title: "fest apply"
+linkTitle: "fest apply"
+description: "Apply a local template to a destination file (copy or render)"
+---
+
 ## fest apply
 
 Apply a local template to a destination file (copy or render)
@@ -32,5 +38,4 @@ fest apply [flags]
 
 ### SEE ALSO
 
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-
+* [fest](../fest/)	 - Festival Methodology CLI - goal-oriented project management for AI agents

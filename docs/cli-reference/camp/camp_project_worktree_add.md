@@ -1,3 +1,9 @@
+---
+title: "camp project worktree add"
+linkTitle: "camp project worktree add"
+description: "Create a new worktree for the project"
+---
+
 ## camp project worktree add
 
 Create a new worktree for the project
@@ -54,5 +60,4 @@ camp project worktree add <name> [flags]
 
 ### SEE ALSO
 
-* [camp project worktree](camp_project_worktree.md)	 - Manage worktrees for a project
-
+* [camp project worktree](../camp_project_worktree/)	 - Manage worktrees for a project

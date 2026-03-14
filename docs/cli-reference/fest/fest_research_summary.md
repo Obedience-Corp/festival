@@ -1,3 +1,9 @@
+---
+title: "fest research summary"
+linkTitle: "fest research summary"
+description: "Generate summary/index of research documents"
+---
+
 ## fest research summary
 
 Generate summary/index of research documents
@@ -44,5 +50,4 @@ fest research summary [flags]
 
 ### SEE ALSO
 
-* [fest research](fest_research.md)	 - Manage research phase documents
-
+* [fest research](../fest_research/)	 - Manage research phase documents

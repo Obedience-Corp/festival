@@ -1,3 +1,9 @@
+---
+title: "fest workflow show"
+linkTitle: "fest workflow show"
+description: "Display current step details"
+---
+
 ## fest workflow show
 
 Display current step details
@@ -38,5 +44,4 @@ fest workflow show [step] [flags]
 
 ### SEE ALSO
 
-* [fest workflow](fest_workflow.md)	 - Manage workflow-based phase execution
-
+* [fest workflow](../fest_workflow/)	 - Manage workflow-based phase execution

@@ -1,3 +1,9 @@
+---
+title: "fest go unmap"
+linkTitle: "fest go unmap"
+description: "Remove a navigation shortcut"
+---
+
 ## fest go unmap
 
 Remove a navigation shortcut
@@ -35,5 +41,4 @@ fest go unmap <name> [flags]
 
 ### SEE ALSO
 
-* [fest go](fest_go.md)	 - Navigate to festivals/ - use 'fgo' after shell-init setup
-
+* [fest go](../fest_go/)	 - Navigate to festivals/ - use 'fgo' after shell-init setup

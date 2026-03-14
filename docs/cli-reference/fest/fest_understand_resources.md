@@ -1,3 +1,9 @@
+---
+title: "fest understand resources"
+linkTitle: "fest understand resources"
+description: "What's in the .festival/ directory"
+---
+
 ## fest understand resources
 
 What's in the .festival/ directory
@@ -27,5 +33,4 @@ fest understand resources [flags]
 
 ### SEE ALSO
 
-* [fest understand](fest_understand.md)	 - Learn methodology FIRST - run before executing festival tasks
-
+* [fest understand](../fest_understand/)	 - Learn methodology FIRST - run before executing festival tasks

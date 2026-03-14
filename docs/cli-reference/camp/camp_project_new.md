@@ -1,3 +1,9 @@
+---
+title: "camp project new"
+linkTitle: "camp project new"
+description: "Create a new project in campaign"
+---
+
 ## camp project new
 
 Create a new project in campaign
@@ -39,5 +45,4 @@ camp project new <name> [flags]
 
 ### SEE ALSO
 
-* [camp project](camp_project.md)	 - Manage campaign projects
-
+* [camp project](../camp_project/)	 - Manage campaign projects

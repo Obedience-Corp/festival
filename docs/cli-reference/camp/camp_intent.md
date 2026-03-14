@@ -1,3 +1,9 @@
+---
+title: "camp intent"
+linkTitle: "camp intent"
+description: "Manage campaign intents"
+---
+
 ## camp intent
 
 Manage campaign intents
@@ -51,16 +57,15 @@ camp intent [flags]
 
 ### SEE ALSO
 
-* [camp](camp.md)	 - Campaign management CLI for multi-project AI workspaces
-* [camp intent add](camp_intent_add.md)	 - Create a new intent
-* [camp intent archive](camp_intent_archive.md)	 - Archive an intent
-* [camp intent count](camp_intent_count.md)	 - Count intents by status directory
-* [camp intent edit](camp_intent_edit.md)	 - Edit an existing intent
-* [camp intent explore](camp_intent_explore.md)	 - Interactive intent explorer
-* [camp intent find](camp_intent_find.md)	 - Search for intents by title or content
-* [camp intent gather](camp_intent_gather.md)	 - Gather related intents into a unified document
-* [camp intent list](camp_intent_list.md)	 - List intents in the campaign
-* [camp intent move](camp_intent_move.md)	 - Move intent to a different status
-* [camp intent promote](camp_intent_promote.md)	 - Promote an intent through the pipeline
-* [camp intent show](camp_intent_show.md)	 - Show detailed intent information
-
+* [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces
+* [camp intent add](../camp_intent_add/)	 - Create a new intent
+* [camp intent archive](../camp_intent_archive/)	 - Archive an intent
+* [camp intent count](../camp_intent_count/)	 - Count intents by status directory
+* [camp intent edit](../camp_intent_edit/)	 - Edit an existing intent
+* [camp intent explore](../camp_intent_explore/)	 - Interactive intent explorer
+* [camp intent find](../camp_intent_find/)	 - Search for intents by title or content
+* [camp intent gather](../camp_intent_gather/)	 - Gather related intents into a unified document
+* [camp intent list](../camp_intent_list/)	 - List intents in the campaign
+* [camp intent move](../camp_intent_move/)	 - Move intent to a different status
+* [camp intent promote](../camp_intent_promote/)	 - Promote an intent through the pipeline
+* [camp intent show](../camp_intent_show/)	 - Show detailed intent information

@@ -1,3 +1,9 @@
+---
+title: "fest types festival list"
+linkTitle: "fest types festival list"
+description: "List all festival types"
+---
+
 ## fest types festival list
 
 List all festival types
@@ -36,5 +42,4 @@ fest types festival list [flags]
 
 ### SEE ALSO
 
-* [fest types festival](fest_types_festival.md)	 - Discover festival types
-
+* [fest types festival](../fest_types_festival/)	 - Discover festival types

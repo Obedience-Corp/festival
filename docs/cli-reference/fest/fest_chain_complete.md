@@ -1,3 +1,9 @@
+---
+title: "fest chain complete"
+linkTitle: "fest chain complete"
+description: "Complete and archive a chain"
+---
+
 ## fest chain complete
 
 Complete and archive a chain
@@ -31,5 +37,4 @@ fest chain complete <chain-id> [flags]
 
 ### SEE ALSO
 
-* [fest chain](fest_chain.md)	 - Manage festival chains (inter-festival dependencies)
-
+* [fest chain](../fest_chain/)	 - Manage festival chains (inter-festival dependencies)

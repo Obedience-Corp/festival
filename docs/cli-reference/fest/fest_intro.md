@@ -1,3 +1,9 @@
+---
+title: "fest intro"
+linkTitle: "fest intro"
+description: "Getting started guide for fest CLI and common workflows"
+---
+
 ## fest intro
 
 Getting started guide for fest CLI and common workflows
@@ -43,6 +49,5 @@ fest intro [flags]
 
 ### SEE ALSO
 
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-* [fest intro workflows](fest_intro_workflows.md)	 - Common fest workflow patterns
-
+* [fest](../fest/)	 - Festival Methodology CLI - goal-oriented project management for AI agents
+* [fest intro workflows](../fest_intro_workflows/)	 - Common fest workflow patterns

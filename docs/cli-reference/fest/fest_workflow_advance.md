@@ -1,3 +1,9 @@
+---
+title: "fest workflow advance"
+linkTitle: "fest workflow advance"
+description: "Complete current step and move to next"
+---
+
 ## fest workflow advance
 
 Complete current step and move to next
@@ -35,5 +41,4 @@ fest workflow advance [flags]
 
 ### SEE ALSO
 
-* [fest workflow](fest_workflow.md)	 - Manage workflow-based phase execution
-
+* [fest workflow](../fest_workflow/)	 - Manage workflow-based phase execution

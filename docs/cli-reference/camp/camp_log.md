@@ -1,3 +1,9 @@
+---
+title: "camp log"
+linkTitle: "camp log"
+description: "Show git log of the campaign"
+---
+
 ## camp log
 
 Show git log of the campaign
@@ -40,5 +46,4 @@ camp log [flags]
 
 ### SEE ALSO
 
-* [camp](camp.md)	 - Campaign management CLI for multi-project AI workspaces
-
+* [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces

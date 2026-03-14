@@ -1,3 +1,9 @@
+---
+title: "camp push"
+linkTitle: "camp push"
+description: "Push campaign changes to remote"
+---
+
 ## camp push
 
 Push campaign changes to remote
@@ -43,6 +49,5 @@ camp push [flags] [remote] [branch]
 
 ### SEE ALSO
 
-* [camp](camp.md)	 - Campaign management CLI for multi-project AI workspaces
-* [camp push all](camp_push_all.md)	 - Push all repos with unpushed commits
-
+* [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces
+* [camp push all](../camp_push_all/)	 - Push all repos with unpushed commits

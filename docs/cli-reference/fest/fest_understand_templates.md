@@ -1,3 +1,9 @@
+---
+title: "fest understand templates"
+linkTitle: "fest understand templates"
+description: "Template variables that save tokens"
+---
+
 ## fest understand templates
 
 Template variables that save tokens
@@ -27,5 +33,4 @@ fest understand templates [flags]
 
 ### SEE ALSO
 
-* [fest understand](fest_understand.md)	 - Learn methodology FIRST - run before executing festival tasks
-
+* [fest understand](../fest_understand/)	 - Learn methodology FIRST - run before executing festival tasks

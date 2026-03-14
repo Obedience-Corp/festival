@@ -6,12 +6,40 @@
         <div class="sidebar__section-title">{{ .Name }}</div>
         {{ range .Children }}
           {{ $href := .URL | relURL }}
+          {{ $isActive := or (eq $currentURL $href) (and (ne $href "/" ) (strings.HasPrefix $currentURL $href)) }}
           <a href="{{ $href }}"
-             class="sidebar__link{{ if eq $currentURL $href }} sidebar__link--active{{ end }}">
+             class="sidebar__link{{ if $isActive }} sidebar__link--active{{ end }}">
             {{ .Name }}
           </a>
         {{ end }}
       </div>
     {{ end }}
+  {{ end }}
+
+  {{ $currentSection := .CurrentSection }}
+  {{ if and $currentSection (strings.HasPrefix $currentSection.RelPermalink "/cli-reference/") (ne $currentSection.RelPermalink "/cli-reference/") }}
+    {{ $cliName := path.Base (strings.TrimSuffix "/" $currentSection.RelPermalink) }}
+    {{ $referenceBase := printf "%s-reference" $cliName }}
+    {{ $referencePages := where $currentSection.RegularPages "File.BaseFileName" $referenceBase }}
+    {{ $commandPages := where $currentSection.RegularPages "File.BaseFileName" "!=" $referenceBase }}
+    <div class="sidebar__section sidebar__section--generated">
+      <div class="sidebar__section-title">{{ $currentSection.Title }}</div>
+      <a href="{{ $currentSection.RelPermalink }}"
+         class="sidebar__link{{ if eq $currentURL $currentSection.RelPermalink }} sidebar__link--active{{ end }}">
+        Overview
+      </a>
+      {{ range $referencePages }}
+        <a href="{{ .RelPermalink }}"
+           class="sidebar__link{{ if eq $currentURL .RelPermalink }} sidebar__link--active{{ end }}">
+          {{ .LinkTitle }}
+        </a>
+      {{ end }}
+      {{ range $commandPages.ByLinkTitle }}
+        <a href="{{ .RelPermalink }}"
+           class="sidebar__link{{ if eq $currentURL .RelPermalink }} sidebar__link--active{{ end }}">
+          {{ .LinkTitle }}
+        </a>
+      {{ end }}
+    </div>
   {{ end }}
 </nav>

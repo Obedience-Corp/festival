@@ -1,3 +1,9 @@
+---
+title: "camp skills unlink"
+linkTitle: "camp skills unlink"
+description: "Remove projected skill bundle symlinks"
+---
+
 ## camp skills unlink
 
 Remove projected skill bundle symlinks
@@ -38,5 +44,4 @@ camp skills unlink [flags]
 
 ### SEE ALSO
 
-* [camp skills](camp_skills.md)	 - Manage campaign skill directory links
-
+* [camp skills](../camp_skills/)	 - Manage campaign skill directory links

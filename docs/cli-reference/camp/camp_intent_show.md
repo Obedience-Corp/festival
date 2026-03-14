@@ -1,3 +1,9 @@
+---
+title: "camp intent show"
+linkTitle: "camp intent show"
+description: "Show detailed intent information"
+---
+
 ## camp intent show
 
 Show detailed intent information
@@ -43,5 +49,4 @@ camp intent show <id> [flags]
 
 ### SEE ALSO
 
-* [camp intent](camp_intent.md)	 - Manage campaign intents
-
+* [camp intent](../camp_intent/)	 - Manage campaign intents

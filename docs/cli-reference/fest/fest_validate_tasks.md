@@ -1,3 +1,9 @@
+---
+title: "fest validate tasks"
+linkTitle: "fest validate tasks"
+description: "Validate task files exist (CRITICAL)"
+---
+
 ## fest validate tasks
 
 Validate task files exist (CRITICAL)
@@ -48,5 +54,4 @@ fest validate tasks [festival-path] [flags]
 
 ### SEE ALSO
 
-* [fest validate](fest_validate.md)	 - Check festival structure - find missing task files and issues
-
+* [fest validate](../fest_validate/)	 - Check festival structure - find missing task files and issues

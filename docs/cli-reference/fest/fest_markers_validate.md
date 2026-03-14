@@ -1,3 +1,9 @@
+---
+title: "fest markers validate"
+linkTitle: "fest markers validate"
+description: "Validate marker JSON against template"
+---
+
 ## fest markers validate
 
 Validate marker JSON against template
@@ -52,5 +58,4 @@ fest markers validate [flags]
 
 ### SEE ALSO
 
-* [fest markers](fest_markers.md)	 - Manage template markers in festival files
-
+* [fest markers](../fest_markers/)	 - Manage template markers in festival files

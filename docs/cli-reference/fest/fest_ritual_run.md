@@ -1,3 +1,9 @@
+---
+title: "fest ritual run"
+linkTitle: "fest ritual run"
+description: "Create a new run of a ritual festival in active/"
+---
+
 ## fest ritual run
 
 Create a new run of a ritual festival in active/
@@ -34,5 +40,4 @@ fest ritual run <ritual-name-or-id> [flags]
 
 ### SEE ALSO
 
-* [fest ritual](fest_ritual.md)	 - Manage repeatable ritual festivals
-
+* [fest ritual](../fest_ritual/)	 - Manage repeatable ritual festivals

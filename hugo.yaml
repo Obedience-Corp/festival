@@ -103,9 +103,9 @@ menu:
       weight: 50
     - name: fest
       parent: cli-reference
-      url: /cli-reference/fest/fest-reference/
+      url: /cli-reference/fest/
       weight: 51
     - name: camp
       parent: cli-reference
-      url: /cli-reference/camp/camp-reference/
+      url: /cli-reference/camp/
       weight: 52

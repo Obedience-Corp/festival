@@ -1,3 +1,9 @@
+---
+title: "fest system sync"
+linkTitle: "fest system sync"
+description: "System: Download latest fest templates from GitHub"
+---
+
 ## fest system sync
 
 System: Download latest fest templates from GitHub
@@ -52,5 +58,4 @@ fest system sync [flags]
 
 ### SEE ALSO
 
-* [fest system](fest_system.md)	 - Manage fest tool configuration and templates
-
+* [fest system](../fest_system/)	 - Manage fest tool configuration and templates

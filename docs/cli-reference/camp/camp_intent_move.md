@@ -1,3 +1,9 @@
+---
+title: "camp intent move"
+linkTitle: "camp intent move"
+description: "Move intent to a different status"
+---
+
 ## camp intent move
 
 Move intent to a different status
@@ -49,5 +55,4 @@ camp intent move <id> <status> [flags]
 
 ### SEE ALSO
 
-* [camp intent](camp_intent.md)	 - Manage campaign intents
-
+* [camp intent](../camp_intent/)	 - Manage campaign intents

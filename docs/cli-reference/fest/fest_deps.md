@@ -1,3 +1,9 @@
+---
+title: "fest deps"
+linkTitle: "fest deps"
+description: "Show task dependencies"
+---
+
 ## fest deps
 
 Show task dependencies
@@ -42,5 +48,4 @@ fest deps [task] [flags]
 
 ### SEE ALSO
 
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-
+* [fest](../fest/)	 - Festival Methodology CLI - goal-oriented project management for AI agents

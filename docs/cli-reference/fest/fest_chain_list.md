@@ -1,3 +1,9 @@
+---
+title: "fest chain list"
+linkTitle: "fest chain list"
+description: "List all festival chains"
+---
+
 ## fest chain list
 
 List all festival chains
@@ -24,5 +30,4 @@ fest chain list [flags]
 
 ### SEE ALSO
 
-* [fest chain](fest_chain.md)	 - Manage festival chains (inter-festival dependencies)
-
+* [fest chain](../fest_chain/)	 - Manage festival chains (inter-festival dependencies)

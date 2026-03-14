@@ -1,3 +1,9 @@
+---
+title: "camp registry sync"
+linkTitle: "camp registry sync"
+description: "Sync current campaign with registry"
+---
+
 ## camp registry sync
 
 Sync current campaign with registry
@@ -33,5 +39,4 @@ camp registry sync [flags]
 
 ### SEE ALSO
 
-* [camp registry](camp_registry.md)	 - Manage the campaign registry
-
+* [camp registry](../camp_registry/)	 - Manage the campaign registry

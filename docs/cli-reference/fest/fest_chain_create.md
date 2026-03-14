@@ -1,3 +1,9 @@
+---
+title: "fest chain create"
+linkTitle: "fest chain create"
+description: "Create a new festival chain"
+---
+
 ## fest chain create
 
 Create a new festival chain
@@ -29,5 +35,4 @@ fest chain create [flags]
 
 ### SEE ALSO
 
-* [fest chain](fest_chain.md)	 - Manage festival chains (inter-festival dependencies)
-
+* [fest chain](../fest_chain/)	 - Manage festival chains (inter-festival dependencies)

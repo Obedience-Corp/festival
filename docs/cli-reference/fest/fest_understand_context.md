@@ -1,3 +1,9 @@
+---
+title: "fest understand context"
+linkTitle: "fest understand context"
+description: "CONTEXT.md - session memory for AI agents (CREATE FIRST)"
+---
+
 ## fest understand context
 
 CONTEXT.md - session memory for AI agents (CREATE FIRST)
@@ -31,5 +37,4 @@ fest understand context [flags]
 
 ### SEE ALSO
 
-* [fest understand](fest_understand.md)	 - Learn methodology FIRST - run before executing festival tasks
-
+* [fest understand](../fest_understand/)	 - Learn methodology FIRST - run before executing festival tasks

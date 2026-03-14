@@ -1,3 +1,9 @@
+---
+title: "fest templates create"
+linkTitle: "fest templates create"
+description: "Create a new template"
+---
+
 ## fest templates create
 
 Create a new template
@@ -42,5 +48,4 @@ fest templates create <name> [flags]
 
 ### SEE ALSO
 
-* [fest templates](fest_templates.md)	 - Manage agent-created templates within a festival
-
+* [fest templates](../fest_templates/)	 - Manage agent-created templates within a festival

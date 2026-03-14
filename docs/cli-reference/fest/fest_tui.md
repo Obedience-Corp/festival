@@ -1,3 +1,9 @@
+---
+title: "fest tui"
+linkTitle: "fest tui"
+description: "Interactive UI (Charm) for festival creation and editing"
+---
+
 ## fest tui
 
 Interactive UI (Charm) for festival creation and editing
@@ -23,5 +29,4 @@ fest tui [flags]
 
 ### SEE ALSO
 
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-
+* [fest](../fest/)	 - Festival Methodology CLI - goal-oriented project management for AI agents

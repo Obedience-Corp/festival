@@ -267,6 +267,15 @@ a:hover {
   margin-bottom: 1.5rem;
 }
 
+.sidebar__section--generated {
+  padding-top: 1rem;
+  border-top: 1px solid var(--festival-200);
+}
+
+[data-theme="dark"] .sidebar__section--generated {
+  border-top-color: var(--festival-800);
+}
+
 .sidebar__section-title {
   font-family: var(--font-heading);
   font-size: 0.75rem;
@@ -344,6 +353,80 @@ a:hover {
 .content-area--home .content {
   max-width: 100%;
   padding: 0;
+}
+
+.doc-index__featured {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  border: 1px solid var(--festival-200);
+  border-radius: 20px;
+  background: var(--surface-raised);
+}
+
+[data-theme="dark"] .doc-index__featured {
+  border-color: var(--festival-800);
+  background: var(--festival-900);
+}
+
+.doc-index__featured h2,
+.doc-index__intro h2 {
+  margin-top: 0;
+}
+
+.doc-index__featured p,
+.doc-index__intro p {
+  color: var(--festival-500);
+}
+
+.doc-index__list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.doc-index__item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.95rem 1rem;
+  border: 1px solid var(--festival-200);
+  border-radius: 16px;
+  background: var(--surface-raised);
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 0.2s ease, transform 0.2s ease, background 0.2s ease;
+}
+
+.doc-index__item strong {
+  color: var(--festival-900);
+  font-size: 0.95rem;
+}
+
+.doc-index__item span {
+  color: var(--festival-500);
+  font-size: 0.86rem;
+  line-height: 1.5;
+}
+
+.doc-index__item:hover {
+  border-color: var(--festival-400);
+  background: var(--festival-50);
+  text-decoration: none;
+  transform: translateY(-1px);
+}
+
+[data-theme="dark"] .doc-index__item {
+  border-color: var(--festival-800);
+  background: var(--festival-900);
+}
+
+[data-theme="dark"] .doc-index__item strong {
+  color: var(--festival-100);
+}
+
+[data-theme="dark"] .doc-index__item:hover {
+  border-color: var(--festival-500);
+  background: var(--festival-800);
 }
 
 /* Table of Contents */
@@ -1535,6 +1618,10 @@ summary {
     min-width: 0;
     padding: 0.4rem 0.75rem;
     font-size: 0.8rem;
+  }
+
+  .doc-index__list {
+    grid-template-columns: 1fr;
   }
 
   /* Reduce spacing for smaller screens */

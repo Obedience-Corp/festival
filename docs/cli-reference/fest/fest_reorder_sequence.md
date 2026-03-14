@@ -1,3 +1,9 @@
+---
+title: "fest reorder sequence"
+linkTitle: "fest reorder sequence"
+description: "Reorder sequences within a phase"
+---
+
 ## fest reorder sequence
 
 Reorder sequences within a phase
@@ -45,5 +51,4 @@ fest reorder sequence <from> <to> [flags]
 
 ### SEE ALSO
 
-* [fest reorder](fest_reorder.md)	 - Reorder festival elements
-
+* [fest reorder](../fest_reorder/)	 - Reorder festival elements

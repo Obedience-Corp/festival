@@ -1,3 +1,9 @@
+---
+title: "fest types"
+linkTitle: "fest types"
+description: "Discover and explore template types"
+---
+
 ## fest types
 
 Discover and explore template types
@@ -34,8 +40,7 @@ Examples:
 
 ### SEE ALSO
 
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-* [fest types festival](fest_types_festival.md)	 - Discover festival types
-* [fest types list](fest_types_list.md)	 - List available template types
-* [fest types show](fest_types_show.md)	 - Show details about a template type
-
+* [fest](../fest/)	 - Festival Methodology CLI - goal-oriented project management for AI agents
+* [fest types festival](../fest_types_festival/)	 - Discover festival types
+* [fest types list](../fest_types_list/)	 - List available template types
+* [fest types show](../fest_types_show/)	 - Show details about a template type

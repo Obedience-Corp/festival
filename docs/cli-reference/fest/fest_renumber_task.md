@@ -1,3 +1,9 @@
+---
+title: "fest renumber task"
+linkTitle: "fest renumber task"
+description: "Renumber tasks within a sequence"
+---
+
 ## fest renumber task
 
 Renumber tasks within a sequence
@@ -49,5 +55,4 @@ fest renumber task [flags]
 
 ### SEE ALSO
 
-* [fest renumber](fest_renumber.md)	 - Renumber festival elements
-
+* [fest renumber](../fest_renumber/)	 - Renumber festival elements

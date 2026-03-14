@@ -1,3 +1,9 @@
+---
+title: "camp gather feedback"
+linkTitle: "camp gather feedback"
+description: "Gather feedback observations from festivals into intents"
+---
+
 ## camp gather feedback
 
 Gather feedback observations from festivals into intents
@@ -60,5 +66,4 @@ camp gather feedback [flags]
 
 ### SEE ALSO
 
-* [camp gather](camp_gather.md)	 - Import external data into the intent system
-
+* [camp gather](../camp_gather/)	 - Import external data into the intent system

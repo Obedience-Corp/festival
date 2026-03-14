@@ -1,3 +1,9 @@
+---
+title: "fest scaffold from-plan"
+linkTitle: "fest scaffold from-plan"
+description: "Generate festival structure from a plan document"
+---
+
 ## fest scaffold from-plan
 
 Generate festival structure from a plan document
@@ -48,5 +54,4 @@ fest scaffold from-plan [flags]
 
 ### SEE ALSO
 
-* [fest scaffold](fest_scaffold.md)	 - Generate festival structures from plans
-
+* [fest scaffold](../fest_scaffold/)	 - Generate festival structures from plans

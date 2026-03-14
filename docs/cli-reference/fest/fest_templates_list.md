@@ -1,3 +1,9 @@
+---
+title: "fest templates list"
+linkTitle: "fest templates list"
+description: "List available templates"
+---
+
 ## fest templates list
 
 List available templates
@@ -30,5 +36,4 @@ fest templates list [flags]
 
 ### SEE ALSO
 
-* [fest templates](fest_templates.md)	 - Manage agent-created templates within a festival
-
+* [fest templates](../fest_templates/)	 - Manage agent-created templates within a festival

@@ -1,3 +1,9 @@
+---
+title: "fest markers scaffold"
+linkTitle: "fest markers scaffold"
+description: "Generate marker JSON from template"
+---
+
 ## fest markers scaffold
 
 Generate marker JSON from template
@@ -56,5 +62,4 @@ fest markers scaffold [flags]
 
 ### SEE ALSO
 
-* [fest markers](fest_markers.md)	 - Manage template markers in festival files
-
+* [fest markers](../fest_markers/)	 - Manage template markers in festival files

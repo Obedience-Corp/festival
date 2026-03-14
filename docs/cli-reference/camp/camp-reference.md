@@ -1,5 +1,7 @@
 ---
 title: "camp CLI Reference"
+linkTitle: "camp CLI Reference"
+description: "Campaign management CLI for multi-project AI workspaces"
 weight: 1
 ---
 

@@ -1,3 +1,9 @@
+---
+title: "fest gates apply"
+linkTitle: "fest gates apply"
+description: "Apply quality gates to sequences"
+---
+
 ## fest gates apply
 
 Apply quality gates to sequences
@@ -60,5 +66,4 @@ fest gates apply [flags]
 
 ### SEE ALSO
 
-* [fest gates](fest_gates.md)	 - Manage quality gates - validation steps at sequence end
-
+* [fest gates](../fest_gates/)	 - Manage quality gates - validation steps at sequence end

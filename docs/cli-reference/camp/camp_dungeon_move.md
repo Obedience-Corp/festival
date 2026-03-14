@@ -1,3 +1,9 @@
+---
+title: "camp dungeon move"
+linkTitle: "camp dungeon move"
+description: "Move dungeon items between statuses"
+---
+
 ## camp dungeon move
 
 Move dungeon items between statuses
@@ -42,5 +48,4 @@ camp dungeon move <item> [status] [flags]
 
 ### SEE ALSO
 
-* [camp dungeon](camp_dungeon.md)	 - Manage the campaign dungeon
-
+* [camp dungeon](../camp_dungeon/)	 - Manage the campaign dungeon

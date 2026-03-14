@@ -1,3 +1,9 @@
+---
+title: "fest understand workflow"
+linkTitle: "fest understand workflow"
+description: "Just-in-time reading and execution patterns"
+---
+
 ## fest understand workflow
 
 Just-in-time reading and execution patterns
@@ -27,5 +33,4 @@ fest understand workflow [flags]
 
 ### SEE ALSO
 
-* [fest understand](fest_understand.md)	 - Learn methodology FIRST - run before executing festival tasks
-
+* [fest understand](../fest_understand/)	 - Learn methodology FIRST - run before executing festival tasks

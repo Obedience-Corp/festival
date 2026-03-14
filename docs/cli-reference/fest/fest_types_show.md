@@ -1,3 +1,9 @@
+---
+title: "fest types show"
+linkTitle: "fest types show"
+description: "Show details about a template type"
+---
+
 ## fest types show
 
 Show details about a template type
@@ -40,5 +46,4 @@ fest types show <type-name> [flags]
 
 ### SEE ALSO
 
-* [fest types](fest_types.md)	 - Discover and explore template types
-
+* [fest types](../fest_types/)	 - Discover and explore template types

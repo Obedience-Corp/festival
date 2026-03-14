@@ -1,3 +1,9 @@
+---
+title: "camp project commit"
+linkTitle: "camp project commit"
+description: "Commit changes in a project submodule"
+---
+
 ## camp project commit
 
 Commit changes in a project submodule
@@ -42,5 +48,4 @@ camp project commit [flags]
 
 ### SEE ALSO
 
-* [camp project](camp_project.md)	 - Manage campaign projects
-
+* [camp project](../camp_project/)	 - Manage campaign projects

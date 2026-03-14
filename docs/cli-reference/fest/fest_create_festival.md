@@ -1,3 +1,9 @@
+---
+title: "fest create festival"
+linkTitle: "fest create festival"
+description: "Create a new festival scaffold under festivals/planning"
+---
+
 ## fest create festival
 
 Create a new festival scaffold under festivals/planning
@@ -36,5 +42,4 @@ fest create festival [flags]
 
 ### SEE ALSO
 
-* [fest create](fest_create.md)	 - Create festivals, phases, sequences, or tasks (TUI)
-
+* [fest create](../fest_create/)	 - Create festivals, phases, sequences, or tasks (TUI)

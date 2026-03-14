@@ -1,3 +1,9 @@
+---
+title: "fest promote"
+linkTitle: "fest promote"
+description: "Promote a festival to the next lifecycle status"
+---
+
 ## fest promote
 
 Promote a festival to the next lifecycle status
@@ -43,5 +49,4 @@ fest promote [flags]
 
 ### SEE ALSO
 
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-
+* [fest](../fest/)	 - Festival Methodology CLI - goal-oriented project management for AI agents

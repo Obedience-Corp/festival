@@ -1,3 +1,9 @@
+---
+title: "fest understand structure"
+linkTitle: "fest understand structure"
+description: "3-level hierarchy: Festival → Phase → Sequence → Task"
+---
+
 ## fest understand structure
 
 3-level hierarchy: Festival → Phase → Sequence → Task
@@ -35,5 +41,4 @@ fest understand structure [flags]
 
 ### SEE ALSO
 
-* [fest understand](fest_understand.md)	 - Learn methodology FIRST - run before executing festival tasks
-
+* [fest understand](../fest_understand/)	 - Learn methodology FIRST - run before executing festival tasks

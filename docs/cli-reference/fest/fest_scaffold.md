@@ -1,3 +1,9 @@
+---
+title: "fest scaffold"
+linkTitle: "fest scaffold"
+description: "Generate festival structures from plans"
+---
+
 ## fest scaffold
 
 Generate festival structures from plans
@@ -34,6 +40,5 @@ Examples:
 
 ### SEE ALSO
 
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-* [fest scaffold from-plan](fest_scaffold_from-plan.md)	 - Generate festival structure from a plan document
-
+* [fest](../fest/)	 - Festival Methodology CLI - goal-oriented project management for AI agents
+* [fest scaffold from-plan](../fest_scaffold_from-plan/)	 - Generate festival structure from a plan document

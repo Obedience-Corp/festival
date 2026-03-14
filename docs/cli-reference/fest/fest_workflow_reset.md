@@ -1,3 +1,9 @@
+---
+title: "fest workflow reset"
+linkTitle: "fest workflow reset"
+description: "Reset workflow to step 1"
+---
+
 ## fest workflow reset
 
 Reset workflow to step 1
@@ -32,5 +38,4 @@ fest workflow reset [flags]
 
 ### SEE ALSO
 
-* [fest workflow](fest_workflow.md)	 - Manage workflow-based phase execution
-
+* [fest workflow](../fest_workflow/)	 - Manage workflow-based phase execution

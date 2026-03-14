@@ -1,3 +1,9 @@
+---
+title: "fest remove"
+linkTitle: "fest remove"
+description: "Remove festival elements and renumber"
+---
+
 ## fest remove
 
 Remove festival elements and renumber
@@ -29,8 +35,7 @@ for all following elements in the hierarchy.
 
 ### SEE ALSO
 
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-* [fest remove phase](fest_remove_phase.md)	 - Remove a phase and renumber subsequent phases
-* [fest remove sequence](fest_remove_sequence.md)	 - Remove a sequence and renumber subsequent sequences
-* [fest remove task](fest_remove_task.md)	 - Remove a task and renumber subsequent tasks
-
+* [fest](../fest/)	 - Festival Methodology CLI - goal-oriented project management for AI agents
+* [fest remove phase](../fest_remove_phase/)	 - Remove a phase and renumber subsequent phases
+* [fest remove sequence](../fest_remove_sequence/)	 - Remove a sequence and renumber subsequent sequences
+* [fest remove task](../fest_remove_task/)	 - Remove a task and renumber subsequent tasks

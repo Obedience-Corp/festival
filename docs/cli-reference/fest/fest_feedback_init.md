@@ -1,3 +1,9 @@
+---
+title: "fest feedback init"
+linkTitle: "fest feedback init"
+description: "Initialize feedback collection"
+---
+
 ## fest feedback init
 
 Initialize feedback collection
@@ -37,5 +43,4 @@ fest feedback init [flags]
 
 ### SEE ALSO
 
-* [fest feedback](fest_feedback.md)	 - Manage structured feedback collection
-
+* [fest feedback](../fest_feedback/)	 - Manage structured feedback collection

@@ -1,3 +1,9 @@
+---
+title: "fest markers"
+linkTitle: "fest markers"
+description: "Manage template markers in festival files"
+---
+
 ## fest markers
 
 Manage template markers in festival files
@@ -33,10 +39,9 @@ Use subcommands to list markers or fill them interactively.
 
 ### SEE ALSO
 
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-* [fest markers count](fest_markers_count.md)	 - Count unfilled template markers
-* [fest markers list](fest_markers_list.md)	 - List all unfilled template markers
-* [fest markers next](fest_markers_next.md)	 - Show the next file with unfilled markers
-* [fest markers scaffold](fest_markers_scaffold.md)	 - Generate marker JSON from template
-* [fest markers validate](fest_markers_validate.md)	 - Validate marker JSON against template
-
+* [fest](../fest/)	 - Festival Methodology CLI - goal-oriented project management for AI agents
+* [fest markers count](../fest_markers_count/)	 - Count unfilled template markers
+* [fest markers list](../fest_markers_list/)	 - List all unfilled template markers
+* [fest markers next](../fest_markers_next/)	 - Show the next file with unfilled markers
+* [fest markers scaffold](../fest_markers_scaffold/)	 - Generate marker JSON from template
+* [fest markers validate](../fest_markers_validate/)	 - Validate marker JSON against template

@@ -1,3 +1,9 @@
+---
+title: "camp dungeon crawl"
+linkTitle: "camp dungeon crawl"
+description: "Interactive dungeon review"
+---
+
 ## camp dungeon crawl
 
 Interactive dungeon review
@@ -45,5 +51,4 @@ camp dungeon crawl [flags]
 
 ### SEE ALSO
 
-* [camp dungeon](camp_dungeon.md)	 - Manage the campaign dungeon
-
+* [camp dungeon](../camp_dungeon/)	 - Manage the campaign dungeon

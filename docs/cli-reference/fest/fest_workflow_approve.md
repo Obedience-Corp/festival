@@ -1,3 +1,9 @@
+---
+title: "fest workflow approve"
+linkTitle: "fest workflow approve"
+description: "Approve a blocking checkpoint"
+---
+
 ## fest workflow approve
 
 Approve a blocking checkpoint
@@ -35,5 +41,4 @@ fest workflow approve [flags]
 
 ### SEE ALSO
 
-* [fest workflow](fest_workflow.md)	 - Manage workflow-based phase execution
-
+* [fest workflow](../fest_workflow/)	 - Manage workflow-based phase execution

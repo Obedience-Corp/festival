@@ -1,3 +1,9 @@
+---
+title: "fest search"
+linkTitle: "fest search"
+description: "Search festivals by name, ID, or goal text"
+---
+
 ## fest search
 
 Search festivals by name, ID, or goal text
@@ -46,5 +52,4 @@ fest search <query> [flags]
 
 ### SEE ALSO
 
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-
+* [fest](../fest/)	 - Festival Methodology CLI - goal-oriented project management for AI agents

@@ -1,3 +1,9 @@
+---
+title: "fest task"
+linkTitle: "fest task"
+description: "Manage task status (show, edit, complete, block, reset)"
+---
+
 ## fest task
 
 Manage task status (show, edit, complete, block, reset)
@@ -47,10 +53,9 @@ Examples:
 
 ### SEE ALSO
 
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-* [fest task blocked](fest_task_blocked.md)	 - Mark a task as blocked (requires confirmation)
-* [fest task completed](fest_task_completed.md)	 - Mark a task as complete (requires confirmation)
-* [fest task edit](fest_task_edit.md)	 - Open the current task in your editor
-* [fest task reset](fest_task_reset.md)	 - Reset a task to pending (requires confirmation)
-* [fest task show](fest_task_show.md)	 - Show task details and status
-
+* [fest](../fest/)	 - Festival Methodology CLI - goal-oriented project management for AI agents
+* [fest task blocked](../fest_task_blocked/)	 - Mark a task as blocked (requires confirmation)
+* [fest task completed](../fest_task_completed/)	 - Mark a task as complete (requires confirmation)
+* [fest task edit](../fest_task_edit/)	 - Open the current task in your editor
+* [fest task reset](../fest_task_reset/)	 - Reset a task to pending (requires confirmation)
+* [fest task show](../fest_task_show/)	 - Show task details and status

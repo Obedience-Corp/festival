@@ -1,3 +1,9 @@
+---
+title: "fest validate ordering"
+linkTitle: "fest validate ordering"
+description: "Validate sequential numbering (gap detection)"
+---
+
 ## fest validate ordering
 
 Validate sequential numbering (gap detection)
@@ -40,5 +46,4 @@ fest validate ordering [festival-path] [flags]
 
 ### SEE ALSO
 
-* [fest validate](fest_validate.md)	 - Check festival structure - find missing task files and issues
-
+* [fest validate](../fest_validate/)	 - Check festival structure - find missing task files and issues

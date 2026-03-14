@@ -1,3 +1,9 @@
+---
+title: "fest links"
+linkTitle: "fest links"
+description: "List all festival-project links"
+---
+
 ## fest links
 
 List all festival-project links
@@ -37,5 +43,4 @@ fest links [flags]
 
 ### SEE ALSO
 
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-
+* [fest](../fest/)	 - Festival Methodology CLI - goal-oriented project management for AI agents

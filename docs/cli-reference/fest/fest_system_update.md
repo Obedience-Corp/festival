@@ -1,3 +1,9 @@
+---
+title: "fest system update"
+linkTitle: "fest system update"
+description: "System: Update fest methodology files from templates"
+---
+
 ## fest system update
 
 System: Update fest methodology files from templates
@@ -51,5 +57,4 @@ fest system update [path] [flags]
 
 ### SEE ALSO
 
-* [fest system](fest_system.md)	 - Manage fest tool configuration and templates
-
+* [fest system](../fest_system/)	 - Manage fest tool configuration and templates

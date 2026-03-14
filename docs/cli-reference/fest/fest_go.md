@@ -1,3 +1,9 @@
+---
+title: "fest go"
+linkTitle: "fest go"
+description: "Navigate to festivals/ - use 'fgo' after shell-init setup"
+---
+
 ## fest go
 
 Navigate to festivals/ - use 'fgo' after shell-init setup
@@ -58,12 +64,11 @@ fest go [target] [flags]
 
 ### SEE ALSO
 
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-* [fest go fest](fest_go_fest.md)	 - Navigate back to festival from linked project
-* [fest go link](fest_go_link.md)	 - Link current festival to a project directory (or vice versa)
-* [fest go list](fest_go_list.md)	 - List navigation shortcuts and links
-* [fest go map](fest_go_map.md)	 - Create a navigation shortcut
-* [fest go move](fest_go_move.md)	 - Move files between festival and linked project
-* [fest go project](fest_go_project.md)	 - Navigate to linked project directory
-* [fest go unmap](fest_go_unmap.md)	 - Remove a navigation shortcut
-
+* [fest](../fest/)	 - Festival Methodology CLI - goal-oriented project management for AI agents
+* [fest go fest](../fest_go_fest/)	 - Navigate back to festival from linked project
+* [fest go link](../fest_go_link/)	 - Link current festival to a project directory (or vice versa)
+* [fest go list](../fest_go_list/)	 - List navigation shortcuts and links
+* [fest go map](../fest_go_map/)	 - Create a navigation shortcut
+* [fest go move](../fest_go_move/)	 - Move files between festival and linked project
+* [fest go project](../fest_go_project/)	 - Navigate to linked project directory
+* [fest go unmap](../fest_go_unmap/)	 - Remove a navigation shortcut

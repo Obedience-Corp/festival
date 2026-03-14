@@ -1,3 +1,9 @@
+---
+title: "fest config list"
+linkTitle: "fest config list"
+description: "List all configuration repositories"
+---
+
 ## fest config list
 
 List all configuration repositories
@@ -28,5 +34,4 @@ fest config list [flags]
 
 ### SEE ALSO
 
-* [fest config](fest_config.md)	 - Manage fest configuration repositories
-
+* [fest config](../fest_config/)	 - Manage fest configuration repositories

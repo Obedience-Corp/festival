@@ -1,5 +1,6 @@
 ---
 title: "fest CLI"
 weight: 51
-redirectTo: "cli-reference/fest/fest-reference/"
 ---
+
+Generated reference docs for the `fest` CLI, including a combined reference page and individual command pages.

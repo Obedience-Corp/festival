@@ -1,3 +1,9 @@
+---
+title: "fest remove sequence"
+linkTitle: "fest remove sequence"
+description: "Remove a sequence and renumber subsequent sequences"
+---
+
 ## fest remove sequence
 
 Remove a sequence and renumber subsequent sequences
@@ -44,5 +50,4 @@ fest remove sequence [sequence-number|sequence-name] [flags]
 
 ### SEE ALSO
 
-* [fest remove](fest_remove.md)	 - Remove festival elements and renumber
-
+* [fest remove](../fest_remove/)	 - Remove festival elements and renumber

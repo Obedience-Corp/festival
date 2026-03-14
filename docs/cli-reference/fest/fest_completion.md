@@ -1,3 +1,9 @@
+---
+title: "fest completion"
+linkTitle: "fest completion"
+description: "Generate shell completion scripts"
+---
+
 ## fest completion
 
 Generate shell completion scripts
@@ -66,5 +72,4 @@ fest completion [bash|zsh|fish|powershell]
 
 ### SEE ALSO
 
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-
+* [fest](../fest/)	 - Festival Methodology CLI - goal-oriented project management for AI agents

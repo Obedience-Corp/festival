@@ -1,3 +1,9 @@
+---
+title: "fest migrate"
+linkTitle: "fest migrate"
+description: "Migrate festival documents"
+---
+
 ## fest migrate
 
 Migrate festival documents
@@ -39,8 +45,7 @@ Examples:
 
 ### SEE ALSO
 
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-* [fest migrate frontmatter](fest_migrate_frontmatter.md)	 - Add YAML frontmatter to existing documents
-* [fest migrate metadata](fest_migrate_metadata.md)	 - Add metadata to existing festivals
-* [fest migrate times](fest_migrate_times.md)	 - Populate time tracking data from file modification times
-
+* [fest](../fest/)	 - Festival Methodology CLI - goal-oriented project management for AI agents
+* [fest migrate frontmatter](../fest_migrate_frontmatter/)	 - Add YAML frontmatter to existing documents
+* [fest migrate metadata](../fest_migrate_metadata/)	 - Add metadata to existing festivals
+* [fest migrate times](../fest_migrate_times/)	 - Populate time tracking data from file modification times

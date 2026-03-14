@@ -1,3 +1,9 @@
+---
+title: "camp gather"
+linkTitle: "camp gather"
+description: "Import external data into the intent system"
+---
+
 ## camp gather
 
 Import external data into the intent system
@@ -32,6 +38,5 @@ camp gather [flags]
 
 ### SEE ALSO
 
-* [camp](camp.md)	 - Campaign management CLI for multi-project AI workspaces
-* [camp gather feedback](camp_gather_feedback.md)	 - Gather feedback observations from festivals into intents
-
+* [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces
+* [camp gather feedback](../camp_gather_feedback/)	 - Gather feedback observations from festivals into intents

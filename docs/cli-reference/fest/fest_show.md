@@ -1,3 +1,9 @@
+---
+title: "fest show"
+linkTitle: "fest show"
+description: "Display festival information"
+---
+
 ## fest show
 
 Display festival information
@@ -50,10 +56,9 @@ fest show [status|festival-name] [flags]
 
 ### SEE ALSO
 
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-* [fest show active](fest_show_active.md)	 - List festivals in active/ directory
-* [fest show all](fest_show_all.md)	 - List all festivals grouped by status
-* [fest show completed](fest_show_completed.md)	 - List completed festivals
-* [fest show dungeon](fest_show_dungeon.md)	 - List festivals in dungeon/ directory
-* [fest show planning](fest_show_planning.md)	 - List festivals in planning/ directory
-
+* [fest](../fest/)	 - Festival Methodology CLI - goal-oriented project management for AI agents
+* [fest show active](../fest_show_active/)	 - List festivals in active/ directory
+* [fest show all](../fest_show_all/)	 - List all festivals grouped by status
+* [fest show completed](../fest_show_completed/)	 - List completed festivals
+* [fest show dungeon](../fest_show_dungeon/)	 - List festivals in dungeon/ directory
+* [fest show planning](../fest_show_planning/)	 - List festivals in planning/ directory

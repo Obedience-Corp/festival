@@ -1,3 +1,9 @@
+---
+title: "camp commit"
+linkTitle: "camp commit"
+description: "Commit changes in the campaign root"
+---
+
 ## camp commit
 
 Commit changes in the campaign root
@@ -50,5 +56,4 @@ camp commit [flags]
 
 ### SEE ALSO
 
-* [camp](camp.md)	 - Campaign management CLI for multi-project AI workspaces
-
+* [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces

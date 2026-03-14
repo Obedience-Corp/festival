@@ -1,3 +1,9 @@
+---
+title: "camp skills status"
+linkTitle: "camp skills status"
+description: "Show the current state of projected skill bundle symlinks"
+---
+
 ## camp skills status
 
 Show the current state of projected skill bundle symlinks
@@ -35,5 +41,4 @@ camp skills status [flags]
 
 ### SEE ALSO
 
-* [camp skills](camp_skills.md)	 - Manage campaign skill directory links
-
+* [camp skills](../camp_skills/)	 - Manage campaign skill directory links

@@ -1,3 +1,9 @@
+---
+title: "fest research create"
+linkTitle: "fest research create"
+description: "Create a new research document from template"
+---
+
 ## fest research create
 
 Create a new research document from template
@@ -46,5 +52,4 @@ fest research create [flags]
 
 ### SEE ALSO
 
-* [fest research](fest_research.md)	 - Manage research phase documents
-
+* [fest research](../fest_research/)	 - Manage research phase documents

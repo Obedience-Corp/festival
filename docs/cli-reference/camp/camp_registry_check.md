@@ -1,3 +1,9 @@
+---
+title: "camp registry check"
+linkTitle: "camp registry check"
+description: "Check registry integrity"
+---
+
 ## camp registry check
 
 Check registry integrity
@@ -35,5 +41,4 @@ camp registry check [flags]
 
 ### SEE ALSO
 
-* [camp registry](camp_registry.md)	 - Manage the campaign registry
-
+* [camp registry](../camp_registry/)	 - Manage the campaign registry

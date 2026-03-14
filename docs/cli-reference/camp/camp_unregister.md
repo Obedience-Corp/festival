@@ -1,3 +1,9 @@
+---
+title: "camp unregister"
+linkTitle: "camp unregister"
+description: "Remove campaign from registry"
+---
+
 ## camp unregister
 
 Remove campaign from registry
@@ -42,5 +48,4 @@ camp unregister <name-or-id> [flags]
 
 ### SEE ALSO
 
-* [camp](camp.md)	 - Campaign management CLI for multi-project AI workspaces
-
+* [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces

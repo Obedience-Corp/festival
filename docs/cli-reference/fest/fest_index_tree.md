@@ -1,3 +1,9 @@
+---
+title: "fest index tree"
+linkTitle: "fest index tree"
+description: "Generate workspace-wide tree index"
+---
+
 ## fest index tree
 
 Generate workspace-wide tree index
@@ -32,5 +38,4 @@ fest index tree [flags]
 
 ### SEE ALSO
 
-* [fest index](fest_index.md)	 - Manage festival indices
-
+* [fest index](../fest_index/)	 - Manage festival indices

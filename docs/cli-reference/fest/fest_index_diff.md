@@ -1,3 +1,9 @@
+---
+title: "fest index diff"
+linkTitle: "fest index diff"
+description: "Compare tree indexes to detect changes"
+---
+
 ## fest index diff
 
 Compare tree indexes to detect changes
@@ -32,5 +38,4 @@ fest index diff [flags]
 
 ### SEE ALSO
 
-* [fest index](fest_index.md)	 - Manage festival indices
-
+* [fest index](../fest_index/)	 - Manage festival indices

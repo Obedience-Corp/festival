@@ -1,3 +1,9 @@
+---
+title: "fest understand gates"
+linkTitle: "fest understand gates"
+description: "Show quality gate configuration"
+---
+
 ## fest understand gates
 
 Show quality gate configuration
@@ -37,5 +43,4 @@ fest understand gates [flags]
 
 ### SEE ALSO
 
-* [fest understand](fest_understand.md)	 - Learn methodology FIRST - run before executing festival tasks
-
+* [fest understand](../fest_understand/)	 - Learn methodology FIRST - run before executing festival tasks

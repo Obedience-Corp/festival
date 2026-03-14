@@ -1,3 +1,9 @@
+---
+title: "camp leverage snapshot"
+linkTitle: "camp leverage snapshot"
+description: "Capture current leverage state as a snapshot"
+---
+
 ## camp leverage snapshot
 
 Capture current leverage state as a snapshot
@@ -38,5 +44,4 @@ camp leverage snapshot [flags]
 
 ### SEE ALSO
 
-* [camp leverage](camp_leverage.md)	 - Compute leverage scores for campaign projects
-
+* [camp leverage](../camp_leverage/)	 - Compute leverage scores for campaign projects

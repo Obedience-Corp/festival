@@ -1,3 +1,9 @@
+---
+title: "fest migrate frontmatter"
+linkTitle: "fest migrate frontmatter"
+description: "Add YAML frontmatter to existing documents"
+---
+
 ## fest migrate frontmatter
 
 Add YAML frontmatter to existing documents
@@ -40,5 +46,4 @@ fest migrate frontmatter [flags]
 
 ### SEE ALSO
 
-* [fest migrate](fest_migrate.md)	 - Migrate festival documents
-
+* [fest migrate](../fest_migrate/)	 - Migrate festival documents

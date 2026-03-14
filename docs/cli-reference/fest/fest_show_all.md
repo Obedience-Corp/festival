@@ -1,3 +1,9 @@
+---
+title: "fest show all"
+linkTitle: "fest show all"
+description: "List all festivals grouped by status"
+---
+
 ## fest show all
 
 List all festivals grouped by status
@@ -24,5 +30,4 @@ fest show all [flags]
 
 ### SEE ALSO
 
-* [fest show](fest_show.md)	 - Display festival information
-
+* [fest show](../fest_show/)	 - Display festival information

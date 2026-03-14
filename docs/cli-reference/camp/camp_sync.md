@@ -1,3 +1,9 @@
+---
+title: "camp sync"
+linkTitle: "camp sync"
+description: "Safely synchronize submodules"
+---
+
 ## camp sync
 
 Safely synchronize submodules
@@ -73,5 +79,4 @@ camp sync [submodule...] [flags]
 
 ### SEE ALSO
 
-* [camp](camp.md)	 - Campaign management CLI for multi-project AI workspaces
-
+* [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces

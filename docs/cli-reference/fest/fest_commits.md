@@ -1,3 +1,9 @@
+---
+title: "fest commits"
+linkTitle: "fest commits"
+description: "Query commits by festival element"
+---
+
 ## fest commits
 
 Query commits by festival element
@@ -44,5 +50,4 @@ fest commits [flags]
 
 ### SEE ALSO
 
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-
+* [fest](../fest/)	 - Festival Methodology CLI - goal-oriented project management for AI agents

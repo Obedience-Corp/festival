@@ -1,3 +1,9 @@
+---
+title: "fest system"
+linkTitle: "fest system"
+description: "Manage fest tool configuration and templates"
+---
+
 ## fest system
 
 Manage fest tool configuration and templates
@@ -32,9 +38,8 @@ Available subcommands:
 
 ### SEE ALSO
 
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-* [fest system config](fest_system_config.md)	 - Manage fest configuration settings
-* [fest system repair](fest_system_repair.md)	 - Fix festival directory layout issues
-* [fest system sync](fest_system_sync.md)	 - System: Download latest fest templates from GitHub
-* [fest system update](fest_system_update.md)	 - System: Update fest methodology files from templates
-
+* [fest](../fest/)	 - Festival Methodology CLI - goal-oriented project management for AI agents
+* [fest system config](../fest_system_config/)	 - Manage fest configuration settings
+* [fest system repair](../fest_system_repair/)	 - Fix festival directory layout issues
+* [fest system sync](../fest_system_sync/)	 - System: Download latest fest templates from GitHub
+* [fest system update](../fest_system_update/)	 - System: Update fest methodology files from templates

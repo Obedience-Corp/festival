@@ -1,3 +1,9 @@
+---
+title: "camp project prune all"
+linkTitle: "camp project prune all"
+description: "Delete merged branches across all projects"
+---
+
 ## camp project prune all
 
 Delete merged branches across all projects
@@ -35,5 +41,4 @@ camp project prune all [flags]
 
 ### SEE ALSO
 
-* [camp project prune](camp_project_prune.md)	 - Delete merged branches in a project
-
+* [camp project prune](../camp_project_prune/)	 - Delete merged branches in a project

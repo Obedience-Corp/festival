@@ -1,3 +1,9 @@
+---
+title: "fest unlink"
+linkTitle: "fest unlink"
+description: "Remove festival-project link (context-aware)"
+---
+
 ## fest unlink
 
 Remove festival-project link (context-aware)
@@ -40,5 +46,4 @@ fest unlink [flags]
 
 ### SEE ALSO
 
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-
+* [fest](../fest/)	 - Festival Methodology CLI - goal-oriented project management for AI agents

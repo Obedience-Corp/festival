@@ -1,3 +1,9 @@
+---
+title: "fest reorder"
+linkTitle: "fest reorder"
+description: "Reorder festival elements"
+---
+
 ## fest reorder
 
 Reorder festival elements
@@ -30,8 +36,7 @@ accordingly to maintain proper ordering.
 
 ### SEE ALSO
 
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-* [fest reorder phase](fest_reorder_phase.md)	 - Reorder phases in a festival
-* [fest reorder sequence](fest_reorder_sequence.md)	 - Reorder sequences within a phase
-* [fest reorder task](fest_reorder_task.md)	 - Reorder tasks within a sequence
-
+* [fest](../fest/)	 - Festival Methodology CLI - goal-oriented project management for AI agents
+* [fest reorder phase](../fest_reorder_phase/)	 - Reorder phases in a festival
+* [fest reorder sequence](../fest_reorder_sequence/)	 - Reorder sequences within a phase
+* [fest reorder task](../fest_reorder_task/)	 - Reorder tasks within a sequence

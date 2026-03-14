@@ -1,3 +1,9 @@
+---
+title: "camp"
+linkTitle: "camp"
+description: "Campaign management CLI for multi-project AI workspaces"
+---
+
 ## camp
 
 Campaign management CLI for multi-project AI workspaces
@@ -43,41 +49,40 @@ camp [flags]
 
 ### SEE ALSO
 
-* [camp cache](camp_cache.md)	 - Manage the navigation index cache
-* [camp clone](camp_clone.md)	 - Clone a campaign with full submodule setup
-* [camp commit](camp_commit.md)	 - Commit changes in the campaign root
-* [camp completion](camp_completion.md)	 - Generate the autocompletion script for the specified shell
-* [camp concepts](camp_concepts.md)	 - List configured concepts
-* [camp copy](camp_copy.md)	 - Copy a file or directory within the campaign
-* [camp date](camp_date.md)	 - Append date suffix to file or directory name
-* [camp doctor](camp_doctor.md)	 - Diagnose and fix campaign health issues
-* [camp dungeon](camp_dungeon.md)	 - Manage the campaign dungeon
-* [camp gather](camp_gather.md)	 - Import external data into the intent system
-* [camp go](camp_go.md)	 - Navigate to campaign directories
-* [camp init](camp_init.md)	 - Initialize a new campaign
-* [camp intent](camp_intent.md)	 - Manage campaign intents
-* [camp leverage](camp_leverage.md)	 - Compute leverage scores for campaign projects
-* [camp list](camp_list.md)	 - List all registered campaigns
-* [camp log](camp_log.md)	 - Show git log of the campaign
-* [camp move](camp_move.md)	 - Move a file or directory within the campaign
-* [camp pin](camp_pin.md)	 - Bookmark a directory
-* [camp pins](camp_pins.md)	 - List all pinned directories
-* [camp project](camp_project.md)	 - Manage campaign projects
-* [camp pull](camp_pull.md)	 - Pull latest changes from remote
-* [camp push](camp_push.md)	 - Push campaign changes to remote
-* [camp refs-sync](camp_refs-sync.md)	 - Sync submodule ref pointers in campaign root
-* [camp register](camp_register.md)	 - Register campaign in global registry
-* [camp registry](camp_registry.md)	 - Manage the campaign registry
-* [camp run](camp_run.md)	 - Execute command from campaign root, or just recipe in a project
-* [camp settings](camp_settings.md)	 - Manage camp configuration
-* [camp shell-init](camp_shell-init.md)	 - Output shell initialization code
-* [camp shortcuts](camp_shortcuts.md)	 - List all available shortcuts
-* [camp skills](camp_skills.md)	 - Manage campaign skill directory links
-* [camp status](camp_status.md)	 - Show git status of the campaign
-* [camp switch](camp_switch.md)	 - Switch to a different campaign
-* [camp sync](camp_sync.md)	 - Safely synchronize submodules
-* [camp transfer](camp_transfer.md)	 - Copy files between campaigns
-* [camp unpin](camp_unpin.md)	 - Remove a directory bookmark
-* [camp unregister](camp_unregister.md)	 - Remove campaign from registry
-* [camp version](camp_version.md)	 - Show version information
-
+* [camp cache](../camp_cache/)	 - Manage the navigation index cache
+* [camp clone](../camp_clone/)	 - Clone a campaign with full submodule setup
+* [camp commit](../camp_commit/)	 - Commit changes in the campaign root
+* [camp completion](../camp_completion/)	 - Generate the autocompletion script for the specified shell
+* [camp concepts](../camp_concepts/)	 - List configured concepts
+* [camp copy](../camp_copy/)	 - Copy a file or directory within the campaign
+* [camp date](../camp_date/)	 - Append date suffix to file or directory name
+* [camp doctor](../camp_doctor/)	 - Diagnose and fix campaign health issues
+* [camp dungeon](../camp_dungeon/)	 - Manage the campaign dungeon
+* [camp gather](../camp_gather/)	 - Import external data into the intent system
+* [camp go](../camp_go/)	 - Navigate to campaign directories
+* [camp init](../camp_init/)	 - Initialize a new campaign
+* [camp intent](../camp_intent/)	 - Manage campaign intents
+* [camp leverage](../camp_leverage/)	 - Compute leverage scores for campaign projects
+* [camp list](../camp_list/)	 - List all registered campaigns
+* [camp log](../camp_log/)	 - Show git log of the campaign
+* [camp move](../camp_move/)	 - Move a file or directory within the campaign
+* [camp pin](../camp_pin/)	 - Bookmark a directory
+* [camp pins](../camp_pins/)	 - List all pinned directories
+* [camp project](../camp_project/)	 - Manage campaign projects
+* [camp pull](../camp_pull/)	 - Pull latest changes from remote
+* [camp push](../camp_push/)	 - Push campaign changes to remote
+* [camp refs-sync](../camp_refs-sync/)	 - Sync submodule ref pointers in campaign root
+* [camp register](../camp_register/)	 - Register campaign in global registry
+* [camp registry](../camp_registry/)	 - Manage the campaign registry
+* [camp run](../camp_run/)	 - Execute command from campaign root, or just recipe in a project
+* [camp settings](../camp_settings/)	 - Manage camp configuration
+* [camp shell-init](../camp_shell-init/)	 - Output shell initialization code
+* [camp shortcuts](../camp_shortcuts/)	 - List all available shortcuts
+* [camp skills](../camp_skills/)	 - Manage campaign skill directory links
+* [camp status](../camp_status/)	 - Show git status of the campaign
+* [camp switch](../camp_switch/)	 - Switch to a different campaign
+* [camp sync](../camp_sync/)	 - Safely synchronize submodules
+* [camp transfer](../camp_transfer/)	 - Copy files between campaigns
+* [camp unpin](../camp_unpin/)	 - Remove a directory bookmark
+* [camp unregister](../camp_unregister/)	 - Remove campaign from registry
+* [camp version](../camp_version/)	 - Show version information

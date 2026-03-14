@@ -1,3 +1,9 @@
+---
+title: "fest workflow"
+linkTitle: "fest workflow"
+description: "Manage workflow-based phase execution"
+---
+
 ## fest workflow
 
 Manage workflow-based phase execution
@@ -67,12 +73,11 @@ Examples:
 
 ### SEE ALSO
 
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-* [fest workflow advance](fest_workflow_advance.md)	 - Complete current step and move to next
-* [fest workflow approve](fest_workflow_approve.md)	 - Approve a blocking checkpoint
-* [fest workflow reject](fest_workflow_reject.md)	 - Reject checkpoint with feedback
-* [fest workflow reset](fest_workflow_reset.md)	 - Reset workflow to step 1
-* [fest workflow show](fest_workflow_show.md)	 - Display current step details
-* [fest workflow skip](fest_workflow_skip.md)	 - Operator override: mark workflow steps as skipped/completed
-* [fest workflow status](fest_workflow_status.md)	 - Show workflow progress
-
+* [fest](../fest/)	 - Festival Methodology CLI - goal-oriented project management for AI agents
+* [fest workflow advance](../fest_workflow_advance/)	 - Complete current step and move to next
+* [fest workflow approve](../fest_workflow_approve/)	 - Approve a blocking checkpoint
+* [fest workflow reject](../fest_workflow_reject/)	 - Reject checkpoint with feedback
+* [fest workflow reset](../fest_workflow_reset/)	 - Reset workflow to step 1
+* [fest workflow show](../fest_workflow_show/)	 - Display current step details
+* [fest workflow skip](../fest_workflow_skip/)	 - Operator override: mark workflow steps as skipped/completed
+* [fest workflow status](../fest_workflow_status/)	 - Show workflow progress

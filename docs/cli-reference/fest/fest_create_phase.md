@@ -1,3 +1,9 @@
+---
+title: "fest create phase"
+linkTitle: "fest create phase"
+description: "Insert a new phase and render its goal file"
+---
+
 ## fest create phase
 
 Insert a new phase and render its goal file
@@ -36,5 +42,4 @@ fest create phase [flags]
 
 ### SEE ALSO
 
-* [fest create](fest_create.md)	 - Create festivals, phases, sequences, or tasks (TUI)
-
+* [fest create](../fest_create/)	 - Create festivals, phases, sequences, or tasks (TUI)

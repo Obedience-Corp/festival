@@ -1,3 +1,9 @@
+---
+title: "camp status all"
+linkTitle: "camp status all"
+description: "Show git status of all submodules"
+---
+
 ## camp status all
 
 Show git status of all submodules
@@ -40,5 +46,4 @@ camp status all [flags]
 
 ### SEE ALSO
 
-* [camp status](camp_status.md)	 - Show git status of the campaign
-
+* [camp status](../camp_status/)	 - Show git status of the campaign

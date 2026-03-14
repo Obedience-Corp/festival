@@ -1,3 +1,9 @@
+---
+title: "fest feedback export"
+linkTitle: "fest feedback export"
+description: "Export collected feedback"
+---
+
 ## fest feedback export
 
 Export collected feedback
@@ -37,5 +43,4 @@ fest feedback export [flags]
 
 ### SEE ALSO
 
-* [fest feedback](fest_feedback.md)	 - Manage structured feedback collection
-
+* [fest feedback](../fest_feedback/)	 - Manage structured feedback collection

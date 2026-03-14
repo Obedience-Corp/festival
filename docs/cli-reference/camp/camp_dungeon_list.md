@@ -1,3 +1,9 @@
+---
+title: "camp dungeon list"
+linkTitle: "camp dungeon list"
+description: "List dungeon items"
+---
+
 ## camp dungeon list
 
 List dungeon items
@@ -45,5 +51,4 @@ camp dungeon list [flags]
 
 ### SEE ALSO
 
-* [camp dungeon](camp_dungeon.md)	 - Manage the campaign dungeon
-
+* [camp dungeon](../camp_dungeon/)	 - Manage the campaign dungeon

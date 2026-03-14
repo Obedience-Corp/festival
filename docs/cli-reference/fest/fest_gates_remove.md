@@ -1,3 +1,9 @@
+---
+title: "fest gates remove"
+linkTitle: "fest gates remove"
+description: "Remove quality gate files from sequences"
+---
+
 ## fest gates remove
 
 Remove quality gate files from sequences
@@ -57,5 +63,4 @@ fest gates remove [flags]
 
 ### SEE ALSO
 
-* [fest gates](fest_gates.md)	 - Manage quality gates - validation steps at sequence end
-
+* [fest gates](../fest_gates/)	 - Manage quality gates - validation steps at sequence end

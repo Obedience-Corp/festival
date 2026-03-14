@@ -1,3 +1,9 @@
+---
+title: "camp project worktree remove"
+linkTitle: "camp project worktree remove"
+description: "Remove a worktree"
+---
+
 ## camp project worktree remove
 
 Remove a worktree
@@ -42,5 +48,4 @@ camp project worktree remove <name> [flags]
 
 ### SEE ALSO
 
-* [camp project worktree](camp_project_worktree.md)	 - Manage worktrees for a project
-
+* [camp project worktree](../camp_project_worktree/)	 - Manage worktrees for a project

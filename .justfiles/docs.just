@@ -4,6 +4,7 @@ docs_root := env("CLI_DOCS_ROOT", "docs/cli-reference")
 cli_profile := env("CLI_PROFILE", "stable")
 cli_release_channel := env("CLI_RELEASE_CHANNEL", "")
 base_url := env("HUGO_BASEURL", "https://fest.build")
+normalize_script := "scripts/normalize_cli_docs.py"
 
 # Show available docs commands
 [private]
@@ -39,6 +40,7 @@ fest:
     esac
     mkdir -p {{docs_root}}/fest
     ./fest/bin/fest gendocs --output {{docs_root}}/fest --format markdown --single "${fest_gendocs_flags[@]}"
+    python3 {{normalize_script}} {{docs_root}}/fest
     echo "fest docs generated"
 
 # Generate camp CLI docs
@@ -59,6 +61,7 @@ camp:
     esac
     mkdir -p {{docs_root}}/camp
     ./camp/bin/camp gendocs --output {{docs_root}}/camp --format markdown --single
+    python3 {{normalize_script}} {{docs_root}}/camp
     echo "camp docs generated"
 
 # Serve docs locally with live reload

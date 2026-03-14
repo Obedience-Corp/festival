@@ -1,3 +1,9 @@
+---
+title: "fest understand methodology"
+linkTitle: "fest understand methodology"
+description: "Core principles - START HERE for new agents"
+---
+
 ## fest understand methodology
 
 Core principles - START HERE for new agents
@@ -37,5 +43,4 @@ fest understand methodology [flags]
 
 ### SEE ALSO
 
-* [fest understand](fest_understand.md)	 - Learn methodology FIRST - run before executing festival tasks
-
+* [fest understand](../fest_understand/)	 - Learn methodology FIRST - run before executing festival tasks

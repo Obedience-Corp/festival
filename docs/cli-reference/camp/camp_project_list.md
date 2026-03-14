@@ -1,3 +1,9 @@
+---
+title: "camp project list"
+linkTitle: "camp project list"
+description: "List projects in campaign"
+---
+
 ## camp project list
 
 List projects in campaign
@@ -41,5 +47,4 @@ camp project list [flags]
 
 ### SEE ALSO
 
-* [camp project](camp_project.md)	 - Manage campaign projects
-
+* [camp project](../camp_project/)	 - Manage campaign projects

@@ -1,3 +1,9 @@
+---
+title: "camp project worktree"
+linkTitle: "camp project worktree"
+description: "Manage worktrees for a project"
+---
+
 ## camp project worktree
 
 Manage worktrees for a project
@@ -50,8 +56,7 @@ camp project worktree [flags]
 
 ### SEE ALSO
 
-* [camp project](camp_project.md)	 - Manage campaign projects
-* [camp project worktree add](camp_project_worktree_add.md)	 - Create a new worktree for the project
-* [camp project worktree list](camp_project_worktree_list.md)	 - List worktrees for the project
-* [camp project worktree remove](camp_project_worktree_remove.md)	 - Remove a worktree
-
+* [camp project](../camp_project/)	 - Manage campaign projects
+* [camp project worktree add](../camp_project_worktree_add/)	 - Create a new worktree for the project
+* [camp project worktree list](../camp_project_worktree_list/)	 - List worktrees for the project
+* [camp project worktree remove](../camp_project_worktree_remove/)	 - Remove a worktree

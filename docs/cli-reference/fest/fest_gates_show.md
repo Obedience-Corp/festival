@@ -1,3 +1,9 @@
+---
+title: "fest gates show"
+linkTitle: "fest gates show"
+description: "Show effective gate policy"
+---
+
 ## fest gates show
 
 Show effective gate policy
@@ -39,5 +45,4 @@ fest gates show [flags]
 
 ### SEE ALSO
 
-* [fest gates](fest_gates.md)	 - Manage quality gates - validation steps at sequence end
-
+* [fest gates](../fest_gates/)	 - Manage quality gates - validation steps at sequence end

@@ -1,3 +1,9 @@
+---
+title: "camp date"
+linkTitle: "camp date"
+description: "Append date suffix to file or directory name"
+---
+
 ## camp date
 
 Append date suffix to file or directory name
@@ -47,5 +53,4 @@ camp date <path> [flags]
 
 ### SEE ALSO
 
-* [camp](camp.md)	 - Campaign management CLI for multi-project AI workspaces
-
+* [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces

@@ -1,3 +1,9 @@
+---
+title: "camp leverage reset"
+linkTitle: "camp leverage reset"
+description: "Clear all cached leverage data to allow full recomputation"
+---
+
 ## camp leverage reset
 
 Clear all cached leverage data to allow full recomputation
@@ -35,5 +41,4 @@ camp leverage reset [flags]
 
 ### SEE ALSO
 
-* [camp leverage](camp_leverage.md)	 - Compute leverage scores for campaign projects
-
+* [camp leverage](../camp_leverage/)	 - Compute leverage scores for campaign projects

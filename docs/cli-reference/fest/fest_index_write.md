@@ -1,3 +1,9 @@
+---
+title: "fest index write"
+linkTitle: "fest index write"
+description: "Generate festival index"
+---
+
 ## fest index write
 
 Generate festival index
@@ -32,5 +38,4 @@ fest index write [festival-path] [flags]
 
 ### SEE ALSO
 
-* [fest index](fest_index.md)	 - Manage festival indices
-
+* [fest index](../fest_index/)	 - Manage festival indices

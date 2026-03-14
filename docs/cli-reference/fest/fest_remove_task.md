@@ -1,3 +1,9 @@
+---
+title: "fest remove task"
+linkTitle: "fest remove task"
+description: "Remove a task and renumber subsequent tasks"
+---
+
 ## fest remove task
 
 Remove a task and renumber subsequent tasks
@@ -45,5 +51,4 @@ fest remove task [task-number|task-name] [flags]
 
 ### SEE ALSO
 
-* [fest remove](fest_remove.md)	 - Remove festival elements and renumber
-
+* [fest remove](../fest_remove/)	 - Remove festival elements and renumber

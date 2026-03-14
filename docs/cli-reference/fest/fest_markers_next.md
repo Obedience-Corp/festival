@@ -1,3 +1,9 @@
+---
+title: "fest markers next"
+linkTitle: "fest markers next"
+description: "Show the next file with unfilled markers"
+---
+
 ## fest markers next
 
 Show the next file with unfilled markers
@@ -38,5 +44,4 @@ fest markers next [flags]
 
 ### SEE ALSO
 
-* [fest markers](fest_markers.md)	 - Manage template markers in festival files
-
+* [fest markers](../fest_markers/)	 - Manage template markers in festival files

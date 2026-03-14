@@ -1,3 +1,9 @@
+---
+title: "fest understand nodeids"
+linkTitle: "fest understand nodeids"
+description: "Node reference system for code traceability"
+---
+
 ## fest understand nodeids
 
 Node reference system for code traceability
@@ -31,5 +37,4 @@ fest understand nodeids [flags]
 
 ### SEE ALSO
 
-* [fest understand](fest_understand.md)	 - Learn methodology FIRST - run before executing festival tasks
-
+* [fest understand](../fest_understand/)	 - Learn methodology FIRST - run before executing festival tasks

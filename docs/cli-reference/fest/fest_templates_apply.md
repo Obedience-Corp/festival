@@ -1,3 +1,9 @@
+---
+title: "fest templates apply"
+linkTitle: "fest templates apply"
+description: "Apply a template with variables"
+---
+
 ## fest templates apply
 
 Apply a template with variables
@@ -40,5 +46,4 @@ fest templates apply <name> [flags]
 
 ### SEE ALSO
 
-* [fest templates](fest_templates.md)	 - Manage agent-created templates within a festival
-
+* [fest templates](../fest_templates/)	 - Manage agent-created templates within a festival

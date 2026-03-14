@@ -1,3 +1,9 @@
+---
+title: "fest chain validate"
+linkTitle: "fest chain validate"
+description: "Validate a festival chain"
+---
+
 ## fest chain validate
 
 Validate a festival chain
@@ -29,5 +35,4 @@ fest chain validate <chain-id> [flags]
 
 ### SEE ALSO
 
-* [fest chain](fest_chain.md)	 - Manage festival chains (inter-festival dependencies)
-
+* [fest chain](../fest_chain/)	 - Manage festival chains (inter-festival dependencies)

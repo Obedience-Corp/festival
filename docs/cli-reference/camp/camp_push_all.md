@@ -1,3 +1,9 @@
+---
+title: "camp push all"
+linkTitle: "camp push all"
+description: "Push all repos with unpushed commits"
+---
+
 ## camp push all
 
 Push all repos with unpushed commits
@@ -39,5 +45,4 @@ camp push all [git push flags] [flags]
 
 ### SEE ALSO
 
-* [camp push](camp_push.md)	 - Push campaign changes to remote
-
+* [camp push](../camp_push/)	 - Push campaign changes to remote

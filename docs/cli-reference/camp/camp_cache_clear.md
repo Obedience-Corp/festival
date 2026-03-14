@@ -1,3 +1,9 @@
+---
+title: "camp cache clear"
+linkTitle: "camp cache clear"
+description: "Delete the navigation cache"
+---
+
 ## camp cache clear
 
 Delete the navigation cache
@@ -26,5 +32,4 @@ camp cache clear [flags]
 
 ### SEE ALSO
 
-* [camp cache](camp_cache.md)	 - Manage the navigation index cache
-
+* [camp cache](../camp_cache/)	 - Manage the navigation index cache

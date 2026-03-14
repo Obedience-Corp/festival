@@ -1,3 +1,9 @@
+---
+title: "camp intent gather"
+linkTitle: "camp intent gather"
+description: "Gather related intents into a unified document"
+---
+
 ## camp intent gather
 
 Gather related intents into a unified document
@@ -71,5 +77,4 @@ camp intent gather [ids...] [flags]
 
 ### SEE ALSO
 
-* [camp intent](camp_intent.md)	 - Manage campaign intents
-
+* [camp intent](../camp_intent/)	 - Manage campaign intents

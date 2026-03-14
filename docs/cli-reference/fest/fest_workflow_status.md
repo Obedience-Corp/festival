@@ -1,3 +1,9 @@
+---
+title: "fest workflow status"
+linkTitle: "fest workflow status"
+description: "Show workflow progress"
+---
+
 ## fest workflow status
 
 Show workflow progress
@@ -34,5 +40,4 @@ fest workflow status [flags]
 
 ### SEE ALSO
 
-* [fest workflow](fest_workflow.md)	 - Manage workflow-based phase execution
-
+* [fest workflow](../fest_workflow/)	 - Manage workflow-based phase execution
