@@ -8,6 +8,7 @@ normalize_script := "scripts/normalize_cli_docs.py"
 serve_host := env("HUGO_SERVE_HOST", "127.0.0.1")
 serve_port := env("HUGO_SERVE_PORT", "1313")
 serve_live_reload_port := env("HUGO_LIVERELOAD_PORT", "1314")
+submodule_go_env := "GOWORK=off"
 
 # Show available docs commands
 [private]
@@ -30,12 +31,12 @@ fest:
     fest_gendocs_flags=()
     case "{{cli_profile}}" in
         stable)
-            (cd fest && just build quick-stable)
+            (cd fest && {{submodule_go_env}} just build quick-stable)
             if ./fest/bin/fest gendocs --help 2>&1 | grep -q -- '--stable'; then
                 fest_gendocs_flags+=(--stable)
             fi
             ;;
-        dev) (cd fest && just build quick-dev) ;;
+        dev) (cd fest && {{submodule_go_env}} just build quick-dev) ;;
         *)
             echo "ERROR: CLI_PROFILE must be 'stable' or 'dev' (got: {{cli_profile}})"
             exit 1
@@ -55,8 +56,8 @@ camp:
         bash scripts/check_release_channel_tags.sh "{{cli_release_channel}}"
     fi
     case "{{cli_profile}}" in
-        stable) (cd camp && just build quick-stable) ;;
-        dev) (cd camp && just build quick-dev) ;;
+        stable) (cd camp && {{submodule_go_env}} just build quick-stable) ;;
+        dev) (cd camp && {{submodule_go_env}} just build quick-dev) ;;
         *)
             echo "ERROR: CLI_PROFILE must be 'stable' or 'dev' (got: {{cli_profile}})"
             exit 1
