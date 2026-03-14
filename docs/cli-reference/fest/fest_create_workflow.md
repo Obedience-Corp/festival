@@ -1,3 +1,9 @@
+---
+title: "fest create workflow"
+linkTitle: "fest create workflow"
+description: "Create a WORKFLOW.md for a phase from structured step definitions"
+---
+
 ## fest create workflow
 
 Create a WORKFLOW.md for a phase from structured step definitions
@@ -49,5 +55,4 @@ fest create workflow [flags]
 
 ### SEE ALSO
 
-* [fest create](fest_create.md)	 - Create festivals, phases, sequences, or tasks (TUI)
-
+* [fest create](../fest_create/)	 - Create festivals, phases, sequences, or tasks (TUI)

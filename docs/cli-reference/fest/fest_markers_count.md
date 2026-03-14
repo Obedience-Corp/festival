@@ -1,3 +1,9 @@
+---
+title: "fest markers count"
+linkTitle: "fest markers count"
+description: "Count unfilled template markers"
+---
+
 ## fest markers count
 
 Count unfilled template markers
@@ -29,5 +35,4 @@ fest markers count [flags]
 
 ### SEE ALSO
 
-* [fest markers](fest_markers.md)	 - Manage template markers in festival files
-
+* [fest markers](../fest_markers/)	 - Manage template markers in festival files

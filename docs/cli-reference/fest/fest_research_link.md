@@ -1,3 +1,9 @@
+---
+title: "fest research link"
+linkTitle: "fest research link"
+description: "Link research findings to implementation phases/tasks"
+---
+
 ## fest research link
 
 Link research findings to implementation phases/tasks
@@ -45,5 +51,4 @@ fest research link <research-doc> [flags]
 
 ### SEE ALSO
 
-* [fest research](fest_research.md)	 - Manage research phase documents
-
+* [fest research](../fest_research/)	 - Manage research phase documents

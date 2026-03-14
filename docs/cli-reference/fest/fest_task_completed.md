@@ -1,3 +1,9 @@
+---
+title: "fest task completed"
+linkTitle: "fest task completed"
+description: "Mark a task as complete (requires confirmation)"
+---
+
 ## fest task completed
 
 Mark a task as complete (requires confirmation)
@@ -24,5 +30,4 @@ fest task completed [task] [flags]
 
 ### SEE ALSO
 
-* [fest task](fest_task.md)	 - Manage task status (show, edit, complete, block, reset)
-
+* [fest task](../fest_task/)	 - Manage task status (show, edit, complete, block, reset)

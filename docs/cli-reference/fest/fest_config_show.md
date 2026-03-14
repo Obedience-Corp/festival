@@ -1,3 +1,9 @@
+---
+title: "fest config show"
+linkTitle: "fest config show"
+description: "Show active configuration"
+---
+
 ## fest config show
 
 Show active configuration
@@ -28,5 +34,4 @@ fest config show [flags]
 
 ### SEE ALSO
 
-* [fest config](fest_config.md)	 - Manage fest configuration repositories
-
+* [fest config](../fest_config/)	 - Manage fest configuration repositories

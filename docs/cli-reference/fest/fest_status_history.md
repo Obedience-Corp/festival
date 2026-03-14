@@ -1,3 +1,9 @@
+---
+title: "fest status history"
+linkTitle: "fest status history"
+description: "View status change history"
+---
+
 ## fest status history
 
 View status change history
@@ -38,5 +44,4 @@ fest status history [flags]
 
 ### SEE ALSO
 
-* [fest status](fest_status.md)	 - Manage and query festival entity statuses
-
+* [fest status](../fest_status/)	 - Manage and query festival entity statuses

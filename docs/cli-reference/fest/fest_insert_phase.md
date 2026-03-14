@@ -1,3 +1,9 @@
+---
+title: "fest insert phase"
+linkTitle: "fest insert phase"
+description: "Insert a new phase"
+---
+
 ## fest insert phase
 
 Insert a new phase
@@ -41,5 +47,4 @@ fest insert phase [festival-dir] [flags]
 
 ### SEE ALSO
 
-* [fest insert](fest_insert.md)	 - Insert new festival elements
-
+* [fest insert](../fest_insert/)	 - Insert new festival elements

@@ -1,3 +1,9 @@
+---
+title: "fest index show"
+linkTitle: "fest index show"
+description: "Show festival index contents"
+---
+
 ## fest index show
 
 Show festival index contents
@@ -28,5 +34,4 @@ fest index show [festival-path] [flags]
 
 ### SEE ALSO
 
-* [fest index](fest_index.md)	 - Manage festival indices
-
+* [fest index](../fest_index/)	 - Manage festival indices

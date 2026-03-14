@@ -1,3 +1,9 @@
+---
+title: "fest index validate"
+linkTitle: "fest index validate"
+description: "Validate festival index against filesystem"
+---
+
 ## fest index validate
 
 Validate festival index against filesystem
@@ -33,5 +39,4 @@ fest index validate [festival-path] [flags]
 
 ### SEE ALSO
 
-* [fest index](fest_index.md)	 - Manage festival indices
-
+* [fest index](../fest_index/)	 - Manage festival indices

@@ -1,3 +1,9 @@
+---
+title: "camp transfer"
+linkTitle: "camp transfer"
+description: "Copy files between campaigns"
+---
+
 ## camp transfer
 
 Copy files between campaigns
@@ -43,5 +49,4 @@ camp transfer <src> <dest> [flags]
 
 ### SEE ALSO
 
-* [camp](camp.md)	 - Campaign management CLI for multi-project AI workspaces
-
+* [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces

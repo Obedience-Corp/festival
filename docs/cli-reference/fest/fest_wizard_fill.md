@@ -1,3 +1,9 @@
+---
+title: "fest wizard fill"
+linkTitle: "fest wizard fill"
+description: "Interactively fill REPLACE markers in festival files"
+---
+
 ## fest wizard fill
 
 Interactively fill REPLACE markers in festival files
@@ -84,5 +90,4 @@ fest wizard fill [file-or-directory] [flags]
 
 ### SEE ALSO
 
-* [fest wizard](fest_wizard.md)	 - Interactive guidance and assistance for festival creation
-
+* [fest wizard](../fest_wizard/)	 - Interactive guidance and assistance for festival creation

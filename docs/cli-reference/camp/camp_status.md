@@ -1,3 +1,9 @@
+---
+title: "camp status"
+linkTitle: "camp status"
+description: "Show git status of the campaign"
+---
+
 ## camp status
 
 Show git status of the campaign
@@ -39,6 +45,5 @@ camp status [flags]
 
 ### SEE ALSO
 
-* [camp](camp.md)	 - Campaign management CLI for multi-project AI workspaces
-* [camp status all](camp_status_all.md)	 - Show git status of all submodules
-
+* [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces
+* [camp status all](../camp_status_all/)	 - Show git status of all submodules

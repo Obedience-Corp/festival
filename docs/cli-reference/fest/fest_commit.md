@@ -1,3 +1,9 @@
+---
+title: "fest commit"
+linkTitle: "fest commit"
+description: "Create git commit with task reference"
+---
+
 ## fest commit
 
 Create git commit with task reference
@@ -71,5 +77,4 @@ fest commit [flags]
 
 ### SEE ALSO
 
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-
+* [fest](../fest/)	 - Festival Methodology CLI - goal-oriented project management for AI agents

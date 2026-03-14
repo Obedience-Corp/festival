@@ -1,3 +1,9 @@
+---
+title: "fest create sequence"
+linkTitle: "fest create sequence"
+description: "Insert a new sequence and render its goal file"
+---
+
 ## fest create sequence
 
 Insert a new sequence and render its goal file
@@ -70,5 +76,4 @@ fest create sequence [flags]
 
 ### SEE ALSO
 
-* [fest create](fest_create.md)	 - Create festivals, phases, sequences, or tasks (TUI)
-
+* [fest create](../fest_create/)	 - Create festivals, phases, sequences, or tasks (TUI)

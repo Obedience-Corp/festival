@@ -1,3 +1,9 @@
+---
+title: "fest go list"
+linkTitle: "fest go list"
+description: "List navigation shortcuts and links"
+---
+
 ## fest go list
 
 List navigation shortcuts and links
@@ -44,5 +50,4 @@ fest go list [flags]
 
 ### SEE ALSO
 
-* [fest go](fest_go.md)	 - Navigate to festivals/ - use 'fgo' after shell-init setup
-
+* [fest go](../fest_go/)	 - Navigate to festivals/ - use 'fgo' after shell-init setup

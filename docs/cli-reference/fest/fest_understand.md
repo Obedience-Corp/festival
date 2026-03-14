@@ -1,3 +1,9 @@
+---
+title: "fest understand"
+linkTitle: "fest understand"
+description: "Learn methodology FIRST - run before executing festival tasks"
+---
+
 ## fest understand
 
 Learn methodology FIRST - run before executing festival tasks
@@ -48,18 +54,17 @@ fest understand [flags]
 
 ### SEE ALSO
 
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-* [fest understand checklist](fest_understand_checklist.md)	 - Quick festival validation checklist
-* [fest understand context](fest_understand_context.md)	 - CONTEXT.md - session memory for AI agents (CREATE FIRST)
-* [fest understand extensions](fest_understand_extensions.md)	 - Show loaded extensions
-* [fest understand gates](fest_understand_gates.md)	 - Show quality gate configuration
-* [fest understand methodology](fest_understand_methodology.md)	 - Core principles - START HERE for new agents
-* [fest understand nodeids](fest_understand_nodeids.md)	 - Node reference system for code traceability
-* [fest understand plugins](fest_understand_plugins.md)	 - Show discovered plugins
-* [fest understand resources](fest_understand_resources.md)	 - What's in the .festival/ directory
-* [fest understand rules](fest_understand_rules.md)	 - MANDATORY structure rules for automation
-* [fest understand structure](fest_understand_structure.md)	 - 3-level hierarchy: Festival → Phase → Sequence → Task
-* [fest understand tasks](fest_understand_tasks.md)	 - When and how to create task files (CRITICAL)
-* [fest understand templates](fest_understand_templates.md)	 - Template variables that save tokens
-* [fest understand workflow](fest_understand_workflow.md)	 - Just-in-time reading and execution patterns
-
+* [fest](../fest/)	 - Festival Methodology CLI - goal-oriented project management for AI agents
+* [fest understand checklist](../fest_understand_checklist/)	 - Quick festival validation checklist
+* [fest understand context](../fest_understand_context/)	 - CONTEXT.md - session memory for AI agents (CREATE FIRST)
+* [fest understand extensions](../fest_understand_extensions/)	 - Show loaded extensions
+* [fest understand gates](../fest_understand_gates/)	 - Show quality gate configuration
+* [fest understand methodology](../fest_understand_methodology/)	 - Core principles - START HERE for new agents
+* [fest understand nodeids](../fest_understand_nodeids/)	 - Node reference system for code traceability
+* [fest understand plugins](../fest_understand_plugins/)	 - Show discovered plugins
+* [fest understand resources](../fest_understand_resources/)	 - What's in the .festival/ directory
+* [fest understand rules](../fest_understand_rules/)	 - MANDATORY structure rules for automation
+* [fest understand structure](../fest_understand_structure/)	 - 3-level hierarchy: Festival → Phase → Sequence → Task
+* [fest understand tasks](../fest_understand_tasks/)	 - When and how to create task files (CRITICAL)
+* [fest understand templates](../fest_understand_templates/)	 - Template variables that save tokens
+* [fest understand workflow](../fest_understand_workflow/)	 - Just-in-time reading and execution patterns

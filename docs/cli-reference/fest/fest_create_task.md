@@ -1,3 +1,9 @@
+---
+title: "fest create task"
+linkTitle: "fest create task"
+description: "Insert a new task file in a sequence"
+---
+
 ## fest create task
 
 Insert a new task file in a sequence
@@ -83,5 +89,4 @@ fest create task [flags]
 
 ### SEE ALSO
 
-* [fest create](fest_create.md)	 - Create festivals, phases, sequences, or tasks (TUI)
-
+* [fest create](../fest_create/)	 - Create festivals, phases, sequences, or tasks (TUI)

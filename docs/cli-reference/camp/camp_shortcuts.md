@@ -1,3 +1,9 @@
+---
+title: "camp shortcuts"
+linkTitle: "camp shortcuts"
+description: "List all available shortcuts"
+---
+
 ## camp shortcuts
 
 List all available shortcuts
@@ -45,8 +51,7 @@ camp shortcuts [flags]
 
 ### SEE ALSO
 
-* [camp](camp.md)	 - Campaign management CLI for multi-project AI workspaces
-* [camp shortcuts add](camp_shortcuts_add.md)	 - Add a shortcut (campaign-level or project sub-shortcut)
-* [camp shortcuts list](camp_shortcuts_list.md)	 - List shortcuts for a specific project
-* [camp shortcuts remove](camp_shortcuts_remove.md)	 - Remove a shortcut (campaign-level or project sub-shortcut)
-
+* [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces
+* [camp shortcuts add](../camp_shortcuts_add/)	 - Add a shortcut (campaign-level or project sub-shortcut)
+* [camp shortcuts list](../camp_shortcuts_list/)	 - List shortcuts for a specific project
+* [camp shortcuts remove](../camp_shortcuts_remove/)	 - Remove a shortcut (campaign-level or project sub-shortcut)

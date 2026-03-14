@@ -1,3 +1,9 @@
+---
+title: "fest link"
+linkTitle: "fest link"
+description: "Link festival to project directory (context-aware)"
+---
+
 ## fest link
 
 Link festival to project directory (context-aware)
@@ -53,5 +59,4 @@ fest link [path] [flags]
 
 ### SEE ALSO
 
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-
+* [fest](../fest/)	 - Festival Methodology CLI - goal-oriented project management for AI agents

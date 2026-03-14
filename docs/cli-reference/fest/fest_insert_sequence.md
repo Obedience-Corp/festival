@@ -1,3 +1,9 @@
+---
+title: "fest insert sequence"
+linkTitle: "fest insert sequence"
+description: "Insert a new sequence within a phase"
+---
+
 ## fest insert sequence
 
 Insert a new sequence within a phase
@@ -41,5 +47,4 @@ fest insert sequence [flags]
 
 ### SEE ALSO
 
-* [fest insert](fest_insert.md)	 - Insert new festival elements
-
+* [fest insert](../fest_insert/)	 - Insert new festival elements

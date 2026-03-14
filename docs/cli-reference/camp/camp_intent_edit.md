@@ -1,3 +1,9 @@
+---
+title: "camp intent edit"
+linkTitle: "camp intent edit"
+description: "Edit an existing intent"
+---
+
 ## camp intent edit
 
 Edit an existing intent
@@ -43,5 +49,4 @@ camp intent edit [id] [flags]
 
 ### SEE ALSO
 
-* [camp intent](camp_intent.md)	 - Manage campaign intents
-
+* [camp intent](../camp_intent/)	 - Manage campaign intents

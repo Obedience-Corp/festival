@@ -1,3 +1,9 @@
+---
+title: "fest index"
+linkTitle: "fest index"
+description: "Manage festival indices"
+---
+
 ## fest index
 
 Manage festival indices
@@ -28,10 +34,9 @@ For workspace-wide indexing (Guild v3), use the 'tree' subcommand.
 
 ### SEE ALSO
 
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-* [fest index diff](fest_index_diff.md)	 - Compare tree indexes to detect changes
-* [fest index show](fest_index_show.md)	 - Show festival index contents
-* [fest index tree](fest_index_tree.md)	 - Generate workspace-wide tree index
-* [fest index validate](fest_index_validate.md)	 - Validate festival index against filesystem
-* [fest index write](fest_index_write.md)	 - Generate festival index
-
+* [fest](../fest/)	 - Festival Methodology CLI - goal-oriented project management for AI agents
+* [fest index diff](../fest_index_diff/)	 - Compare tree indexes to detect changes
+* [fest index show](../fest_index_show/)	 - Show festival index contents
+* [fest index tree](../fest_index_tree/)	 - Generate workspace-wide tree index
+* [fest index validate](../fest_index_validate/)	 - Validate festival index against filesystem
+* [fest index write](../fest_index_write/)	 - Generate festival index

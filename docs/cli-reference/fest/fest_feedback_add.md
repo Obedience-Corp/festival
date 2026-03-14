@@ -1,3 +1,9 @@
+---
+title: "fest feedback add"
+linkTitle: "fest feedback add"
+description: "Add a feedback observation"
+---
+
 ## fest feedback add
 
 Add a feedback observation
@@ -42,5 +48,4 @@ fest feedback add [flags]
 
 ### SEE ALSO
 
-* [fest feedback](fest_feedback.md)	 - Manage structured feedback collection
-
+* [fest feedback](../fest_feedback/)	 - Manage structured feedback collection

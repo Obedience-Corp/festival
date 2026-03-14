@@ -1,3 +1,9 @@
+---
+title: "camp pull"
+linkTitle: "camp pull"
+description: "Pull latest changes from remote"
+---
+
 ## camp pull
 
 Pull latest changes from remote
@@ -44,6 +50,5 @@ camp pull [flags] [remote] [branch]
 
 ### SEE ALSO
 
-* [camp](camp.md)	 - Campaign management CLI for multi-project AI workspaces
-* [camp pull all](camp_pull_all.md)	 - Pull latest changes for all repos
-
+* [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces
+* [camp pull all](../camp_pull_all/)	 - Pull latest changes for all repos

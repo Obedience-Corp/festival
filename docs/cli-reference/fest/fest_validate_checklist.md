@@ -1,3 +1,9 @@
+---
+title: "fest validate checklist"
+linkTitle: "fest validate checklist"
+description: "Post-completion questionnaire"
+---
+
 ## fest validate checklist
 
 Post-completion questionnaire
@@ -35,5 +41,4 @@ fest validate checklist [festival-path] [flags]
 
 ### SEE ALSO
 
-* [fest validate](fest_validate.md)	 - Check festival structure - find missing task files and issues
-
+* [fest validate](../fest_validate/)	 - Check festival structure - find missing task files and issues

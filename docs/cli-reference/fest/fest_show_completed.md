@@ -1,3 +1,9 @@
+---
+title: "fest show completed"
+linkTitle: "fest show completed"
+description: "List completed festivals"
+---
+
 ## fest show completed
 
 List completed festivals
@@ -24,5 +30,4 @@ fest show completed [flags]
 
 ### SEE ALSO
 
-* [fest show](fest_show.md)	 - Display festival information
-
+* [fest show](../fest_show/)	 - Display festival information

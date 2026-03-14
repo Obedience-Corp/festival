@@ -1,3 +1,9 @@
+---
+title: "fest init"
+linkTitle: "fest init"
+description: "Initialize a new festival directory structure"
+---
+
 ## fest init
 
 Initialize a new festival directory structure
@@ -54,5 +60,4 @@ fest init [path] [flags]
 
 ### SEE ALSO
 
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-
+* [fest](../fest/)	 - Festival Methodology CLI - goal-oriented project management for AI agents

@@ -1,3 +1,9 @@
+---
+title: "camp intent list"
+linkTitle: "camp intent list"
+description: "List intents in the campaign"
+---
+
 ## camp intent list
 
 List intents in the campaign
@@ -49,5 +55,4 @@ camp intent list [flags]
 
 ### SEE ALSO
 
-* [camp intent](camp_intent.md)	 - Manage campaign intents
-
+* [camp intent](../camp_intent/)	 - Manage campaign intents

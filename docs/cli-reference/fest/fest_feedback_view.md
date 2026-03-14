@@ -1,3 +1,9 @@
+---
+title: "fest feedback view"
+linkTitle: "fest feedback view"
+description: "View collected feedback"
+---
+
 ## fest feedback view
 
 View collected feedback
@@ -42,5 +48,4 @@ fest feedback view [flags]
 
 ### SEE ALSO
 
-* [fest feedback](fest_feedback.md)	 - Manage structured feedback collection
-
+* [fest feedback](../fest_feedback/)	 - Manage structured feedback collection

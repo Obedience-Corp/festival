@@ -1,5 +1,7 @@
 ---
-title: "fest Reference"
+title: "fest CLI Reference"
+linkTitle: "fest CLI Reference"
+description: "Festival Methodology CLI - goal-oriented project management for AI agents"
 weight: 1
 ---
 

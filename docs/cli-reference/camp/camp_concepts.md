@@ -1,3 +1,9 @@
+---
+title: "camp concepts"
+linkTitle: "camp concepts"
+description: "List configured concepts"
+---
+
 ## camp concepts
 
 List configured concepts
@@ -22,5 +28,4 @@ camp concepts [flags]
 
 ### SEE ALSO
 
-* [camp](camp.md)	 - Campaign management CLI for multi-project AI workspaces
-
+* [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces

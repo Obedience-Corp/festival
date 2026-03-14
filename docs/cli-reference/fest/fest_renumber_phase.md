@@ -1,3 +1,9 @@
+---
+title: "fest renumber phase"
+linkTitle: "fest renumber phase"
+description: "Renumber phases in a festival"
+---
+
 ## fest renumber phase
 
 Renumber phases in a festival
@@ -42,5 +48,4 @@ fest renumber phase [festival-dir] [flags]
 
 ### SEE ALSO
 
-* [fest renumber](fest_renumber.md)	 - Renumber festival elements
-
+* [fest renumber](../fest_renumber/)	 - Renumber festival elements

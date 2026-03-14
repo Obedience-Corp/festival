@@ -1,3 +1,9 @@
+---
+title: "fest feedback"
+linkTitle: "fest feedback"
+description: "Manage structured feedback collection"
+---
+
 ## fest feedback
 
 Manage structured feedback collection
@@ -34,9 +40,8 @@ Examples:
 
 ### SEE ALSO
 
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-* [fest feedback add](fest_feedback_add.md)	 - Add a feedback observation
-* [fest feedback export](fest_feedback_export.md)	 - Export collected feedback
-* [fest feedback init](fest_feedback_init.md)	 - Initialize feedback collection
-* [fest feedback view](fest_feedback_view.md)	 - View collected feedback
-
+* [fest](../fest/)	 - Festival Methodology CLI - goal-oriented project management for AI agents
+* [fest feedback add](../fest_feedback_add/)	 - Add a feedback observation
+* [fest feedback export](../fest_feedback_export/)	 - Export collected feedback
+* [fest feedback init](../fest_feedback_init/)	 - Initialize feedback collection
+* [fest feedback view](../fest_feedback_view/)	 - View collected feedback

@@ -1,3 +1,9 @@
+---
+title: "fest config theme show"
+linkTitle: "fest config theme show"
+description: "Show current theme setting"
+---
+
 ## fest config theme show
 
 Show current theme setting
@@ -23,5 +29,4 @@ fest config theme show [flags]
 
 ### SEE ALSO
 
-* [fest config theme](fest_config_theme.md)	 - Manage TUI color theme
-
+* [fest config theme](../fest_config_theme/)	 - Manage TUI color theme

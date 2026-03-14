@@ -1,3 +1,9 @@
+---
+title: "fest go map"
+linkTitle: "fest go map"
+description: "Create a navigation shortcut"
+---
+
 ## fest go map
 
 Create a navigation shortcut
@@ -45,5 +51,4 @@ fest go map <name> [path] [flags]
 
 ### SEE ALSO
 
-* [fest go](fest_go.md)	 - Navigate to festivals/ - use 'fgo' after shell-init setup
-
+* [fest go](../fest_go/)	 - Navigate to festivals/ - use 'fgo' after shell-init setup

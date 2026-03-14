@@ -1,3 +1,9 @@
+---
+title: "fest status"
+linkTitle: "fest status"
+description: "Manage and query festival entity statuses"
+---
+
 ## fest status
 
 Manage and query festival entity statuses
@@ -47,8 +53,7 @@ fest status [path] [flags]
 
 ### SEE ALSO
 
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-* [fest status history](fest_status_history.md)	 - View status change history
-* [fest status list](fest_status_list.md)	 - List entities by status
-* [fest status set](fest_status_set.md)	 - Change entity status
-
+* [fest](../fest/)	 - Festival Methodology CLI - goal-oriented project management for AI agents
+* [fest status history](../fest_status_history/)	 - View status change history
+* [fest status list](../fest_status_list/)	 - List entities by status
+* [fest status set](../fest_status_set/)	 - Change entity status

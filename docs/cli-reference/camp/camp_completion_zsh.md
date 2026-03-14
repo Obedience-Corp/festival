@@ -1,3 +1,9 @@
+---
+title: "camp completion zsh"
+linkTitle: "camp completion zsh"
+description: "Generate the autocompletion script for zsh"
+---
+
 ## camp completion zsh
 
 Generate the autocompletion script for zsh
@@ -49,5 +55,4 @@ camp completion zsh [flags]
 
 ### SEE ALSO
 
-* [camp completion](camp_completion.md)	 - Generate the autocompletion script for the specified shell
-
+* [camp completion](../camp_completion/)	 - Generate the autocompletion script for the specified shell

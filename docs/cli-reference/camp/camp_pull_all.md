@@ -1,3 +1,9 @@
+---
+title: "camp pull all"
+linkTitle: "camp pull all"
+description: "Pull latest changes for all repos"
+---
+
 ## camp pull all
 
 Pull latest changes for all repos
@@ -45,5 +51,4 @@ camp pull all [git pull flags] [flags]
 
 ### SEE ALSO
 
-* [camp pull](camp_pull.md)	 - Pull latest changes from remote
-
+* [camp pull](../camp_pull/)	 - Pull latest changes from remote

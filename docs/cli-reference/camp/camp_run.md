@@ -1,3 +1,9 @@
+---
+title: "camp run"
+linkTitle: "camp run"
+description: "Execute command from campaign root, or just recipe in a project"
+---
+
 ## camp run
 
 Execute command from campaign root, or just recipe in a project
@@ -57,5 +63,4 @@ camp run [project | @shortcut] [command | recipe] [args...] [flags]
 
 ### SEE ALSO
 
-* [camp](camp.md)	 - Campaign management CLI for multi-project AI workspaces
-
+* [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces

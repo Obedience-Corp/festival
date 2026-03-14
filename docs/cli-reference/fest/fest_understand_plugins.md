@@ -1,3 +1,9 @@
+---
+title: "fest understand plugins"
+linkTitle: "fest understand plugins"
+description: "Show discovered plugins"
+---
+
 ## fest understand plugins
 
 Show discovered plugins
@@ -37,5 +43,4 @@ fest understand plugins [flags]
 
 ### SEE ALSO
 
-* [fest understand](fest_understand.md)	 - Learn methodology FIRST - run before executing festival tasks
-
+* [fest understand](../fest_understand/)	 - Learn methodology FIRST - run before executing festival tasks

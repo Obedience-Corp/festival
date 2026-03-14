@@ -1,3 +1,9 @@
+---
+title: "fest id"
+linkTitle: "fest id"
+description: "Show the festival ID for the current context"
+---
+
 ## fest id
 
 Show the festival ID for the current context
@@ -37,5 +43,4 @@ fest id [flags]
 
 ### SEE ALSO
 
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-
+* [fest](../fest/)	 - Festival Methodology CLI - goal-oriented project management for AI agents

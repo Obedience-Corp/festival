@@ -1,3 +1,9 @@
+---
+title: "fest config sync"
+linkTitle: "fest config sync"
+description: "Sync configuration repository"
+---
+
 ## fest config sync
 
 Sync configuration repository
@@ -36,5 +42,4 @@ fest config sync [name] [flags]
 
 ### SEE ALSO
 
-* [fest config](fest_config.md)	 - Manage fest configuration repositories
-
+* [fest config](../fest_config/)	 - Manage fest configuration repositories

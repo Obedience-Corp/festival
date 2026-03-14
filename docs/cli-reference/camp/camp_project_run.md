@@ -1,3 +1,9 @@
+---
+title: "camp project run"
+linkTitle: "camp project run"
+description: "Run a command inside a project directory"
+---
+
 ## camp project run
 
 Run a command inside a project directory
@@ -47,5 +53,4 @@ camp project run [--project <name>] [--] <command> [args...] [flags]
 
 ### SEE ALSO
 
-* [camp project](camp_project.md)	 - Manage campaign projects
-
+* [camp project](../camp_project/)	 - Manage campaign projects

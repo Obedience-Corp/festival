@@ -1,3 +1,9 @@
+---
+title: "fest remove phase"
+linkTitle: "fest remove phase"
+description: "Remove a phase and renumber subsequent phases"
+---
+
 ## fest remove phase
 
 Remove a phase and renumber subsequent phases
@@ -40,5 +46,4 @@ fest remove phase [phase-number|phase-path] [flags]
 
 ### SEE ALSO
 
-* [fest remove](fest_remove.md)	 - Remove festival elements and renumber
-
+* [fest remove](../fest_remove/)	 - Remove festival elements and renumber

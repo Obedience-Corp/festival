@@ -1,3 +1,9 @@
+---
+title: "fest gates"
+linkTitle: "fest gates"
+description: "Manage quality gates - validation steps at sequence end"
+---
+
 ## fest gates
 
 Manage quality gates - validation steps at sequence end
@@ -31,8 +37,7 @@ Available Commands:
 
 ### SEE ALSO
 
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-* [fest gates apply](fest_gates_apply.md)	 - Apply quality gates to sequences
-* [fest gates remove](fest_gates_remove.md)	 - Remove quality gate files from sequences
-* [fest gates show](fest_gates_show.md)	 - Show effective gate policy
-
+* [fest](../fest/)	 - Festival Methodology CLI - goal-oriented project management for AI agents
+* [fest gates apply](../fest_gates_apply/)	 - Apply quality gates to sequences
+* [fest gates remove](../fest_gates_remove/)	 - Remove quality gate files from sequences
+* [fest gates show](../fest_gates_show/)	 - Show effective gate policy

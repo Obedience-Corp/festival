@@ -1,3 +1,9 @@
+---
+title: "camp intent count"
+linkTitle: "camp intent count"
+description: "Count intents by status directory"
+---
+
 ## camp intent count
 
 Count intents by status directory
@@ -35,5 +41,4 @@ camp intent count [flags]
 
 ### SEE ALSO
 
-* [camp intent](camp_intent.md)	 - Manage campaign intents
-
+* [camp intent](../camp_intent/)	 - Manage campaign intents

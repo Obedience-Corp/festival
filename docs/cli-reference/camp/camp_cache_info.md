@@ -1,3 +1,9 @@
+---
+title: "camp cache info"
+linkTitle: "camp cache info"
+description: "Show cache status and metadata"
+---
+
 ## camp cache info
 
 Show cache status and metadata
@@ -26,5 +32,4 @@ camp cache info [flags]
 
 ### SEE ALSO
 
-* [camp cache](camp_cache.md)	 - Manage the navigation index cache
-
+* [camp cache](../camp_cache/)	 - Manage the navigation index cache

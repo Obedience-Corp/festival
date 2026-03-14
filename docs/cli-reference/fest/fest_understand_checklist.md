@@ -1,3 +1,9 @@
+---
+title: "fest understand checklist"
+linkTitle: "fest understand checklist"
+description: "Quick festival validation checklist"
+---
+
 ## fest understand checklist
 
 Quick festival validation checklist
@@ -37,5 +43,4 @@ fest understand checklist [flags]
 
 ### SEE ALSO
 
-* [fest understand](fest_understand.md)	 - Learn methodology FIRST - run before executing festival tasks
-
+* [fest understand](../fest_understand/)	 - Learn methodology FIRST - run before executing festival tasks

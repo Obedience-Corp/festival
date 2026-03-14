@@ -1,3 +1,9 @@
+---
+title: "fest renumber"
+linkTitle: "fest renumber"
+description: "Renumber festival elements"
+---
+
 ## fest renumber
 
 Renumber festival elements
@@ -30,8 +36,7 @@ removed, or reordered in the festival hierarchy.
 
 ### SEE ALSO
 
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-* [fest renumber phase](fest_renumber_phase.md)	 - Renumber phases in a festival
-* [fest renumber sequence](fest_renumber_sequence.md)	 - Renumber sequences within a phase
-* [fest renumber task](fest_renumber_task.md)	 - Renumber tasks within a sequence
-
+* [fest](../fest/)	 - Festival Methodology CLI - goal-oriented project management for AI agents
+* [fest renumber phase](../fest_renumber_phase/)	 - Renumber phases in a festival
+* [fest renumber sequence](../fest_renumber_sequence/)	 - Renumber sequences within a phase
+* [fest renumber task](../fest_renumber_task/)	 - Renumber tasks within a sequence

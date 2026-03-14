@@ -1,3 +1,9 @@
+---
+title: "fest parse"
+linkTitle: "fest parse"
+description: "Parse festival documents into structured output"
+---
+
 ## fest parse
 
 Parse festival documents into structured output
@@ -49,5 +55,4 @@ fest parse [path] [flags]
 
 ### SEE ALSO
 
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-
+* [fest](../fest/)	 - Festival Methodology CLI - goal-oriented project management for AI agents

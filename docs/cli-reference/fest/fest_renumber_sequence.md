@@ -1,3 +1,9 @@
+---
+title: "fest renumber sequence"
+linkTitle: "fest renumber sequence"
+description: "Renumber sequences within a phase"
+---
+
 ## fest renumber sequence
 
 Renumber sequences within a phase
@@ -46,5 +52,4 @@ fest renumber sequence [flags]
 
 ### SEE ALSO
 
-* [fest renumber](fest_renumber.md)	 - Renumber festival elements
-
+* [fest renumber](../fest_renumber/)	 - Renumber festival elements

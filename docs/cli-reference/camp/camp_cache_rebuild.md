@@ -1,3 +1,9 @@
+---
+title: "camp cache rebuild"
+linkTitle: "camp cache rebuild"
+description: "Force rebuild the navigation cache"
+---
+
 ## camp cache rebuild
 
 Force rebuild the navigation cache
@@ -26,5 +32,4 @@ camp cache rebuild [flags]
 
 ### SEE ALSO
 
-* [camp cache](camp_cache.md)	 - Manage the navigation index cache
-
+* [camp cache](../camp_cache/)	 - Manage the navigation index cache

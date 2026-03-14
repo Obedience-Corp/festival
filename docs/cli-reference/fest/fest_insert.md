@@ -1,3 +1,9 @@
+---
+title: "fest insert"
+linkTitle: "fest insert"
+description: "Insert new festival elements"
+---
+
 ## fest insert
 
 Insert new festival elements
@@ -28,8 +34,7 @@ following elements to maintain proper ordering.
 
 ### SEE ALSO
 
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-* [fest insert phase](fest_insert_phase.md)	 - Insert a new phase
-* [fest insert sequence](fest_insert_sequence.md)	 - Insert a new sequence within a phase
-* [fest insert task](fest_insert_task.md)	 - Insert a new task within a sequence
-
+* [fest](../fest/)	 - Festival Methodology CLI - goal-oriented project management for AI agents
+* [fest insert phase](../fest_insert_phase/)	 - Insert a new phase
+* [fest insert sequence](../fest_insert_sequence/)	 - Insert a new sequence within a phase
+* [fest insert task](../fest_insert_task/)	 - Insert a new task within a sequence

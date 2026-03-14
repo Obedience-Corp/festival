@@ -1,3 +1,9 @@
+---
+title: "fest task blocked"
+linkTitle: "fest task blocked"
+description: "Mark a task as blocked (requires confirmation)"
+---
+
 ## fest task blocked
 
 Mark a task as blocked (requires confirmation)
@@ -25,5 +31,4 @@ fest task blocked [task] [flags]
 
 ### SEE ALSO
 
-* [fest task](fest_task.md)	 - Manage task status (show, edit, complete, block, reset)
-
+* [fest task](../fest_task/)	 - Manage task status (show, edit, complete, block, reset)

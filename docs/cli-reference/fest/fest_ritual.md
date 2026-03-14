@@ -1,3 +1,9 @@
+---
+title: "fest ritual"
+linkTitle: "fest ritual"
+description: "Manage repeatable ritual festivals"
+---
+
 ## fest ritual
 
 Manage repeatable ritual festivals
@@ -19,6 +25,5 @@ Manage repeatable ritual festivals
 
 ### SEE ALSO
 
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-* [fest ritual run](fest_ritual_run.md)	 - Create a new run of a ritual festival in active/
-
+* [fest](../fest/)	 - Festival Methodology CLI - goal-oriented project management for AI agents
+* [fest ritual run](../fest_ritual_run/)	 - Create a new run of a ritual festival in active/

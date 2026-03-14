@@ -1,3 +1,9 @@
+---
+title: "fest shell-init"
+linkTitle: "fest shell-init"
+description: "Output shell integration code for festival helpers"
+---
+
 ## fest shell-init
 
 Output shell integration code for festival helpers
@@ -75,5 +81,4 @@ fest shell-init <shell> [flags]
 
 ### SEE ALSO
 
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-
+* [fest](../fest/)	 - Festival Methodology CLI - goal-oriented project management for AI agents

@@ -1,3 +1,9 @@
+---
+title: "fest chain check"
+linkTitle: "fest chain check"
+description: "Check if a festival is unblocked within its chain"
+---
+
 ## fest chain check
 
 Check if a festival is unblocked within its chain
@@ -28,5 +34,4 @@ fest chain check <ref-or-id> [flags]
 
 ### SEE ALSO
 
-* [fest chain](fest_chain.md)	 - Manage festival chains (inter-festival dependencies)
-
+* [fest chain](../fest_chain/)	 - Manage festival chains (inter-festival dependencies)

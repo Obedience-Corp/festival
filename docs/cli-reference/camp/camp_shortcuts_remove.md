@@ -1,3 +1,9 @@
+---
+title: "camp shortcuts remove"
+linkTitle: "camp shortcuts remove"
+description: "Remove a shortcut (campaign-level or project sub-shortcut)"
+---
+
 ## camp shortcuts remove
 
 Remove a shortcut (campaign-level or project sub-shortcut)
@@ -39,5 +45,4 @@ camp shortcuts remove <name> or <project> <name> [flags]
 
 ### SEE ALSO
 
-* [camp shortcuts](camp_shortcuts.md)	 - List all available shortcuts
-
+* [camp shortcuts](../camp_shortcuts/)	 - List all available shortcuts

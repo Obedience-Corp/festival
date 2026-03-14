@@ -1,3 +1,9 @@
+---
+title: "camp intent add"
+linkTitle: "camp intent add"
+description: "Create a new intent"
+---
+
 ## camp intent add
 
 Create a new intent
@@ -47,5 +53,4 @@ camp intent add [title] [flags]
 
 ### SEE ALSO
 
-* [camp intent](camp_intent.md)	 - Manage campaign intents
-
+* [camp intent](../camp_intent/)	 - Manage campaign intents

@@ -1,3 +1,9 @@
+---
+title: "camp list"
+linkTitle: "camp list"
+description: "List all registered campaigns"
+---
+
 ## camp list
 
 List all registered campaigns
@@ -48,5 +54,4 @@ camp list [flags]
 
 ### SEE ALSO
 
-* [camp](camp.md)	 - Campaign management CLI for multi-project AI workspaces
-
+* [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces

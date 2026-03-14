@@ -1,3 +1,9 @@
+---
+title: "camp init"
+linkTitle: "camp init"
+description: "Initialize a new campaign"
+---
+
 ## camp init
 
 Initialize a new campaign
@@ -69,5 +75,4 @@ camp init [path] [flags]
 
 ### SEE ALSO
 
-* [camp](camp.md)	 - Campaign management CLI for multi-project AI workspaces
-
+* [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces

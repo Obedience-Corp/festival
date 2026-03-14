@@ -1,3 +1,9 @@
+---
+title: "fest wizard"
+linkTitle: "fest wizard"
+description: "Interactive guidance and assistance for festival creation"
+---
+
 ## fest wizard
 
 Interactive guidance and assistance for festival creation
@@ -41,6 +47,5 @@ through the festival creation process step by step.
 
 ### SEE ALSO
 
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-* [fest wizard fill](fest_wizard_fill.md)	 - Interactively fill REPLACE markers in festival files
-
+* [fest](../fest/)	 - Festival Methodology CLI - goal-oriented project management for AI agents
+* [fest wizard fill](../fest_wizard_fill/)	 - Interactively fill REPLACE markers in festival files

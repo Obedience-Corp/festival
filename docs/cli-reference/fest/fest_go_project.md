@@ -1,3 +1,9 @@
+---
+title: "fest go project"
+linkTitle: "fest go project"
+description: "Navigate to linked project directory"
+---
+
 ## fest go project
 
 Navigate to linked project directory
@@ -30,5 +36,4 @@ fest go project [flags]
 
 ### SEE ALSO
 
-* [fest go](fest_go.md)	 - Navigate to festivals/ - use 'fgo' after shell-init setup
-
+* [fest go](../fest_go/)	 - Navigate to festivals/ - use 'fgo' after shell-init setup

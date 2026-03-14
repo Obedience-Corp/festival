@@ -1,3 +1,9 @@
+---
+title: "fest validate completeness"
+linkTitle: "fest validate completeness"
+description: "Validate required files exist"
+---
+
 ## fest validate completeness
 
 Validate required files exist
@@ -33,5 +39,4 @@ fest validate completeness [festival-path] [flags]
 
 ### SEE ALSO
 
-* [fest validate](fest_validate.md)	 - Check festival structure - find missing task files and issues
-
+* [fest validate](../fest_validate/)	 - Check festival structure - find missing task files and issues

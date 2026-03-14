@@ -1,3 +1,9 @@
+---
+title: "fest system repair"
+linkTitle: "fest system repair"
+description: "Fix festival directory layout issues"
+---
+
 ## fest system repair
 
 Fix festival directory layout issues
@@ -40,5 +46,4 @@ fest system repair [flags]
 
 ### SEE ALSO
 
-* [fest system](fest_system.md)	 - Manage fest tool configuration and templates
-
+* [fest system](../fest_system/)	 - Manage fest tool configuration and templates

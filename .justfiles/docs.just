@@ -4,6 +4,11 @@ docs_root := env("CLI_DOCS_ROOT", "docs/cli-reference")
 cli_profile := env("CLI_PROFILE", "stable")
 cli_release_channel := env("CLI_RELEASE_CHANNEL", "")
 base_url := env("HUGO_BASEURL", "https://fest.build")
+normalize_script := "scripts/normalize_cli_docs.py"
+serve_host := env("HUGO_SERVE_HOST", "127.0.0.1")
+serve_port := env("HUGO_SERVE_PORT", "1313")
+serve_live_reload_port := env("HUGO_LIVERELOAD_PORT", "1314")
+submodule_go_env := "GOWORK=off"
 
 # Show available docs commands
 [private]
@@ -26,12 +31,12 @@ fest:
     fest_gendocs_flags=()
     case "{{cli_profile}}" in
         stable)
-            (cd fest && just build quick-stable)
+            (cd fest && {{submodule_go_env}} just build quick-stable)
             if ./fest/bin/fest gendocs --help 2>&1 | grep -q -- '--stable'; then
                 fest_gendocs_flags+=(--stable)
             fi
             ;;
-        dev) (cd fest && just build quick-dev) ;;
+        dev) (cd fest && {{submodule_go_env}} just build quick-dev) ;;
         *)
             echo "ERROR: CLI_PROFILE must be 'stable' or 'dev' (got: {{cli_profile}})"
             exit 1
@@ -39,6 +44,7 @@ fest:
     esac
     mkdir -p {{docs_root}}/fest
     ./fest/bin/fest gendocs --output {{docs_root}}/fest --format markdown --single "${fest_gendocs_flags[@]}"
+    python3 {{normalize_script}} {{docs_root}}/fest
     echo "fest docs generated"
 
 # Generate camp CLI docs
@@ -50,8 +56,8 @@ camp:
         bash scripts/check_release_channel_tags.sh "{{cli_release_channel}}"
     fi
     case "{{cli_profile}}" in
-        stable) (cd camp && just build quick-stable) ;;
-        dev) (cd camp && just build quick-dev) ;;
+        stable) (cd camp && {{submodule_go_env}} just build quick-stable) ;;
+        dev) (cd camp && {{submodule_go_env}} just build quick-dev) ;;
         *)
             echo "ERROR: CLI_PROFILE must be 'stable' or 'dev' (got: {{cli_profile}})"
             exit 1
@@ -59,21 +65,22 @@ camp:
     esac
     mkdir -p {{docs_root}}/camp
     ./camp/bin/camp gendocs --output {{docs_root}}/camp --format markdown --single
+    python3 {{normalize_script}} {{docs_root}}/camp
     echo "camp docs generated"
 
 # Serve docs locally with live reload
 [no-cd]
-serve:
-    hugo server -D --source .
+serve: all
+    hugo server -D --source . --bind {{serve_host}} --port {{serve_port}} --liveReloadPort {{serve_live_reload_port}}
 
 # Build docs for production (override domain: HUGO_BASEURL="https://example.com" just docs build)
 [no-cd]
-build:
-    hugo --minify --source . --baseURL "{{base_url}}"
+build: all
+    hugo --gc --minify --cleanDestinationDir --source . --baseURL "{{base_url}}"
     npx pagefind --site public
 
 # Index docs for search (run after 'just docs build' or for local dev)
 [no-cd]
-index:
-    hugo --minify --source .
+index: all
+    hugo --gc --minify --cleanDestinationDir --source . --baseURL "{{base_url}}"
     npx pagefind --site public

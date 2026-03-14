@@ -1,3 +1,9 @@
+---
+title: "fest migrate metadata"
+linkTitle: "fest migrate metadata"
+description: "Add metadata to existing festivals"
+---
+
 ## fest migrate metadata
 
 Add metadata to existing festivals
@@ -42,5 +48,4 @@ fest migrate metadata [path] [flags]
 
 ### SEE ALSO
 
-* [fest migrate](fest_migrate.md)	 - Migrate festival documents
-
+* [fest migrate](../fest_migrate/)	 - Migrate festival documents

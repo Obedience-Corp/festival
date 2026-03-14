@@ -1,3 +1,9 @@
+---
+title: "fest insert task"
+linkTitle: "fest insert task"
+description: "Insert a new task within a sequence"
+---
+
 ## fest insert task
 
 Insert a new task within a sequence
@@ -42,5 +48,4 @@ fest insert task [flags]
 
 ### SEE ALSO
 
-* [fest insert](fest_insert.md)	 - Insert new festival elements
-
+* [fest insert](../fest_insert/)	 - Insert new festival elements

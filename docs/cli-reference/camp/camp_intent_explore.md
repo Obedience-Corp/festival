@@ -1,3 +1,9 @@
+---
+title: "camp intent explore"
+linkTitle: "camp intent explore"
+description: "Interactive intent explorer"
+---
+
 ## camp intent explore
 
 Interactive intent explorer
@@ -68,5 +74,4 @@ camp intent explore [flags]
 
 ### SEE ALSO
 
-* [camp intent](camp_intent.md)	 - Manage campaign intents
-
+* [camp intent](../camp_intent/)	 - Manage campaign intents

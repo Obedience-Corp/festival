@@ -1,3 +1,9 @@
+---
+title: "camp intent find"
+linkTitle: "camp intent find"
+description: "Search for intents by title or content"
+---
+
 ## camp intent find
 
 Search for intents by title or content
@@ -42,5 +48,4 @@ camp intent find [query] [flags]
 
 ### SEE ALSO
 
-* [camp intent](camp_intent.md)	 - Manage campaign intents
-
+* [camp intent](../camp_intent/)	 - Manage campaign intents

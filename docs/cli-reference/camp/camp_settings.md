@@ -1,3 +1,9 @@
+---
+title: "camp settings"
+linkTitle: "camp settings"
+description: "Manage camp configuration"
+---
+
 ## camp settings
 
 Manage camp configuration
@@ -26,5 +32,4 @@ camp settings [flags]
 
 ### SEE ALSO
 
-* [camp](camp.md)	 - Campaign management CLI for multi-project AI workspaces
-
+* [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces

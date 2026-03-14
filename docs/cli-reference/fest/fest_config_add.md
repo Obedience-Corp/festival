@@ -1,3 +1,9 @@
+---
+title: "fest config add"
+linkTitle: "fest config add"
+description: "Add a configuration repository"
+---
+
 ## fest config add
 
 Add a configuration repository
@@ -38,5 +44,4 @@ fest config add <name> <source> [flags]
 
 ### SEE ALSO
 
-* [fest config](fest_config.md)	 - Manage fest configuration repositories
-
+* [fest config](../fest_config/)	 - Manage fest configuration repositories

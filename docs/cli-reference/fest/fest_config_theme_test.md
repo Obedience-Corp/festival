@@ -1,3 +1,9 @@
+---
+title: "fest config theme test"
+linkTitle: "fest config theme test"
+description: "Preview all themes side by side"
+---
+
 ## fest config theme test
 
 Preview all themes side by side
@@ -30,5 +36,4 @@ fest config theme test [flags]
 
 ### SEE ALSO
 
-* [fest config theme](fest_config_theme.md)	 - Manage TUI color theme
-
+* [fest config theme](../fest_config_theme/)	 - Manage TUI color theme

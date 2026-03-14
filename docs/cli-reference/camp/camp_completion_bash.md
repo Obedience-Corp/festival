@@ -1,3 +1,9 @@
+---
+title: "camp completion bash"
+linkTitle: "camp completion bash"
+description: "Generate the autocompletion script for bash"
+---
+
 ## camp completion bash
 
 Generate the autocompletion script for bash
@@ -47,5 +53,4 @@ camp completion bash
 
 ### SEE ALSO
 
-* [camp completion](camp_completion.md)	 - Generate the autocompletion script for the specified shell
-
+* [camp completion](../camp_completion/)	 - Generate the autocompletion script for the specified shell

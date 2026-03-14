@@ -1,3 +1,9 @@
+---
+title: "camp leverage config"
+linkTitle: "camp leverage config"
+description: "View or update leverage configuration"
+---
+
 ## camp leverage config
 
 View or update leverage configuration
@@ -49,5 +55,4 @@ camp leverage config [flags]
 
 ### SEE ALSO
 
-* [camp leverage](camp_leverage.md)	 - Compute leverage scores for campaign projects
-
+* [camp leverage](../camp_leverage/)	 - Compute leverage scores for campaign projects

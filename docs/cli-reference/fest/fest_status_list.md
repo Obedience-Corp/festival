@@ -1,3 +1,9 @@
+---
+title: "fest status list"
+linkTitle: "fest status list"
+description: "List entities by status"
+---
+
 ## fest status list
 
 List entities by status
@@ -40,5 +46,4 @@ fest status list [flags]
 
 ### SEE ALSO
 
-* [fest status](fest_status.md)	 - Manage and query festival entity statuses
-
+* [fest status](../fest_status/)	 - Manage and query festival entity statuses

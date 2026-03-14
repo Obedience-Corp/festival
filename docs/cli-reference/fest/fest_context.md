@@ -1,3 +1,9 @@
+---
+title: "fest context"
+linkTitle: "fest context"
+description: "Get context for the current location or task"
+---
+
 ## fest context
 
 Get context for the current location or task
@@ -50,5 +56,4 @@ fest context [flags]
 
 ### SEE ALSO
 
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-
+* [fest](../fest/)	 - Festival Methodology CLI - goal-oriented project management for AI agents

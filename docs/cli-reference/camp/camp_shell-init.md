@@ -1,3 +1,9 @@
+---
+title: "camp shell-init"
+linkTitle: "camp shell-init"
+description: "Output shell initialization code"
+---
+
 ## camp shell-init
 
 Output shell initialization code
@@ -55,5 +61,4 @@ camp shell-init <shell> [flags]
 
 ### SEE ALSO
 
-* [camp](camp.md)	 - Campaign management CLI for multi-project AI workspaces
-
+* [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces

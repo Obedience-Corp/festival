@@ -1,3 +1,9 @@
+---
+title: "camp dungeon add"
+linkTitle: "camp dungeon add"
+description: "Initialize dungeon structure"
+---
+
 ## camp dungeon add
 
 Initialize dungeon structure
@@ -44,5 +50,4 @@ camp dungeon add [flags]
 
 ### SEE ALSO
 
-* [camp dungeon](camp_dungeon.md)	 - Manage the campaign dungeon
-
+* [camp dungeon](../camp_dungeon/)	 - Manage the campaign dungeon

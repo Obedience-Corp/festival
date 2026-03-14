@@ -1,3 +1,9 @@
+---
+title: "camp completion fish"
+linkTitle: "camp completion fish"
+description: "Generate the autocompletion script for fish"
+---
+
 ## camp completion fish
 
 Generate the autocompletion script for fish
@@ -38,5 +44,4 @@ camp completion fish [flags]
 
 ### SEE ALSO
 
-* [camp completion](camp_completion.md)	 - Generate the autocompletion script for the specified shell
-
+* [camp completion](../camp_completion/)	 - Generate the autocompletion script for the specified shell

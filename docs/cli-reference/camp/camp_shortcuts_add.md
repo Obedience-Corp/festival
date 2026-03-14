@@ -1,3 +1,9 @@
+---
+title: "camp shortcuts add"
+linkTitle: "camp shortcuts add"
+description: "Add a shortcut (campaign-level or project sub-shortcut)"
+---
+
 ## camp shortcuts add
 
 Add a shortcut (campaign-level or project sub-shortcut)
@@ -49,5 +55,4 @@ camp shortcuts add [name] [path] or [project] [name] [path] [flags]
 
 ### SEE ALSO
 
-* [camp shortcuts](camp_shortcuts.md)	 - List all available shortcuts
-
+* [camp shortcuts](../camp_shortcuts/)	 - List all available shortcuts

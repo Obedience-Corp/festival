@@ -1,3 +1,9 @@
+---
+title: "fest system config"
+linkTitle: "fest system config"
+description: "Manage fest configuration settings"
+---
+
 ## fest system config
 
 Manage fest configuration settings
@@ -40,5 +46,4 @@ fest system config [flags]
 
 ### SEE ALSO
 
-* [fest system](fest_system.md)	 - Manage fest tool configuration and templates
-
+* [fest system](../fest_system/)	 - Manage fest tool configuration and templates

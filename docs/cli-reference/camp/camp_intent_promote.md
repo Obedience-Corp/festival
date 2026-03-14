@@ -1,3 +1,9 @@
+---
+title: "camp intent promote"
+linkTitle: "camp intent promote"
+description: "Promote an intent through the pipeline"
+---
+
 ## camp intent promote
 
 Promote an intent through the pipeline
@@ -44,5 +50,4 @@ camp intent promote <id> [flags]
 
 ### SEE ALSO
 
-* [camp intent](camp_intent.md)	 - Manage campaign intents
-
+* [camp intent](../camp_intent/)	 - Manage campaign intents

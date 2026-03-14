@@ -1,3 +1,9 @@
+---
+title: "fest task show"
+linkTitle: "fest task show"
+description: "Show task details and status"
+---
+
 ## fest task show
 
 Show task details and status
@@ -25,5 +31,4 @@ fest task show [task] [flags]
 
 ### SEE ALSO
 
-* [fest task](fest_task.md)	 - Manage task status (show, edit, complete, block, reset)
-
+* [fest task](../fest_task/)	 - Manage task status (show, edit, complete, block, reset)

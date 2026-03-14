@@ -1,3 +1,9 @@
+---
+title: "camp doctor"
+linkTitle: "camp doctor"
+description: "Diagnose and fix campaign health issues"
+---
+
 ## camp doctor
 
 Diagnose and fix campaign health issues
@@ -61,5 +67,4 @@ camp doctor [flags]
 
 ### SEE ALSO
 
-* [camp](camp.md)	 - Campaign management CLI for multi-project AI workspaces
-
+* [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces

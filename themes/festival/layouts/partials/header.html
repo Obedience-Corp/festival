@@ -27,8 +27,10 @@
       <kbd class="search-trigger__kbd">⌘K</kbd>
     </button>
     <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">☾</button>
+    {{ if .IsHome }}
     {{ with site.GetPage "/getting-started/quickstart" }}
       <a href="{{ .RelPermalink }}" class="btn btn--primary site-header__cta">Get Started</a>
+    {{ end }}
     {{ end }}
   </nav>
 </header>

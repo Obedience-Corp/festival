@@ -1,3 +1,9 @@
+---
+title: "camp refs-sync"
+linkTitle: "camp refs-sync"
+description: "Sync submodule ref pointers in campaign root"
+---
+
 ## camp refs-sync
 
 Sync submodule ref pointers in campaign root
@@ -36,5 +42,4 @@ camp refs-sync [submodule...] [flags]
 
 ### SEE ALSO
 
-* [camp](camp.md)	 - Campaign management CLI for multi-project AI workspaces
-
+* [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces

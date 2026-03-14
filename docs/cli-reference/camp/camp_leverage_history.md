@@ -1,3 +1,9 @@
+---
+title: "camp leverage history"
+linkTitle: "camp leverage history"
+description: "Show leverage score history over time"
+---
+
 ## camp leverage history
 
 Show leverage score history over time
@@ -44,5 +50,4 @@ camp leverage history [flags]
 
 ### SEE ALSO
 
-* [camp leverage](camp_leverage.md)	 - Compute leverage scores for campaign projects
-
+* [camp leverage](../camp_leverage/)	 - Compute leverage scores for campaign projects

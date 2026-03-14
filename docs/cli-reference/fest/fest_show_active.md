@@ -1,3 +1,9 @@
+---
+title: "fest show active"
+linkTitle: "fest show active"
+description: "List festivals in active/ directory"
+---
+
 ## fest show active
 
 List festivals in active/ directory
@@ -24,5 +30,4 @@ fest show active [flags]
 
 ### SEE ALSO
 
-* [fest show](fest_show.md)	 - Display festival information
-
+* [fest show](../fest_show/)	 - Display festival information

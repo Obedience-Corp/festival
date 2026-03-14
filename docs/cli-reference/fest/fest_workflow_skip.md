@@ -1,3 +1,9 @@
+---
+title: "fest workflow skip"
+linkTitle: "fest workflow skip"
+description: "Operator override: mark workflow steps as skipped/completed"
+---
+
 ## fest workflow skip
 
 Operator override: mark workflow steps as skipped/completed
@@ -39,5 +45,4 @@ fest workflow skip [flags]
 
 ### SEE ALSO
 
-* [fest workflow](fest_workflow.md)	 - Manage workflow-based phase execution
-
+* [fest workflow](../fest_workflow/)	 - Manage workflow-based phase execution

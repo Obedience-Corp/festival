@@ -1,3 +1,9 @@
+---
+title: "fest validate structure"
+linkTitle: "fest validate structure"
+description: "Validate naming conventions and hierarchy"
+---
+
 ## fest validate structure
 
 Validate naming conventions and hierarchy
@@ -32,5 +38,4 @@ fest validate structure [festival-path] [flags]
 
 ### SEE ALSO
 
-* [fest validate](fest_validate.md)	 - Check festival structure - find missing task files and issues
-
+* [fest validate](../fest_validate/)	 - Check festival structure - find missing task files and issues

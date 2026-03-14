@@ -1,3 +1,9 @@
+---
+title: "fest list"
+linkTitle: "fest list"
+description: "List festivals by status"
+---
+
 ## fest list
 
 List festivals by status
@@ -55,5 +61,4 @@ fest list [status] [flags]
 
 ### SEE ALSO
 
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-
+* [fest](../fest/)	 - Festival Methodology CLI - goal-oriented project management for AI agents

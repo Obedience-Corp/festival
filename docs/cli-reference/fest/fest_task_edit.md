@@ -1,3 +1,9 @@
+---
+title: "fest task edit"
+linkTitle: "fest task edit"
+description: "Open the current task in your editor"
+---
+
 ## fest task edit
 
 Open the current task in your editor
@@ -23,5 +29,4 @@ fest task edit [task] [flags]
 
 ### SEE ALSO
 
-* [fest task](fest_task.md)	 - Manage task status (show, edit, complete, block, reset)
-
+* [fest task](../fest_task/)	 - Manage task status (show, edit, complete, block, reset)

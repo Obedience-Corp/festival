@@ -1,3 +1,9 @@
+---
+title: "fest progress"
+linkTitle: "fest progress"
+description: "Track and display festival execution progress"
+---
+
 ## fest progress
 
 Track and display festival execution progress
@@ -76,5 +82,4 @@ fest progress [flags]
 
 ### SEE ALSO
 
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-
+* [fest](../fest/)	 - Festival Methodology CLI - goal-oriented project management for AI agents

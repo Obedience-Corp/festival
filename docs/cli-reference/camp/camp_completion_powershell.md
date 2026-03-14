@@ -1,3 +1,9 @@
+---
+title: "camp completion powershell"
+linkTitle: "camp completion powershell"
+description: "Generate the autocompletion script for powershell"
+---
+
 ## camp completion powershell
 
 Generate the autocompletion script for powershell
@@ -35,5 +41,4 @@ camp completion powershell [flags]
 
 ### SEE ALSO
 
-* [camp completion](camp_completion.md)	 - Generate the autocompletion script for the specified shell
-
+* [camp completion](../camp_completion/)	 - Generate the autocompletion script for the specified shell

@@ -1,3 +1,9 @@
+---
+title: "camp go"
+linkTitle: "camp go"
+description: "Navigate to campaign directories"
+---
+
 ## camp go
 
 Navigate to campaign directories
@@ -70,5 +76,4 @@ camp go [shortcut] [query...] [flags]
 
 ### SEE ALSO
 
-* [camp](camp.md)	 - Campaign management CLI for multi-project AI workspaces
-
+* [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces

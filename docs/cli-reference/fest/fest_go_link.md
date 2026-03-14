@@ -1,3 +1,9 @@
+---
+title: "fest go link"
+linkTitle: "fest go link"
+description: "Link current festival to a project directory (or vice versa)"
+---
+
 ## fest go link
 
 Link current festival to a project directory (or vice versa)
@@ -49,5 +55,4 @@ fest go link [path] [flags]
 
 ### SEE ALSO
 
-* [fest go](fest_go.md)	 - Navigate to festivals/ - use 'fgo' after shell-init setup
-
+* [fest go](../fest_go/)	 - Navigate to festivals/ - use 'fgo' after shell-init setup

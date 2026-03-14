@@ -1,3 +1,9 @@
+---
+title: "camp skills link"
+linkTitle: "camp skills link"
+description: "Project campaign skill bundles into tool-specific skills directories"
+---
+
 ## camp skills link
 
 Project campaign skill bundles into tool-specific skills directories
@@ -41,5 +47,4 @@ camp skills link [flags]
 
 ### SEE ALSO
 
-* [camp skills](camp_skills.md)	 - Manage campaign skill directory links
-
+* [camp skills](../camp_skills/)	 - Manage campaign skill directory links

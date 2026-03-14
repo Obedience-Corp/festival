@@ -1,3 +1,9 @@
+---
+title: "fest understand rules"
+linkTitle: "fest understand rules"
+description: "MANDATORY structure rules for automation"
+---
+
 ## fest understand rules
 
 MANDATORY structure rules for automation
@@ -27,5 +33,4 @@ fest understand rules [flags]
 
 ### SEE ALSO
 
-* [fest understand](fest_understand.md)	 - Learn methodology FIRST - run before executing festival tasks
-
+* [fest understand](../fest_understand/)	 - Learn methodology FIRST - run before executing festival tasks

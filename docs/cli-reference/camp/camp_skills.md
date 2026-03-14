@@ -1,3 +1,9 @@
+---
+title: "camp skills"
+linkTitle: "camp skills"
+description: "Manage campaign skill directory links"
+---
+
 ## camp skills
 
 Manage campaign skill directory links
@@ -41,8 +47,7 @@ camp skills [flags]
 
 ### SEE ALSO
 
-* [camp](camp.md)	 - Campaign management CLI for multi-project AI workspaces
-* [camp skills link](camp_skills_link.md)	 - Project campaign skill bundles into tool-specific skills directories
-* [camp skills status](camp_skills_status.md)	 - Show the current state of projected skill bundle symlinks
-* [camp skills unlink](camp_skills_unlink.md)	 - Remove projected skill bundle symlinks
-
+* [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces
+* [camp skills link](../camp_skills_link/)	 - Project campaign skill bundles into tool-specific skills directories
+* [camp skills status](../camp_skills_status/)	 - Show the current state of projected skill bundle symlinks
+* [camp skills unlink](../camp_skills_unlink/)	 - Remove projected skill bundle symlinks

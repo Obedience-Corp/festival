@@ -1,3 +1,9 @@
+---
+title: "camp project worktree list"
+linkTitle: "camp project worktree list"
+description: "List worktrees for the project"
+---
+
 ## camp project worktree list
 
 List worktrees for the project
@@ -38,5 +44,4 @@ camp project worktree list [flags]
 
 ### SEE ALSO
 
-* [camp project worktree](camp_project_worktree.md)	 - Manage worktrees for a project
-
+* [camp project worktree](../camp_project_worktree/)	 - Manage worktrees for a project

@@ -1,3 +1,9 @@
+---
+title: "fest validate"
+linkTitle: "fest validate"
+description: "Check festival structure - find missing task files and issues"
+---
+
 ## fest validate
 
 Check festival structure - find missing task files and issues
@@ -43,11 +49,10 @@ fest validate [festival-path] [flags]
 
 ### SEE ALSO
 
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-* [fest validate checklist](fest_validate_checklist.md)	 - Post-completion questionnaire
-* [fest validate completeness](fest_validate_completeness.md)	 - Validate required files exist
-* [fest validate ordering](fest_validate_ordering.md)	 - Validate sequential numbering (gap detection)
-* [fest validate quality-gates](fest_validate_quality-gates.md)	 - Validate quality gates exist
-* [fest validate structure](fest_validate_structure.md)	 - Validate naming conventions and hierarchy
-* [fest validate tasks](fest_validate_tasks.md)	 - Validate task files exist (CRITICAL)
-
+* [fest](../fest/)	 - Festival Methodology CLI - goal-oriented project management for AI agents
+* [fest validate checklist](../fest_validate_checklist/)	 - Post-completion questionnaire
+* [fest validate completeness](../fest_validate_completeness/)	 - Validate required files exist
+* [fest validate ordering](../fest_validate_ordering/)	 - Validate sequential numbering (gap detection)
+* [fest validate quality-gates](../fest_validate_quality-gates/)	 - Validate quality gates exist
+* [fest validate structure](../fest_validate_structure/)	 - Validate naming conventions and hierarchy
+* [fest validate tasks](../fest_validate_tasks/)	 - Validate task files exist (CRITICAL)

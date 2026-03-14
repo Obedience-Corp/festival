@@ -1,5 +1,6 @@
 ---
 title: "camp CLI"
 weight: 52
-redirectTo: "docs/cli-reference/camp/camp-reference/"
 ---
+
+Generated reference docs for the `camp` CLI, including a combined reference page and individual command pages.

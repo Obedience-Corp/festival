@@ -1,3 +1,9 @@
+---
+title: "camp shortcuts list"
+linkTitle: "camp shortcuts list"
+description: "List shortcuts for a specific project"
+---
+
 ## camp shortcuts list
 
 List shortcuts for a specific project
@@ -35,5 +41,4 @@ camp shortcuts list [project] [flags]
 
 ### SEE ALSO
 
-* [camp shortcuts](camp_shortcuts.md)	 - List all available shortcuts
-
+* [camp shortcuts](../camp_shortcuts/)	 - List all available shortcuts

@@ -1,18 +1,51 @@
 {{ define "main" }}
-  {{ if .Params.redirectTo }}
-  {{ $url := .Params.redirectTo | relURL }}
-  <meta http-equiv="refresh" content="0; url={{ $url }}">
-  <script>window.location.href = "{{ $url }}";</script>
-  <p>Redirecting to <a href="{{ $url }}">{{ .Title }}</a>...</p>
-  {{ else }}
+  {{ $isCliLeaf := and .File (in .File.Path "docs/cli-reference/") (ne .File.Path "docs/cli-reference/_index.md") }}
   <article>
     <h1>{{ .Title }}</h1>
     {{ .Content }}
-    {{ range .Pages }}
-      <div style="margin-bottom: 0.5rem;">
-        <a href="{{ .RelPermalink }}">{{ .Title }}</a>
-      </div>
+
+    {{ if $isCliLeaf }}
+      {{ $cliName := path.Base (strings.TrimSuffix "/" .RelPermalink) }}
+      {{ $referenceBase := printf "%s-reference" $cliName }}
+      {{ $referencePages := where .RegularPages "File.BaseFileName" $referenceBase }}
+      {{ $commandPages := where .RegularPages "File.BaseFileName" "!=" $referenceBase }}
+
+      {{ if gt (len $referencePages) 0 }}
+        {{ range $referencePages }}
+          <section class="doc-index__featured">
+            <h2>Combined Reference</h2>
+            <p>{{ with .Description }}{{ . }}{{ else }}Full generated reference for {{ $cliName }}.{{ end }}</p>
+            <a href="{{ .RelPermalink }}" class="btn btn--secondary">Open Combined Reference</a>
+          </section>
+        {{ end }}
+      {{ end }}
+
+      {{ if gt (len $commandPages) 0 }}
+        <section class="doc-index">
+          <div class="doc-index__intro">
+            <h2>Commands</h2>
+            <p>Browse individual generated command pages for {{ $cliName }}.</p>
+          </div>
+          <div class="doc-index__list">
+            {{ range $commandPages.ByLinkTitle }}
+              <a href="{{ .RelPermalink }}" class="doc-index__item">
+                <strong>{{ .LinkTitle }}</strong>
+                {{ with .Description }}
+                  <span>{{ . }}</span>
+                {{ else }}
+                  <span>{{ .Summary | plainify }}</span>
+                {{ end }}
+              </a>
+            {{ end }}
+          </div>
+        </section>
+      {{ end }}
+    {{ else }}
+      {{ range .Pages }}
+        <div style="margin-bottom: 0.5rem;">
+          <a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>
+        </div>
+      {{ end }}
     {{ end }}
   </article>
-  {{ end }}
 {{ end }}

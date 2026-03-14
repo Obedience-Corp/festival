@@ -1,3 +1,9 @@
+---
+title: "fest task reset"
+linkTitle: "fest task reset"
+description: "Reset a task to pending (requires confirmation)"
+---
+
 ## fest task reset
 
 Reset a task to pending (requires confirmation)
@@ -24,5 +30,4 @@ fest task reset [task] [flags]
 
 ### SEE ALSO
 
-* [fest task](fest_task.md)	 - Manage task status (show, edit, complete, block, reset)
-
+* [fest task](../fest_task/)	 - Manage task status (show, edit, complete, block, reset)

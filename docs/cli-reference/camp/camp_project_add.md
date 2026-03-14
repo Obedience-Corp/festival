@@ -1,3 +1,9 @@
+---
+title: "camp project add"
+linkTitle: "camp project add"
+description: "Add a project to campaign"
+---
+
 ## camp project add
 
 Add a project to campaign
@@ -44,5 +50,4 @@ camp project add <source> [flags]
 
 ### SEE ALSO
 
-* [camp project](camp_project.md)	 - Manage campaign projects
-
+* [camp project](../camp_project/)	 - Manage campaign projects

@@ -1,3 +1,9 @@
+---
+title: "fest migrate times"
+linkTitle: "fest migrate times"
+description: "Populate time tracking data from file modification times"
+---
+
 ## fest migrate times
 
 Populate time tracking data from file modification times
@@ -48,5 +54,4 @@ fest migrate times [path] [flags]
 
 ### SEE ALSO
 
-* [fest migrate](fest_migrate.md)	 - Migrate festival documents
-
+* [fest migrate](../fest_migrate/)	 - Migrate festival documents

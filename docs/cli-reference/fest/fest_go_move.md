@@ -1,3 +1,9 @@
+---
+title: "fest go move"
+linkTitle: "fest go move"
+description: "Move files between festival and linked project"
+---
+
 ## fest go move
 
 Move files between festival and linked project
@@ -56,5 +62,4 @@ fest go move <source> [destination] [flags]
 
 ### SEE ALSO
 
-* [fest go](fest_go.md)	 - Navigate to festivals/ - use 'fgo' after shell-init setup
-
+* [fest go](../fest_go/)	 - Navigate to festivals/ - use 'fgo' after shell-init setup

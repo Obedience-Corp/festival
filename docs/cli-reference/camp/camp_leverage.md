@@ -1,3 +1,9 @@
+---
+title: "camp leverage"
+linkTitle: "camp leverage"
+description: "Compute leverage scores for campaign projects"
+---
+
 ## camp leverage
 
 Compute leverage scores for campaign projects
@@ -50,10 +56,9 @@ camp leverage [directory] [flags]
 
 ### SEE ALSO
 
-* [camp](camp.md)	 - Campaign management CLI for multi-project AI workspaces
-* [camp leverage backfill](camp_leverage_backfill.md)	 - Reconstruct historical leverage data from git history
-* [camp leverage config](camp_leverage_config.md)	 - View or update leverage configuration
-* [camp leverage history](camp_leverage_history.md)	 - Show leverage score history over time
-* [camp leverage reset](camp_leverage_reset.md)	 - Clear all cached leverage data to allow full recomputation
-* [camp leverage snapshot](camp_leverage_snapshot.md)	 - Capture current leverage state as a snapshot
-
+* [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces
+* [camp leverage backfill](../camp_leverage_backfill/)	 - Reconstruct historical leverage data from git history
+* [camp leverage config](../camp_leverage_config/)	 - View or update leverage configuration
+* [camp leverage history](../camp_leverage_history/)	 - Show leverage score history over time
+* [camp leverage reset](../camp_leverage_reset/)	 - Clear all cached leverage data to allow full recomputation
+* [camp leverage snapshot](../camp_leverage_snapshot/)	 - Capture current leverage state as a snapshot

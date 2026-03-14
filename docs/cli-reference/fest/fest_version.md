@@ -1,3 +1,9 @@
+---
+title: "fest version"
+linkTitle: "fest version"
+description: "Show version information"
+---
+
 ## fest version
 
 Show version information
@@ -36,5 +42,4 @@ fest version [flags]
 
 ### SEE ALSO
 
-* [fest](fest.md)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-
+* [fest](../fest/)	 - Festival Methodology CLI - goal-oriented project management for AI agents

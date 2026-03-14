@@ -1,3 +1,9 @@
+---
+title: "camp clone"
+linkTitle: "camp clone"
+description: "Clone a campaign with full submodule setup"
+---
+
 ## camp clone
 
 Clone a campaign with full submodule setup
@@ -88,5 +94,4 @@ camp clone <url> [directory] [flags]
 
 ### SEE ALSO
 
-* [camp](camp.md)	 - Campaign management CLI for multi-project AI workspaces
-
+* [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces

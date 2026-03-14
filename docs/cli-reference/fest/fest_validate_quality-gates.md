@@ -1,3 +1,9 @@
+---
+title: "fest validate quality-gates"
+linkTitle: "fest validate quality-gates"
+description: "Validate quality gates exist"
+---
+
 ## fest validate quality-gates
 
 Validate quality gates exist
@@ -40,5 +46,4 @@ fest validate quality-gates [festival-path] [flags]
 
 ### SEE ALSO
 
-* [fest validate](fest_validate.md)	 - Check festival structure - find missing task files and issues
-
+* [fest validate](../fest_validate/)	 - Check festival structure - find missing task files and issues
