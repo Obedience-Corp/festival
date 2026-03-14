@@ -63,17 +63,17 @@ camp:
 
 # Serve docs locally with live reload
 [no-cd]
-serve:
+serve: all
     hugo server -D --source .
 
 # Build docs for production (override domain: HUGO_BASEURL="https://example.com" just docs build)
 [no-cd]
-build:
-    hugo --minify --source . --baseURL "{{base_url}}"
+build: all
+    hugo --gc --minify --cleanDestinationDir --source . --baseURL "{{base_url}}"
     npx pagefind --site public
 
 # Index docs for search (run after 'just docs build' or for local dev)
 [no-cd]
-index:
-    hugo --minify --source .
+index: all
+    hugo --gc --minify --cleanDestinationDir --source . --baseURL "{{base_url}}"
     npx pagefind --site public

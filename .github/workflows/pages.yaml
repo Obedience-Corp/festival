@@ -1,0 +1,82 @@
+name: Deploy GitHub Pages
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: festival-pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.25'
+          cache-dependency-path: |
+            fest/go.sum
+            camp/go.sum
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Set up Hugo
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: '0.157.0'
+          extended: true
+
+      - name: Set up just
+        uses: extractions/setup-just@v3
+
+      - name: Configure Pages
+        id: pages
+        uses: actions/configure-pages@v5
+
+      - name: Detect release docs profile
+        id: docs_profile
+        run: |
+          case "${GITHUB_REF_NAME}" in
+            v*-dev.*)
+              echo "cli_profile=dev" >> "$GITHUB_OUTPUT"
+              ;;
+            *)
+              echo "cli_profile=stable" >> "$GITHUB_OUTPUT"
+              ;;
+          esac
+
+      - name: Build site for Pages
+        run: |
+          HUGO_BASEURL="${{ steps.pages.outputs.base_url }}/" \
+          CLI_PROFILE="${{ steps.docs_profile.outputs.cli_profile }}" \
+          just docs build
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./public
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

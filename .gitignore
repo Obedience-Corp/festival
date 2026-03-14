@@ -2,6 +2,7 @@
 dist/
 bin/
 public/
+public-pages/
 completions/
 
 # Hugo

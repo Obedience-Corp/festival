@@ -1,6 +1,6 @@
 {{ define "main" }}
   {{ if .Params.redirectTo }}
-  {{ $url := .Params.redirectTo | relURL }}
+  {{ $url := strings.TrimPrefix "/" .Params.redirectTo | relURL }}
   <meta http-equiv="refresh" content="0; url={{ $url }}">
   <script>window.location.href = "{{ $url }}";</script>
   <p>Redirecting to <a href="{{ $url }}">{{ .Title }}</a>...</p>

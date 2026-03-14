@@ -5,8 +5,9 @@
       <div class="sidebar__section">
         <div class="sidebar__section-title">{{ .Name }}</div>
         {{ range .Children }}
-          <a href="{{ .URL }}"
-             class="sidebar__link{{ if eq $currentURL .URL }} sidebar__link--active{{ end }}">
+          {{ $href := .URL | relURL }}
+          <a href="{{ $href }}"
+             class="sidebar__link{{ if eq $currentURL $href }} sidebar__link--active{{ end }}">
             {{ .Name }}
           </a>
         {{ end }}
