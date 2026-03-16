@@ -1,4 +1,4 @@
-baseURL: https://fest.build
+baseURL: https://docs.fest.build
 title: Festival
 theme: festival
 contentDir: docs
