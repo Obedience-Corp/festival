@@ -68,7 +68,7 @@ jobs:
 
       - name: Build site for Pages
         run: |
-          HUGO_BASEURL="${{ steps.pages.outputs.base_url }}/" \
+          HUGO_BASEURL="https://docs.fest.build/" \
           CLI_PROFILE="${{ steps.docs_profile.outputs.cli_profile }}" \
           just docs build
 
