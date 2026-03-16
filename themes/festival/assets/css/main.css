@@ -1271,6 +1271,14 @@ summary {
 
 .card--step {
   min-height: 100%;
+  position: relative;
+  cursor: pointer;
+}
+
+.card--step .card__arrow::after {
+  content: '';
+  position: absolute;
+  inset: 0;
 }
 
 .card__kicker {
