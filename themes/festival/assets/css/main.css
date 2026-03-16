@@ -1357,6 +1357,16 @@ summary {
   text-decoration: none;
 }
 
+[data-theme="dark"] .btn--light {
+  background: var(--festival-100);
+  color: var(--festival-950);
+}
+
+[data-theme="dark"] .btn--light:hover {
+  background: var(--festival-200);
+  color: var(--festival-950);
+}
+
 .btn--ghost-light {
   background: transparent;
   color: var(--festival-300);
@@ -1486,6 +1496,18 @@ summary {
   --pagefind-ui-text: var(--festival-300);
   --pagefind-ui-border: var(--festival-700);
   --pagefind-ui-tag: var(--festival-800);
+}
+
+.search-modal mark {
+  background-color: var(--festival-900);
+  color: white;
+  border-radius: 2px;
+  padding: 0.05em 0.2em;
+}
+
+[data-theme="dark"] .search-modal mark {
+  background-color: var(--festival-200);
+  color: var(--festival-900);
 }
 
 /* Footer */
