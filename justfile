@@ -22,6 +22,9 @@ mod sub '.justfiles/sub.just'
 [doc('Git operations')]
 mod git '.justfiles/git.just'
 
+[doc('Claude Code plugin')]
+mod plugin '.justfiles/plugin.just'
+
 
 [private]
 default:
