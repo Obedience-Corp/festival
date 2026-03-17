@@ -235,6 +235,24 @@ graph LR
     D --> A
 ```
 
+## Claude Code Plugin
+
+Install the Festival plugin for Claude Code to get `fest` and `camp` CLI tools, slash commands, methodology skills, and specialized agents in one step:
+
+```bash
+claude plugin add --source git-subdir --url Obedience-Corp/festival --path claude-plugin
+```
+
+If `fest` and `camp` aren't already installed, the plugin installs them automatically on first session. It also checks for updates once per day and notifies you when a new release is available.
+
+### What you get
+
+| Component | Examples |
+|-----------|---------|
+| **Slash commands** | `/fest-next`, `/fest-create`, `/fest-done`, `/fest-commit`, `/fest-validate`, `/camp-intent`, `/camp-init` |
+| **Skills** | Auto-activating methodology knowledge, execution workflows, planning guidance |
+| **Agents** | `fest-planner` for designing festivals, `fest-executor` for working through tasks |
+
 ## Documentation
 
 Full documentation at **[fest.build](https://fest.build)**:
