@@ -87,6 +87,11 @@ jobs:
       - name: Run beginner path smoke
         run: just test beginner-path-smoke
 
+      - name: Check Claude Code plugin sync
+        run: |
+          export PATH="$(pwd)/bin:$PATH"
+          just plugin check
+
       - name: Generate bundled release notes
         run: |
           cd tools/release-notes
