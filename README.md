@@ -6,7 +6,7 @@
 
 To use AI to solve hard problems you need three things: **context**, **direction**, and **verification**. Festival provides a structured layer for each, resulting in dramatically fewer tokens and less time spent getting to the outcome you want.
 
-> [Get started](https://fest.build/getting-started/quickstart) (takes ~5 minutes).
+> [Get started](https://docs.fest.build/getting-started/quickstart) (takes ~5 minutes).
 
 ```mermaid
 graph TD
@@ -69,7 +69,7 @@ fest validate
 fest next
 ```
 
-After installing, see the [quick start guide](https://fest.build/getting-started/quickstart/) for shell setup and first steps.
+After installing, see the [quick start guide](https://docs.fest.build/getting-started/quickstart/) for shell setup and first steps.
 
 ## The Problem
 
@@ -197,7 +197,7 @@ camp p list                   # Same as: camp project list
 
 ## CLI Overview
 
-Full reference: [fest CLI](https://fest.build/cli-reference/fest/) | [camp CLI](https://fest.build/cli-reference/camp/)
+Full reference: [fest CLI](https://docs.fest.build/cli-reference/fest/) | [camp CLI](https://docs.fest.build/cli-reference/camp/)
 
 ### camp: workspace management
 
@@ -255,12 +255,12 @@ If `fest` and `camp` aren't already installed, the plugin installs them automati
 
 ## Documentation
 
-Full documentation at **[fest.build](https://fest.build)**:
+Full documentation at **[docs.fest.build](https://docs.fest.build)**:
 
-- [Methodology Overview](https://fest.build/methodology/overview/): core principles and concepts
-- [Agent Workflows](https://fest.build/guides/agent-workflows/): using Festival with AI coding tools
-- [First Festival Tutorial](https://fest.build/tutorials/first-festival/): end-to-end walkthrough
-- [CI Integration](https://fest.build/tutorials/ci-integration/): release smoke ownership and launch-path verification
+- [Methodology Overview](https://docs.fest.build/methodology/overview/): core principles and concepts
+- [Agent Workflows](https://docs.fest.build/guides/agent-workflows/): using Festival with AI coding tools
+- [First Festival Tutorial](https://docs.fest.build/tutorials/first-festival/): end-to-end walkthrough
+- [CI Integration](https://docs.fest.build/tutorials/ci-integration/): release smoke ownership and launch-path verification
 
 ## License
 
