@@ -24,7 +24,7 @@ QUICK REFERENCE:
 ```bash
   fest understand checklist      Validation checklist before starting
   fest understand rules          Naming conventions for automation
-  fest understand workflow       Just-in-time reading pattern
+  fest understand workflow       Just-in-time reading + workflow/gates
 ```
 
 The understand command helps you grasp WHEN and WHY to use specific
@@ -67,4 +67,4 @@ fest understand [flags]
 * [fest understand structure](../fest_understand_structure/)	 - 3-level hierarchy: Festival → Phase → Sequence → Task
 * [fest understand tasks](../fest_understand_tasks/)	 - When and how to create task files (CRITICAL)
 * [fest understand templates](../fest_understand_templates/)	 - Template variables that save tokens
-* [fest understand workflow](../fest_understand_workflow/)	 - Just-in-time reading and execution patterns
+* [fest understand workflow](../fest_understand_workflow/)	 - Just-in-time reading plus workflow/gate execution

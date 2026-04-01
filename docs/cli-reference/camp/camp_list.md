@@ -13,7 +13,7 @@ List all registered campaigns
 List all campaigns registered in the global registry.
 
 Campaigns are registered when created with 'camp init' or manually
-with 'camp register'. The registry lives at ~/.obey/campaign/registry.yaml.
+with 'camp register'. The registry lives at ~/.obey/campaign/registry.json.
 
 Output formats:
   table   - Aligned columns with headers (default)
@@ -47,7 +47,7 @@ camp list [flags]
 ### Options inherited from parent commands
 
 ```
-      --config string   config file (default: ~/.obey/campaign/config.yaml)
+      --config string   config file (default: ~/.obey/campaign/config.json)
       --no-color        disable colored output
       --verbose         enable verbose output
 ```

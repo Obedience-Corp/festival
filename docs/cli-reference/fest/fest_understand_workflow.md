@@ -1,16 +1,18 @@
 ---
 title: "fest understand workflow"
 linkTitle: "fest understand workflow"
-description: "Just-in-time reading and execution patterns"
+description: "Just-in-time reading plus workflow/gate execution"
 ---
 
 ## fest understand workflow
 
-Just-in-time reading and execution patterns
+Just-in-time reading plus workflow/gate execution
 
 ### Synopsis
 
-Learn the just-in-time approach to reading templates and documentation, preserving context for actual work.
+Learn the just-in-time approach to reading templates and documentation,
+preserving context for actual work, and how to use 'fest workflow' for
+WORKFLOW.md phases and GATES.md phase gates.
 
 ```
 fest understand workflow [flags]

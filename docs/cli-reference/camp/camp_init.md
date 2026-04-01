@@ -14,6 +14,8 @@ Initialize a new campaign directory structure.
 
 Creates the standard campaign directories:
   .campaign/              - Campaign configuration and metadata
+  .campaign/quests/       - Quest execution contexts
+  .campaign/intents/      - System-managed intent state
   projects/               - Project repositories (submodules or worktrees)
   projects/worktrees/     - Git worktrees for parallel development
   festivals/              - Festival methodology workspace (via fest init)
@@ -24,7 +26,6 @@ Creates the standard campaign directories:
   workflow/code_reviews/  - Code review notes and feedback
   workflow/pipelines/     - CI/CD pipeline definitions
   workflow/design/        - Design documents
-  workflow/intents/       - Intent documents
 
 Also creates:
   AGENTS.md     - AI agent instruction file
@@ -68,7 +69,7 @@ camp init [path] [flags]
 ### Options inherited from parent commands
 
 ```
-      --config string   config file (default: ~/.obey/campaign/config.yaml)
+      --config string   config file (default: ~/.obey/campaign/config.json)
       --no-color        disable colored output
       --verbose         enable verbose output
 ```

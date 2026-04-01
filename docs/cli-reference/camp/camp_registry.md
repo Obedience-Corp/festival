@@ -26,6 +26,10 @@ Examples:
   camp registry sync              Update path for current campaign
   camp registry check             Check for issues
 
+```
+camp registry [flags]
+```
+
 ### Options
 
 ```
@@ -35,7 +39,7 @@ Examples:
 ### Options inherited from parent commands
 
 ```
-      --config string   config file (default: ~/.obey/campaign/config.yaml)
+      --config string   config file (default: ~/.obey/campaign/config.json)
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
