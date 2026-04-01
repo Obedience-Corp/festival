@@ -42,6 +42,9 @@ check_pair() {
     local right_tmp=""
 
     if [[ ! -f "$left" ]]; then
+        if [[ ! -f "$right" ]]; then
+            return
+        fi
         echo "missing source file: $left" >&2
         failures=$((failures + 1))
         return
