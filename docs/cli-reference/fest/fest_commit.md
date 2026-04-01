@@ -16,8 +16,18 @@ Requires festival context: either run from inside a festival directory,
 a linked project directory (see 'fest link'), or use --festival to specify one.
 
 The fest commit command wraps git commit and automatically:
-  1. Stages all changes (git add -A) unless --stage=false
-  2. Prepends the festival reference to the commit message
+  1. Stages changes and prepends the festival reference to the commit message
+  2. Creates a campaign root commit for festival-scoped files (task docs, progress, state)
+
+When run from a linked project directory, two commits are created:
+  - Project commit: stages all project changes
+  - Campaign root commit: stages only festival directory, .campaign/fest/,
+    festivals/.festival/.state/, and the submodule pointer
+
+When run from a festival directory, one commit is created at the campaign root
+with only festival-scoped files staged (not git add -A).
+
+Use --no-root to skip the campaign root commit.
 
 Reference format: [OBEY-FE-{id}]
   - OBEY: Obey workflow tool prefix
@@ -56,14 +66,14 @@ fest commit [flags]
 ### Options
 
 ```
-      --festival string      festival name or ID (overrides auto-detection)
-  -h, --help                 help for commit
-      --json                 output result as JSON
-  -m, --message string       commit message
-      --no-tag               don't prepend task reference
-      --stage                auto-stage all changes before commit (default true)
-      --sync-submodule-ref   sync submodule ref at campaign root after commit
-      --task string          task reference ID to use (e.g., FEST-a3b2c1)
+      --festival string   festival name or ID (overrides auto-detection)
+  -h, --help              help for commit
+      --json              output result as JSON
+  -m, --message string    commit message
+      --no-root           skip campaign root commit (project commit only)
+      --no-tag            don't prepend task reference
+      --stage             auto-stage all changes before commit (default true)
+      --task string       task reference ID to use (e.g., FEST-a3b2c1)
 ```
 
 ### Options inherited from parent commands

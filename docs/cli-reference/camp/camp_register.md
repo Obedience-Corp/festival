@@ -12,7 +12,7 @@ Register campaign in global registry
 
 Register an existing campaign in the global registry.
 
-This adds the campaign to the registry at ~/.obey/campaign/registry.yaml,
+This adds the campaign to the registry at ~/.obey/campaign/registry.json,
 enabling it to appear in 'camp list' and be accessible via navigation commands.
 
 Note: 'camp init' automatically registers new campaigns. This command is for
@@ -42,7 +42,7 @@ camp register [path] [flags]
 ### Options inherited from parent commands
 
 ```
-      --config string   config file (default: ~/.obey/campaign/config.yaml)
+      --config string   config file (default: ~/.obey/campaign/config.json)
       --no-color        disable colored output
       --verbose         enable verbose output
 ```

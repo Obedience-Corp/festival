@@ -14,7 +14,7 @@ Scan festival directories for feedback observations and create
 trackable FEEDBACK intent files with checkboxes.
 
 Each festival with feedback observations gets a FEEDBACK_<fest_id>.md intent
-in workflow/intents/inbox/. Observations are grouped by criteria with
+in .campaign/intents/inbox/. Observations are grouped by criteria with
 checkboxes for tracking addressed status.
 
 Deduplication tracking ensures observations are only gathered once.
@@ -59,7 +59,7 @@ camp gather feedback [flags]
 ### Options inherited from parent commands
 
 ```
-      --config string   config file (default: ~/.obey/campaign/config.yaml)
+      --config string   config file (default: ~/.obey/campaign/config.json)
       --no-color        disable colored output
       --verbose         enable verbose output
 ```

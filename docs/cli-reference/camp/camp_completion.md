@@ -23,7 +23,7 @@ See each sub-command's help for details on how to use the generated script.
 ### Options inherited from parent commands
 
 ```
-      --config string   config file (default: ~/.obey/campaign/config.yaml)
+      --config string   config file (default: ~/.obey/campaign/config.json)
       --no-color        disable colored output
       --verbose         enable verbose output
 ```

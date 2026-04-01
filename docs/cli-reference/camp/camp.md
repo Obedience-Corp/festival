@@ -41,7 +41,7 @@ camp [flags]
 ### Options
 
 ```
-      --config string   config file (default: ~/.obey/campaign/config.yaml)
+      --config string   config file (default: ~/.obey/campaign/config.json)
   -h, --help            help for camp
       --no-color        disable colored output
       --verbose         enable verbose output
@@ -58,8 +58,10 @@ camp [flags]
 * [camp date](../camp_date/)	 - Append date suffix to file or directory name
 * [camp doctor](../camp_doctor/)	 - Diagnose and fix campaign health issues
 * [camp dungeon](../camp_dungeon/)	 - Manage the campaign dungeon
+* [camp fresh](../camp_fresh/)	 - Post-merge branch cycling: sync to default branch and optionally create a new working branch
 * [camp gather](../camp_gather/)	 - Import external data into the intent system
 * [camp go](../camp_go/)	 - Navigate to campaign directories
+* [camp id](../camp_id/)	 - Print the current campaign ID
 * [camp init](../camp_init/)	 - Initialize a new campaign
 * [camp intent](../camp_intent/)	 - Manage campaign intents
 * [camp leverage](../camp_leverage/)	 - Compute leverage scores for campaign projects
@@ -68,12 +70,14 @@ camp [flags]
 * [camp move](../camp_move/)	 - Move a file or directory within the campaign
 * [camp pin](../camp_pin/)	 - Bookmark a directory
 * [camp pins](../camp_pins/)	 - List all pinned directories
+* [camp plugins](../camp_plugins/)	 - List discovered camp plugins on PATH
 * [camp project](../camp_project/)	 - Manage campaign projects
 * [camp pull](../camp_pull/)	 - Pull latest changes from remote
 * [camp push](../camp_push/)	 - Push campaign changes to remote
 * [camp refs-sync](../camp_refs-sync/)	 - Sync submodule ref pointers in campaign root
 * [camp register](../camp_register/)	 - Register campaign in global registry
 * [camp registry](../camp_registry/)	 - Manage the campaign registry
+* [camp root](../camp_root/)	 - Print the current campaign root
 * [camp run](../camp_run/)	 - Execute command from campaign root, or just recipe in a project
 * [camp settings](../camp_settings/)	 - Manage camp configuration
 * [camp shell-init](../camp_shell-init/)	 - Output shell initialization code

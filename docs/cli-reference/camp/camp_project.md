@@ -33,7 +33,7 @@ camp project [flags]
 ### Options inherited from parent commands
 
 ```
-      --config string   config file (default: ~/.obey/campaign/config.yaml)
+      --config string   config file (default: ~/.obey/campaign/config.json)
       --no-color        disable colored output
       --verbose         enable verbose output
 ```
@@ -46,6 +46,7 @@ camp project [flags]
 * [camp project list](../camp_project_list/)	 - List projects in campaign
 * [camp project new](../camp_project_new/)	 - Create a new project in campaign
 * [camp project prune](../camp_project_prune/)	 - Delete merged branches in a project
+* [camp project remote](../camp_project_remote/)	 - Manage remotes for a project
 * [camp project remove](../camp_project_remove/)	 - Remove a project from campaign
 * [camp project run](../camp_project_run/)	 - Run a command inside a project directory
 * [camp project worktree](../camp_project_worktree/)	 - Manage worktrees for a project
