@@ -100,6 +100,39 @@ func (r *repoContext) runDocs(mode releaseMode) error {
 	return r.justEnv(mode.DocsEnv, "docs", "all")
 }
 
+func (r *repoContext) checkBundledModuleResolution(name string) error {
+	tag, err := r.exactTag(name)
+	if err != nil {
+		return err
+	}
+	if tag == "" {
+		tag = "HEAD"
+	}
+
+	modCacheDir, err := os.MkdirTemp("", "festival-"+name+"-gomodcache-")
+	if err != nil {
+		return fmt.Errorf("create %s module cache: %w", name, err)
+	}
+	defer os.RemoveAll(modCacheDir)
+
+	goCacheDir, err := os.MkdirTemp("", "festival-"+name+"-gocache-")
+	if err != nil {
+		return fmt.Errorf("create %s build cache: %w", name, err)
+	}
+	defer os.RemoveAll(goCacheDir)
+
+	env := map[string]string{
+		"GOWORK":     "off",
+		"GOMODCACHE": modCacheDir,
+		"GOCACHE":    goCacheDir,
+	}
+	if _, err := cmdOutput(r.submodulePath(name), env, "go", "mod", "download"); err != nil {
+		return fmt.Errorf("%s %s module graph does not resolve from a clean cache: %w", name, tag, err)
+	}
+
+	return nil
+}
+
 func (r *repoContext) exactTag(name string) (string, error) {
 	out, err := cmdOutput(r.submodulePath(name), nil, "git", "describe", "--tags", "--exact-match", "HEAD")
 	if err != nil {
@@ -339,6 +372,19 @@ func runStatus(ctx *repoContext) error {
 	return nil
 }
 
+func runCheckBundledModules(ctx *repoContext) error {
+	fmt.Println("Checking bundled submodule module resolution:")
+	for _, sub := range submodules {
+		fmt.Printf("  %s: ", sub)
+		if err := ctx.checkBundledModuleResolution(sub); err != nil {
+			fmt.Println("failed")
+			return err
+		}
+		fmt.Println("ok")
+	}
+	return nil
+}
+
 func runPreflight(ctx *repoContext, mode releaseMode) error {
 	fmt.Println("=== Release Preflight ===")
 	fmt.Println()
@@ -383,8 +429,8 @@ func runPreflight(ctx *repoContext, mode releaseMode) error {
 	}
 	fmt.Println()
 
-	fmt.Println("Checking mirrored docs:")
-	if err := ctx.just("test", "doc-sync"); err != nil {
+	fmt.Println("Checking bundled submodule module resolution:")
+	if err := ctx.just("test", "bundled-module-resolution"); err != nil {
 		return err
 	}
 	fmt.Println()

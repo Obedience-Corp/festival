@@ -80,6 +80,12 @@ func run(args []string) error {
 			return err
 		}
 		return runRequireStablePublishCredentials(ctx)
+	case "check-bundled-modules":
+		ctx, err := repoContextFromArgs("check-bundled-modules", args[1:])
+		if err != nil {
+			return err
+		}
+		return runCheckBundledModules(ctx)
 	case "draft-from-latest":
 		fs := commandFlags("draft-from-latest")
 		repoRoot := fs.String("repo-root", ".", "festival repo root")
@@ -195,6 +201,7 @@ func printHelp(out io.Writer) {
 	fmt.Fprintln(out, "Support:")
 	fmt.Fprintln(out, "  just release status")
 	fmt.Fprintln(out, "  just release preflight [stable|rc|dev]")
+	fmt.Fprintln(out, "  just test bundled-module-resolution")
 	fmt.Fprintln(out, "  just release dry-run")
 	fmt.Fprintln(out, "  just release cleanup <tag>")
 }
