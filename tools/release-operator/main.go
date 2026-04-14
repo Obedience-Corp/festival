@@ -2,7 +2,9 @@ package main
 
 import (
 	"errors"
+	"flag"
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -19,57 +21,182 @@ func main() {
 }
 
 func run(args []string) error {
-	if len(args) < 2 || args[0] != "bundle" {
-		return errors.New("usage: release-operator bundle <dev|rc|stable> [--repo-root PATH]")
+	if len(args) == 0 {
+		printHelp(os.Stdout)
+		return nil
 	}
 
-	channel := args[1]
-	repoRoot, err := parseRepoRoot(args[2:])
-	if err != nil {
-		return err
+	switch args[0] {
+	case "help", "--help", "-h":
+		printHelp(os.Stdout)
+		return nil
+	case "bundle":
+		fs := commandFlags("bundle")
+		repoRoot := fs.String("repo-root", ".", "festival repo root")
+		if err := fs.Parse(args[1:]); err != nil {
+			return err
+		}
+		if fs.NArg() != 1 {
+			return errors.New("usage: release-operator bundle <dev|rc|stable> [--repo-root PATH]")
+		}
+		return runBundleWithRoot(*repoRoot, fs.Arg(0))
+	case "pin":
+		fs := commandFlags("pin")
+		repoRoot := fs.String("repo-root", ".", "festival repo root")
+		modeName := fs.String("mode", "stable", "release mode: stable, rc, or dev")
+		if err := fs.Parse(args[1:]); err != nil {
+			return err
+		}
+		ctx, err := newRepoContext(*repoRoot)
+		if err != nil {
+			return err
+		}
+		return ctx.pinFromLatest(*modeName)
+	case "status":
+		ctx, err := repoContextFromArgs("status", args[1:])
+		if err != nil {
+			return err
+		}
+		return runStatus(ctx)
+	case "preflight":
+		fs := commandFlags("preflight")
+		repoRoot := fs.String("repo-root", ".", "festival repo root")
+		modeName := fs.String("mode", "stable", "release mode: stable, rc, or dev")
+		if err := fs.Parse(args[1:]); err != nil {
+			return err
+		}
+		ctx, err := newRepoContext(*repoRoot)
+		if err != nil {
+			return err
+		}
+		mode, err := modeConfig(*modeName)
+		if err != nil {
+			return err
+		}
+		return runPreflight(ctx, mode)
+	case "require-stable-publish-credentials":
+		ctx, err := repoContextFromArgs("require-stable-publish-credentials", args[1:])
+		if err != nil {
+			return err
+		}
+		return runRequireStablePublishCredentials(ctx)
+	case "draft-from-latest":
+		fs := commandFlags("draft-from-latest")
+		repoRoot := fs.String("repo-root", ".", "festival repo root")
+		version := fs.String("version", "", "festival release version without leading v")
+		modeName := fs.String("mode", "stable", "release mode: stable, rc, or dev")
+		iteration := fs.Int("n", 1, "prerelease iteration for rc/dev flows")
+		if err := fs.Parse(args[1:]); err != nil {
+			return err
+		}
+		if *version == "" {
+			return errors.New("missing required --version")
+		}
+		mode, err := modeConfig(*modeName)
+		if err != nil {
+			return err
+		}
+		ctx, err := newRepoContext(*repoRoot)
+		if err != nil {
+			return err
+		}
+		return runDraftFromLatest(ctx, *version, mode, *iteration)
+	case "draft-bootstrap":
+		fs := commandFlags("draft-bootstrap")
+		repoRoot := fs.String("repo-root", ".", "festival repo root")
+		version := fs.String("version", "", "festival release version without leading v")
+		festVersion := fs.String("fest-version", "", "fest release version without leading v")
+		campVersion := fs.String("camp-version", "", "camp release version without leading v")
+		if err := fs.Parse(args[1:]); err != nil {
+			return err
+		}
+		if *version == "" || *festVersion == "" || *campVersion == "" {
+			return errors.New("draft-bootstrap requires --version, --fest-version, and --camp-version")
+		}
+		ctx, err := newRepoContext(*repoRoot)
+		if err != nil {
+			return err
+		}
+		return runDraftBootstrap(ctx, *version, *festVersion, *campVersion)
+	case "draft":
+		return runDraftCommand(args[1:], "stable")
+	case "draft-rc":
+		return runDraftCommand(args[1:], "rc")
+	case "draft-dev":
+		return runDraftCommand(args[1:], "dev")
+	case "cleanup":
+		fs := commandFlags("cleanup")
+		repoRoot := fs.String("repo-root", ".", "festival repo root")
+		tag := fs.String("tag", "", "full tag name to delete")
+		if err := fs.Parse(args[1:]); err != nil {
+			return err
+		}
+		if *tag == "" {
+			return errors.New("missing required --tag")
+		}
+		ctx, err := newRepoContext(*repoRoot)
+		if err != nil {
+			return err
+		}
+		return runCleanup(ctx, *tag)
+	default:
+		return fmt.Errorf("unknown command %q", args[0])
 	}
-
-	repoRoot, err = filepath.Abs(repoRoot)
-	if err != nil {
-		return fmt.Errorf("resolve repo root: %w", err)
-	}
-
-	state, err := collectState(repoRoot, channel)
-	if err != nil {
-		return err
-	}
-
-	plan, err := operator.DeriveBundlePlan(state)
-	if err != nil {
-		return err
-	}
-
-	fmt.Println()
-	fmt.Println("== Current State ==")
-	fmt.Printf("  festival branch: %s\n", state.CurrentBranch)
-	fmt.Printf("  fest tag: %s\n", state.FestTag)
-	fmt.Printf("  camp tag: %s\n", state.CampTag)
-	fmt.Println()
-	fmt.Printf("== %s Bundle Release ==\n", strings.ToUpper(channel))
-	fmt.Println(plan.Description)
-	fmt.Printf("Using latest already-created %s tags from camp and fest.\n", channel)
-	fmt.Println()
-
-	return runJust(repoRoot, plan.DraftRecipe, plan.DraftArgs...)
 }
 
-func parseRepoRoot(args []string) (string, error) {
-	repoRoot := "."
-	for i := 0; i < len(args); i++ {
-		if args[i] == "--repo-root" {
-			if i+1 >= len(args) {
-				return "", errors.New("missing value for --repo-root")
-			}
-			repoRoot = args[i+1]
-			i++
-		}
+func runDraftCommand(args []string, modeName string) error {
+	fs := commandFlags("draft")
+	repoRoot := fs.String("repo-root", ".", "festival repo root")
+	version := fs.String("version", "", "festival release version without leading v")
+	iteration := fs.Int("n", 1, "prerelease iteration for rc/dev flows")
+	if err := fs.Parse(args); err != nil {
+		return err
 	}
-	return repoRoot, nil
+	if *version == "" {
+		return errors.New("missing required --version")
+	}
+	ctx, err := newRepoContext(*repoRoot)
+	if err != nil {
+		return err
+	}
+	mode, err := modeConfig(modeName)
+	if err != nil {
+		return err
+	}
+	return runDraftExplicit(ctx, *version, mode, *iteration)
+}
+
+func commandFlags(name string) *flag.FlagSet {
+	fs := flag.NewFlagSet(name, flag.ContinueOnError)
+	fs.SetOutput(os.Stderr)
+	return fs
+}
+
+func repoContextFromArgs(name string, args []string) (*repoContext, error) {
+	fs := commandFlags(name)
+	repoRoot := fs.String("repo-root", ".", "festival repo root")
+	if err := fs.Parse(args); err != nil {
+		return nil, err
+	}
+	if fs.NArg() != 0 {
+		return nil, fmt.Errorf("%s does not accept positional arguments", name)
+	}
+	return newRepoContext(*repoRoot)
+}
+
+func printHelp(out io.Writer) {
+	fmt.Fprintln(out, "festival release commands")
+	fmt.Fprintln(out)
+	fmt.Fprintln(out, "Primary:")
+	fmt.Fprintln(out, "  just release dev")
+	fmt.Fprintln(out, "  just release rc")
+	fmt.Fprintln(out, "  just release stable")
+	fmt.Fprintln(out)
+	fmt.Fprintln(out, "Support:")
+	fmt.Fprintln(out, "  just release status")
+	fmt.Fprintln(out, "  just release preflight [stable|rc|dev]")
+	fmt.Fprintln(out, "  just release dry-run")
+	fmt.Fprintln(out, "  just release cleanup <tag>")
 }
 
 func collectState(repoRoot, channel string) (operator.BundleInput, error) {
@@ -83,7 +210,7 @@ func collectState(repoRoot, channel string) (operator.BundleInput, error) {
 		return operator.BundleInput{}, errors.New("festival repo has uncommitted changes")
 	}
 
-	for _, sub := range []string{"fest", "camp"} {
+	for _, sub := range submodules {
 		subPath := filepath.Join(repoRoot, sub)
 		if dirty, err := worktreeDirty(subPath); err != nil {
 			return operator.BundleInput{}, err
@@ -158,7 +285,7 @@ func worktreeDirty(dir string) (bool, error) {
 }
 
 func fetchTags(dir string) error {
-	return runCmd(dir, "git", "fetch", "--tags")
+	return runCmd(dir, nil, "git", "fetch", "--tags")
 }
 
 func headMatchesTag(dir, tag string) (bool, error) {
@@ -235,13 +362,6 @@ func latestTagForModeVersion(dir, mode, version string) string {
 	return ""
 }
 
-func runJust(repoRoot, recipe string, args ...string) error {
-	justfile := filepath.Join(repoRoot, ".justfiles", "release.just")
-	cmdArgs := []string{"--justfile", justfile, recipe}
-	cmdArgs = append(cmdArgs, args...)
-	return runCmd(repoRoot, "just", cmdArgs...)
-}
-
 func gitLines(dir string, args ...string) ([]string, error) {
 	out, err := gitOutput(dir, args...)
 	if err != nil {
@@ -254,17 +374,19 @@ func gitLines(dir string, args ...string) ([]string, error) {
 }
 
 func gitOutput(dir string, args ...string) (string, error) {
-	cmdArgs := append([]string{}, args...)
-	out, err := cmdOutput(dir, "git", cmdArgs...)
+	out, err := cmdOutput(dir, nil, "git", args...)
 	if err != nil {
 		return "", fmt.Errorf("git %s: %w", strings.Join(args, " "), err)
 	}
 	return strings.TrimSpace(out), nil
 }
 
-func cmdOutput(dir, name string, args ...string) (string, error) {
+func cmdOutput(dir string, env map[string]string, name string, args ...string) (string, error) {
 	cmd := exec.Command(name, args...)
 	cmd.Dir = dir
+	if envList := envList(env); len(envList) > 0 {
+		cmd.Env = envList
+	}
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		return "", fmt.Errorf("%v\n%s", err, strings.TrimSpace(string(out)))
@@ -272,9 +394,12 @@ func cmdOutput(dir, name string, args ...string) (string, error) {
 	return string(out), nil
 }
 
-func runCmd(dir, name string, args ...string) error {
+func runCmd(dir string, env map[string]string, name string, args ...string) error {
 	cmd := exec.Command(name, args...)
 	cmd.Dir = dir
+	if envList := envList(env); len(envList) > 0 {
+		cmd.Env = envList
+	}
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	return cmd.Run()
