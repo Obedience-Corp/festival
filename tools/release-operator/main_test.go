@@ -7,6 +7,20 @@ import (
 	"testing"
 )
 
+func TestParseBundleArgsAcceptsRepoRootBeforeChannel(t *testing.T) {
+	repoRoot, channel, err := parseBundleArgs([]string{"--repo-root", "/tmp/festival", "dev"})
+	if err != nil {
+		t.Fatalf("parseBundleArgs returned error: %v", err)
+	}
+
+	if got, want := repoRoot, "/tmp/festival"; got != want {
+		t.Fatalf("repoRoot = %q, want %q", got, want)
+	}
+	if got, want := channel, "dev"; got != want {
+		t.Fatalf("channel = %q, want %q", got, want)
+	}
+}
+
 func TestLatestReachableTagForModeIgnoresOffBranchTags(t *testing.T) {
 	repo := initTestRepo(t)
 

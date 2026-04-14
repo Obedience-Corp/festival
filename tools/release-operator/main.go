@@ -31,15 +31,11 @@ func run(args []string) error {
 		printHelp(os.Stdout)
 		return nil
 	case "bundle":
-		fs := commandFlags("bundle")
-		repoRoot := fs.String("repo-root", ".", "festival repo root")
-		if err := fs.Parse(args[1:]); err != nil {
+		repoRoot, channel, err := parseBundleArgs(args[1:])
+		if err != nil {
 			return err
 		}
-		if fs.NArg() != 1 {
-			return errors.New("usage: release-operator bundle <dev|rc|stable> [--repo-root PATH]")
-		}
-		return runBundleWithRoot(*repoRoot, fs.Arg(0))
+		return runBundleWithRoot(repoRoot, channel)
 	case "pin":
 		fs := commandFlags("pin")
 		repoRoot := fs.String("repo-root", ".", "festival repo root")
@@ -176,6 +172,18 @@ func commandFlags(name string) *flag.FlagSet {
 	fs := flag.NewFlagSet(name, flag.ContinueOnError)
 	fs.SetOutput(os.Stderr)
 	return fs
+}
+
+func parseBundleArgs(args []string) (repoRoot string, channel string, err error) {
+	fs := commandFlags("bundle")
+	repoRootFlag := fs.String("repo-root", ".", "festival repo root")
+	if err := fs.Parse(args); err != nil {
+		return "", "", err
+	}
+	if fs.NArg() != 1 {
+		return "", "", errors.New("usage: release-operator bundle <dev|rc|stable> [--repo-root PATH]")
+	}
+	return *repoRootFlag, fs.Arg(0), nil
 }
 
 func repoContextFromArgs(name string, args []string) (*repoContext, error) {
