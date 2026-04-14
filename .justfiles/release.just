@@ -105,12 +105,12 @@ refresh-dev:
 
 [private]
 [no-cd]
-require-homebrew-token:
+require-stable-publish-credentials:
     #!/usr/bin/env bash
     set -euo pipefail
 
     if ! command -v gh >/dev/null 2>&1; then
-        echo "ERROR: gh is required to verify stable Homebrew publishing readiness."
+        echo "ERROR: gh is required to verify stable publishing readiness."
         exit 1
     fi
 
@@ -120,15 +120,31 @@ require-homebrew-token:
         exit 1
     fi
 
-    if ! gh secret list --repo Obedience-Corp/festival | awk '{print $1}' | grep -qx 'HOMEBREW_TAP_GITHUB_TOKEN'; then
-        echo "ERROR: HOMEBREW_TAP_GITHUB_TOKEN is not configured for Obedience-Corp/festival."
-        echo "Stable release would fail when publishing the Homebrew formula."
-        echo "Add it with:"
-        echo "  gh secret set HOMEBREW_TAP_GITHUB_TOKEN --repo Obedience-Corp/festival"
+    secret_names="$(gh secret list --repo Obedience-Corp/festival | awk '{print $1}')"
+    missing=0
+
+    for name in HOMEBREW_TAP_GITHUB_TOKEN AUR_SSH_KEY; do
+        if ! printf '%s\n' "${secret_names}" | grep -qx "${name}"; then
+            echo "ERROR: ${name} is not configured for Obedience-Corp/festival."
+            case "${name}" in
+                HOMEBREW_TAP_GITHUB_TOKEN)
+                    echo "Stable release would fail when publishing the Homebrew cask."
+                    ;;
+                AUR_SSH_KEY)
+                    echo "Stable release would fail when publishing the festival-bin AUR package."
+                    ;;
+            esac
+            echo "Add it with:"
+            echo "  gh secret set ${name} --repo Obedience-Corp/festival"
+            missing=1
+        fi
+    done
+
+    if [ "${missing}" -ne 0 ]; then
         exit 1
     fi
 
-    echo "Homebrew publish token is configured."
+    echo "Stable publish credentials are configured."
 
 # Show operator-facing release readiness for current branch and latest tags
 [no-cd]
@@ -166,10 +182,21 @@ status:
         echo "  ${mode}: fest=$(latest_tag fest "$mode" || true) camp=$(latest_tag camp "$mode" || true)"
     done
     echo ""
-    if gh auth status >/dev/null 2>&1 && gh secret list --repo Obedience-Corp/festival 2>/dev/null | awk '{print $1}' | grep -qx 'HOMEBREW_TAP_GITHUB_TOKEN'; then
-        echo "Homebrew stable publish: configured"
+    if gh auth status >/dev/null 2>&1; then
+        secrets="$(gh secret list --repo Obedience-Corp/festival 2>/dev/null | awk '{print $1}')"
+        if printf '%s\n' "${secrets}" | grep -qx 'HOMEBREW_TAP_GITHUB_TOKEN'; then
+            echo "Homebrew stable publish: configured"
+        else
+            echo "Homebrew stable publish: missing HOMEBREW_TAP_GITHUB_TOKEN"
+        fi
+        if printf '%s\n' "${secrets}" | grep -qx 'AUR_SSH_KEY'; then
+            echo "AUR stable publish: configured"
+        else
+            echo "AUR stable publish: missing AUR_SSH_KEY"
+        fi
     else
-        echo "Homebrew stable publish: missing HOMEBREW_TAP_GITHUB_TOKEN"
+        echo "Homebrew stable publish: unknown (gh not authenticated)"
+        echo "AUR stable publish: unknown (gh not authenticated)"
     fi
 
 # Pre-release checks: show submodule versions, dirty state, and build validation
@@ -224,7 +251,7 @@ preflight mode="stable":
 
     if [ "{{mode}}" = "stable" ]; then
         echo "Checking stable publisher secrets:"
-        just --justfile {{source_file()}} require-homebrew-token
+        just --justfile {{source_file()}} require-stable-publish-credentials
         echo ""
     fi
 

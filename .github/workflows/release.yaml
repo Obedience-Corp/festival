@@ -37,16 +37,6 @@ jobs:
           GO_PRIVATE_TOKEN: ${{ secrets.GO_PRIVATE_TOKEN }}
           GOPRIVATE: github.com/Obedience-Corp/*
 
-      - name: Import AUR SSH key
-        if: env.AUR_SSH_KEY != ''
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.AUR_SSH_KEY }}" > ~/.ssh/aur
-          chmod 600 ~/.ssh/aur
-          ssh-keyscan aur.archlinux.org >> ~/.ssh/known_hosts
-        env:
-          AUR_SSH_KEY: ${{ secrets.AUR_SSH_KEY }}
-
       - name: Detect release channel
         id: release_channel
         run: |
@@ -68,6 +58,27 @@ jobs:
               exit 1
               ;;
           esac
+
+      - name: Validate stable publish credentials
+        if: steps.release_channel.outputs.mode == 'stable'
+        env:
+          HOMEBREW_TAP_GITHUB_TOKEN: ${{ secrets.HOMEBREW_TAP_GITHUB_TOKEN }}
+          AUR_SSH_KEY: ${{ secrets.AUR_SSH_KEY }}
+        run: |
+          missing=0
+          for name in HOMEBREW_TAP_GITHUB_TOKEN AUR_SSH_KEY; do
+            if [ -z "${!name:-}" ]; then
+              echo "::error::Missing required secret ${name}"
+              missing=1
+            fi
+          done
+          exit "${missing}"
+
+      - name: Trust AUR host key
+        if: steps.release_channel.outputs.mode == 'stable'
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan aur.archlinux.org >> ~/.ssh/known_hosts
 
       - name: Verify tagged camp/fest pins
         run: just test release-pins "${{ steps.release_channel.outputs.mode }}"
