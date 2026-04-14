@@ -45,19 +45,19 @@ preflight mode="stable":
 [confirm("This will create a dev festival release from the latest dev tags in camp and fest. Continue?")]
 dev:
     just test release-operator
-    go -C tools/release-operator run . bundle dev --repo-root ../..
+    go -C tools/release-operator run . bundle --repo-root ../.. dev
 
 [no-cd]
 [confirm("This will create an RC festival release from the latest rc tags in camp and fest. Continue?")]
 rc:
     just test release-operator
-    go -C tools/release-operator run . bundle rc --repo-root ../..
+    go -C tools/release-operator run . bundle --repo-root ../.. rc
 
 [no-cd]
 [confirm("This will create a stable festival release from the latest stable tags in camp and fest. Continue?")]
 stable:
     just test release-operator
-    go -C tools/release-operator run . bundle stable --repo-root ../..
+    go -C tools/release-operator run . bundle --repo-root ../.. stable
 
 # Run GoReleaser dry run (no publish)
 [no-cd]

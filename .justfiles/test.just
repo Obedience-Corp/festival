@@ -15,6 +15,12 @@ all: fest camp release-operator release-notes
 doc-sync:
     bash scripts/check-doc-sync.sh
 
+# Verify bundled camp/fest submodules resolve from a clean module cache rather
+# than inheriting whatever happens to already be installed on the host.
+[no-cd]
+bundled-module-resolution:
+    go -C tools/release-operator run . check-bundled-modules --repo-root ../..
+
 # Verify stable/dev CLI doc generation uses the intended command surface
 [no-cd]
 docs-profile:

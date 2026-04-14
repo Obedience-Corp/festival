@@ -83,8 +83,8 @@ jobs:
       - name: Verify tagged camp/fest pins
         run: just test release-pins "${{ steps.release_channel.outputs.mode }}"
 
-      - name: Check mirrored docs
-        run: just test doc-sync
+      - name: Check bundled submodule module resolution
+        run: just test bundled-module-resolution
 
       - name: Check docs profile
         run: just test docs-profile

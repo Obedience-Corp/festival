@@ -31,15 +31,11 @@ func run(args []string) error {
 		printHelp(os.Stdout)
 		return nil
 	case "bundle":
-		fs := commandFlags("bundle")
-		repoRoot := fs.String("repo-root", ".", "festival repo root")
-		if err := fs.Parse(args[1:]); err != nil {
+		repoRoot, channel, err := parseBundleArgs(args[1:])
+		if err != nil {
 			return err
 		}
-		if fs.NArg() != 1 {
-			return errors.New("usage: release-operator bundle <dev|rc|stable> [--repo-root PATH]")
-		}
-		return runBundleWithRoot(*repoRoot, fs.Arg(0))
+		return runBundleWithRoot(repoRoot, channel)
 	case "pin":
 		fs := commandFlags("pin")
 		repoRoot := fs.String("repo-root", ".", "festival repo root")
@@ -80,6 +76,12 @@ func run(args []string) error {
 			return err
 		}
 		return runRequireStablePublishCredentials(ctx)
+	case "check-bundled-modules":
+		ctx, err := repoContextFromArgs("check-bundled-modules", args[1:])
+		if err != nil {
+			return err
+		}
+		return runCheckBundledModules(ctx)
 	case "draft-from-latest":
 		fs := commandFlags("draft-from-latest")
 		repoRoot := fs.String("repo-root", ".", "festival repo root")
@@ -172,6 +174,18 @@ func commandFlags(name string) *flag.FlagSet {
 	return fs
 }
 
+func parseBundleArgs(args []string) (repoRoot string, channel string, err error) {
+	fs := commandFlags("bundle")
+	repoRootFlag := fs.String("repo-root", ".", "festival repo root")
+	if err := fs.Parse(args); err != nil {
+		return "", "", err
+	}
+	if fs.NArg() != 1 {
+		return "", "", errors.New("usage: release-operator bundle <dev|rc|stable> [--repo-root PATH]")
+	}
+	return *repoRootFlag, fs.Arg(0), nil
+}
+
 func repoContextFromArgs(name string, args []string) (*repoContext, error) {
 	fs := commandFlags(name)
 	repoRoot := fs.String("repo-root", ".", "festival repo root")
@@ -195,6 +209,7 @@ func printHelp(out io.Writer) {
 	fmt.Fprintln(out, "Support:")
 	fmt.Fprintln(out, "  just release status")
 	fmt.Fprintln(out, "  just release preflight [stable|rc|dev]")
+	fmt.Fprintln(out, "  just test bundled-module-resolution")
 	fmt.Fprintln(out, "  just release dry-run")
 	fmt.Fprintln(out, "  just release cleanup <tag>")
 }
