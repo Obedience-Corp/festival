@@ -4,290 +4,60 @@
 # - rc: release candidate prerelease
 # - stable: public release
 
-subs := "fest camp"
-
-prune_fetch := "fetch --prune --prune-tags origin '+refs/tags/*:refs/tags/*'"
-
-# Show available release commands
-[private]
-default:
-    #!/usr/bin/env bash
-    echo "festival release commands"
-    echo ""
-    echo "Primary:"
-    echo "  just release dev"
-    echo "  just release rc"
-    echo "  just release stable"
-    echo ""
-    echo "Support:"
-    echo "  just release status"
-    echo "  just release preflight [stable|rc|dev]"
-    echo "  just release dry-run"
-    echo "  just release cleanup <tag>"
-
 [private]
 [no-cd]
-pin-from-latest mode="stable":
-    #!/usr/bin/env bash
-    set -euo pipefail
-
-    mode="{{mode}}"
-    case "${mode}" in
-        stable|rc|dev) ;;
-        *)
-            echo "ERROR: mode must be 'stable', 'rc', or 'dev' (got: ${mode})"
-            exit 1
-            ;;
-    esac
-
-    if [ -n "$(git status --porcelain)" ]; then
-        echo "ERROR: festival repo has uncommitted changes."
-        echo "Commit/stash first, then rerun."
-        exit 1
-    fi
-
-    git {{prune_fetch}}
-    git -C fest {{prune_fetch}}
-    git -C camp {{prune_fetch}}
-
-    latest_tag() {
-        repo="$1"
-        tag_mode="$2"
-        local pattern=""
-        case "${tag_mode}" in
-            stable) pattern='^v[0-9]+(\.[0-9]+)*$' ;;
-            rc) pattern='^v[0-9]+(\.[0-9]+)*-rc\.[0-9]+$' ;;
-            dev) pattern='^v[0-9]+(\.[0-9]+)*-dev\.[0-9]+$' ;;
-        esac
-        git -C "${repo}" tag -l 'v*' --sort=-v:refname | grep -E "${pattern}" | head -1 || true
-    }
-
-    fest_tag="$(latest_tag fest "${mode}")"
-    camp_tag="$(latest_tag camp "${mode}")"
-
-    if [ -z "${fest_tag}" ] || [ -z "${camp_tag}" ]; then
-        echo "ERROR: Missing ${mode} tags."
-        echo "fest latest ${mode}: ${fest_tag:-<none>}"
-        echo "camp latest ${mode}: ${camp_tag:-<none>}"
-        if [ "${mode}" = "stable" ]; then
-            echo "For a first release, run:"
-            echo "  just release draft-bootstrap <festival_version> <fest_version> <camp_version>"
-        elif [ "${mode}" = "rc" ]; then
-            echo "Create rc tags in fest/camp first, then rerun with mode=rc."
-        else
-            echo "Create dev tags in fest/camp first, then rerun with mode=dev."
-        fi
-        exit 1
-    fi
-
-    git -C fest checkout --detach "${fest_tag}"
-    git -C camp checkout --detach "${camp_tag}"
-    # Stages submodule pointer updates; caller decides whether and when to commit them.
-    git add fest camp
-
-    echo "Pinned fest to: ${fest_tag}"
-    echo "Pinned camp to: ${camp_tag}"
+default:
+    @go -C tools/release-operator run . help
 
 # Pin submodules to latest stable tags without creating a festival release
 [no-cd]
 refresh-stable:
-    just --justfile {{source_file()}} pin-from-latest stable
+    go -C tools/release-operator run . pin --repo-root ../.. --mode stable
 
 # Pin submodules to latest rc tags without creating a festival release
 [no-cd]
 refresh-rc:
-    just --justfile {{source_file()}} pin-from-latest rc
+    go -C tools/release-operator run . pin --repo-root ../.. --mode rc
 
 # Pin submodules to latest dev/prerelease tags without creating a festival release
 [no-cd]
 refresh-dev:
-    just --justfile {{source_file()}} pin-from-latest dev
+    go -C tools/release-operator run . pin --repo-root ../.. --mode dev
 
 [private]
 [no-cd]
-require-homebrew-token:
-    #!/usr/bin/env bash
-    set -euo pipefail
-
-    if ! command -v gh >/dev/null 2>&1; then
-        echo "ERROR: gh is required to verify stable Homebrew publishing readiness."
-        exit 1
-    fi
-
-    if ! gh auth status >/dev/null 2>&1; then
-        echo "ERROR: gh is not authenticated."
-        echo "Authenticate with: gh auth login"
-        exit 1
-    fi
-
-    if ! gh secret list --repo Obedience-Corp/festival | awk '{print $1}' | grep -qx 'HOMEBREW_TAP_GITHUB_TOKEN'; then
-        echo "ERROR: HOMEBREW_TAP_GITHUB_TOKEN is not configured for Obedience-Corp/festival."
-        echo "Stable release would fail when publishing the Homebrew formula."
-        echo "Add it with:"
-        echo "  gh secret set HOMEBREW_TAP_GITHUB_TOKEN --repo Obedience-Corp/festival"
-        exit 1
-    fi
-
-    echo "Homebrew publish token is configured."
+require-stable-publish-credentials:
+    go -C tools/release-operator run . require-stable-publish-credentials --repo-root ../..
 
 # Show operator-facing release readiness for current branch and latest tags
 [no-cd]
 status:
-    #!/usr/bin/env bash
-    set -euo pipefail
-
-    latest_tag() {
-        repo="$1"
-        tag_mode="$2"
-        local pattern=""
-        case "${tag_mode}" in
-            stable) pattern='^v[0-9]+(\.[0-9]+)*$' ;;
-            rc) pattern='^v[0-9]+(\.[0-9]+)*-rc\.[0-9]+$' ;;
-            dev) pattern='^v[0-9]+(\.[0-9]+)*-dev\.[0-9]+$' ;;
-        esac
-        git -C "${repo}" tag -l 'v*' --sort=-v:refname | grep -E "${pattern}" | head -1 || true
-    }
-
-    git {{prune_fetch}} >/dev/null 2>&1 || true
-    git -C fest {{prune_fetch}} >/dev/null 2>&1 || true
-    git -C camp {{prune_fetch}} >/dev/null 2>&1 || true
-
-    echo "festival branch: $(git rev-parse --abbrev-ref HEAD)"
-    echo ""
-    echo "Current submodule pins:"
-    for sub in {{subs}}; do
-        sha=$(cd "$sub" && git rev-parse --short HEAD)
-        tag=$(cd "$sub" && git describe --tags --exact-match HEAD 2>/dev/null || echo "no tag")
-        echo "  $sub: $sha ($tag)"
-    done
-    echo ""
-    echo "Latest available tags:"
-    for mode in stable rc dev; do
-        echo "  ${mode}: fest=$(latest_tag fest "$mode" || true) camp=$(latest_tag camp "$mode" || true)"
-    done
-    echo ""
-    if gh auth status >/dev/null 2>&1 && gh secret list --repo Obedience-Corp/festival 2>/dev/null | awk '{print $1}' | grep -qx 'HOMEBREW_TAP_GITHUB_TOKEN'; then
-        echo "Homebrew stable publish: configured"
-    else
-        echo "Homebrew stable publish: missing HOMEBREW_TAP_GITHUB_TOKEN"
-    fi
+    go -C tools/release-operator run . status --repo-root ../..
 
 # Pre-release checks: show submodule versions, dirty state, and build validation
 [no-cd]
 preflight mode="stable":
-    #!/usr/bin/env bash
-    set -euo pipefail
-    build_profile="stable"
-    if [ "{{mode}}" = "dev" ]; then
-        build_profile="dev"
-    fi
-    echo "=== Release Preflight ==="
-    echo ""
-
-    # Check submodule versions
-    echo "Submodule pins:"
-    for sub in {{subs}}; do
-        if [ -d "$sub" ]; then
-            sha=$(cd "$sub" && git rev-parse --short HEAD)
-            tag=$(cd "$sub" && git describe --tags --exact-match HEAD 2>/dev/null || echo "no tag")
-            branch=$(cd "$sub" && git rev-parse --abbrev-ref HEAD)
-            echo "  $sub: $sha ($tag) [branch: $branch]"
-        fi
-    done
-    echo ""
-
-    # Check for dirty submodules
-    dirty=0
-    for sub in {{subs}}; do
-        if [ -d "$sub" ]; then
-            if [ -n "$(cd "$sub" && git status --porcelain)" ]; then
-                echo "  WARNING: $sub has uncommitted changes"
-                dirty=1
-            fi
-        fi
-    done
-    if [ $dirty -eq 0 ]; then
-        echo "Submodules: clean"
-    else
-        echo ""
-        echo "ERROR: Dirty submodules. Commit or stash changes before releasing."
-        exit 1
-    fi
-    echo ""
-
-    if [ -n "$(git status --porcelain)" ]; then
-        echo "ERROR: festival repo has uncommitted changes"
-        git status --short
-        echo "Commit/stash first, then rerun."
-        exit 1
-    fi
-
-    if [ "{{mode}}" = "stable" ]; then
-        echo "Checking stable publisher secrets:"
-        just --justfile {{source_file()}} require-homebrew-token
-        echo ""
-    fi
-
-    echo "Checking tagged release pins:"
-    just test release-pins "{{mode}}"
-    echo ""
-
-    echo "Checking mirrored docs:"
-    just test doc-sync
-    echo ""
-
-    echo "Checking stable/dev docs profile:"
-    just test docs-profile
-    echo ""
-
-    echo "Testing release operator:"
-    just test release-operator
-    echo ""
-
-    echo "Building CLIs:"
-    CLI_PROFILE="${build_profile}" just build all
-    echo ""
-
-    echo "Beginner-path smoke:"
-    just test beginner-path-smoke
-    echo ""
-
-    # Show existing tags for context
-    echo "Recent tags:"
-    git tag -l --sort=-v:refname | head -5 || echo "  (none)"
-    echo ""
-    echo "Preflight complete."
-    echo "  One-command: just release dev | just release rc | just release stable"
-    echo "  Manual:      just release draft <version> | draft-rc <version> <n> | draft-dev <version> <n>"
+    go -C tools/release-operator run . preflight --repo-root ../.. --mode "{{mode}}"
 
 # One-command bundled release from the latest already-created camp/fest tags.
 # This does not create camp/fest tags. Those repos own their own versions.
-# Festival's version policy lives in tools/release-operator so it can be unit tested.
-[private]
-[no-cd]
-_bundle channel:
-    #!/usr/bin/env bash
-    set -euo pipefail
-    cd tools/release-operator
-    go run . bundle "{{channel}}" --repo-root ../..
-
 [no-cd]
 [confirm("This will create a dev festival release from the latest dev tags in camp and fest. Continue?")]
 dev:
     just test release-operator
-    just --justfile {{source_file()}} _bundle dev
+    go -C tools/release-operator run . bundle dev --repo-root ../..
 
 [no-cd]
 [confirm("This will create an RC festival release from the latest rc tags in camp and fest. Continue?")]
 rc:
     just test release-operator
-    just --justfile {{source_file()}} _bundle rc
+    go -C tools/release-operator run . bundle rc --repo-root ../..
 
 [no-cd]
 [confirm("This will create a stable festival release from the latest stable tags in camp and fest. Continue?")]
 stable:
     just test release-operator
-    just --justfile {{source_file()}} _bundle stable
+    go -C tools/release-operator run . bundle stable --repo-root ../..
 
 # Run GoReleaser dry run (no publish)
 [no-cd]
@@ -303,84 +73,7 @@ dry-run:
 [no-cd]
 [confirm("This will create and push fest/camp tags, then create and push a STABLE festival release tag. Continue?")]
 draft-bootstrap version fest_version camp_version:
-    #!/usr/bin/env bash
-    set -euo pipefail
-
-    release_tag="v{{version}}"
-    fest_tag="v{{fest_version}}"
-    camp_tag="v{{camp_version}}"
-
-    # Require clean festival working tree for safe release automation.
-    if [ -n "$(git status --porcelain)" ]; then
-        echo "ERROR: festival repo has uncommitted changes."
-        echo "Commit/stash first, then rerun."
-        exit 1
-    fi
-
-    # Fetch latest refs for root + submodules.
-    git {{prune_fetch}}
-    git -C fest {{prune_fetch}}
-    git -C camp {{prune_fetch}}
-
-    # Ensure requested tags don't already exist locally or remotely.
-    for pair in "fest:${fest_tag}" "camp:${camp_tag}"; do
-        repo="${pair%%:*}"
-        tag="${pair##*:}"
-        if git -C "${repo}" rev-parse -q --verify "refs/tags/${tag}" >/dev/null; then
-            echo "ERROR: ${repo} tag ${tag} already exists locally."
-            echo "Use 'just release draft-from-latest <version>' if tags already exist."
-            exit 1
-        fi
-        if [ -n "$(git -C "${repo}" ls-remote --tags origin "refs/tags/${tag}")" ]; then
-            echo "ERROR: ${repo} tag ${tag} already exists on origin."
-            echo "Use 'just release draft-from-latest <version>' if tags already exist."
-            exit 1
-        fi
-    done
-
-    # Create and push stable tags in submodules at current HEAD.
-    git -C fest tag -a "${fest_tag}" -m "Release ${fest_tag}"
-    git -C fest push origin "${fest_tag}"
-
-    git -C camp tag -a "${camp_tag}" -m "Release ${camp_tag}"
-    git -C camp push origin "${camp_tag}"
-
-    # Pin submodules to the tags just created.
-    git -C fest checkout --detach "${fest_tag}"
-    git -C camp checkout --detach "${camp_tag}"
-    CLI_RELEASE_CHANNEL=stable just docs all
-    git add fest camp docs/cli-reference
-
-    # Commit and push submodule pointer changes.
-    if git diff --cached --quiet -- fest camp docs/cli-reference; then
-        echo "Submodule pointers and docs already match ${fest_tag}/${camp_tag}; no release commit needed."
-    else
-        git commit -m "Release: pin fest ${fest_tag} and camp ${camp_tag}"
-        git push origin HEAD
-    fi
-
-    # Ensure the festival release tag doesn't already exist.
-    if git rev-parse -q --verify "refs/tags/${release_tag}" >/dev/null; then
-        echo "ERROR: festival tag ${release_tag} already exists locally."
-        exit 1
-    fi
-    if [ -n "$(git ls-remote --tags origin "refs/tags/${release_tag}")" ]; then
-        echo "ERROR: festival tag ${release_tag} already exists on origin."
-        exit 1
-    fi
-
-    # Final preflight and release tag push (triggers CI release workflow).
-    just release preflight
-
-    echo ""
-    echo "=== Creating stable release ${release_tag} ==="
-    git tag -a "${release_tag}" -m "Release ${release_tag}"
-    git push origin "${release_tag}"
-    echo ""
-    echo "Stable release ${release_tag} pushed."
-    echo "fest pinned to: ${fest_tag}"
-    echo "camp pinned to: ${camp_tag}"
-    echo "Monitor: gh run watch --repo Obedience-Corp/festival"
+    go -C tools/release-operator run . draft-bootstrap --repo-root ../.. --version "{{version}}" --fest-version "{{fest_version}}" --camp-version "{{camp_version}}"
 
 # Unified release automation from latest submodule tags:
 # - mode=stable: latest stable tags (vX.Y.Z)
@@ -391,75 +84,7 @@ draft-bootstrap version fest_version camp_version:
 [private]
 [no-cd]
 draft-from-latest version mode="stable" n="1":
-    #!/usr/bin/env bash
-    set -euo pipefail
-
-    mode="{{mode}}"
-    case "${mode}" in
-        stable|rc|dev) ;;
-        *)
-            echo "ERROR: mode must be 'stable', 'rc', or 'dev' (got: ${mode})"
-            exit 1
-            ;;
-    esac
-
-    case "${mode}" in
-        stable)
-            release_tag="v{{version}}"
-            docs_cmd="CLI_RELEASE_CHANNEL=stable just docs all"
-            release_label="stable"
-            ;;
-        rc)
-            release_tag="v{{version}}-rc.{{n}}"
-            docs_cmd="CLI_RELEASE_CHANNEL=rc just docs all"
-            release_label="rc"
-            ;;
-        dev)
-            release_tag="v{{version}}-dev.{{n}}"
-            docs_cmd="CLI_PROFILE=dev CLI_RELEASE_CHANNEL=dev just docs all"
-            release_label="dev"
-            ;;
-    esac
-
-    if git rev-parse -q --verify "refs/tags/${release_tag}" >/dev/null; then
-        echo "ERROR: festival tag ${release_tag} already exists locally."
-        exit 1
-    fi
-    if [ -n "$(git ls-remote --tags origin "refs/tags/${release_tag}")" ]; then
-        echo "ERROR: festival tag ${release_tag} already exists on origin."
-        exit 1
-    fi
-
-    just --justfile {{source_file()}} pin-from-latest "${mode}"
-    eval "${docs_cmd}"
-    git add fest camp docs/cli-reference
-
-    fest_tag="$(cd fest && git describe --tags --exact-match HEAD 2>/dev/null || true)"
-    camp_tag="$(cd camp && git describe --tags --exact-match HEAD 2>/dev/null || true)"
-
-    if [ -z "${fest_tag}" ] || [ -z "${camp_tag}" ]; then
-        echo "ERROR: Submodules are not pinned to exact ${mode} tags after refresh."
-        exit 1
-    fi
-
-    if git diff --cached --quiet -- fest camp docs/cli-reference; then
-        echo "Submodule pointers and docs already at fest=${fest_tag}, camp=${camp_tag}; no release commit needed."
-    else
-        git commit -m "Release: pin fest ${fest_tag} and camp ${camp_tag}"
-        git push origin HEAD
-    fi
-
-    just release preflight "${mode}"
-
-    echo ""
-    echo "=== Creating ${release_label} release ${release_tag} ==="
-    git tag -a "${release_tag}" -m "Release ${release_tag}"
-    git push origin "${release_tag}"
-    echo ""
-    echo "${release_label} release ${release_tag} pushed."
-    echo "fest pinned to: ${fest_tag}"
-    echo "camp pinned to: ${camp_tag}"
-    echo "Monitor: gh run watch --repo Obedience-Corp/festival"
+    go -C tools/release-operator run . draft-from-latest --repo-root ../.. --version "{{version}}" --mode "{{mode}}" --n "{{n}}"
 
 # Human-friendly aliases for the most common end-to-end release flows
 [private]
@@ -482,75 +107,27 @@ draft-dev-from-latest version n="1":
 [no-cd]
 [confirm("This will create and push a STABLE release tag. Continue?")]
 draft version:
-    #!/usr/bin/env bash
-    set -euo pipefail
-
-    # Run preflight
-    just release preflight stable
-
-    echo ""
-    echo "=== Creating stable release v{{version}} ==="
-    git tag -a "v{{version}}" -m "Release v{{version}}"
-    git push origin "v{{version}}"
-    echo ""
-    echo "Stable release v{{version}} pushed. CI will build and publish."
-    echo "Monitor: gh run watch --repo Obedience-Corp/festival"
+    go -C tools/release-operator run . draft --repo-root ../.. --version "{{version}}"
 
 # Draft an RC release: preflight + rc tag + push (triggers CI, marked as prerelease)
 [private]
 [no-cd]
 [confirm("This will create and push an RC release tag. Continue?")]
 draft-rc version n="1":
-    #!/usr/bin/env bash
-    set -euo pipefail
-
-    just release preflight rc
-
-    tag="v{{version}}-rc.{{n}}"
-    echo ""
-    echo "=== Creating rc release ${tag} ==="
-    git tag -a "${tag}" -m "RC release ${tag}"
-    git push origin "${tag}"
-    echo ""
-    echo "RC release ${tag} pushed. CI will build and publish as prerelease."
-    echo "Monitor: gh run watch --repo Obedience-Corp/festival"
+    go -C tools/release-operator run . draft-rc --repo-root ../.. --version "{{version}}" --n "{{n}}"
 
 # Draft a dev release: preflight + dev tag + push (triggers CI, marked as prerelease)
 [private]
 [no-cd]
 [confirm("This will create and push a DEV release tag. Continue?")]
 draft-dev version n="1":
-    #!/usr/bin/env bash
-    set -euo pipefail
-
-    just release preflight dev
-
-    tag="v{{version}}-dev.{{n}}"
-    echo ""
-    echo "=== Creating dev release ${tag} ==="
-    git tag -a "${tag}" -m "Dev release ${tag}"
-    git push origin "${tag}"
-    echo ""
-    echo "Dev release ${tag} pushed. CI will build and publish as prerelease."
-    echo "Monitor: gh run watch --repo Obedience-Corp/festival"
-    echo ""
-    echo "To clean up later:"
-    echo "  gh release delete ${tag} --repo Obedience-Corp/festival --yes"
-    echo "  git push origin --delete ${tag} && git tag -d ${tag}"
+    go -C tools/release-operator run . draft-dev --repo-root ../.. --version "{{version}}" --n "{{n}}"
 
 # Clean up a release (delete tag + GitHub release)
 [no-cd]
 [confirm("This will delete the GitHub release and tag. Continue?")]
 cleanup tag:
-    #!/usr/bin/env bash
-    set -euo pipefail
-    echo "Deleting GitHub release {{tag}}..."
-    gh release delete "{{tag}}" --repo Obedience-Corp/festival --yes 2>/dev/null || echo "  No GitHub release found for {{tag}}"
-    echo "Deleting remote tag {{tag}}..."
-    git push origin --delete "{{tag}}" 2>/dev/null || echo "  Remote tag not found"
-    echo "Deleting local tag {{tag}}..."
-    git tag -d "{{tag}}" 2>/dev/null || echo "  Local tag not found"
-    echo "Cleanup complete."
+    go -C tools/release-operator run . cleanup --repo-root ../.. --tag "{{tag}}"
 
 # Full release (CI should handle this, but for manual use)
 [no-cd]

@@ -120,10 +120,11 @@ aurs:
     homepage: "https://fest.build"
     description: "Festival Methodology CLI suite (fest + camp) - AI-native project planning"
     maintainers:
-      - "Lance Rogers <lance@obediencecorp.com>"
+      - "Obedience Corp <contact@obediencecorp.com>"
     license: "BUSL-1.1"
     private_key: "{{ .Env.AUR_SSH_KEY }}"
     git_url: "ssh://aur@aur.archlinux.org/festival-bin.git"
+    skip_upload: auto
     provides:
       - fest
       - camp
