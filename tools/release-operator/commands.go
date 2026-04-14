@@ -1,6 +1,7 @@
 package main
 
 import (
+	"archive/tar"
 	"errors"
 	"fmt"
 	"io"
@@ -16,6 +17,11 @@ var submodules = []string{"fest", "camp"}
 
 type repoContext struct {
 	Root string
+}
+
+type stableReadinessReport struct {
+	Ready  bool
+	Issues []string
 }
 
 func newRepoContext(root string) (*repoContext, error) {
@@ -100,24 +106,41 @@ func (r *repoContext) runDocs(mode releaseMode) error {
 	return r.justEnv(mode.DocsEnv, "docs", "all")
 }
 
-func (r *repoContext) checkBundledModuleResolution(name string) error {
-	tag, err := r.exactTag(name)
+func (r *repoContext) latestComponentTags(modeName string) (festTag string, campTag string, err error) {
+	mode, err := modeConfig(modeName)
 	if err != nil {
-		return err
+		return "", "", err
 	}
-	if tag == "" {
-		tag = "HEAD"
+	festTag = latestTagForMode(r.submodulePath("fest"), mode.Name)
+	campTag = latestTagForMode(r.submodulePath("camp"), mode.Name)
+	if festTag == "" || campTag == "" {
+		fmt.Printf("ERROR: Missing %s tags.\n", mode.Name)
+		fmt.Printf("fest latest %s: %s\n", mode.Name, valueOrNone(festTag))
+		fmt.Printf("camp latest %s: %s\n", mode.Name, valueOrNone(campTag))
+		switch mode.Name {
+		case "stable":
+			fmt.Println("For a first release, run:")
+			fmt.Println("  just release draft-bootstrap <festival_version> <fest_version> <camp_version>")
+		case "rc":
+			fmt.Println("Create rc tags in fest/camp first, then rerun with mode=rc.")
+		default:
+			fmt.Println("Create dev tags in fest/camp first, then rerun with mode=dev.")
+		}
+		return "", "", errors.New("missing component tags")
 	}
+	return festTag, campTag, nil
+}
 
-	modCacheDir, err := os.MkdirTemp("", "festival-"+name+"-gomodcache-")
+func checkModuleResolutionForDir(dir string, label string) error {
+	modCacheDir, err := os.MkdirTemp("", "festival-module-resolution-gomodcache-")
 	if err != nil {
-		return fmt.Errorf("create %s module cache: %w", name, err)
+		return fmt.Errorf("create %s module cache: %w", label, err)
 	}
 	defer os.RemoveAll(modCacheDir)
 
-	goCacheDir, err := os.MkdirTemp("", "festival-"+name+"-gocache-")
+	goCacheDir, err := os.MkdirTemp("", "festival-module-resolution-gocache-")
 	if err != nil {
-		return fmt.Errorf("create %s build cache: %w", name, err)
+		return fmt.Errorf("create %s build cache: %w", label, err)
 	}
 	defer os.RemoveAll(goCacheDir)
 
@@ -126,11 +149,95 @@ func (r *repoContext) checkBundledModuleResolution(name string) error {
 		"GOMODCACHE": modCacheDir,
 		"GOCACHE":    goCacheDir,
 	}
-	if _, err := cmdOutput(r.submodulePath(name), env, "go", "mod", "download"); err != nil {
-		return fmt.Errorf("%s %s module graph does not resolve from a clean cache: %w", name, tag, err)
+	if _, err := cmdOutput(dir, env, "go", "mod", "download"); err != nil {
+		return fmt.Errorf("%s module graph does not resolve from a clean cache: %w", label, err)
 	}
 
 	return nil
+}
+
+func extractTarFile(src, dst string) error {
+	file, err := os.Open(src)
+	if err != nil {
+		return fmt.Errorf("open tar %s: %w", src, err)
+	}
+	defer file.Close()
+
+	reader := tar.NewReader(file)
+	for {
+		header, err := reader.Next()
+		if errors.Is(err, io.EOF) {
+			return nil
+		}
+		if err != nil {
+			return fmt.Errorf("read tar %s: %w", src, err)
+		}
+
+		target := filepath.Join(dst, header.Name)
+		switch header.Typeflag {
+		case tar.TypeXGlobalHeader, tar.TypeXHeader:
+			continue
+		case tar.TypeDir:
+			if err := os.MkdirAll(target, 0o755); err != nil {
+				return fmt.Errorf("create dir %s: %w", target, err)
+			}
+		case tar.TypeReg:
+			if err := os.MkdirAll(filepath.Dir(target), 0o755); err != nil {
+				return fmt.Errorf("create parent dir for %s: %w", target, err)
+			}
+			out, err := os.OpenFile(target, os.O_CREATE|os.O_TRUNC|os.O_WRONLY, os.FileMode(header.Mode))
+			if err != nil {
+				return fmt.Errorf("open file %s: %w", target, err)
+			}
+			if _, err := io.Copy(out, reader); err != nil {
+				out.Close()
+				return fmt.Errorf("write file %s: %w", target, err)
+			}
+			if err := out.Close(); err != nil {
+				return fmt.Errorf("close file %s: %w", target, err)
+			}
+		default:
+			return fmt.Errorf("unsupported tar entry %s of type %d", header.Name, header.Typeflag)
+		}
+	}
+}
+
+func (r *repoContext) checkBundledModuleResolution(name string) error {
+	tag, err := r.exactTag(name)
+	if err != nil {
+		return err
+	}
+	if tag == "" {
+		tag = "HEAD"
+	}
+	return checkModuleResolutionForDir(r.submodulePath(name), fmt.Sprintf("%s %s", name, tag))
+}
+
+func (r *repoContext) checkBundledModuleResolutionAtTag(name, tag string) error {
+	if strings.TrimSpace(tag) == "" {
+		return fmt.Errorf("%s tag is empty", name)
+	}
+
+	stageDir, err := os.MkdirTemp("", "festival-"+name+"-tag-*")
+	if err != nil {
+		return fmt.Errorf("create %s tag staging dir: %w", name, err)
+	}
+	defer os.RemoveAll(stageDir)
+
+	archivePath := filepath.Join(stageDir, "source.tar")
+	if err := runCmd(r.submodulePath(name), nil, "git", "archive", "--format=tar", "-o", archivePath, tag); err != nil {
+		return fmt.Errorf("archive %s %s: %w", name, tag, err)
+	}
+
+	sourceDir := filepath.Join(stageDir, "source")
+	if err := os.MkdirAll(sourceDir, 0o755); err != nil {
+		return fmt.Errorf("create source dir for %s %s: %w", name, tag, err)
+	}
+	if err := extractTarFile(archivePath, sourceDir); err != nil {
+		return fmt.Errorf("extract %s %s: %w", name, tag, err)
+	}
+
+	return checkModuleResolutionForDir(sourceDir, fmt.Sprintf("%s %s", name, tag))
 }
 
 func (r *repoContext) exactTag(name string) (string, error) {
@@ -232,33 +339,15 @@ func (r *repoContext) checkoutSubmoduleTag(name, tag string) error {
 }
 
 func (r *repoContext) pinFromLatest(modeName string) error {
-	mode, err := modeConfig(modeName)
-	if err != nil {
-		return err
-	}
 	if err := r.ensureAllWorktreesClean(); err != nil {
 		return err
 	}
 	if err := r.fetchReleaseRefs(); err != nil {
 		return err
 	}
-
-	festTag := latestTagForMode(r.submodulePath("fest"), mode.Name)
-	campTag := latestTagForMode(r.submodulePath("camp"), mode.Name)
-	if festTag == "" || campTag == "" {
-		fmt.Printf("ERROR: Missing %s tags.\n", mode.Name)
-		fmt.Printf("fest latest %s: %s\n", mode.Name, valueOrNone(festTag))
-		fmt.Printf("camp latest %s: %s\n", mode.Name, valueOrNone(campTag))
-		switch mode.Name {
-		case "stable":
-			fmt.Println("For a first release, run:")
-			fmt.Println("  just release draft-bootstrap <festival_version> <fest_version> <camp_version>")
-		case "rc":
-			fmt.Println("Create rc tags in fest/camp first, then rerun with mode=rc.")
-		default:
-			fmt.Println("Create dev tags in fest/camp first, then rerun with mode=dev.")
-		}
-		return errors.New("missing component tags")
+	festTag, campTag, err := r.latestComponentTags(modeName)
+	if err != nil {
+		return err
 	}
 
 	if err := r.checkoutSubmoduleTag("fest", festTag); err != nil {
@@ -273,6 +362,65 @@ func (r *repoContext) pinFromLatest(modeName string) error {
 
 	fmt.Printf("Pinned fest to: %s\n", festTag)
 	fmt.Printf("Pinned camp to: %s\n", campTag)
+	return nil
+}
+
+func (r *repoContext) currentStableReadiness() (stableReadinessReport, error) {
+	report := stableReadinessReport{Ready: true}
+
+	for _, sub := range submodules {
+		tag, err := r.exactTag(sub)
+		if err != nil {
+			return stableReadinessReport{}, err
+		}
+		switch {
+		case tag == "":
+			report.Ready = false
+			report.Issues = append(report.Issues, fmt.Sprintf("%s is not pinned to an exact tag", sub))
+		case !operator.TagMatchesMode(tag, "stable"):
+			report.Ready = false
+			report.Issues = append(report.Issues, fmt.Sprintf("%s is pinned to non-stable tag %s", sub, tag))
+		default:
+			if err := r.checkBundledModuleResolution(sub); err != nil {
+				report.Ready = false
+				report.Issues = append(report.Issues, err.Error())
+			}
+		}
+	}
+
+	return report, nil
+}
+
+func (r *repoContext) ensureStableTagCandidateReady(name, tag string) error {
+	if !operator.TagMatchesMode(tag, "stable") {
+		return fmt.Errorf("%s candidate %s is not a stable tag", name, tag)
+	}
+	return r.checkBundledModuleResolutionAtTag(name, tag)
+}
+
+func (r *repoContext) ensureStableLatestBundleReady() error {
+	if err := r.fetchReleaseRefs(); err != nil {
+		return err
+	}
+	festTag, campTag, err := r.latestComponentTags("stable")
+	if err != nil {
+		return err
+	}
+	if err := r.ensureStableTagCandidateReady("fest", festTag); err != nil {
+		return err
+	}
+	if err := r.ensureStableTagCandidateReady("camp", campTag); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (r *repoContext) ensureCurrentComponentsResolveForStableTagging() error {
+	for _, sub := range submodules {
+		if err := checkModuleResolutionForDir(r.submodulePath(sub), fmt.Sprintf("%s HEAD", sub)); err != nil {
+			return err
+		}
+	}
 	return nil
 }
 
@@ -345,6 +493,20 @@ func runStatus(ctx *repoContext) error {
 			valueOrNone(latestTagForMode(ctx.submodulePath("fest"), modeName)),
 			valueOrNone(latestTagForMode(ctx.submodulePath("camp"), modeName)),
 		)
+	}
+
+	fmt.Println()
+	readiness, err := ctx.currentStableReadiness()
+	if err != nil {
+		return err
+	}
+	if readiness.Ready {
+		fmt.Println("Stable release readiness: ready")
+	} else {
+		fmt.Println("Stable release readiness: blocked")
+		for _, issue := range readiness.Issues {
+			fmt.Printf("  - %s\n", issue)
+		}
 	}
 
 	fmt.Println()
@@ -486,6 +648,11 @@ func runDraftFromLatest(ctx *repoContext, version string, mode releaseMode, iter
 	if err := ctx.ensureTagAbsent(releaseTag); err != nil {
 		return err
 	}
+	if mode.Name == "stable" {
+		if err := ctx.ensureStableLatestBundleReady(); err != nil {
+			return err
+		}
+	}
 	if err := ctx.pinFromLatest(mode.Name); err != nil {
 		return err
 	}
@@ -560,6 +727,9 @@ func runDraftBootstrap(ctx *repoContext, festivalVersion, festVersion, campVersi
 		return err
 	}
 	if err := ctx.ensureAllWorktreesClean(); err != nil {
+		return err
+	}
+	if err := ctx.ensureCurrentComponentsResolveForStableTagging(); err != nil {
 		return err
 	}
 	if err := ctx.fetchReleaseRefs(); err != nil {
