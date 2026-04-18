@@ -57,8 +57,14 @@
   <script>
   // Theme toggle
   (function() {
+    var urlTheme = null;
+    try {
+      urlTheme = new URLSearchParams(window.location.search).get('theme');
+    } catch (e) {}
     var defaultTheme = {{ if .IsHome }}"light"{{ else }}"dark"{{ end }};
-    var theme = localStorage.getItem('theme') || defaultTheme;
+    var theme = (urlTheme === 'dark' || urlTheme === 'light')
+      ? urlTheme
+      : (localStorage.getItem('theme') || defaultTheme);
     document.documentElement.setAttribute('data-theme', theme);
   })();
 
