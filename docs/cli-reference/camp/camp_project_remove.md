@@ -15,6 +15,9 @@ Remove a project from the campaign.
 By default, this only removes the project from git submodule tracking.
 The project files remain in place for you to handle manually.
 
+For linked projects, prefer 'camp project unlink'. Linked projects are
+machine-local symlinks and are never deleted through this command.
+
 Use --delete to also remove all project files. This is destructive
 and requires confirmation unless --force is also specified.
 

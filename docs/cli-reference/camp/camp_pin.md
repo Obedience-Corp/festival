@@ -1,16 +1,16 @@
 ---
 title: "camp pin"
 linkTitle: "camp pin"
-description: "Bookmark a directory"
+description: "Pin a directory"
 ---
 
 ## camp pin
 
-Bookmark a directory
+Pin a directory
 
 ### Synopsis
 
-Bookmark a directory for quick navigation with 'camp jump'.
+Pin a directory for quick navigation with 'camp go <name>' or 'cgo <name>'.
 
 If path is omitted, the current working directory is used.
 
@@ -21,8 +21,10 @@ camp pin <name> [path] [flags]
 ### Examples
 
 ```
-  camp pin myspot           # Pin current directory as "myspot"
-  camp pin docs /path/to/docs  # Pin a specific path
+  camp pin code                        # Pin current directory as "code"
+  camp pin design workflow/design/my-project
+  camp go code                         # Jump to a pin by name
+  cgo design                           # Shell jump to a pin
 ```
 
 ### Options

@@ -68,7 +68,7 @@ camp [flags]
 * [camp list](../camp_list/)	 - List all registered campaigns
 * [camp log](../camp_log/)	 - Show git log of the campaign
 * [camp move](../camp_move/)	 - Move a file or directory within the campaign
-* [camp pin](../camp_pin/)	 - Bookmark a directory
+* [camp pin](../camp_pin/)	 - Pin a directory
 * [camp pins](../camp_pins/)	 - List all pinned directories
 * [camp plugins](../camp_plugins/)	 - List discovered camp plugins on PATH
 * [camp project](../camp_project/)	 - Manage campaign projects
@@ -87,6 +87,6 @@ camp [flags]
 * [camp switch](../camp_switch/)	 - Switch to a different campaign
 * [camp sync](../camp_sync/)	 - Safely synchronize submodules
 * [camp transfer](../camp_transfer/)	 - Copy files between campaigns
-* [camp unpin](../camp_unpin/)	 - Remove a directory bookmark
+* [camp unpin](../camp_unpin/)	 - Remove a saved pin
 * [camp unregister](../camp_unregister/)	 - Remove campaign from registry
 * [camp version](../camp_version/)	 - Show version information

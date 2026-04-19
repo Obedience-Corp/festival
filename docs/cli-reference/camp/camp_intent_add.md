@@ -22,6 +22,16 @@ Fast capture is optimized for speed - ideas are saved immediately.
 Use --full when you want to add a body description in the form.
 Use --edit when you need the complete template in your editor.
 
+PROGRAMMATIC (agent) FLAGS:
+  --body              Set intent body from a literal string
+  --body-file         Read intent body from a file (- for stdin)
+  --concept           Set the concept field (e.g., "projects/camp")
+  --author            Override the default author attribution
+
+  --body and --body-file are mutually exclusive.
+  --full + body flags is a usage error.
+  --edit + body flags pre-fills the editor template.
+
 Examples:
   camp intent add "Add dark mode"        Ultra-fast capture
   camp intent add -c obey-campaign "Add dark mode"
@@ -30,6 +40,9 @@ Examples:
   camp intent add --full                 Full TUI (includes body)
   camp intent add -e "Complex feature"   Deep capture with editor
   camp intent add -t feature "New API"   Set type explicitly
+  camp intent add "Fix login" --body "The login page returns 500"
+  camp intent add "Migrate DB" --body-file spec.md --concept projects/camp
+  echo "body" | camp intent add "Idea" --body-file -
 
 ```
 camp intent add [title] [flags]
@@ -38,12 +51,16 @@ camp intent add [title] [flags]
 ### Options
 
 ```
-  -c, --campaign string   Target campaign by name or ID; omit value to pick interactively
-  -e, --edit              Open in $EDITOR for deep capture
-  -f, --full              Full TUI mode with body textarea
-  -h, --help              help for add
-      --no-commit         Don't create a git commit
-  -t, --type string       Intent type (idea, feature, bug, research, chore) (default "idea")
+      --author string      Override the default author attribution
+      --body string        Set intent body as a literal string
+      --body-file string   Read intent body from file (- for stdin, 10 MiB cap)
+  -c, --campaign string    Target campaign by name or ID; omit value to pick interactively
+      --concept string     Set the concept field (e.g., projects/camp)
+  -e, --edit               Open in $EDITOR for deep capture
+  -f, --full               Full TUI mode with body textarea
+  -h, --help               help for add
+      --no-commit          Don't create a git commit
+  -t, --type string        Intent type (idea, feature, bug, research, chore) (default "idea")
 ```
 
 ### Options inherited from parent commands
