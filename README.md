@@ -245,7 +245,7 @@ If `fest` and `camp` are not already installed, the plugin installs them automat
 
 | Component | Examples |
 |---|---|
-| Slash commands | `/fest-next`, `/fest-create`, `/fest-done`, `/fest-commit`, `/fest-validate`, `/camp-intent`, `/camp-init` |
+| Slash commands | `/fest-next`, `/fest-create`, `/fest-commit`, `/fest-validate`, `/fest-status`, `/fest-show`, `/fest-understand`, `/camp-intent`, `/camp-init` |
 | Skills | Auto-activating methodology knowledge, execution workflows, planning guidance |
 | Agents | `fest-planner` for designing festivals, `fest-executor` for working through tasks |
 
