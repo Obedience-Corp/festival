@@ -374,15 +374,21 @@ func collectState(repoRoot, channel, festSelector, campSelector string) (operato
 	return state, nil
 }
 
+// exactTagAt returns the tag pointing at HEAD in dir, or "" if HEAD is untagged.
+// Uses `git tag --points-at HEAD` because it exits 0 with empty stdout for the
+// untagged-HEAD case, avoiding locale- and version-dependent stderr parsing that
+// `git describe --exact-match` would require. If multiple tags point at HEAD,
+// the first line (sorted lexicographically by git) is returned.
 func exactTagAt(dir string) (string, error) {
-	out, err := cmdOutput(dir, nil, "git", "describe", "--tags", "--exact-match", "HEAD")
+	out, err := gitOutput(dir, "tag", "--points-at", "HEAD")
 	if err != nil {
-		if strings.Contains(err.Error(), "no tag exactly matches") || strings.Contains(err.Error(), "cannot describe") {
-			return "", nil
-		}
-		return "", fmt.Errorf("git describe --tags --exact-match HEAD: %w", err)
+		return "", err
 	}
-	return strings.TrimSpace(out), nil
+	if out == "" {
+		return "", nil
+	}
+	first, _, _ := strings.Cut(out, "\n")
+	return first, nil
 }
 
 func resolveSelectedTag(dir, mode, selector string) (string, error) {

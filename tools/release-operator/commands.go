@@ -134,11 +134,7 @@ func (r *repoContext) checkBundledModuleResolution(name string) error {
 }
 
 func (r *repoContext) exactTag(name string) (string, error) {
-	out, err := cmdOutput(r.submodulePath(name), nil, "git", "describe", "--tags", "--exact-match", "HEAD")
-	if err != nil {
-		return "", nil
-	}
-	return strings.TrimSpace(out), nil
+	return exactTagAt(r.submodulePath(name))
 }
 
 func (r *repoContext) exactComponentTags() (string, string, error) {

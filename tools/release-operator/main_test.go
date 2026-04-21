@@ -132,6 +132,50 @@ func TestResolveSelectedTag(t *testing.T) {
 	})
 }
 
+func TestExactTagAt(t *testing.T) {
+	t.Run("returns empty for untagged HEAD without error", func(t *testing.T) {
+		repo := initTestRepo(t)
+		writeFile(t, filepath.Join(repo, "untagged.md"), "untagged\n")
+		runGit(t, repo, "add", "untagged.md")
+		runGit(t, repo, "commit", "-m", "untagged")
+
+		got, err := exactTagAt(repo)
+		if err != nil {
+			t.Fatalf("exactTagAt returned error for untagged HEAD: %v", err)
+		}
+		if got != "" {
+			t.Fatalf("exactTagAt = %q, want empty string", got)
+		}
+	})
+
+	t.Run("returns a tag when HEAD is tagged", func(t *testing.T) {
+		repo := initTestRepo(t)
+		got, err := exactTagAt(repo)
+		if err != nil {
+			t.Fatalf("exactTagAt returned error: %v", err)
+		}
+		if want := "v0.1.0"; got != want {
+			t.Fatalf("exactTagAt = %q, want %q", got, want)
+		}
+	})
+
+	t.Run("returns a single tag when HEAD has multiple", func(t *testing.T) {
+		repo := initTestRepo(t)
+		runGit(t, repo, "tag", "v0.1.0-alias")
+
+		got, err := exactTagAt(repo)
+		if err != nil {
+			t.Fatalf("exactTagAt returned error: %v", err)
+		}
+		if got == "" {
+			t.Fatal("exactTagAt returned empty string, want one of the HEAD tags")
+		}
+		if got != "v0.1.0" && got != "v0.1.0-alias" {
+			t.Fatalf("exactTagAt = %q, want one of v0.1.0 or v0.1.0-alias", got)
+		}
+	})
+}
+
 func initTestRepo(t *testing.T) string {
 	t.Helper()
 
