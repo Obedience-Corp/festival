@@ -8,16 +8,39 @@ import (
 )
 
 func TestParseBundleArgsAcceptsRepoRootBeforeChannel(t *testing.T) {
-	repoRoot, channel, err := parseBundleArgs([]string{"--repo-root", "/tmp/festival", "dev"})
+	opts, err := parseBundleArgs([]string{"--repo-root", "/tmp/festival", "--fest-tag", "keep", "dev"})
 	if err != nil {
 		t.Fatalf("parseBundleArgs returned error: %v", err)
 	}
 
-	if got, want := repoRoot, "/tmp/festival"; got != want {
+	if got, want := opts.RepoRoot, "/tmp/festival"; got != want {
 		t.Fatalf("repoRoot = %q, want %q", got, want)
 	}
-	if got, want := channel, "dev"; got != want {
+	if got, want := opts.Channel, "dev"; got != want {
 		t.Fatalf("channel = %q, want %q", got, want)
+	}
+	if got, want := opts.FestSelector, "keep"; got != want {
+		t.Fatalf("fest selector = %q, want %q", got, want)
+	}
+	if got, want := opts.CampSelector, "latest"; got != want {
+		t.Fatalf("camp selector = %q, want %q", got, want)
+	}
+}
+
+func TestParsePlanArgsAcceptsSelectors(t *testing.T) {
+	opts, err := parsePlanArgs([]string{"--mode", "stable", "--fest-tag", "v0.2.4", "--camp-tag", "keep"})
+	if err != nil {
+		t.Fatalf("parsePlanArgs returned error: %v", err)
+	}
+
+	if got, want := opts.Channel, "stable"; got != want {
+		t.Fatalf("channel = %q, want %q", got, want)
+	}
+	if got, want := opts.FestSelector, "v0.2.4"; got != want {
+		t.Fatalf("fest selector = %q, want %q", got, want)
+	}
+	if got, want := opts.CampSelector, "keep"; got != want {
+		t.Fatalf("camp selector = %q, want %q", got, want)
 	}
 }
 
@@ -66,6 +89,47 @@ func TestLatestReachableTagForModeIgnoresOffBranchTags(t *testing.T) {
 	if got, want := latestTagForMode(repo, "stable"), "v0.2.0"; got != want {
 		t.Fatalf("latestTagForMode(stable) = %q, want %q", got, want)
 	}
+}
+
+func TestResolveSelectedTag(t *testing.T) {
+	t.Run("selects latest keep and explicit tags", func(t *testing.T) {
+		repo := initTestRepo(t)
+
+		writeFile(t, filepath.Join(repo, "CHANGELOG.md"), "stable\n")
+		runGit(t, repo, "add", "CHANGELOG.md")
+		runGit(t, repo, "commit", "-m", "stable release")
+		runGit(t, repo, "tag", "v0.2.0")
+
+		if got, err := resolveSelectedTag(repo, "stable", "latest"); err != nil {
+			t.Fatalf("resolveSelectedTag(latest) error = %v", err)
+		} else if want := "v0.2.0"; got != want {
+			t.Fatalf("resolveSelectedTag(latest) = %q, want %q", got, want)
+		}
+
+		if got, err := resolveSelectedTag(repo, "stable", "keep"); err != nil {
+			t.Fatalf("resolveSelectedTag(keep) error = %v", err)
+		} else if want := "v0.2.0"; got != want {
+			t.Fatalf("resolveSelectedTag(keep) = %q, want %q", got, want)
+		}
+
+		if got, err := resolveSelectedTag(repo, "stable", "v0.1.0"); err != nil {
+			t.Fatalf("resolveSelectedTag(explicit) error = %v", err)
+		} else if want := "v0.1.0"; got != want {
+			t.Fatalf("resolveSelectedTag(explicit) = %q, want %q", got, want)
+		}
+	})
+
+	t.Run("keep rejects untagged head", func(t *testing.T) {
+		repo := initTestRepo(t)
+
+		writeFile(t, filepath.Join(repo, "UNTAGGED.md"), "untagged\n")
+		runGit(t, repo, "add", "UNTAGGED.md")
+		runGit(t, repo, "commit", "-m", "untagged commit")
+
+		if _, err := resolveSelectedTag(repo, "stable", "keep"); err == nil {
+			t.Fatal("expected keep selection to fail on untagged HEAD")
+		}
+	})
 }
 
 func initTestRepo(t *testing.T) string {

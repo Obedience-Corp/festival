@@ -39,25 +39,33 @@ status:
 preflight mode="stable":
     go -C tools/release-operator run . preflight --repo-root ../.. --mode "{{mode}}"
 
-# One-command bundled release from the latest already-created camp/fest tags.
-# This does not create camp/fest tags. Those repos own their own versions.
+# Preview the next bundled release without mutating submodule refs, docs, or tags.
+[no-cd]
+plan mode="stable" fest="latest" camp="latest":
+    go -C tools/release-operator run . plan --repo-root ../.. --mode "{{mode}}" --fest-tag "{{fest}}" --camp-tag "{{camp}}"
+
+# One-command bundled release from already-created camp/fest tags.
+# Selectors:
+# - latest: use the newest tag for the requested release channel
+# - keep: keep the currently pinned exact tag for that submodule
+# - vX.Y.Z: pin a specific release tag
 [no-cd]
 [confirm("This will create a dev festival release from the latest dev tags in camp and fest. Continue?")]
-dev:
+dev fest="latest" camp="latest":
     just test release-operator
-    go -C tools/release-operator run . bundle --repo-root ../.. dev
+    go -C tools/release-operator run . bundle --repo-root ../.. --fest-tag "{{fest}}" --camp-tag "{{camp}}" dev
 
 [no-cd]
 [confirm("This will create an RC festival release from the latest rc tags in camp and fest. Continue?")]
-rc:
+rc fest="latest" camp="latest":
     just test release-operator
-    go -C tools/release-operator run . bundle --repo-root ../.. rc
+    go -C tools/release-operator run . bundle --repo-root ../.. --fest-tag "{{fest}}" --camp-tag "{{camp}}" rc
 
 [no-cd]
-[confirm("This will create a stable festival release from the latest stable tags in camp and fest. Continue?")]
-stable:
+[confirm("This will create a stable festival release from selected stable camp/fest tags on main. Continue?")]
+stable fest="latest" camp="latest":
     just test release-operator
-    go -C tools/release-operator run . bundle --repo-root ../.. stable
+    go -C tools/release-operator run . bundle --repo-root ../.. --fest-tag "{{fest}}" --camp-tag "{{camp}}" stable
 
 # Run GoReleaser dry run (no publish)
 [no-cd]

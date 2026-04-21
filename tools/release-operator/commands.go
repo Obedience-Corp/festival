@@ -170,7 +170,23 @@ func (r *repoContext) cachedDiffExists(paths ...string) (bool, error) {
 	return false, nil
 }
 
-func (r *repoContext) commitPinnedArtifacts(festTag, campTag string) error {
+func releaseCommitMessage(currentFestTag, currentCampTag, festTag, campTag string) string {
+	festChanged := currentFestTag != festTag
+	campChanged := currentCampTag != campTag
+
+	switch {
+	case festChanged && campChanged:
+		return fmt.Sprintf("Release: pin fest %s and camp %s", festTag, campTag)
+	case festChanged:
+		return fmt.Sprintf("Release: pin fest %s", festTag)
+	case campChanged:
+		return fmt.Sprintf("Release: pin camp %s", campTag)
+	default:
+		return fmt.Sprintf("Release: refresh bundled docs for fest %s and camp %s", festTag, campTag)
+	}
+}
+
+func (r *repoContext) commitPinnedArtifacts(currentFestTag, currentCampTag, festTag, campTag string) error {
 	hasDiff, err := r.cachedDiffExists("fest", "camp", "docs/cli-reference")
 	if err != nil {
 		return err
@@ -179,7 +195,7 @@ func (r *repoContext) commitPinnedArtifacts(festTag, campTag string) error {
 		fmt.Printf("Submodule pointers and docs already at fest=%s, camp=%s; no release commit needed.\n", festTag, campTag)
 		return nil
 	}
-	if err := r.runGit("commit", "-m", fmt.Sprintf("Release: pin fest %s and camp %s", festTag, campTag)); err != nil {
+	if err := r.runGit("commit", "-m", releaseCommitMessage(currentFestTag, currentCampTag, festTag, campTag)); err != nil {
 		return err
 	}
 	return r.runGit("push", "origin", "HEAD")
@@ -231,7 +247,7 @@ func (r *repoContext) checkoutSubmoduleTag(name, tag string) error {
 	return r.runGitSubmodule(name, "checkout", "--detach", tag)
 }
 
-func (r *repoContext) pinFromLatest(modeName string) error {
+func (r *repoContext) pinFromLatest(modeName, festSelector, campSelector string) error {
 	mode, err := modeConfig(modeName)
 	if err != nil {
 		return err
@@ -243,8 +259,14 @@ func (r *repoContext) pinFromLatest(modeName string) error {
 		return err
 	}
 
-	festTag := latestTagForMode(r.submodulePath("fest"), mode.Name)
-	campTag := latestTagForMode(r.submodulePath("camp"), mode.Name)
+	festTag, err := resolveSelectedTag(r.submodulePath("fest"), mode.Name, festSelector)
+	if err != nil {
+		return err
+	}
+	campTag, err := resolveSelectedTag(r.submodulePath("camp"), mode.Name, campSelector)
+	if err != nil {
+		return err
+	}
 	if festTag == "" || campTag == "" {
 		fmt.Printf("ERROR: Missing %s tags.\n", mode.Name)
 		fmt.Printf("fest latest %s: %s\n", mode.Name, valueOrNone(festTag))
@@ -476,17 +498,18 @@ func runPreflight(ctx *repoContext, mode releaseMode) error {
 	}
 	fmt.Println()
 	fmt.Println("Preflight complete.")
-	fmt.Println("  One-command: just release dev | just release rc | just release stable")
+	fmt.Println("  One-command: just release stable fest=latest camp=keep")
+	fmt.Println("  Planner:     just release plan mode=stable fest=latest camp=keep")
 	fmt.Println("  Manual:      just release draft <version> | draft-rc <version> <n> | draft-dev <version> <n>")
 	return nil
 }
 
-func runDraftFromLatest(ctx *repoContext, version string, mode releaseMode, iteration int) error {
+func runDraftFromLatest(ctx *repoContext, version string, mode releaseMode, iteration int, festSelector, campSelector, currentFestTag, currentCampTag string) error {
 	releaseTag := releaseTagFor(mode, version, iteration)
 	if err := ctx.ensureTagAbsent(releaseTag); err != nil {
 		return err
 	}
-	if err := ctx.pinFromLatest(mode.Name); err != nil {
+	if err := ctx.pinFromLatest(mode.Name, festSelector, campSelector); err != nil {
 		return err
 	}
 	if err := ctx.runDocs(mode); err != nil {
@@ -504,7 +527,7 @@ func runDraftFromLatest(ctx *repoContext, version string, mode releaseMode, iter
 		return fmt.Errorf("submodules are not pinned to exact %s tags after refresh", mode.Name)
 	}
 
-	if err := ctx.commitPinnedArtifacts(festTag, campTag); err != nil {
+	if err := ctx.commitPinnedArtifacts(currentFestTag, currentCampTag, festTag, campTag); err != nil {
 		return err
 	}
 	if err := runPreflight(ctx, mode); err != nil {
@@ -595,7 +618,7 @@ func runDraftBootstrap(ctx *repoContext, festivalVersion, festVersion, campVersi
 	if err := ctx.stageReleaseArtifacts(); err != nil {
 		return err
 	}
-	if err := ctx.commitPinnedArtifacts(festTag, campTag); err != nil {
+	if err := ctx.commitPinnedArtifacts("", "", festTag, campTag); err != nil {
 		return err
 	}
 
@@ -619,13 +642,49 @@ func runDraftBootstrap(ctx *repoContext, festivalVersion, festVersion, campVersi
 	return nil
 }
 
-func runBundleWithRoot(repoRoot, channel string) error {
-	ctx, err := newRepoContext(repoRoot)
+func runPlanWithRoot(opts planOptions) error {
+	ctx, err := newRepoContext(opts.RepoRoot)
 	if err != nil {
 		return err
 	}
 
-	state, err := collectState(ctx.Root, channel)
+	state, err := collectState(ctx.Root, opts.Channel, opts.FestSelector, opts.CampSelector)
+	if err != nil {
+		return err
+	}
+
+	plan, err := operator.DeriveBundlePlan(state)
+	if err != nil {
+		return err
+	}
+	mode, err := modeConfig(plan.Channel)
+	if err != nil {
+		return err
+	}
+
+	fmt.Println()
+	fmt.Println("== Release Plan ==")
+	fmt.Printf("  channel: %s\n", opts.Channel)
+	fmt.Printf("  festival branch: %s\n", state.CurrentBranch)
+	fmt.Printf("  planned release tag: %s\n", plan.ReleaseTag)
+	fmt.Printf("  fest: %s -> %s (%s)\n", valueOrNone(state.CurrentPinnedFestTag), state.FestTag, opts.FestSelector)
+	fmt.Printf("  camp: %s -> %s (%s)\n", valueOrNone(state.CurrentPinnedCampTag), state.CampTag, opts.CampSelector)
+	fmt.Printf("  docs profile: %s\n", mode.BuildProfile)
+	fmt.Printf("  commit message: %s\n", releaseCommitMessage(state.CurrentPinnedFestTag, state.CurrentPinnedCampTag, state.FestTag, state.CampTag))
+	fmt.Println()
+	fmt.Println(plan.Description)
+	fmt.Printf("Command: just release %s fest=%s camp=%s\n", opts.Channel, opts.FestSelector, opts.CampSelector)
+	fmt.Println()
+	return nil
+}
+
+func runBundleWithRoot(opts bundleOptions) error {
+	ctx, err := newRepoContext(opts.RepoRoot)
+	if err != nil {
+		return err
+	}
+
+	state, err := collectState(ctx.Root, opts.Channel, opts.FestSelector, opts.CampSelector)
 	if err != nil {
 		return err
 	}
@@ -642,15 +701,15 @@ func runBundleWithRoot(repoRoot, channel string) error {
 	fmt.Println()
 	fmt.Println("== Current State ==")
 	fmt.Printf("  festival branch: %s\n", state.CurrentBranch)
-	fmt.Printf("  fest tag: %s\n", state.FestTag)
-	fmt.Printf("  camp tag: %s\n", state.CampTag)
+	fmt.Printf("  fest: %s -> %s (%s)\n", valueOrNone(state.CurrentPinnedFestTag), state.FestTag, opts.FestSelector)
+	fmt.Printf("  camp: %s -> %s (%s)\n", valueOrNone(state.CurrentPinnedCampTag), state.CampTag, opts.CampSelector)
 	fmt.Println()
-	fmt.Printf("== %s Bundle Release ==\n", strings.ToUpper(channel))
+	fmt.Printf("== %s Bundle Release ==\n", strings.ToUpper(opts.Channel))
 	fmt.Println(plan.Description)
-	fmt.Printf("Using latest already-created %s tags from camp and fest.\n", channel)
+	fmt.Printf("Using selected %s tags for camp and fest.\n", opts.Channel)
 	fmt.Println()
 
-	return runDraftFromLatest(ctx, plan.Version, mode, plan.Iteration)
+	return runDraftFromLatest(ctx, plan.Version, mode, plan.Iteration, opts.FestSelector, opts.CampSelector, state.CurrentPinnedFestTag, state.CurrentPinnedCampTag)
 }
 
 func runCleanup(ctx *repoContext, tag string) error {

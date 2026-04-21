@@ -49,25 +49,26 @@ func TestDeriveBundlePlanRCFromReleaseBranch(t *testing.T) {
 	}
 }
 
-func TestDeriveBundlePlanStablePromotesLatestRC(t *testing.T) {
+func TestDeriveBundlePlanStableBumpsLatestStablePatch(t *testing.T) {
 	plan, err := DeriveBundlePlan(BundleInput{
-		Channel:                    "stable",
-		CurrentBranch:              "main",
-		FestTag:                    "v0.2.0",
-		CampTag:                    "v0.2.1",
-		LatestFestivalPromotableRC: "v0.2.0-rc.3",
-		LatestFestivalStable:       "v0.1.1",
+		Channel:              "stable",
+		CurrentBranch:        "main",
+		FestTag:              "v0.2.0",
+		CampTag:              "v0.2.1",
+		CurrentPinnedFestTag: "v0.1.9",
+		CurrentPinnedCampTag: "v0.2.1",
+		LatestFestivalStable: "v0.1.1",
 	})
 	if err != nil {
 		t.Fatalf("DeriveBundlePlan returned error: %v", err)
 	}
 
-	if got, want := plan.ReleaseTag, "v0.2.0"; got != want {
+	if got, want := plan.ReleaseTag, "v0.1.2"; got != want {
 		t.Fatalf("ReleaseTag = %q, want %q", got, want)
 	}
 }
 
-func TestDeriveBundlePlanStableRejectsWhenMainHasNoPromotableRC(t *testing.T) {
+func TestDeriveBundlePlanStableRejectsWhenMainHasNoStableHistory(t *testing.T) {
 	_, err := DeriveBundlePlan(BundleInput{
 		Channel:       "stable",
 		CurrentBranch: "main",
@@ -79,14 +80,16 @@ func TestDeriveBundlePlanStableRejectsWhenMainHasNoPromotableRC(t *testing.T) {
 	}
 }
 
-func TestDeriveBundlePlanStableRejectsWhenStableAlreadyCaughtUp(t *testing.T) {
+func TestDeriveBundlePlanStableRejectsWhenCurrentCommitAlreadyBundlesSelectedTags(t *testing.T) {
 	_, err := DeriveBundlePlan(BundleInput{
-		Channel:                    "stable",
-		CurrentBranch:              "main",
-		FestTag:                    "v0.2.0",
-		CampTag:                    "v0.2.1",
-		LatestFestivalPromotableRC: "v0.2.0-rc.3",
-		LatestFestivalStable:       "v0.2.0",
+		Channel:                         "stable",
+		CurrentBranch:                   "main",
+		FestTag:                         "v0.2.0",
+		CampTag:                         "v0.2.1",
+		CurrentPinnedFestTag:            "v0.2.0",
+		CurrentPinnedCampTag:            "v0.2.1",
+		LatestFestivalStable:            "v0.2.0",
+		CurrentCommitTaggedLatestStable: true,
 	})
 	if err == nil {
 		t.Fatal("expected error")
