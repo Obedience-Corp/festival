@@ -45,9 +45,9 @@ func run(args []string) error {
 	case "pin":
 		fs := commandFlags("pin")
 		repoRoot := fs.String("repo-root", ".", "festival repo root")
-		modeName := fs.String("mode", "stable", "release mode: stable, rc, or dev")
-		festTag := fs.String("fest-tag", "latest", "fest tag selector: latest, keep, or an explicit tag")
-		campTag := fs.String("camp-tag", "latest", "camp tag selector: latest, keep, or an explicit tag")
+		modeName := fs.String("mode", "stable", "release mode: stable, rc, or dev (a mode=... prefix is also accepted)")
+		festTag := fs.String("fest-tag", "latest", "fest tag selector: latest, keep, or an explicit tag (a fest=... prefix is also accepted)")
+		campTag := fs.String("camp-tag", "latest", "camp tag selector: latest, keep, or an explicit tag (a camp=... prefix is also accepted)")
 		if err := fs.Parse(args[1:]); err != nil {
 			return err
 		}
@@ -55,7 +55,11 @@ func run(args []string) error {
 		if err != nil {
 			return err
 		}
-		return ctx.pinFromLatest(*modeName, *festTag, *campTag)
+		return ctx.pinFromLatest(
+			normalizeOptionalAssignment(*modeName, "mode"),
+			normalizeOptionalAssignment(*festTag, "fest"),
+			normalizeOptionalAssignment(*campTag, "camp"),
+		)
 	case "status":
 		ctx, err := repoContextFromArgs("status", args[1:])
 		if err != nil {
@@ -65,7 +69,7 @@ func run(args []string) error {
 	case "preflight":
 		fs := commandFlags("preflight")
 		repoRoot := fs.String("repo-root", ".", "festival repo root")
-		modeName := fs.String("mode", "stable", "release mode: stable, rc, or dev")
+		modeName := fs.String("mode", "stable", "release mode: stable, rc, or dev (a mode=... prefix is also accepted)")
 		if err := fs.Parse(args[1:]); err != nil {
 			return err
 		}
@@ -73,7 +77,7 @@ func run(args []string) error {
 		if err != nil {
 			return err
 		}
-		mode, err := modeConfig(*modeName)
+		mode, err := modeConfig(normalizeOptionalAssignment(*modeName, "mode"))
 		if err != nil {
 			return err
 		}
@@ -94,17 +98,20 @@ func run(args []string) error {
 		fs := commandFlags("draft-from-latest")
 		repoRoot := fs.String("repo-root", ".", "festival repo root")
 		version := fs.String("version", "", "festival release version without leading v")
-		modeName := fs.String("mode", "stable", "release mode: stable, rc, or dev")
+		modeName := fs.String("mode", "stable", "release mode: stable, rc, or dev (a mode=... prefix is also accepted)")
 		iteration := fs.Int("n", 1, "prerelease iteration for rc/dev flows")
-		festTag := fs.String("fest-tag", "latest", "fest tag selector: latest, keep, or an explicit tag")
-		campTag := fs.String("camp-tag", "latest", "camp tag selector: latest, keep, or an explicit tag")
+		festTag := fs.String("fest-tag", "latest", "fest tag selector: latest, keep, or an explicit tag (a fest=... prefix is also accepted)")
+		campTag := fs.String("camp-tag", "latest", "camp tag selector: latest, keep, or an explicit tag (a camp=... prefix is also accepted)")
 		if err := fs.Parse(args[1:]); err != nil {
 			return err
 		}
 		if *version == "" {
 			return errors.New("missing required --version")
 		}
-		mode, err := modeConfig(*modeName)
+		modeValue := normalizeOptionalAssignment(*modeName, "mode")
+		festValue := normalizeOptionalAssignment(*festTag, "fest")
+		campValue := normalizeOptionalAssignment(*campTag, "camp")
+		mode, err := modeConfig(modeValue)
 		if err != nil {
 			return err
 		}
@@ -112,11 +119,11 @@ func run(args []string) error {
 		if err != nil {
 			return err
 		}
-		state, err := collectState(ctx.Root, mode.Name, *festTag, *campTag)
+		state, err := collectState(ctx.Root, mode.Name, festValue, campValue)
 		if err != nil {
 			return err
 		}
-		return runDraftFromLatest(ctx, *version, mode, *iteration, *festTag, *campTag, state.CurrentPinnedFestTag, state.CurrentPinnedCampTag)
+		return runDraftFromLatest(ctx, *version, mode, *iteration, festValue, campValue, state.CurrentPinnedFestTag, state.CurrentPinnedCampTag)
 	case "draft-bootstrap":
 		fs := commandFlags("draft-bootstrap")
 		repoRoot := fs.String("repo-root", ".", "festival repo root")
@@ -188,6 +195,15 @@ func commandFlags(name string) *flag.FlagSet {
 	return fs
 }
 
+func normalizeOptionalAssignment(value, key string) string {
+	value = strings.TrimSpace(value)
+	prefix := key + "="
+	if strings.HasPrefix(value, prefix) {
+		return strings.TrimSpace(strings.TrimPrefix(value, prefix))
+	}
+	return value
+}
+
 type bundleOptions struct {
 	RepoRoot     string
 	Channel      string
@@ -205,8 +221,8 @@ type planOptions struct {
 func parseBundleArgs(args []string) (bundleOptions, error) {
 	fs := commandFlags("bundle")
 	repoRootFlag := fs.String("repo-root", ".", "festival repo root")
-	festTag := fs.String("fest-tag", "latest", "fest tag selector: latest, keep, or an explicit tag")
-	campTag := fs.String("camp-tag", "latest", "camp tag selector: latest, keep, or an explicit tag")
+	festTag := fs.String("fest-tag", "latest", "fest tag selector: latest, keep, or an explicit tag (a fest=... prefix is also accepted)")
+	campTag := fs.String("camp-tag", "latest", "camp tag selector: latest, keep, or an explicit tag (a camp=... prefix is also accepted)")
 	if err := fs.Parse(args); err != nil {
 		return bundleOptions{}, err
 	}
@@ -216,17 +232,17 @@ func parseBundleArgs(args []string) (bundleOptions, error) {
 	return bundleOptions{
 		RepoRoot:     *repoRootFlag,
 		Channel:      fs.Arg(0),
-		FestSelector: *festTag,
-		CampSelector: *campTag,
+		FestSelector: normalizeOptionalAssignment(*festTag, "fest"),
+		CampSelector: normalizeOptionalAssignment(*campTag, "camp"),
 	}, nil
 }
 
 func parsePlanArgs(args []string) (planOptions, error) {
 	fs := commandFlags("plan")
 	repoRootFlag := fs.String("repo-root", ".", "festival repo root")
-	modeName := fs.String("mode", "stable", "release mode: stable, rc, or dev")
-	festTag := fs.String("fest-tag", "latest", "fest tag selector: latest, keep, or an explicit tag")
-	campTag := fs.String("camp-tag", "latest", "camp tag selector: latest, keep, or an explicit tag")
+	modeName := fs.String("mode", "stable", "release mode: stable, rc, or dev (a mode=... prefix is also accepted)")
+	festTag := fs.String("fest-tag", "latest", "fest tag selector: latest, keep, or an explicit tag (a fest=... prefix is also accepted)")
+	campTag := fs.String("camp-tag", "latest", "camp tag selector: latest, keep, or an explicit tag (a camp=... prefix is also accepted)")
 	if err := fs.Parse(args); err != nil {
 		return planOptions{}, err
 	}
@@ -235,9 +251,9 @@ func parsePlanArgs(args []string) (planOptions, error) {
 	}
 	return planOptions{
 		RepoRoot:     *repoRootFlag,
-		Channel:      *modeName,
-		FestSelector: *festTag,
-		CampSelector: *campTag,
+		Channel:      normalizeOptionalAssignment(*modeName, "mode"),
+		FestSelector: normalizeOptionalAssignment(*festTag, "fest"),
+		CampSelector: normalizeOptionalAssignment(*campTag, "camp"),
 	}, nil
 }
 
