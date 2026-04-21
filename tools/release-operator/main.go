@@ -31,15 +31,23 @@ func run(args []string) error {
 		printHelp(os.Stdout)
 		return nil
 	case "bundle":
-		repoRoot, channel, err := parseBundleArgs(args[1:])
+		opts, err := parseBundleArgs(args[1:])
 		if err != nil {
 			return err
 		}
-		return runBundleWithRoot(repoRoot, channel)
+		return runBundleWithRoot(opts)
+	case "plan":
+		opts, err := parsePlanArgs(args[1:])
+		if err != nil {
+			return err
+		}
+		return runPlanWithRoot(opts)
 	case "pin":
 		fs := commandFlags("pin")
 		repoRoot := fs.String("repo-root", ".", "festival repo root")
 		modeName := fs.String("mode", "stable", "release mode: stable, rc, or dev")
+		festTag := fs.String("fest-tag", "latest", "fest tag selector: latest, keep, or an explicit tag")
+		campTag := fs.String("camp-tag", "latest", "camp tag selector: latest, keep, or an explicit tag")
 		if err := fs.Parse(args[1:]); err != nil {
 			return err
 		}
@@ -47,7 +55,7 @@ func run(args []string) error {
 		if err != nil {
 			return err
 		}
-		return ctx.pinFromLatest(*modeName)
+		return ctx.pinFromLatest(*modeName, *festTag, *campTag)
 	case "status":
 		ctx, err := repoContextFromArgs("status", args[1:])
 		if err != nil {
@@ -88,6 +96,8 @@ func run(args []string) error {
 		version := fs.String("version", "", "festival release version without leading v")
 		modeName := fs.String("mode", "stable", "release mode: stable, rc, or dev")
 		iteration := fs.Int("n", 1, "prerelease iteration for rc/dev flows")
+		festTag := fs.String("fest-tag", "latest", "fest tag selector: latest, keep, or an explicit tag")
+		campTag := fs.String("camp-tag", "latest", "camp tag selector: latest, keep, or an explicit tag")
 		if err := fs.Parse(args[1:]); err != nil {
 			return err
 		}
@@ -102,7 +112,11 @@ func run(args []string) error {
 		if err != nil {
 			return err
 		}
-		return runDraftFromLatest(ctx, *version, mode, *iteration)
+		state, err := collectState(ctx.Root, mode.Name, *festTag, *campTag)
+		if err != nil {
+			return err
+		}
+		return runDraftFromLatest(ctx, *version, mode, *iteration, *festTag, *campTag, state.CurrentPinnedFestTag, state.CurrentPinnedCampTag)
 	case "draft-bootstrap":
 		fs := commandFlags("draft-bootstrap")
 		repoRoot := fs.String("repo-root", ".", "festival repo root")
@@ -174,16 +188,57 @@ func commandFlags(name string) *flag.FlagSet {
 	return fs
 }
 
-func parseBundleArgs(args []string) (repoRoot string, channel string, err error) {
+type bundleOptions struct {
+	RepoRoot     string
+	Channel      string
+	FestSelector string
+	CampSelector string
+}
+
+type planOptions struct {
+	RepoRoot     string
+	Channel      string
+	FestSelector string
+	CampSelector string
+}
+
+func parseBundleArgs(args []string) (bundleOptions, error) {
 	fs := commandFlags("bundle")
 	repoRootFlag := fs.String("repo-root", ".", "festival repo root")
+	festTag := fs.String("fest-tag", "latest", "fest tag selector: latest, keep, or an explicit tag")
+	campTag := fs.String("camp-tag", "latest", "camp tag selector: latest, keep, or an explicit tag")
 	if err := fs.Parse(args); err != nil {
-		return "", "", err
+		return bundleOptions{}, err
 	}
 	if fs.NArg() != 1 {
-		return "", "", errors.New("usage: release-operator bundle <dev|rc|stable> [--repo-root PATH]")
+		return bundleOptions{}, errors.New("usage: release-operator bundle <dev|rc|stable> [--repo-root PATH] [--fest-tag latest|keep|vX.Y.Z] [--camp-tag latest|keep|vX.Y.Z]")
 	}
-	return *repoRootFlag, fs.Arg(0), nil
+	return bundleOptions{
+		RepoRoot:     *repoRootFlag,
+		Channel:      fs.Arg(0),
+		FestSelector: *festTag,
+		CampSelector: *campTag,
+	}, nil
+}
+
+func parsePlanArgs(args []string) (planOptions, error) {
+	fs := commandFlags("plan")
+	repoRootFlag := fs.String("repo-root", ".", "festival repo root")
+	modeName := fs.String("mode", "stable", "release mode: stable, rc, or dev")
+	festTag := fs.String("fest-tag", "latest", "fest tag selector: latest, keep, or an explicit tag")
+	campTag := fs.String("camp-tag", "latest", "camp tag selector: latest, keep, or an explicit tag")
+	if err := fs.Parse(args); err != nil {
+		return planOptions{}, err
+	}
+	if fs.NArg() != 0 {
+		return planOptions{}, errors.New("usage: release-operator plan [--mode stable|rc|dev] [--repo-root PATH] [--fest-tag latest|keep|vX.Y.Z] [--camp-tag latest|keep|vX.Y.Z]")
+	}
+	return planOptions{
+		RepoRoot:     *repoRootFlag,
+		Channel:      *modeName,
+		FestSelector: *festTag,
+		CampSelector: *campTag,
+	}, nil
 }
 
 func repoContextFromArgs(name string, args []string) (*repoContext, error) {
@@ -202,9 +257,10 @@ func printHelp(out io.Writer) {
 	fmt.Fprintln(out, "festival release commands")
 	fmt.Fprintln(out)
 	fmt.Fprintln(out, "Primary:")
-	fmt.Fprintln(out, "  just release dev")
-	fmt.Fprintln(out, "  just release rc")
-	fmt.Fprintln(out, "  just release stable")
+	fmt.Fprintln(out, "  just release plan [mode=stable] [fest=latest|keep|vX.Y.Z] [camp=latest|keep|vX.Y.Z]")
+	fmt.Fprintln(out, "  just release dev [fest=latest|keep|vX.Y.Z] [camp=latest|keep|vX.Y.Z]")
+	fmt.Fprintln(out, "  just release rc [fest=latest|keep|vX.Y.Z] [camp=latest|keep|vX.Y.Z]")
+	fmt.Fprintln(out, "  just release stable [fest=latest|keep|vX.Y.Z] [camp=latest|keep|vX.Y.Z]")
 	fmt.Fprintln(out)
 	fmt.Fprintln(out, "Support:")
 	fmt.Fprintln(out, "  just release status")
@@ -214,7 +270,7 @@ func printHelp(out io.Writer) {
 	fmt.Fprintln(out, "  just release cleanup <tag>")
 }
 
-func collectState(repoRoot, channel string) (operator.BundleInput, error) {
+func collectState(repoRoot, channel, festSelector, campSelector string) (operator.BundleInput, error) {
 	if channel != "dev" && channel != "rc" && channel != "stable" {
 		return operator.BundleInput{}, fmt.Errorf("channel must be dev, rc, or stable (got %q)", channel)
 	}
@@ -249,11 +305,31 @@ func collectState(repoRoot, channel string) (operator.BundleInput, error) {
 		return operator.BundleInput{}, err
 	}
 
+	currentFestTag, err := exactTagAt(filepath.Join(repoRoot, "fest"))
+	if err != nil {
+		return operator.BundleInput{}, err
+	}
+	currentCampTag, err := exactTagAt(filepath.Join(repoRoot, "camp"))
+	if err != nil {
+		return operator.BundleInput{}, err
+	}
+
+	selectedFestTag, err := resolveSelectedTag(filepath.Join(repoRoot, "fest"), channel, festSelector)
+	if err != nil {
+		return operator.BundleInput{}, err
+	}
+	selectedCampTag, err := resolveSelectedTag(filepath.Join(repoRoot, "camp"), channel, campSelector)
+	if err != nil {
+		return operator.BundleInput{}, err
+	}
+
 	state := operator.BundleInput{
-		Channel:       channel,
-		CurrentBranch: branch,
-		FestTag:       latestTagForMode(filepath.Join(repoRoot, "fest"), channel),
-		CampTag:       latestTagForMode(filepath.Join(repoRoot, "camp"), channel),
+		Channel:              channel,
+		CurrentBranch:        branch,
+		FestTag:              selectedFestTag,
+		CampTag:              selectedCampTag,
+		CurrentPinnedFestTag: currentFestTag,
+		CurrentPinnedCampTag: currentCampTag,
 	}
 	state.LatestFestivalDev, err = latestReachableTagForMode(repoRoot, "dev")
 	if err != nil {
@@ -275,6 +351,13 @@ func collectState(repoRoot, channel string) (operator.BundleInput, error) {
 		}
 		state.CurrentCommitTaggedLatestDev = match
 	}
+	if state.LatestFestivalStable != "" {
+		match, err := headMatchesTag(repoRoot, state.LatestFestivalStable)
+		if err != nil {
+			return operator.BundleInput{}, err
+		}
+		state.CurrentCommitTaggedLatestStable = match
+	}
 
 	if state.CurrentBranch != "" && strings.HasPrefix(state.CurrentBranch, "release/v") {
 		version := strings.TrimPrefix(state.CurrentBranch, "release/v")
@@ -289,6 +372,60 @@ func collectState(repoRoot, channel string) (operator.BundleInput, error) {
 	}
 
 	return state, nil
+}
+
+// exactTagAt returns the tag pointing at HEAD in dir, or "" if HEAD is untagged.
+// Uses `git tag --points-at HEAD` because it exits 0 with empty stdout for the
+// untagged-HEAD case, avoiding locale- and version-dependent stderr parsing that
+// `git describe --exact-match` would require. If multiple tags point at HEAD,
+// the first line (sorted lexicographically by git) is returned.
+func exactTagAt(dir string) (string, error) {
+	out, err := gitOutput(dir, "tag", "--points-at", "HEAD")
+	if err != nil {
+		return "", err
+	}
+	if out == "" {
+		return "", nil
+	}
+	first, _, _ := strings.Cut(out, "\n")
+	return first, nil
+}
+
+func resolveSelectedTag(dir, mode, selector string) (string, error) {
+	name := filepath.Base(dir)
+
+	switch selector {
+	case "", "latest":
+		tag := latestTagForMode(dir, mode)
+		if tag == "" {
+			return "", fmt.Errorf("%s has no %s tag to select", name, mode)
+		}
+		return tag, nil
+	case "keep":
+		tag, err := exactTagAt(dir)
+		if err != nil {
+			return "", err
+		}
+		if tag == "" {
+			return "", fmt.Errorf("%s is not pinned to an exact tag, so keep cannot be used", name)
+		}
+		if !operator.TagMatchesMode(tag, mode) {
+			return "", fmt.Errorf("%s keep tag %s does not match %s mode", name, tag, mode)
+		}
+		return tag, nil
+	default:
+		if !operator.TagMatchesMode(selector, mode) {
+			return "", fmt.Errorf("%s tag %s does not match %s mode", name, selector, mode)
+		}
+		out, err := gitOutput(dir, "tag", "-l", selector)
+		if err != nil {
+			return "", err
+		}
+		if strings.TrimSpace(out) == "" {
+			return "", fmt.Errorf("%s tag %s was not found", name, selector)
+		}
+		return selector, nil
+	}
 }
 
 func worktreeDirty(dir string) (bool, error) {

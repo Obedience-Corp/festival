@@ -55,16 +55,19 @@ type ParsedPrerelease struct {
 }
 
 type BundleInput struct {
-	Channel                      string
-	CurrentBranch                string
-	FestTag                      string
-	CampTag                      string
-	LatestFestivalDev            string
-	LatestFestivalPromotableRC   string
-	LatestFestivalStable         string
-	LatestFestivalVersionRC      string
-	CurrentCommitTaggedLatestDev bool
-	CurrentCommitTaggedVersionRC bool
+	Channel                         string
+	CurrentBranch                   string
+	FestTag                         string
+	CampTag                         string
+	CurrentPinnedFestTag            string
+	CurrentPinnedCampTag            string
+	LatestFestivalDev               string
+	LatestFestivalPromotableRC      string
+	LatestFestivalStable            string
+	LatestFestivalVersionRC         string
+	CurrentCommitTaggedLatestDev    bool
+	CurrentCommitTaggedLatestStable bool
+	CurrentCommitTaggedVersionRC    bool
 }
 
 type BundlePlan struct {
@@ -169,33 +172,28 @@ func planStable(in BundleInput) (BundlePlan, error) {
 	if in.CurrentBranch != "main" {
 		return BundlePlan{}, fmt.Errorf("stable releases must be created from the main branch")
 	}
-	if in.LatestFestivalPromotableRC == "" {
-		return BundlePlan{}, fmt.Errorf("main does not contain a festival rc to promote")
+	if in.LatestFestivalStable == "" {
+		return BundlePlan{}, fmt.Errorf("main does not contain a prior festival stable release; use draft-bootstrap or draft --version")
 	}
 
-	rc, err := ParseRCTag(in.LatestFestivalPromotableRC)
+	stable, err := ParseStableTag(in.LatestFestivalStable)
 	if err != nil {
 		return BundlePlan{}, err
 	}
-
-	if in.LatestFestivalStable != "" {
-		stable, err := ParseStableTag(in.LatestFestivalStable)
-		if err != nil {
-			return BundlePlan{}, err
-		}
-		if stable.Compare(rc.Version) >= 0 {
-			return BundlePlan{}, fmt.Errorf("there is no newer festival rc line to promote")
-		}
+	if in.CurrentCommitTaggedLatestStable &&
+		in.FestTag == in.CurrentPinnedFestTag &&
+		in.CampTag == in.CurrentPinnedCampTag {
+		return BundlePlan{}, fmt.Errorf("latest festival stable release already bundles the selected component tags on the current commit")
 	}
 
-	version := rc.Version.String()
+	version := stable.BumpPatch().String()
 	return BundlePlan{
 		Channel:     "stable",
 		Version:     version,
 		ReleaseTag:  "v" + version,
 		DraftRecipe: "draft-stable-from-latest",
 		DraftArgs:   []string{version},
-		Description: fmt.Sprintf("Festival version line: v%s (promoting %s on main)", version, in.LatestFestivalPromotableRC),
+		Description: fmt.Sprintf("Festival version line: v%s (patch bump from %s on main)", version, in.LatestFestivalStable),
 	}, nil
 }
 
