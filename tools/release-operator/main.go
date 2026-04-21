@@ -45,9 +45,9 @@ func run(args []string) error {
 	case "pin":
 		fs := commandFlags("pin")
 		repoRoot := fs.String("repo-root", ".", "festival repo root")
-		modeName := fs.String("mode", "stable", "release mode: stable, rc, or dev")
-		festTag := fs.String("fest-tag", "latest", "fest tag selector: latest, keep, or an explicit tag")
-		campTag := fs.String("camp-tag", "latest", "camp tag selector: latest, keep, or an explicit tag")
+		modeName := fs.String("mode", "stable", "release mode: stable, rc, or dev (a mode=... prefix is also accepted)")
+		festTag := fs.String("fest-tag", "latest", "fest tag selector: latest, keep, or an explicit tag (a fest=... prefix is also accepted)")
+		campTag := fs.String("camp-tag", "latest", "camp tag selector: latest, keep, or an explicit tag (a camp=... prefix is also accepted)")
 		if err := fs.Parse(args[1:]); err != nil {
 			return err
 		}
@@ -69,7 +69,7 @@ func run(args []string) error {
 	case "preflight":
 		fs := commandFlags("preflight")
 		repoRoot := fs.String("repo-root", ".", "festival repo root")
-		modeName := fs.String("mode", "stable", "release mode: stable, rc, or dev")
+		modeName := fs.String("mode", "stable", "release mode: stable, rc, or dev (a mode=... prefix is also accepted)")
 		if err := fs.Parse(args[1:]); err != nil {
 			return err
 		}
@@ -98,10 +98,10 @@ func run(args []string) error {
 		fs := commandFlags("draft-from-latest")
 		repoRoot := fs.String("repo-root", ".", "festival repo root")
 		version := fs.String("version", "", "festival release version without leading v")
-		modeName := fs.String("mode", "stable", "release mode: stable, rc, or dev")
+		modeName := fs.String("mode", "stable", "release mode: stable, rc, or dev (a mode=... prefix is also accepted)")
 		iteration := fs.Int("n", 1, "prerelease iteration for rc/dev flows")
-		festTag := fs.String("fest-tag", "latest", "fest tag selector: latest, keep, or an explicit tag")
-		campTag := fs.String("camp-tag", "latest", "camp tag selector: latest, keep, or an explicit tag")
+		festTag := fs.String("fest-tag", "latest", "fest tag selector: latest, keep, or an explicit tag (a fest=... prefix is also accepted)")
+		campTag := fs.String("camp-tag", "latest", "camp tag selector: latest, keep, or an explicit tag (a camp=... prefix is also accepted)")
 		if err := fs.Parse(args[1:]); err != nil {
 			return err
 		}
@@ -221,8 +221,8 @@ type planOptions struct {
 func parseBundleArgs(args []string) (bundleOptions, error) {
 	fs := commandFlags("bundle")
 	repoRootFlag := fs.String("repo-root", ".", "festival repo root")
-	festTag := fs.String("fest-tag", "latest", "fest tag selector: latest, keep, or an explicit tag")
-	campTag := fs.String("camp-tag", "latest", "camp tag selector: latest, keep, or an explicit tag")
+	festTag := fs.String("fest-tag", "latest", "fest tag selector: latest, keep, or an explicit tag (a fest=... prefix is also accepted)")
+	campTag := fs.String("camp-tag", "latest", "camp tag selector: latest, keep, or an explicit tag (a camp=... prefix is also accepted)")
 	if err := fs.Parse(args); err != nil {
 		return bundleOptions{}, err
 	}
@@ -240,9 +240,9 @@ func parseBundleArgs(args []string) (bundleOptions, error) {
 func parsePlanArgs(args []string) (planOptions, error) {
 	fs := commandFlags("plan")
 	repoRootFlag := fs.String("repo-root", ".", "festival repo root")
-	modeName := fs.String("mode", "stable", "release mode: stable, rc, or dev")
-	festTag := fs.String("fest-tag", "latest", "fest tag selector: latest, keep, or an explicit tag")
-	campTag := fs.String("camp-tag", "latest", "camp tag selector: latest, keep, or an explicit tag")
+	modeName := fs.String("mode", "stable", "release mode: stable, rc, or dev (a mode=... prefix is also accepted)")
+	festTag := fs.String("fest-tag", "latest", "fest tag selector: latest, keep, or an explicit tag (a fest=... prefix is also accepted)")
+	campTag := fs.String("camp-tag", "latest", "camp tag selector: latest, keep, or an explicit tag (a camp=... prefix is also accepted)")
 	if err := fs.Parse(args); err != nil {
 		return planOptions{}, err
 	}
