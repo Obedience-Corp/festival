@@ -27,6 +27,23 @@ func TestParseBundleArgsAcceptsRepoRootBeforeChannel(t *testing.T) {
 	}
 }
 
+func TestParseBundleArgsNormalizesKeyValueSelectors(t *testing.T) {
+	opts, err := parseBundleArgs([]string{"--fest-tag", "fest=latest", "--camp-tag", "camp=keep", "stable"})
+	if err != nil {
+		t.Fatalf("parseBundleArgs returned error: %v", err)
+	}
+
+	if got, want := opts.Channel, "stable"; got != want {
+		t.Fatalf("channel = %q, want %q", got, want)
+	}
+	if got, want := opts.FestSelector, "latest"; got != want {
+		t.Fatalf("fest selector = %q, want %q", got, want)
+	}
+	if got, want := opts.CampSelector, "keep"; got != want {
+		t.Fatalf("camp selector = %q, want %q", got, want)
+	}
+}
+
 func TestParsePlanArgsAcceptsSelectors(t *testing.T) {
 	opts, err := parsePlanArgs([]string{"--mode", "stable", "--fest-tag", "v0.2.4", "--camp-tag", "keep"})
 	if err != nil {
@@ -41,6 +58,59 @@ func TestParsePlanArgsAcceptsSelectors(t *testing.T) {
 	}
 	if got, want := opts.CampSelector, "keep"; got != want {
 		t.Fatalf("camp selector = %q, want %q", got, want)
+	}
+}
+
+func TestParsePlanArgsNormalizesKeyValueInputs(t *testing.T) {
+	opts, err := parsePlanArgs([]string{"--mode", "mode=stable", "--fest-tag", "fest=latest", "--camp-tag", "camp=keep"})
+	if err != nil {
+		t.Fatalf("parsePlanArgs returned error: %v", err)
+	}
+
+	if got, want := opts.Channel, "stable"; got != want {
+		t.Fatalf("channel = %q, want %q", got, want)
+	}
+	if got, want := opts.FestSelector, "latest"; got != want {
+		t.Fatalf("fest selector = %q, want %q", got, want)
+	}
+	if got, want := opts.CampSelector, "keep"; got != want {
+		t.Fatalf("camp selector = %q, want %q", got, want)
+	}
+}
+
+func TestNormalizeOptionalAssignment(t *testing.T) {
+	tests := []struct {
+		name  string
+		value string
+		key   string
+		want  string
+	}{
+		{
+			name:  "strips matching key prefix",
+			value: "fest=latest",
+			key:   "fest",
+			want:  "latest",
+		},
+		{
+			name:  "preserves plain value",
+			value: "keep",
+			key:   "camp",
+			want:  "keep",
+		},
+		{
+			name:  "ignores non-matching prefix",
+			value: "camp=keep",
+			key:   "fest",
+			want:  "camp=keep",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := normalizeOptionalAssignment(tt.value, tt.key); got != tt.want {
+				t.Fatalf("normalizeOptionalAssignment(%q, %q) = %q, want %q", tt.value, tt.key, got, tt.want)
+			}
+		})
 	}
 }
 

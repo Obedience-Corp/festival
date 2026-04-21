@@ -55,7 +55,11 @@ func run(args []string) error {
 		if err != nil {
 			return err
 		}
-		return ctx.pinFromLatest(*modeName, *festTag, *campTag)
+		return ctx.pinFromLatest(
+			normalizeOptionalAssignment(*modeName, "mode"),
+			normalizeOptionalAssignment(*festTag, "fest"),
+			normalizeOptionalAssignment(*campTag, "camp"),
+		)
 	case "status":
 		ctx, err := repoContextFromArgs("status", args[1:])
 		if err != nil {
@@ -73,7 +77,7 @@ func run(args []string) error {
 		if err != nil {
 			return err
 		}
-		mode, err := modeConfig(*modeName)
+		mode, err := modeConfig(normalizeOptionalAssignment(*modeName, "mode"))
 		if err != nil {
 			return err
 		}
@@ -104,7 +108,10 @@ func run(args []string) error {
 		if *version == "" {
 			return errors.New("missing required --version")
 		}
-		mode, err := modeConfig(*modeName)
+		modeValue := normalizeOptionalAssignment(*modeName, "mode")
+		festValue := normalizeOptionalAssignment(*festTag, "fest")
+		campValue := normalizeOptionalAssignment(*campTag, "camp")
+		mode, err := modeConfig(modeValue)
 		if err != nil {
 			return err
 		}
@@ -112,11 +119,11 @@ func run(args []string) error {
 		if err != nil {
 			return err
 		}
-		state, err := collectState(ctx.Root, mode.Name, *festTag, *campTag)
+		state, err := collectState(ctx.Root, mode.Name, festValue, campValue)
 		if err != nil {
 			return err
 		}
-		return runDraftFromLatest(ctx, *version, mode, *iteration, *festTag, *campTag, state.CurrentPinnedFestTag, state.CurrentPinnedCampTag)
+		return runDraftFromLatest(ctx, *version, mode, *iteration, festValue, campValue, state.CurrentPinnedFestTag, state.CurrentPinnedCampTag)
 	case "draft-bootstrap":
 		fs := commandFlags("draft-bootstrap")
 		repoRoot := fs.String("repo-root", ".", "festival repo root")
@@ -188,6 +195,15 @@ func commandFlags(name string) *flag.FlagSet {
 	return fs
 }
 
+func normalizeOptionalAssignment(value, key string) string {
+	value = strings.TrimSpace(value)
+	prefix := key + "="
+	if strings.HasPrefix(value, prefix) {
+		return strings.TrimSpace(strings.TrimPrefix(value, prefix))
+	}
+	return value
+}
+
 type bundleOptions struct {
 	RepoRoot     string
 	Channel      string
@@ -216,8 +232,8 @@ func parseBundleArgs(args []string) (bundleOptions, error) {
 	return bundleOptions{
 		RepoRoot:     *repoRootFlag,
 		Channel:      fs.Arg(0),
-		FestSelector: *festTag,
-		CampSelector: *campTag,
+		FestSelector: normalizeOptionalAssignment(*festTag, "fest"),
+		CampSelector: normalizeOptionalAssignment(*campTag, "camp"),
 	}, nil
 }
 
@@ -235,9 +251,9 @@ func parsePlanArgs(args []string) (planOptions, error) {
 	}
 	return planOptions{
 		RepoRoot:     *repoRootFlag,
-		Channel:      *modeName,
-		FestSelector: *festTag,
-		CampSelector: *campTag,
+		Channel:      normalizeOptionalAssignment(*modeName, "mode"),
+		FestSelector: normalizeOptionalAssignment(*festTag, "fest"),
+		CampSelector: normalizeOptionalAssignment(*campTag, "camp"),
 	}, nil
 }
 
