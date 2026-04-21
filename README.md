@@ -1,239 +1,235 @@
 # Festival
 
+[![Release](https://img.shields.io/github/v/release/Obedience-Corp/festival?display_name=tag)](https://github.com/Obedience-Corp/festival/releases/latest)
+[![Docs](https://img.shields.io/badge/docs-docs.fest.build-1f6feb)](https://docs.fest.build)
+[![License](https://img.shields.io/github/license/Obedience-Corp/festival)](LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/Obedience-Corp/festival?style=social)](https://github.com/Obedience-Corp/festival/stargazers)
+
 ![Festival Banner](docs/images/festival_banner.png)
 
-**A standardized workspace and workflow for solving difficult, multi-faceted problems with AI.**
+**Persistent multi-repo workspace for AI coding agents.**
 
-To use AI to solve hard problems you need three things: **context**, **direction**, and **verification**. Festival provides a structured layer for each, resulting in dramatically fewer tokens and less time spent getting to the outcome you want.
+AI coding tools work well inside one session. They get brittle when work spans days, repos, docs, research, plans, commits, reviews, and handoffs.
 
-> [Get started](https://docs.fest.build/getting-started/quickstart) (takes ~5 minutes).
+Festival keeps the mission on disk:
 
-```mermaid
-graph TD
-    HP["<b>Hard, multi-faceted problem</b>"]
+- all related repos in one workspace
+- docs, research, and decisions beside the code
+- execution plans agents can resume with `fest next`
+- completion criteria and review notes for every task
+- commits tied back to the plan
 
-    HP --> C["<b>Context</b><br/><br/>a campaign workspace with<br/>all projects, docs, and research"]
-    HP --> D["<b>Direction</b><br/><br/>a structured plan that AI agents<br/>can execute, pause, and resume"]
-    HP --> V["<b>Verification</b><br/><br/>all work captured in reviewable<br/>files you can trace and audit"]
+Use it with Claude Code, Codex, Cursor, OpenCode, Aider, Gemini CLI, or any agent that can read files and run shell commands.
 
-    C --> O["<b>Fewer tokens · less time · better outcomes</b>"]
-    D --> O
-    V --> O
-```
+**One install. Two command groups.**
 
-## Install
+`camp` organizes the mission workspace.
 
-**macOS:**
+`fest` runs the execution plan.
 
-```bash
-brew install --cask Obedience-Corp/tap/festival
-```
+## Contents
 
-**Arch Linux:**
+- [60-second example](#60-second-example)
+- [Why Festival](#why-festival)
+- [Who Festival Is For](#who-festival-is-for)
+- [What Festival Is Not](#what-festival-is-not)
+- [Real Example](#real-example)
+- [Install](#install)
+- [How Festival Works](#how-festival-works)
+- [How Festival Compares](#how-festival-compares)
+- [Claude Code Plugin](#claude-code-plugin)
+- [Documentation](#documentation)
 
-```bash
-yay -S festival-bin
-```
-
-**Debian/Ubuntu:** Download `.deb` from [releases](https://github.com/Obedience-Corp/festival/releases/latest)
-
-**Windows:** Stable Windows packages are temporarily paused while support is being hardened.
-For now, use WSL2 and the Linux install method above.
-
-## Requirements
-
-- `git` is required. `camp` and `fest` use git internally for campaign init, project management, template sync, and commit-aware workflows.
-- `scc` is recommended but optional. Without it, `camp leverage` features will not work.
-
-## Quick Start
+## 60-second example
 
 ```bash
-# Shell integration (add to ~/.zshrc)
-eval "$(camp shell-init zsh)"
-eval "$(fest shell-init zsh)"
+# Create a mission workspace
+camp init billing-redesign
+cd billing-redesign
 
-# Create a campaign
-camp init my-project && cd my-project
+# Add the repos involved in the work
+camp project add https://github.com/acme/api
+camp project add https://github.com/acme/web
+camp intent add "Redesign billing flow across API and web"
 
-# Add a project
-camp project add https://github.com/you/your-repo
-
-# Create your first festival
-fest create festival --name "my-first-feature" --type standard
-
-# Fill the generated REPLACE markers in the new festival files
-# Then validate before execution
+# Create an execution plan
+fest create festival --name billing-redesign --type standard
 fest validate
 
-# Start working
+# Work the plan
+fest next
+fest task completed
+fest commit -m "implement billing session creation"
 fest next
 ```
 
-After installing, see the [quick start guide](https://docs.fest.build/getting-started/quickstart/) for shell setup and first steps.
+`fest next` is the magic moment. It gives the agent the next task, surrounding context, workflow order, and completion criteria:
 
-## The Problem
+```text
+$ fest next
 
-AI coding tools are fast. But speed without context and direction just means you burn tokens faster. Every new session starts from zero: no memory of the larger goal, no structure for multi-step work, no way to pick up where you left off. You end up re-explaining the same context, getting inconsistent results, and losing coherence across sessions.
+Next task: Implement billing session creation
+Phase: 002-api-contract
+Sequence: 001-session-lifecycle
+Linked project: projects/api
+Why: Web checkout cannot proceed until the API creates durable billing sessions.
 
-Traditional tools don't solve this because they weren't designed for it. You need:
+Done when:
+  - POST /billing/session exists
+  - expired sessions are covered by tests
+  - duplicate session creation is idempotent
+  - commit references this festival task
 
-1. **Context**: a workspace that holds all projects, docs, and planning for a mission in one place
-2. **Direction**: structured plans that AI agents can pick up, execute, and resume without losing the thread
-3. **Verification**: completion criteria and reviewable output baked into the workflow, not bolted on after
-
-## What Festival Does
-
-Festival ships two CLIs (`camp` and `fest`) that solve the three problems above.
-
-**`camp`** manages campaigns: isolated workspaces that hold all the projects, docs, research, and planning for a single mission. It gives you instant navigation across everything in the workspace, project lifecycle management, and shell shortcuts that make `cd` obsolete.
-
-**`fest`** manages festivals: structured plans that break work into phases, sequences, and tasks. The hierarchy is designed for AI agents to execute autonomously, pause, and resume without context loss. Run `fest next` and the agent gets its next task with full surrounding context. Run `fest commit` and every commit traces back to the plan.
-
-### Where Festival Fits
-
-Festival is a **planning and context layer**, not a runtime orchestrator. It doesn't spawn agents or manage their processes. It gives them the structure, context, and goals they need to work autonomously. Runtime orchestrators tell agents what to do next. Festival tells agents *why* they're doing it, what success looks like, and where they are in a larger mission.
-
-The context model is persistent and filesystem-based. Plans survive across sessions, days, and weeks, not just a single agent run. Festival is agent-agnostic: it works with Claude Code, Codex, Aider, OpenCode, or any CLI tool that can read files and run commands. Use an orchestrator to manage parallel agents, and Festival to give each agent the plan and context it needs.
-
-### Festival Methodology
-
-Festival is built around Festival Methodology: a hierarchical, goal-based planning system for human-directed AI execution. It preserves both agent context and operator context, uses ingest and planning phases to reduce chat iteration up front, and leaves a durable pre- and post-execution audit trail so you can scale difficult knowledge work without micromanaging every decision. Read the full methodology guide in the [`fest` repo](https://github.com/Obedience-Corp/fest/blob/main/methodology/README.md).
-
-### Real Example
-
-Here's what `obey-campaign` looks like, a real campaign that orchestrates Obedience Corp's internal platform and product stack:
-
+Relevant context:
+  - docs/billing/stripe-contract.md
+  - festivals/active/billing-redesign/decisions/session-ids.md
+  - prior task: 001-session-schema
 ```
+
+The loop is simple:
+
+```text
+fest next -> do the work -> fest task completed -> fest commit -> fest next
+```
+
+Tomorrow, the next agent starts there instead of reconstructing the mission from chat.
+
+## Why Festival
+
+AI agents do not just lose context. They lose the mission.
+
+Real software work is not one prompt and one repo. It is:
+
+- backend, frontend, infra, docs, and scripts living in different repos
+- requirements scattered across chats, notes, issues, and old decisions
+- new sessions asking "what are we doing again?"
+- agents completing tasks without preserving why the task mattered
+- commits existing without a durable link back to the plan
+
+Festival adds the missing project-memory layer: local files, structured execution state, and traceable commits that survive sessions and handoffs.
+
+## Who Festival Is For
+
+Festival is useful when:
+
+- one goal touches multiple repos
+- work spans days or weeks instead of one session
+- agents need to pause, resume, or hand off cleanly
+- you keep re-explaining project context to new sessions
+- you want local files and Git instead of a hosted task manager
+- you want completed work traceable to a plan
+
+## What Festival Is Not
+
+Festival is not:
+
+- a hosted dashboard
+- an agent runtime or orchestrator
+- a prompt pack
+- a Jira replacement
+- a generic todo list
+- a Claude-only tool
+
+Use an orchestrator if you want to supervise parallel agents. Use Festival when those agents need durable mission context and an execution plan they can actually resume.
+
+## Real Example
+
+This is a real Obedience Corp campaign workspace for a multi-repo platform and product stack:
+
+```text
 obey-campaign/
 ├── projects/                     # 19 project submodules
 │   ├── camp/                     # Campaign CLI
 │   ├── fest/                     # Festival planning CLI
-│   ├── festival/                 # Distribution repo (this one)
+│   ├── festival/                 # Distribution repo
 │   ├── obey-platform-monorepo/   # Core platform
 │   ├── obey-chat/                # Chat client
 │   ├── guild-core/               # Reference implementation
 │   ├── obediencecorp.com/        # Company website
 │   ├── prototypes/               # Experiment sandbox
 │   └── ...                       # 11 more projects
-├── festivals/                    # Festival lifecycle workspace
-│   ├── planning/                 # Festivals being designed
-│   ├── active/                   # Currently executing
-│   ├── ready/                    # Prepared, awaiting execution
-│   ├── ritual/                   # Recurring processes
-│   └── dungeon/                  # completed/ | archived/ | someday/
-├── workflow/                     # Intents, code reviews, pipelines
+├── festivals/                    # Execution plans
+│   ├── planning/
+│   ├── active/
+│   ├── ready/
+│   ├── ritual/
+│   └── dungeon/
+├── workflow/                     # Intents, reviews, pipelines
 ├── ai_docs/                      # AI research and documentation
 ├── docs/                         # Human-authored documentation
 └── CLAUDE.md                     # Agent instructions
 ```
 
-Every project, every plan, every piece of context for this mission lives here. `cgo p fest` jumps to the fest project. `fgo` toggles between a festival and its linked project. Everything is navigable by both humans and AI agents.
+Every project, plan, and piece of context for the mission lives in one local workspace.
 
-## Navigation
+## Install
 
-Shell integration gives you shorthand functions that make navigating a campaign instant. Add these to your shell config:
-
-```bash
-eval "$(camp shell-init zsh)"   # gives you: cgo, cr, csw, cint
-eval "$(fest shell-init zsh)"   # gives you: fgo, fls
-```
-
-### cgo: jump anywhere in your workspace
-
-`cgo` wraps `camp go` with real `cd` behavior. It's the fastest way to move around:
+**macOS**
 
 ```bash
-cgo                   # Toggle between campaign root and last location
-cgo p                 # Jump to projects/
-cgo p api             # Fuzzy-find "api" in projects/ (matches api-server, api-gateway, etc.)
-cgo f                 # Jump to festivals/
-cgo w                 # Jump to workflow/
-cgo wt api@feat       # Jump to a worktree branch
+brew install --cask Obedience-Corp/tap/festival
 ```
 
-Single-letter category shortcuts (`p`, `f`, `w`, `a`, `d`, `i`, `wt`, `du`, `cr`, `de`) map to top-level campaign directories. After the category, any additional argument is a fuzzy search. `cgo p mono` lands you in `obey-platform-monorepo/`. Tab completion works at every level.
-
-You can also run a command without leaving your current directory:
+**Arch Linux**
 
 ```bash
-cgo -c p api ls       # Run ls inside projects/api-* without cd'ing
-cr just build         # Run "just build" from campaign root
+yay -S festival-bin
 ```
 
-### fgo: toggle between a festival and its linked project
+**Debian/Ubuntu**: download the `.deb` from [releases](https://github.com/Obedience-Corp/festival/releases/latest)
 
-`fgo` wraps `fest go`. Its standout feature is bidirectional toggling:
+**Windows**: use WSL2 while native package support is being hardened
 
-```bash
-fgo                   # From a festival -> jump to its linked project
-                      # From a linked project -> jump back to the festival
+## Requirements
 
-fgo 2                 # Jump to phase 002
-fgo 2/1               # Jump to phase 2, sequence 1
-fgo active            # Jump to festivals/active/
-fgo active my-fest    # Jump to a specific active festival
-```
+- `git` is required because `camp` and `fest` use it for workspace init, project management, template sync, and commit-aware workflows
+- `scc` is recommended but optional; without it, `camp leverage` features will not work
 
-Link a festival to a project once (`fgo link`) and `fgo` with no args toggles between them forever. Named shortcuts work too: `fest go map n` bookmarks the current directory, then `fgo -n` jumps there.
+After installing, start with the [quick start guide](https://docs.fest.build/getting-started/quickstart/) and get to your first `fest next` in a few minutes.
 
-### Other shorthands
+## How Festival Works
 
-| Shorthand | Expands to | What it does |
-|-----------|------------|--------------|
-| `csw`     | `camp switch` | Switch between campaigns (fuzzy match + interactive picker) |
-| `cint`    | `camp intent add` | Quick-capture an idea to the intent inbox |
-| `cr`      | `camp run` | Run a command from campaign root |
-| `fls`     | `fest list` | List festivals by status |
+Festival is one product with two command groups.
 
-### Concept shortcuts
+### `camp`: organize the mission workspace
 
-`camp` supports shorthand for subcommands too. `camp p` expands to `camp project`, so these are identical:
+`camp` manages campaigns: isolated workspaces that hold all the projects, docs, research, and planning for a single mission.
 
-```bash
-camp p commit -m "fix bug"    # Same as: camp project commit -m "fix bug"
-camp p add <url>              # Same as: camp project add <url>
-camp p list                   # Same as: camp project list
-```
+- create a workspace
+- add related repos as projects
+- capture intents before planning
+- jump across repos and workspace folders without path hunting
 
-## CLI Overview
+### `fest`: run the execution plan
 
-Full reference: [fest CLI](https://docs.fest.build/cli-reference/fest/) | [camp CLI](https://docs.fest.build/cli-reference/camp/)
+`fest` manages festivals: structured plans that break work into phases, sequences, and tasks.
 
-### camp: workspace management
+- turn goals into execution-ready work
+- give agents the next scoped task with context
+- validate plans before execution
+- mark tasks complete
+- commit work with task traceability
 
-```bash
-camp init my-startup             # Create a campaign
-camp project add <url>           # Add a project as submodule
-camp p commit -m "fix auth"      # Commit in a project (auto-stages all changes)
-camp status all                  # Dashboard of all project statuses
-camp doctor                      # Health check the workspace
-camp intent add "idea"           # Capture an idea to the inbox
-camp leverage                    # Measure productivity leverage across projects
-```
+Festival is a planning and context layer, not a runtime orchestrator. It does not spawn agents or manage their processes. It gives agents and humans the structure, context, done criteria, and durable state needed to keep long-running work coherent.
 
-### fest: planning and execution
+## How Festival Compares
 
-The core workflow: create a festival, then let `fest next` drive execution.
+Festival is not a prompt pack, task board, or hosted orchestrator.
 
-```bash
-fest create festival --name "my-feature" --type standard  # Scaffold the beginner path
-fest next                        # Get the next task with layered context (festival -> phase -> sequence -> task)
-fest task completed              # Mark the current task done
-fest workflow advance            # Complete a workflow step and move to the next
-fest status                      # View progress across all levels
-fest commit -m "implement auth"  # Git commit with automatic festival/task reference
-fest understand                  # Teach an AI agent the full methodology
-```
+- [GSD](https://github.com/gsd-build/get-shit-done) helps agents avoid context rot inside coding workflows. Festival gives the whole mission a durable filesystem workspace across repos, docs, plans, tasks, and commits.
+- [Paperclip](https://github.com/paperclipai/paperclip) manages agent organizations, heartbeats, and budgets. Festival is lower level: local mission state and execution plans any agent can read.
+- [Task Master](https://github.com/eyaltoledano/claude-task-master) manages tasks for AI-driven development. Festival adds workspace context: repos, docs, research, lifecycle state, and commit traceability.
+- [Spec Kit](https://github.com/github/spec-kit) and [OpenSpec](https://github.com/Fission-AI/OpenSpec) help define what to build before implementation. Festival keeps the broader mission coherent during planning, execution, review, and handoff.
+- [planning-with-files](https://github.com/OthmanAdi/planning-with-files), [Agent OS](https://github.com/buildermethods/agent-os), [Superpowers](https://github.com/obra/superpowers), [BMAD](https://github.com/bmad-code-org/BMAD-METHOD), and [gstack](https://github.com/garrytan/gstack) improve planning, standards, or agent behavior. Festival stores the persistent project state those workflows can operate inside.
 
-`fest next` is the entry point for agents. It resolves what to do next, includes surrounding context from every level of the hierarchy, and respects workflow ordering and completion criteria.
+For direct comparisons, see:
 
-```mermaid
-graph LR
-    A[fest next] --> B[Do the work]
-    B --> C[fest task completed]
-    C --> D[fest commit]
-    D --> A
-```
+- [Festival vs GSD](https://docs.fest.build/compare/festival-vs-gsd/)
+- [Festival vs Paperclip](https://docs.fest.build/compare/festival-vs-paperclip/)
+- [Festival vs Task Master](https://docs.fest.build/compare/festival-vs-task-master/)
+- [Festival vs Spec Kit and OpenSpec](https://docs.fest.build/compare/festival-vs-spec-kit-openspec/)
+
+Festival is designed for agentic coding workflows with Claude Code, Codex, Cursor, OpenCode, Aider, and other AI coding agents. It uses local files, Markdown, Git, and CLI commands to preserve persistent context, task state, project memory, specs, docs, and audit trails across multi-repo software projects.
 
 ## Claude Code Plugin
 
@@ -243,24 +239,26 @@ Install the Festival plugin for Claude Code to get `fest` and `camp` CLI tools, 
 claude plugin add --source git-subdir --url Obedience-Corp/festival --path claude-plugin
 ```
 
-If `fest` and `camp` aren't already installed, the plugin installs them automatically on first session. It also checks for updates once per day and notifies you when a new release is available.
+If `fest` and `camp` are not already installed, the plugin installs them automatically on first session. It also checks for updates once per day and notifies you when a new release is available.
 
 ### What you get
 
 | Component | Examples |
-|-----------|---------|
-| **Slash commands** | `/fest-next`, `/fest-create`, `/fest-done`, `/fest-commit`, `/fest-validate`, `/camp-intent`, `/camp-init` |
-| **Skills** | Auto-activating methodology knowledge, execution workflows, planning guidance |
-| **Agents** | `fest-planner` for designing festivals, `fest-executor` for working through tasks |
+|---|---|
+| Slash commands | `/fest-next`, `/fest-create`, `/fest-done`, `/fest-commit`, `/fest-validate`, `/camp-intent`, `/camp-init` |
+| Skills | Auto-activating methodology knowledge, execution workflows, planning guidance |
+| Agents | `fest-planner` for designing festivals, `fest-executor` for working through tasks |
 
 ## Documentation
 
-Full documentation at **[docs.fest.build](https://docs.fest.build)**:
+Full documentation lives at **[docs.fest.build](https://docs.fest.build)**.
 
-- [Methodology Overview](https://docs.fest.build/methodology/overview/): core principles and concepts
-- [Agent Workflows](https://docs.fest.build/guides/agent-workflows/): using Festival with AI coding tools
-- [First Festival Tutorial](https://docs.fest.build/tutorials/first-festival/): end-to-end walkthrough
-- [CI Integration](https://docs.fest.build/tutorials/ci-integration/): release smoke ownership and launch-path verification
+- [Quick Start](https://docs.fest.build/getting-started/quickstart/)
+- [Methodology Overview](https://docs.fest.build/methodology/overview/)
+- [Agent Workflows](https://docs.fest.build/guides/agent-workflows/)
+- [Using Festival with Claude Code](https://docs.fest.build/guides/using-festival-with-claude-code/)
+- [Using Festival with Codex](https://docs.fest.build/guides/using-festival-with-codex/)
+- [Festival vs GSD](https://docs.fest.build/compare/festival-vs-gsd/)
 
 ## License
 

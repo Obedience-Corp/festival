@@ -4,7 +4,7 @@ theme: festival
 contentDir: docs
 
 params:
-  description: "Mission-based AI workspace management for developers using AI coding tools"
+  description: "Persistent multi-repo workspace and execution plans for AI coding agents"
   repo: "https://github.com/Obedience-Corp/festival"
 
 markup:
@@ -81,6 +81,14 @@ menu:
       parent: guides
       url: /guides/best-practices/
       weight: 33
+    - name: Using Festival with Claude Code
+      parent: guides
+      url: /guides/using-festival-with-claude-code/
+      weight: 34
+    - name: Using Festival with Codex
+      parent: guides
+      url: /guides/using-festival-with-codex/
+      weight: 35
 
     - name: Tutorials
       identifier: tutorials
@@ -98,14 +106,46 @@ menu:
       url: /tutorials/ci-integration/
       weight: 43
 
+    - name: Compare
+      identifier: compare
+      weight: 45
+    - name: Festival vs GSD
+      parent: compare
+      url: /compare/festival-vs-gsd/
+      weight: 46
+    - name: Festival vs Paperclip
+      parent: compare
+      url: /compare/festival-vs-paperclip/
+      weight: 47
+    - name: Festival vs Task Master
+      parent: compare
+      url: /compare/festival-vs-task-master/
+      weight: 48
+    - name: Festival vs Spec Kit and OpenSpec
+      parent: compare
+      url: /compare/festival-vs-spec-kit-openspec/
+      weight: 49
+    - name: Festival vs planning-with-files
+      parent: compare
+      url: /compare/festival-vs-planning-with-files/
+      weight: 50
+    - name: Festival vs Agent OS
+      parent: compare
+      url: /compare/festival-vs-agent-os/
+      weight: 51
+    - name: Festival vs Agent Methodologies
+      parent: compare
+      url: /compare/festival-vs-agent-methodologies/
+      weight: 52
+
     - name: CLI Reference
       identifier: cli-reference
-      weight: 50
+      weight: 60
     - name: fest
       parent: cli-reference
       url: /cli-reference/fest/
-      weight: 51
+      weight: 61
     - name: camp
       parent: cli-reference
       url: /cli-reference/camp/
-      weight: 52
+      weight: 62

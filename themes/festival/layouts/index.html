@@ -2,12 +2,13 @@
 <div class="home-shell">
   <section class="home-hero">
     <div class="home-hero__copy">
-      <div class="home-hero__eyebrow">Structured AI Execution</div>
-      <h1>Agents at scale. Context that sticks.</h1>
+      <div class="home-hero__eyebrow">Persistent AI Project Memory</div>
+      <h1>Keep AI coding agents on track across long-running work.</h1>
       <p>
-        Festival is a planning layer on top of the AI coding tools you already use.
-        Structure multi-project campaigns into phases, sequences, and tasks, then let
-        agents execute without losing the thread.
+        Festival is a persistent multi-repo workspace for Claude Code, Codex, Cursor,
+        OpenCode, Aider, and humans. Keep repos, docs, plans, next tasks, and traceable
+        commits on disk so any session can resume the mission without reconstructing
+        context from chat.
       </p>
 
       <div class="home-hero__actions">
@@ -15,22 +16,22 @@
           <a href="{{ .RelPermalink }}" class="btn btn--primary">Install Festival</a>
         {{ end }}
         {{ with site.GetPage "/getting-started/quickstart" }}
-          <a href="{{ .RelPermalink }}" class="btn btn--secondary">Read the Quick Start</a>
+          <a href="{{ .RelPermalink }}" class="btn btn--secondary">See the 60-second loop</a>
         {{ end }}
       </div>
 
       <div class="home-hero__stats">
         <div class="home-stat">
-          <div class="home-stat__value">Multi-project</div>
-          <div class="home-stat__label">campaigns at scale</div>
+          <div class="home-stat__value">Multi-repo</div>
+          <div class="home-stat__label">one workspace for the whole mission</div>
         </div>
         <div class="home-stat">
-          <div class="home-stat__value">Structured</div>
-          <div class="home-stat__label">phases → sequences → tasks</div>
+          <div class="home-stat__value">Local-first</div>
+          <div class="home-stat__label">files and Git instead of a hosted dashboard</div>
         </div>
         <div class="home-stat">
-          <div class="home-stat__value">Any AI</div>
-          <div class="home-stat__label">Claude, Codex, OpenCode, Crush</div>
+          <div class="home-stat__value">Agent-agnostic</div>
+          <div class="home-stat__label">Claude Code, Codex, Cursor, OpenCode, Aider</div>
         </div>
       </div>
     </div>
@@ -43,19 +44,21 @@
             <span class="terminal-demo__dot terminal-demo__dot--yellow"></span>
             <span class="terminal-demo__dot terminal-demo__dot--green"></span>
           </div>
-          <span class="terminal-demo__title">~/my-startup</span>
+          <span class="terminal-demo__title">~/billing-redesign</span>
         </div>
         <div class="terminal-demo__body">
-          <div class="terminal-demo__line"><span class="terminal-demo__prompt">$</span> cgo f</div>
-          <div class="terminal-demo__line terminal-demo__line--muted">~/my-startup/festivals</div>
-          <div class="terminal-demo__line"><span class="terminal-demo__prompt">$</span> fest create festival --name "search-rewrite" --type standard</div>
-          <div class="terminal-demo__line terminal-demo__line--accent">✓ Festival created: search-rewrite</div>
-          <div class="terminal-demo__line terminal-demo__line--muted">001_INGEST/ 002_PLAN/ 003_IMPLEMENT/</div>
-          <div class="terminal-demo__line"><span class="terminal-demo__prompt">$</span> fest validate</div>
-          <div class="terminal-demo__line terminal-demo__line--accent">✓ Festival is valid. Ready for execution.</div>
+          <div class="terminal-demo__line"><span class="terminal-demo__prompt">$</span> camp init billing-redesign</div>
+          <div class="terminal-demo__line terminal-demo__line--accent">✓ Mission workspace created</div>
+          <div class="terminal-demo__line"><span class="terminal-demo__prompt">$</span> camp project add https://github.com/acme/api</div>
+          <div class="terminal-demo__line terminal-demo__line--muted">projects/api linked into the workspace</div>
+          <div class="terminal-demo__line"><span class="terminal-demo__prompt">$</span> fest create festival --name "billing-redesign" --type standard</div>
+          <div class="terminal-demo__line terminal-demo__line--accent">✓ Execution plan created</div>
           <div class="terminal-demo__line"><span class="terminal-demo__prompt">$</span> fest next</div>
-          <div class="terminal-demo__line terminal-demo__line--highlight">→ 003_IMPLEMENT/01/03 search_query_builder</div>
-          <div class="terminal-demo__line terminal-demo__line--muted">3 festivals active. Agents working autonomously.</div>
+          <div class="terminal-demo__line terminal-demo__line--highlight">→ Next task: Implement billing session creation</div>
+          <div class="terminal-demo__line terminal-demo__line--muted">Linked project: projects/api</div>
+          <div class="terminal-demo__line terminal-demo__line--muted">Done when: endpoint exists, tests pass, commit references task</div>
+          <div class="terminal-demo__line"><span class="terminal-demo__prompt">$</span> fest commit -m "implement billing session creation"</div>
+          <div class="terminal-demo__line terminal-demo__line--accent">✓ Commit tied back to the plan</div>
         </div>
       </div>
     </div>
@@ -63,19 +66,19 @@
 
   <section class="home-section" id="how-it-works">
     <div class="home-section__intro">
-      <h2 class="home-section__heading">How Festival Works</h2>
+      <h2 class="home-section__heading">One Install. Two Command Groups.</h2>
       <p class="home-section__lede">
-        Campaigns keep your repos, docs, research, and planning in one workspace.
-        Festivals turn large goals into execution-ready work that agents can keep moving through.
+        Festival is one product. `camp` organizes the mission workspace and `fest`
+        runs the execution plan.
       </p>
     </div>
 
     <div class="cards cards--steps">
       <div class="card card--step">
-        <div class="card__kicker">01 · Workspace</div>
-        <div class="card__title">Create a campaign workspace</div>
+        <div class="card__kicker">01 · camp</div>
+        <div class="card__title">Create the mission workspace</div>
         <div class="card__description">
-          One command gives you a structured place for projects, festivals, documentation, and AI research.
+          Keep related repos, docs, research, and planning in one local workspace instead of scattered folders.
         </div>
         {{ with site.GetPage "/tutorials/campaign-setup" }}
           <a href="{{ .RelPermalink }}" class="card__arrow">→ Campaign setup</a>
@@ -83,10 +86,10 @@
       </div>
 
       <div class="card card--step">
-        <div class="card__kicker">02 · Planning</div>
-        <div class="card__title">Break work into festivals</div>
+        <div class="card__kicker">02 · fest</div>
+        <div class="card__title">Turn the goal into execution-ready work</div>
         <div class="card__description">
-          Use phases, sequences, and tasks to turn a goal into concrete steps with verification baked in.
+          Break long-running work into phases, sequences, and tasks with explicit done criteria and validation.
         </div>
         {{ with site.GetPage "/methodology/overview" }}
           <a href="{{ .RelPermalink }}" class="card__arrow">→ Methodology overview</a>
@@ -94,10 +97,10 @@
       </div>
 
       <div class="card card--step">
-        <div class="card__kicker">03 · Execution</div>
-        <div class="card__title">Run agents with context intact</div>
+        <div class="card__kicker">03 · Magic Moment</div>
+        <div class="card__title">Resume with `fest next`</div>
         <div class="card__description">
-          `fest next` loads the next scoped task so an agent can continue cleanly across sessions and repos.
+          `fest next` gives the next task, linked repo, surrounding context, and done criteria so any agent can keep moving.
         </div>
         {{ with site.GetPage "/guides/agent-workflows" }}
           <a href="{{ .RelPermalink }}" class="card__arrow">→ Agent workflows</a>
@@ -105,13 +108,13 @@
       </div>
 
       <div class="card card--step">
-        <div class="card__kicker">04 · Throughput</div>
-        <div class="card__title">Track multiple missions at once</div>
+        <div class="card__kicker">04 · Traceability</div>
+        <div class="card__title">Keep commits tied to the plan</div>
         <div class="card__description">
-          Parallel festivals, visible progress, and quality gates make multi-project work operable instead of chaotic.
+          `fest commit` keeps code changes connected to the work that caused them, which makes reviews and handoffs cleaner.
         </div>
-        {{ with site.GetPage "/getting-started/quickstart" }}
-          <a href="{{ .RelPermalink }}" class="card__arrow">→ Quick start</a>
+        {{ with site.GetPage "/guides/work-pipeline" }}
+          <a href="{{ .RelPermalink }}" class="card__arrow">→ Work pipeline</a>
         {{ end }}
       </div>
     </div>
@@ -121,27 +124,58 @@
     <div class="home-section__intro">
       <h2 class="home-section__heading">Why Teams Use Festival</h2>
       <p class="home-section__lede">
-        AI coding tools are fast inside a repo. Festival adds the planning and operational layer around them.
+        AI coding tools are fast inside one session. Festival is for the part that usually falls apart after that.
       </p>
     </div>
 
     <div class="cards cards--reasons">
       <div class="card">
-        <div class="card__title">Scattered context</div>
+        <div class="card__title">Agents lose the mission</div>
         <div class="card__description">
-          Campaigns keep repos, docs, design notes, and planning in one durable workspace instead of across ad hoc folders.
+          New sessions should not have to reconstruct goals, decisions, and next steps from chat history.
         </div>
       </div>
       <div class="card">
-        <div class="card__title">Unstructured AI work</div>
+        <div class="card__title">Multi-repo work gets scattered</div>
         <div class="card__description">
-          Festivals turn big goals into explicit execution units with expectations, file targets, and verification steps.
+          Festival keeps repos, docs, research, and plans in one local workspace that both humans and agents can navigate.
         </div>
       </div>
       <div class="card">
-        <div class="card__title">No visibility across agents</div>
+        <div class="card__title">Handoffs restart from zero</div>
         <div class="card__description">
-          Progress, status, and quality gates make it clear what is running, what is blocked, and what shipped.
+          `fest next`, lifecycle state, and traceable commits make pause, resume, and handoff much less brittle.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="home-section">
+    <div class="home-section__intro">
+      <h2 class="home-section__heading">Where Festival Fits</h2>
+      <p class="home-section__lede">
+        Festival is a local-first planning and context layer. It is not a hosted task manager,
+        a prompt pack, or an agent runtime.
+      </p>
+    </div>
+
+    <div class="cards cards--reasons">
+      <div class="card">
+        <div class="card__title">Use Festival when</div>
+        <div class="card__description">
+          One mission touches multiple repos, spans multiple sessions, and needs durable next tasks, done criteria, and commit traceability.
+        </div>
+      </div>
+      <div class="card">
+        <div class="card__title">Use an orchestrator when</div>
+        <div class="card__description">
+          You need to spawn, supervise, and budget many agents. Festival works well under that layer, not instead of it.
+        </div>
+      </div>
+      <div class="card">
+        <div class="card__title">Use both together</div>
+        <div class="card__description">
+          Let the runtime manage agents while Festival provides the durable mission state they all read and update.
         </div>
       </div>
     </div>
@@ -150,9 +184,9 @@
   <section class="home-section home-section--install">
     <div class="home-install">
       <div class="home-install__copy">
-        <h2 class="home-section__heading">Install and Start Fast</h2>
+        <h2 class="home-section__heading">Get to Your First `fest next` Fast</h2>
         <p class="home-section__lede">
-          The launch-critical path is simple: install Festival, create a campaign, and get to the first actionable `fest next`.
+          Install Festival, create a workspace, add the repos involved in the work, and move into the execution loop.
         </p>
       </div>
       <div class="home-install__actions">
@@ -173,14 +207,14 @@
   </section>
 
   <section class="home-section home-section--tools">
-    <p class="home-tools__label">Works with any AI coding tool</p>
+    <p class="home-tools__label">Works with the AI coding tools you already use</p>
     <div class="home-tools__grid">
       <span>Claude Code</span>
       <span>Codex</span>
+      <span>Cursor</span>
       <span>OpenCode</span>
-      <span>Crush</span>
       <span>Aider</span>
-      <span>Cursor Agents</span>
+      <span>Humans</span>
       <span>Custom tooling</span>
     </div>
   </section>
