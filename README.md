@@ -9,8 +9,9 @@
 
 **Long-running AI coding work you can trust.**
 
-Festival is a system for running long-running AI coding work end-to-end: intents become specs, specs become plans, plans break into tasks with explicit done criteria, and every commit ties back to the task it satisfies. One campaign workspace holds every repo, doc, and decision the work touches. Agents pull their next task from the festival — not from you — so work compounds across sessions without constant re-briefing.
+Festival is a goal-oriented project planning methodology for long-running AI coding work. Each festival starts from a measurable goal and breaks down into phases, sequences, and tasks — planned top-down and executed in order, with explicit done criteria at every step. Every commit ties back to the task it satisfies. One campaign workspace holds every repo, doc, and decision the work touches. Agents pull their next task from the festival — not from you — so work compounds across sessions without constant re-briefing.
 
+- every festival starts from a goal and breaks down into phases, sequences, and tasks — planned high-to-low, executed in order
 - the festival hands agents the next task with full context, so you're interrupted as little as possible
 - specs, plans, and tasks live in local files — never chat, never a dashboard
 - every task has explicit done criteria before work starts
@@ -104,18 +105,19 @@ Without that, long-running AI work falls apart in predictable ways:
 - multi-repo work scatters across folders with no shared workspace state
 - every new session starts with the agent asking what to do next and you explaining it again
 
-Festival makes the whole loop explicit and auditable, and puts itself between you and the agents. Specs, plans, tasks, done criteria, reviews, and commits all sit on disk, ordered, validated, and tied together. Agents pull work from the festival with `fest next` instead of interrupting you — so humans can verify what shipped against which spec, and the work keeps compounding while you do other things.
+Festival replaces that loop with a goal-oriented methodology: a measurable goal breaks down into phases, sequences, and tasks, planned top-down and executed in order. Specs, plans, tasks, done criteria, reviews, and commits all sit on disk, ordered, validated, and tied together. Agents pull work from the festival with `fest next` instead of interrupting you — so humans can verify what shipped against which goal, and the work keeps compounding while you do other things.
 
 ## Who Festival Is For
 
 Festival is built for teams that need AI coding work to be:
 
+- **goal-driven** — every festival starts from a measurable goal and breaks down into phases, sequences, and tasks, planned top-down and executed in order
 - **hands-off** — agents pull work from the festival with `fest next` instead of asking you what to do
 - **compounding** — each task builds on the festival's accumulated plans, decisions, and completed work
+- **step-based, not time-based** — progress is measured by completed steps with verified outcomes, not hours logged or sprints burned down
 - **trustworthy** — every task has done criteria before work starts
 - **auditable** — every commit traces back to the plan it satisfies
 - **resumable** — any agent picks up across sessions and repos
-- **spec-driven** — intents and design docs drive execution, not chat threads
 - **local-first** — files and Git, not a hosted dashboard
 - **multi-repo** — one campaign workspace holds every repo, doc, and decision it touches
 
@@ -202,9 +204,9 @@ Festival is one product with two command groups.
 
 ### `fest`: run the execution plan
 
-`fest` manages festivals: structured plans that break work into phases, sequences, and tasks.
+`fest` manages festivals: goal-oriented plans that break down from a high-level goal into phases, then sequences, then individual tasks. Plans are built top-down and executed in order — the filesystem itself is the dependency graph.
 
-- turn goals into execution-ready work
+- turn a goal into phases, sequences, and tasks with explicit done criteria
 - give agents the next scoped task with context
 - validate plans before execution
 - mark tasks complete
