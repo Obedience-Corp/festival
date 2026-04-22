@@ -9,8 +9,9 @@
 
 **Long-running AI coding work you can trust.**
 
-Festival is a system for running long-running AI coding work end-to-end: intents become specs, specs become plans, plans break into tasks with explicit done criteria, and every commit ties back to the task it satisfies. One campaign workspace holds every repo, doc, and decision the work touches, so any agent can resume with `fest next` and any human can audit what shipped and why.
+Festival is a system for running long-running AI coding work end-to-end: intents become specs, specs become plans, plans break into tasks with explicit done criteria, and every commit ties back to the task it satisfies. One campaign workspace holds every repo, doc, and decision the work touches. Agents pull their next task from the festival — not from you — so work compounds across sessions without constant re-briefing.
 
+- the festival hands agents the next task with full context, so you're interrupted as little as possible
 - specs, plans, and tasks live in local files — never chat, never a dashboard
 - every task has explicit done criteria before work starts
 - every commit traces back to the plan it satisfies
@@ -93,25 +94,27 @@ Tomorrow, the next agent starts there instead of reconstructing context from cha
 
 ## Why Festival
 
-Autonomous AI execution only earns trust when there's a real audit trail.
+Autonomous AI execution only earns trust when there's a real audit trail — and it only scales when you stop re-briefing agents every session.
 
-Without one, long-running AI work falls apart in predictable ways:
+Without that, long-running AI work falls apart in predictable ways:
 
 - specs live in chat and get lost between sessions
 - tasks complete without explicit done criteria, so "done" is whatever the agent decided
 - commits ship with no durable link back to the spec that asked for them
 - multi-repo work scatters across folders with no shared workspace state
-- new sessions reconstruct goals and decisions from half-remembered context
+- every new session starts with the agent asking what to do next and you explaining it again
 
-Festival makes the whole loop explicit and auditable. Specs, plans, tasks, done criteria, reviews, and commits all sit on disk, ordered, validated, and tied together — so humans can verify what shipped against which spec, and agents can resume without guessing.
+Festival makes the whole loop explicit and auditable, and puts itself between you and the agents. Specs, plans, tasks, done criteria, reviews, and commits all sit on disk, ordered, validated, and tied together. Agents pull work from the festival with `fest next` instead of interrupting you — so humans can verify what shipped against which spec, and the work keeps compounding while you do other things.
 
 ## Who Festival Is For
 
 Festival is built for teams that need AI coding work to be:
 
+- **hands-off** — agents pull work from the festival with `fest next` instead of asking you what to do
+- **compounding** — each task builds on the festival's accumulated plans, decisions, and completed work
 - **trustworthy** — every task has done criteria before work starts
 - **auditable** — every commit traces back to the plan it satisfies
-- **resumable** — any agent picks up with `fest next` across sessions and repos
+- **resumable** — any agent picks up across sessions and repos
 - **spec-driven** — intents and design docs drive execution, not chat threads
 - **local-first** — files and Git, not a hosted dashboard
 - **multi-repo** — one campaign workspace holds every repo, doc, and decision it touches

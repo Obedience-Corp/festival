@@ -4,7 +4,7 @@ title: "Documentation"
 
 # Festival Documentation
 
-Festival is a system for long-running AI coding work you can trust. Specs, plans, tasks, done criteria, and commits all live on disk and stay tied together — so autonomous execution is auditable, resumable, and anchored to the spec it came from.
+Festival is a system for long-running AI coding work you can trust. Specs, plans, tasks, done criteria, and commits all live on disk and stay tied together. Agents pull their next task from the festival instead of asking you — so autonomous execution is auditable, resumable, and keeps compounding while you do other things.
 
 Use these docs to get from install to your first `fest next`, then learn how Festival runs long-running, auditable work across repos, sessions, and handoffs.
 
