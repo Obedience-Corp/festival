@@ -106,38 +106,6 @@ menu:
       url: /tutorials/ci-integration/
       weight: 43
 
-    - name: Compare
-      identifier: compare
-      weight: 45
-    - name: Festival vs GSD
-      parent: compare
-      url: /compare/festival-vs-gsd/
-      weight: 46
-    - name: Festival vs Paperclip
-      parent: compare
-      url: /compare/festival-vs-paperclip/
-      weight: 47
-    - name: Festival vs Task Master
-      parent: compare
-      url: /compare/festival-vs-task-master/
-      weight: 48
-    - name: Festival vs Spec Kit and OpenSpec
-      parent: compare
-      url: /compare/festival-vs-spec-kit-openspec/
-      weight: 49
-    - name: Festival vs planning-with-files
-      parent: compare
-      url: /compare/festival-vs-planning-with-files/
-      weight: 50
-    - name: Festival vs Agent OS
-      parent: compare
-      url: /compare/festival-vs-agent-os/
-      weight: 51
-    - name: Festival vs Agent Methodologies
-      parent: compare
-      url: /compare/festival-vs-agent-methodologies/
-      weight: 52
-
     - name: CLI Reference
       identifier: cli-reference
       weight: 60

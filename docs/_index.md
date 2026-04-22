@@ -4,9 +4,9 @@ title: "Documentation"
 
 # Festival Documentation
 
-Festival is a persistent multi-repo workspace for AI coding agents.
+Festival is a system for long-running AI coding work you can trust. Specs, plans, tasks, done criteria, and commits all live on disk and stay tied together — so autonomous execution is auditable, resumable, and anchored to the spec it came from.
 
-Use these docs to get from install to your first `fest next`, then learn how Festival fits into longer-running AI coding workflows across repos, sessions, and handoffs.
+Use these docs to get from install to your first `fest next`, then learn how Festival runs long-running, auditable work across repos, sessions, and handoffs.
 
 ## Start Here
 
@@ -18,10 +18,3 @@ Use these docs to get from install to your first `fest next`, then learn how Fes
 
 - [Using Festival with Claude Code]({{< ref "/guides/using-festival-with-claude-code" >}})
 - [Using Festival with Codex]({{< ref "/guides/using-festival-with-codex" >}})
-
-## Compare Festival
-
-- [Festival vs GSD]({{< ref "/compare/festival-vs-gsd" >}})
-- [Festival vs Paperclip]({{< ref "/compare/festival-vs-paperclip" >}})
-- [Festival vs Task Master]({{< ref "/compare/festival-vs-task-master" >}})
-- [Festival vs Spec Kit and OpenSpec]({{< ref "/compare/festival-vs-spec-kit-openspec" >}})

@@ -7,17 +7,15 @@
 
 ![Festival Banner](docs/images/festival_banner.png)
 
-**Persistent multi-repo workspace for AI coding agents.**
+**Long-running AI coding work you can trust.**
 
-AI coding tools work well inside one session. They get brittle when work spans days, repos, docs, research, plans, commits, reviews, and handoffs.
+Festival is a system for running AI coding missions end-to-end: intents become specs, specs become plans, plans break into tasks with explicit done criteria, and every commit ties back to the task it satisfies. One workspace holds every repo, doc, and decision the mission touches, so any agent can resume with `fest next` and any human can audit what shipped and why.
 
-Festival keeps the mission on disk:
-
-- all related repos in one workspace
-- docs, research, and decisions beside the code
-- execution plans agents can resume with `fest next`
-- completion criteria and review notes for every task
-- commits tied back to the plan
+- specs, plans, and tasks live in local files — never chat, never a dashboard
+- every task has explicit done criteria before work starts
+- every commit traces back to the plan it satisfies
+- any session resumes exactly where the last one left off
+- all related repos sit inside one auditable workspace
 
 Use it with Claude Code, Codex, Cursor, OpenCode, Aider, Gemini CLI, or any agent that can read files and run shell commands.
 
@@ -36,7 +34,6 @@ Use it with Claude Code, Codex, Cursor, OpenCode, Aider, Gemini CLI, or any agen
 - [Real Example](#real-example)
 - [Install](#install)
 - [How Festival Works](#how-festival-works)
-- [How Festival Compares](#how-festival-compares)
 - [Claude Code Plugin](#claude-code-plugin)
 - [Documentation](#documentation)
 
@@ -96,28 +93,28 @@ Tomorrow, the next agent starts there instead of reconstructing the mission from
 
 ## Why Festival
 
-AI agents do not just lose context. They lose the mission.
+Autonomous AI execution only earns trust when there's a real audit trail.
 
-Real software work is not one prompt and one repo. It is:
+Without one, long-running AI work falls apart in predictable ways:
 
-- backend, frontend, infra, docs, and scripts living in different repos
-- requirements scattered across chats, notes, issues, and old decisions
-- new sessions asking "what are we doing again?"
-- agents completing tasks without preserving why the task mattered
-- commits existing without a durable link back to the plan
+- specs live in chat and get lost between sessions
+- tasks complete without explicit done criteria, so "done" is whatever the agent decided
+- commits ship with no durable link back to the spec that asked for them
+- multi-repo work scatters across folders with no shared mission state
+- new sessions reconstruct goals and decisions from half-remembered context
 
-Festival adds the missing project-memory layer: local files, structured execution state, and traceable commits that survive sessions and handoffs.
+Festival makes the whole loop explicit and auditable. Specs, plans, tasks, done criteria, reviews, and commits all sit on disk, ordered, validated, and tied together — so humans can verify what shipped against which spec, and agents can resume without guessing.
 
 ## Who Festival Is For
 
-Festival is useful when:
+Festival is built for teams that need AI coding work to be:
 
-- one goal touches multiple repos
-- work spans days or weeks instead of one session
-- agents need to pause, resume, or hand off cleanly
-- you keep re-explaining project context to new sessions
-- you want local files and Git instead of a hosted task manager
-- you want completed work traceable to a plan
+- **trustworthy** — every task has done criteria before work starts
+- **auditable** — every commit traces back to the plan it satisfies
+- **resumable** — any agent picks up with `fest next` across sessions and repos
+- **spec-driven** — intents and design docs drive execution, not chat threads
+- **local-first** — files and Git, not a hosted dashboard
+- **multi-repo** — one mission holds every repo, doc, and decision it touches
 
 ## What Festival Is Not
 
@@ -212,23 +209,6 @@ Festival is one product with two command groups.
 
 Festival is a planning and context layer, not a runtime orchestrator. It does not spawn agents or manage their processes. It gives agents and humans the structure, context, done criteria, and durable state needed to keep long-running work coherent.
 
-## How Festival Compares
-
-Festival is not a prompt pack, task board, or hosted orchestrator.
-
-- [GSD](https://github.com/gsd-build/get-shit-done) helps agents avoid context rot inside coding workflows. Festival gives the whole mission a durable filesystem workspace across repos, docs, plans, tasks, and commits.
-- [Paperclip](https://github.com/paperclipai/paperclip) manages agent organizations, heartbeats, and budgets. Festival is lower level: local mission state and execution plans any agent can read.
-- [Task Master](https://github.com/eyaltoledano/claude-task-master) manages tasks for AI-driven development. Festival adds workspace context: repos, docs, research, lifecycle state, and commit traceability.
-- [Spec Kit](https://github.com/github/spec-kit) and [OpenSpec](https://github.com/Fission-AI/OpenSpec) help define what to build before implementation. Festival keeps the broader mission coherent during planning, execution, review, and handoff.
-- [planning-with-files](https://github.com/OthmanAdi/planning-with-files), [Agent OS](https://github.com/buildermethods/agent-os), [Superpowers](https://github.com/obra/superpowers), [BMAD](https://github.com/bmad-code-org/BMAD-METHOD), and [gstack](https://github.com/garrytan/gstack) improve planning, standards, or agent behavior. Festival stores the persistent project state those workflows can operate inside.
-
-For direct comparisons, see:
-
-- [Festival vs GSD](https://docs.fest.build/compare/festival-vs-gsd/)
-- [Festival vs Paperclip](https://docs.fest.build/compare/festival-vs-paperclip/)
-- [Festival vs Task Master](https://docs.fest.build/compare/festival-vs-task-master/)
-- [Festival vs Spec Kit and OpenSpec](https://docs.fest.build/compare/festival-vs-spec-kit-openspec/)
-
 Festival is designed for agentic coding workflows with Claude Code, Codex, Cursor, OpenCode, Aider, and other AI coding agents. It uses local files, Markdown, Git, and CLI commands to preserve persistent context, task state, project memory, specs, docs, and audit trails across multi-repo software projects.
 
 ## Claude Code Plugin
@@ -258,7 +238,6 @@ Full documentation lives at **[docs.fest.build](https://docs.fest.build)**.
 - [Agent Workflows](https://docs.fest.build/guides/agent-workflows/)
 - [Using Festival with Claude Code](https://docs.fest.build/guides/using-festival-with-claude-code/)
 - [Using Festival with Codex](https://docs.fest.build/guides/using-festival-with-codex/)
-- [Festival vs GSD](https://docs.fest.build/compare/festival-vs-gsd/)
 
 ## License
 
