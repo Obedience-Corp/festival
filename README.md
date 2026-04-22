@@ -9,7 +9,7 @@
 
 **Long-running AI coding work you can trust.**
 
-Festival is a system for running AI coding missions end-to-end: intents become specs, specs become plans, plans break into tasks with explicit done criteria, and every commit ties back to the task it satisfies. One workspace holds every repo, doc, and decision the mission touches, so any agent can resume with `fest next` and any human can audit what shipped and why.
+Festival is a system for running long-running AI coding work end-to-end: intents become specs, specs become plans, plans break into tasks with explicit done criteria, and every commit ties back to the task it satisfies. One campaign workspace holds every repo, doc, and decision the work touches, so any agent can resume with `fest next` and any human can audit what shipped and why.
 
 - specs, plans, and tasks live in local files — never chat, never a dashboard
 - every task has explicit done criteria before work starts
@@ -21,7 +21,7 @@ Use it with Claude Code, Codex, Cursor, OpenCode, Aider, Gemini CLI, or any agen
 
 **One install. Two command groups.**
 
-`camp` organizes the mission workspace.
+`camp` organizes the campaign workspace.
 
 `fest` runs the execution plan.
 
@@ -40,7 +40,7 @@ Use it with Claude Code, Codex, Cursor, OpenCode, Aider, Gemini CLI, or any agen
 ## 60-second example
 
 ```bash
-# Create a mission workspace
+# Create a campaign workspace
 camp init billing-redesign
 cd billing-redesign
 
@@ -89,7 +89,7 @@ The loop is simple:
 fest next -> do the work -> fest task completed -> fest commit -> fest next
 ```
 
-Tomorrow, the next agent starts there instead of reconstructing the mission from chat.
+Tomorrow, the next agent starts there instead of reconstructing context from chat.
 
 ## Why Festival
 
@@ -100,7 +100,7 @@ Without one, long-running AI work falls apart in predictable ways:
 - specs live in chat and get lost between sessions
 - tasks complete without explicit done criteria, so "done" is whatever the agent decided
 - commits ship with no durable link back to the spec that asked for them
-- multi-repo work scatters across folders with no shared mission state
+- multi-repo work scatters across folders with no shared workspace state
 - new sessions reconstruct goals and decisions from half-remembered context
 
 Festival makes the whole loop explicit and auditable. Specs, plans, tasks, done criteria, reviews, and commits all sit on disk, ordered, validated, and tied together — so humans can verify what shipped against which spec, and agents can resume without guessing.
@@ -114,7 +114,7 @@ Festival is built for teams that need AI coding work to be:
 - **resumable** — any agent picks up with `fest next` across sessions and repos
 - **spec-driven** — intents and design docs drive execution, not chat threads
 - **local-first** — files and Git, not a hosted dashboard
-- **multi-repo** — one mission holds every repo, doc, and decision it touches
+- **multi-repo** — one campaign workspace holds every repo, doc, and decision it touches
 
 ## What Festival Is Not
 
@@ -127,7 +127,7 @@ Festival is not:
 - a generic todo list
 - a Claude-only tool
 
-Use an orchestrator if you want to supervise parallel agents. Use Festival when those agents need durable mission context and an execution plan they can actually resume.
+Use an orchestrator if you want to supervise parallel agents. Use Festival when those agents need a durable workspace and an execution plan they can actually resume.
 
 ## Real Example
 
@@ -157,7 +157,7 @@ obey-campaign/
 └── CLAUDE.md                     # Agent instructions
 ```
 
-Every project, plan, and piece of context for the mission lives in one local workspace.
+Every project, plan, and piece of context lives in one local campaign workspace.
 
 ## Install
 
@@ -188,9 +188,9 @@ After installing, start with the [quick start guide](https://docs.fest.build/get
 
 Festival is one product with two command groups.
 
-### `camp`: organize the mission workspace
+### `camp`: organize the campaign workspace
 
-`camp` manages campaigns: isolated workspaces that hold all the projects, docs, research, and planning for a single mission.
+`camp` manages campaigns: isolated workspaces that hold the projects, docs, research, and planning for a coherent body of work.
 
 - create a workspace
 - add related repos as projects
