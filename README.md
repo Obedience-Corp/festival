@@ -23,6 +23,12 @@ graph TD
 
 ## Install
 
+**npm / pnpm / bun:**
+
+```bash
+npm install -g @obedience-corp/festival
+```
+
 **macOS:**
 
 ```bash
@@ -44,6 +50,26 @@ For now, use WSL2 and the Linux install method above.
 
 - `git` is required. `camp` and `fest` use git internally for campaign init, project management, template sync, and commit-aware workflows.
 - `scc` is recommended but optional. Without it, `camp leverage` features will not work.
+
+## Updating Templates After Upgrades
+
+Festival releases may include updated methodology files, agents, examples, and templates. Upgrading the `fest` binary does not automatically rewrite those files because users often customize their `.festival/` methodology directory and template files.
+
+When a release includes template changes, update in two explicit steps:
+
+```bash
+# Refresh the local system template cache
+fest system sync
+
+# Preview campaign methodology/template changes before applying them
+fest system update --dry-run
+
+# Apply interactively, or create backups before updating
+fest system update
+fest system update --backup
+```
+
+Use `fest system update --force` only when you intentionally want to overwrite local changes. The manual update flow protects customized templates from accidental replacement.
 
 ## Quick Start
 

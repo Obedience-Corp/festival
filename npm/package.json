@@ -1,0 +1,49 @@
+{
+  "name": "@obedience-corp/festival",
+  "version": "0.0.0",
+  "description": "Festival Methodology CLI suite: fest and camp",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Obedience-Corp/festival.git"
+  },
+  "homepage": "https://fest.build",
+  "bugs": {
+    "url": "https://github.com/Obedience-Corp/festival/issues"
+  },
+  "license": "BUSL-1.1",
+  "bin": {
+    "camp": "bin/camp",
+    "fest": "bin/fest"
+  },
+  "scripts": {
+    "postinstall": "node install.js"
+  },
+  "files": [
+    "README.md",
+    "bin",
+    "install.js",
+    "lib"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "os": [
+    "darwin",
+    "linux"
+  ],
+  "cpu": [
+    "x64",
+    "arm64"
+  ],
+  "keywords": [
+    "ai",
+    "ai-agents",
+    "camp",
+    "cli",
+    "developer-tools",
+    "fest",
+    "festival",
+    "festival-methodology",
+    "workflow"
+  ]
+}

@@ -1,0 +1,9 @@
+#!/usr/bin/env node
+
+const { runBinary } = require("../lib/run");
+
+runBinary("camp").catch((err) => {
+  console.error(`Failed to run camp: ${err.message}`);
+  process.exit(1);
+});
+
