@@ -1,0 +1,5 @@
+*.tar.gz
+.tmp-extract/
+bin/*-bin
+bin/*.exe
+

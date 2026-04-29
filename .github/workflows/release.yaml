@@ -59,6 +59,15 @@ jobs:
               ;;
           esac
 
+      - name: Validate npm publish credentials
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          if [ -z "${NPM_TOKEN:-}" ]; then
+            echo "::error::Missing required secret NPM_TOKEN"
+            exit 1
+          fi
+
       - name: Validate stable publish credentials
         if: steps.release_channel.outputs.mode == 'stable'
         env:
@@ -137,3 +146,34 @@ jobs:
             --notes-file "${RUNNER_TEMP}/festival-release-notes.md"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Publish npm package
+        working-directory: npm
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          RELEASE_MODE: ${{ steps.release_channel.outputs.mode }}
+        run: |
+          if [ -z "${NODE_AUTH_TOKEN:-}" ]; then
+            echo "::error::Missing required secret NPM_TOKEN"
+            exit 1
+          fi
+
+          version="${GITHUB_REF_NAME#v}"
+          case "${RELEASE_MODE}" in
+            stable) npm_tag="latest" ;;
+            rc) npm_tag="rc" ;;
+            dev) npm_tag="dev" ;;
+            *)
+              echo "::error::Unsupported release mode ${RELEASE_MODE}"
+              exit 1
+              ;;
+          esac
+
+          npm version "${version}" --no-git-tag-version
+          npm publish --access public --tag "${npm_tag}"

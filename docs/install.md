@@ -13,6 +13,12 @@ title: "Install Festival"
 The fastest way to install:
 
 ```bash
+npm install -g @obedience-corp/festival
+```
+
+Or use Homebrew:
+
+```bash
 brew install --cask Obedience-Corp/tap/festival
 ```
 
@@ -25,6 +31,12 @@ Or download the latest macOS release directly:
 <div id="install-linux" class="install-platform" style="display:none">
 
 ## Linux
+
+The npm package works on x64 and arm64 Linux:
+
+```bash
+npm install -g @obedience-corp/festival
+```
 
 Choose your distribution's package format:
 

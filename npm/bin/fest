@@ -1,0 +1,9 @@
+#!/usr/bin/env node
+
+const { runBinary } = require("../lib/run");
+
+runBinary("fest").catch((err) => {
+  console.error(`Failed to run fest: ${err.message}`);
+  process.exit(1);
+});
+

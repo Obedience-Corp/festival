@@ -12,6 +12,16 @@ Festival includes two CLI tools: **fest** (festival planning) and **camp** (camp
 - `git` is required. Festival depends on it for campaign init, project management, template sync, and commit-aware workflows.
 - `scc` is recommended but optional. Without it, `camp leverage` features will not work.
 
+## npm / pnpm / bun
+
+```bash
+npm install -g @obedience-corp/festival
+```
+
+The npm package downloads the matching Festival GitHub release archive for your
+platform, verifies it against the release checksums, and exposes both `fest` and
+`camp`.
+
 {{< tabs names="macOS, Linux, Windows (Temporarily Paused)" >}}
 
 ### Homebrew (Recommended)

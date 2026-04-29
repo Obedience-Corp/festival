@@ -234,6 +234,7 @@ release:
 
     | Platform | Command |
     |----------|---------|
+    | npm / pnpm / bun | `npm install -g @obedience-corp/festival` |
     | macOS | `brew install --cask Obedience-Corp/tap/festival` |
     | Arch Linux | `yay -S festival-bin` |
     | Debian/Ubuntu | Download `.deb` from assets below |
