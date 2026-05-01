@@ -1,0 +1,207 @@
+#!/usr/bin/env bash
+# Smoke-test the Claude Code plugin bundle and its session hooks.
+
+set -euo pipefail
+
+repo_root="$(cd "$(dirname "$0")/.." && pwd)"
+plugin_dir="$repo_root/claude-plugin"
+
+require_command() {
+    local name="$1"
+    command -v "$name" >/dev/null 2>&1 || {
+        echo "Required command not found: $name" >&2
+        exit 1
+    }
+}
+
+json_check() {
+    local file="$1"
+    node -e "JSON.parse(require('fs').readFileSync(process.argv[1], 'utf8'))" "$file"
+}
+
+plugin_version_check() {
+    node -e '
+const fs = require("fs");
+const manifest = JSON.parse(fs.readFileSync(process.argv[1], "utf8"));
+if (!/^[0-9]+\.[0-9]+\.[0-9]+$/.test(manifest.version)) {
+  throw new Error(`plugin version must be semver: ${manifest.version}`);
+}
+if (!manifest.name || !manifest.description || !manifest.repository) {
+  throw new Error("plugin manifest is missing required metadata");
+}
+' "$plugin_dir/.claude-plugin/plugin.json"
+}
+
+target_for_host() {
+    local os arch
+
+    os="$(uname -s | tr '[:upper:]' '[:lower:]')"
+    case "$os" in
+        darwin) os="macOS" ;;
+        linux) os="linux" ;;
+        *) echo "unsupported" && return 0 ;;
+    esac
+
+    arch="$(uname -m)"
+    case "$arch" in
+        x86_64|amd64) arch="x86_64" ;;
+        arm64|aarch64) arch="arm64" ;;
+        *) echo "unsupported" && return 0 ;;
+    esac
+
+    if [ "$os" = "macOS" ]; then
+        echo "macOS-all"
+    else
+        echo "${os}-${arch}"
+    fi
+}
+
+write_stub_binary() {
+    local path="$1"
+    local name="$2"
+
+    cat > "$path" <<EOF_STUB
+#!/usr/bin/env bash
+case "\${1:-}" in
+  version|--version) echo "${name} v9.8.7" ;;
+  *) echo "${name} stub" ;;
+esac
+EOF_STUB
+    chmod +x "$path"
+}
+
+write_fake_curl() {
+    local path="$1"
+
+    cat > "$path" <<'EOF_CURL'
+#!/usr/bin/env bash
+set -euo pipefail
+
+out=""
+url=""
+while [ "$#" -gt 0 ]; do
+    case "$1" in
+        -o)
+            out="$2"
+            shift 2
+            ;;
+        -*)
+            shift
+            ;;
+        *)
+            url="$1"
+            shift
+            ;;
+    esac
+done
+
+fixture="${FESTIVAL_PLUGIN_TEST_FIXTURE_DIR:?}"
+case "$url" in
+    *"/releases/latest")
+        src="$fixture/release.json"
+        ;;
+    *"/checksums.txt")
+        src="$fixture/checksums.txt"
+        ;;
+    *".tar.gz")
+        src="$fixture/archive.tar.gz"
+        ;;
+    *)
+        echo "unexpected URL: $url" >&2
+        exit 22
+        ;;
+esac
+
+if [ -n "$out" ]; then
+    cp "$src" "$out"
+else
+    cat "$src"
+fi
+EOF_CURL
+    chmod +x "$path"
+}
+
+smoke_install_hook() {
+    local target archive_name tmp fixture payload fakebin home install_dir
+
+    target="$(target_for_host)"
+    if [ "$target" = "unsupported" ]; then
+        echo "Skipping install hook smoke on unsupported host platform"
+        return 0
+    fi
+
+    tmp="$(mktemp -d "${TMPDIR:-/tmp}/festival-plugin-test.XXXXXX")"
+    trap 'rm -rf "$tmp"' RETURN
+    fixture="$tmp/fixture"
+    payload="$tmp/payload"
+    fakebin="$tmp/fakebin"
+    home="$tmp/home"
+    install_dir="$tmp/install"
+    mkdir -p "$fixture" "$payload" "$fakebin" "$home" "$install_dir"
+
+    write_stub_binary "$payload/fest" "fest"
+    write_stub_binary "$payload/camp" "camp"
+
+    archive_name="festival-9.8.7-${target}.tar.gz"
+    (cd "$payload" && tar -czf "$fixture/archive.tar.gz" fest camp)
+    if command -v shasum >/dev/null 2>&1; then
+        checksum="$(shasum -a 256 "$fixture/archive.tar.gz" | awk '{print $1}')"
+    else
+        checksum="$(sha256sum "$fixture/archive.tar.gz" | awk '{print $1}')"
+    fi
+    printf '%s  %s\n' "$checksum" "$archive_name" > "$fixture/checksums.txt"
+
+    cat > "$fixture/release.json" <<EOF_JSON
+{
+  "tag_name": "v9.8.7",
+  "assets": [
+    {
+      "browser_download_url": "https://example.test/${archive_name}"
+    }
+  ]
+}
+EOF_JSON
+
+    write_fake_curl "$fakebin/curl"
+
+    if ! FESTIVAL_PLUGIN_TEST_FIXTURE_DIR="$fixture" \
+        HOME="$home" \
+        INSTALL_DIR="$install_dir" \
+        PATH="$fakebin:/usr/bin:/bin:/usr/sbin:/sbin" \
+        bash "$plugin_dir/hooks/scripts/ensure-festival.sh" >"$tmp/install.log" 2>&1; then
+        cat "$tmp/install.log" >&2
+        return 1
+    fi
+
+    test -x "$install_dir/fest"
+    test -x "$install_dir/camp"
+
+    if ! FESTIVAL_PLUGIN_TEST_FIXTURE_DIR="$fixture" \
+        HOME="$home" \
+        INSTALL_DIR="$install_dir" \
+        PATH="$install_dir:$fakebin:/usr/bin:/bin:/usr/sbin:/sbin" \
+        bash "$plugin_dir/hooks/scripts/ensure-festival.sh" >"$tmp/update-check.log" 2>&1; then
+        cat "$tmp/update-check.log" >&2
+        return 1
+    fi
+}
+
+require_command node
+require_command tar
+require_command bash
+
+json_check "$plugin_dir/.claude-plugin/plugin.json"
+json_check "$plugin_dir/hooks/hooks.json"
+plugin_version_check
+bash -n "$plugin_dir/hooks/scripts/ensure-festival.sh" "$plugin_dir/hooks/scripts/sync-check.sh"
+
+if [ -x "$repo_root/fest/bin/fest" ] && [ -x "$repo_root/camp/bin/camp" ]; then
+    FEST_BIN="$repo_root/fest/bin/fest" CAMP_BIN="$repo_root/camp/bin/camp" \
+        bash "$plugin_dir/hooks/scripts/sync-check.sh"
+else
+    bash "$plugin_dir/hooks/scripts/sync-check.sh"
+fi
+
+smoke_install_hook
+
+echo "Claude plugin smoke passed"

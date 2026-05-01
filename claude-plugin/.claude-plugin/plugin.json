@@ -1,6 +1,6 @@
 {
   "name": "festival",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Festival Methodology for Claude Code — goal-oriented project management for human-AI development workflows. Provides fest and camp CLI integration, automatic installation, and methodology guidance.",
   "author": {
     "name": "Obedience Corp",

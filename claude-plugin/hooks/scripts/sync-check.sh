@@ -62,17 +62,50 @@ check_command() {
     fi
 }
 
+known_reference() {
+    case "$1:$2" in
+        fest:next|fest:validate|fest:commit|fest:status|fest:list|fest:show|fest:create|fest:task|fest:workflow|fest:link|fest:promote|fest:understand|fest:deps|fest:progress|fest:shell-init|fest:completion|fest:types|fest:links|fest:unlink|fest:scaffold)
+            return 0
+            ;;
+        camp:init|camp:intent|camp:project|camp:go|camp:status|camp:shell-init|camp:p|camp:refs-sync|camp:pull|camp:push|camp:dungeon|camp:flow)
+            return 0
+            ;;
+    esac
+
+    return 1
+}
+
+check_markdown_references() {
+    local file line cmd subcmd
+
+    while IFS= read -r file; do
+        while IFS= read -r line; do
+            if [[ "$line" =~ ^[[:space:]]*(fest|camp)[[:space:]]+([a-z][a-z-]*) ]]; then
+                cmd="${BASH_REMATCH[1]}"
+                subcmd="${BASH_REMATCH[2]}"
+
+                if ! known_reference "$cmd" "$subcmd"; then
+                    echo "WARNING: $file references '$cmd $subcmd' but sync-check.sh does not validate it" >&2
+                    ERRORS=$((ERRORS + 1))
+                fi
+            fi
+        done < "$file"
+    done < <(find "$PLUGIN_DIR" -type f -name '*.md' | sort)
+}
+
 echo "Checking plugin commands against installed CLI..."
 
 # fest commands referenced in plugin
-for subcmd in next validate commit status list show create task workflow link promote understand; do
+for subcmd in next validate commit status list show create task workflow link promote understand deps progress shell-init completion types links unlink scaffold; do
     check_command fest "$subcmd"
 done
 
 # camp commands referenced in plugin
-for subcmd in init intent project go status; do
+for subcmd in init intent project go status shell-init p refs-sync pull push dungeon flow; do
     check_command camp "$subcmd"
 done
+
+check_markdown_references
 
 if [ "$ERRORS" -gt 0 ]; then
     echo ""

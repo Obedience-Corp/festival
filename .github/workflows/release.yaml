@@ -4,12 +4,29 @@ on:
   push:
     tags:
       - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Festival version to publish to npm, without leading v (example: 0.2.4)'
+        required: true
+        type: string
+      release_mode:
+        description: 'npm dist-tag channel'
+        required: true
+        default: stable
+        type: choice
+        options:
+          - stable
+          - rc
+          - dev
 
 permissions:
   contents: write
+  id-token: write
 
 jobs:
   release:
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -58,15 +75,6 @@ jobs:
               exit 1
               ;;
           esac
-
-      - name: Validate npm publish credentials
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          if [ -z "${NPM_TOKEN:-}" ]; then
-            echo "::error::Missing required secret NPM_TOKEN"
-            exit 1
-          fi
 
       - name: Validate stable publish credentials
         if: steps.release_channel.outputs.mode == 'stable'
@@ -150,30 +158,38 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: '24'
           registry-url: 'https://registry.npmjs.org'
 
       - name: Publish npm package
-        working-directory: npm
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           RELEASE_MODE: ${{ steps.release_channel.outputs.mode }}
-        run: |
-          if [ -z "${NODE_AUTH_TOKEN:-}" ]; then
-            echo "::error::Missing required secret NPM_TOKEN"
-            exit 1
-          fi
+        run: scripts/publish_npm_package.sh
 
-          version="${GITHUB_REF_NAME#v}"
-          case "${RELEASE_MODE}" in
-            stable) npm_tag="latest" ;;
-            rc) npm_tag="rc" ;;
-            dev) npm_tag="dev" ;;
-            *)
-              echo "::error::Unsupported release mode ${RELEASE_MODE}"
-              exit 1
-              ;;
-          esac
+  npm-publish:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout workflow scripts
+        uses: actions/checkout@v4
 
-          npm version "${version}" --no-git-tag-version
-          npm publish --access public --tag "${npm_tag}"
+      - name: Checkout release source
+        uses: actions/checkout@v4
+        with:
+          ref: v${{ inputs.version }}
+          path: release-source
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Publish npm package
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_PACKAGE_DIR: release-source/npm
+          NPM_PACKAGE_VERSION: ${{ inputs.version }}
+          RELEASE_MODE: ${{ inputs.release_mode }}
+        run: scripts/publish_npm_package.sh
