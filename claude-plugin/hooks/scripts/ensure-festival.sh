@@ -1,13 +1,37 @@
 #!/usr/bin/env bash
 # Ensures fest and camp are installed and up-to-date. Runs on SessionStart.
-# - If missing: downloads and installs from GitHub releases.
+# - If missing: downloads and installs from GitHub releases with checksum verification.
 # - If installed: checks for newer version and offers update notification.
 
 set -euo pipefail
 
 INSTALL_DIR="${INSTALL_DIR:-$HOME/.local/bin}"
 REPO="Obedience-Corp/festival"
-CHECK_FILE="${HOME}/.cache/festival/last-update-check"
+CACHE_DIR="${FESTIVAL_CACHE_DIR:-${XDG_CACHE_HOME:-$HOME/.cache}/festival}"
+CHECK_FILE="${FESTIVAL_CHECK_FILE:-$CACHE_DIR/last-update-check}"
+DOWNLOAD_TIMEOUT_SECONDS="${FESTIVAL_DOWNLOAD_TIMEOUT_SECONDS:-120}"
+
+info() {
+    echo "$*" >&2
+}
+
+fail() {
+    echo "$*" >&2
+    exit 1
+}
+
+require_command() {
+    local name="$1"
+    command -v "$name" >/dev/null 2>&1 || fail "Required command not found: $name"
+}
+
+require_checksum_command() {
+    if command -v shasum >/dev/null 2>&1 || command -v sha256sum >/dev/null 2>&1; then
+        return 0
+    fi
+
+    fail "Required command not found: shasum or sha256sum"
+}
 
 check_installed() {
     command -v fest >/dev/null 2>&1 && command -v camp >/dev/null 2>&1
@@ -49,7 +73,7 @@ detect_platform() {
 }
 
 fetch_release() {
-    curl -fsSL "https://api.github.com/repos/${REPO}/releases/latest" 2>/dev/null
+    curl -fsSL --connect-timeout 10 --max-time "$DOWNLOAD_TIMEOUT_SECONDS" "https://api.github.com/repos/${REPO}/releases/latest" 2>/dev/null
 }
 
 find_archive_url() {
@@ -70,44 +94,119 @@ extract_tag() {
     echo "$1" | grep '"tag_name"' | head -1 | sed -E 's/.*"([^"]+)".*/\1/'
 }
 
-download_and_install() {
+download_file() {
+    local url="$1"
+    local dest="$2"
+    local tmp="${dest}.tmp"
+
+    rm -f "$tmp"
+    curl -fsSL --connect-timeout 10 --max-time "$DOWNLOAD_TIMEOUT_SECONDS" "$url" -o "$tmp" || {
+        rm -f "$tmp"
+        return 1
+    }
+    mv "$tmp" "$dest"
+}
+
+checksum_url_for_archive() {
     local archive_url="$1"
+    echo "${archive_url%/*}/checksums.txt"
+}
 
-    TMP_DIR=$(mktemp -d)
-    trap 'rm -rf "$TMP_DIR"' EXIT
+sha256_file() {
+    local file="$1"
 
-    curl -fsSL "$archive_url" -o "${TMP_DIR}/archive.tar.gz" 2>/dev/null || {
-        echo "Download failed. Install manually: curl -fsSL https://raw.githubusercontent.com/${REPO}/main/install.sh | bash" >&2
-        exit 1
+    if command -v shasum >/dev/null 2>&1; then
+        shasum -a 256 "$file" | awk '{print $1}'
+        return 0
+    fi
+
+    sha256sum "$file" | awk '{print $1}'
+}
+
+expected_checksum() {
+    local checksums_file="$1"
+    local archive_name="$2"
+
+    awk -v name="$archive_name" '$2 == name {print $1; found=1} END {exit found ? 0 : 1}' "$checksums_file"
+}
+
+verify_checksum() {
+    local archive_path="$1"
+    local checksums_path="$2"
+    local archive_name="$3"
+    local expected actual
+
+    expected="$(expected_checksum "$checksums_path" "$archive_name")" || {
+        echo "Checksum for ${archive_name} not found in checksums.txt" >&2
+        return 1
     }
 
-    tar -xzf "${TMP_DIR}/archive.tar.gz" -C "$TMP_DIR"
+    actual="$(sha256_file "$archive_path")"
+    if [ "$actual" != "$expected" ]; then
+        echo "Checksum mismatch for ${archive_name}" >&2
+        echo "expected: ${expected}" >&2
+        echo "actual:   ${actual}" >&2
+        return 1
+    fi
+}
+
+download_and_install() {
+    local archive_url="$1"
+    local archive_name checksums_url archive_path checksums_path
+
+    archive_name="$(basename "$archive_url")"
+    checksums_url="$(checksum_url_for_archive "$archive_url")"
+    TMP_DIR=$(mktemp -d "${TMPDIR:-/tmp}/festival-plugin.XXXXXX")
+    trap 'rm -rf "$TMP_DIR"' EXIT
+    archive_path="${TMP_DIR}/${archive_name}"
+    checksums_path="${TMP_DIR}/checksums.txt"
+
+    download_file "$archive_url" "$archive_path" ||
+        fail "Download failed. Install manually: curl -fsSL https://raw.githubusercontent.com/${REPO}/main/install.sh | bash"
+
+    download_file "$checksums_url" "$checksums_path" ||
+        fail "Checksum download failed. Install manually: curl -fsSL https://raw.githubusercontent.com/${REPO}/main/install.sh | bash"
+
+    verify_checksum "$archive_path" "$checksums_path" "$archive_name" ||
+        fail "Checksum verification failed. Install manually: curl -fsSL https://raw.githubusercontent.com/${REPO}/main/install.sh | bash"
+
+    tar -xzf "$archive_path" -C "$TMP_DIR"
 
     mkdir -p "$INSTALL_DIR"
     for binary in fest camp; do
-        if [ -f "${TMP_DIR}/${binary}" ]; then
-            cp "${TMP_DIR}/${binary}" "${INSTALL_DIR}/${binary}"
-            chmod +x "${INSTALL_DIR}/${binary}"
+        extracted_path="$(find "$TMP_DIR" -type f -name "$binary" | head -1)"
+        if [ -n "$extracted_path" ]; then
+            install -m 0755 "$extracted_path" "${INSTALL_DIR}/${binary}"
+        else
+            fail "${binary} not found in ${archive_name}"
         fi
     done
 }
 
 # --- Main ---
 
+require_command curl
+require_command tar
+require_command grep
+require_command sed
+require_command awk
+require_command find
+require_command install
+require_checksum_command
 detect_platform
 
 if ! check_installed; then
     # Fresh install
-    echo "Festival CLI not found. Installing fest and camp..." >&2
+    info "Festival CLI not found. Installing fest and camp..."
 
     RELEASE_JSON=$(fetch_release) || {
-        echo "Could not fetch release info. Install manually: curl -fsSL https://raw.githubusercontent.com/${REPO}/main/install.sh | bash" >&2
+        info "Could not fetch release info. Install manually: curl -fsSL https://raw.githubusercontent.com/${REPO}/main/install.sh | bash"
         exit 1
     }
 
     ARCHIVE_URL=$(find_archive_url "$RELEASE_JSON")
     if [ -z "$ARCHIVE_URL" ]; then
-        echo "No compatible archive found for ${OS}/${ARCH}. Install manually: curl -fsSL https://raw.githubusercontent.com/${REPO}/main/install.sh | bash" >&2
+        info "No compatible archive found for ${OS}/${ARCH}. Install manually: curl -fsSL https://raw.githubusercontent.com/${REPO}/main/install.sh | bash"
         exit 1
     fi
 
@@ -115,9 +214,9 @@ if ! check_installed; then
     record_check
 
     if command -v fest >/dev/null 2>&1; then
-        echo "Festival installed successfully: $(fest version 2>/dev/null || echo 'fest ready')" >&2
+        info "Festival installed successfully: $(fest version 2>/dev/null || echo 'fest ready')"
     else
-        echo "Installed to ${INSTALL_DIR}. You may need to add it to your PATH: export PATH=\"${INSTALL_DIR}:\$PATH\"" >&2
+        info "Installed to ${INSTALL_DIR}. You may need to add it to your PATH: export PATH=\"${INSTALL_DIR}:\$PATH\""
     fi
     exit 0
 fi
@@ -146,5 +245,5 @@ LATEST_CLEAN="${LATEST_TAG#v}"
 record_check
 
 if [ "$CURRENT_CLEAN" != "$LATEST_CLEAN" ]; then
-    echo "Festival update available: ${CURRENT_VERSION} -> ${LATEST_TAG}. Run: curl -fsSL https://raw.githubusercontent.com/${REPO}/main/install.sh | bash" >&2
+    info "Festival update available: ${CURRENT_VERSION} -> ${LATEST_TAG}. Run: curl -fsSL https://raw.githubusercontent.com/${REPO}/main/install.sh | bash"
 fi

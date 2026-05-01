@@ -55,3 +55,8 @@ release-operator:
 [no-cd]
 release-notes:
     cd tools/release-notes && go test ./...
+
+# Test the Claude Code plugin bundle and hooks
+[no-cd]
+plugin:
+    just plugin check

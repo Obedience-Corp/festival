@@ -8,8 +8,8 @@ default:
 # Check plugin commands match installed CLI
 check:
     #!/usr/bin/env bash
-    PLUGIN="$(cd "$(dirname "{{source_file()}}")/.." && pwd)/claude-plugin"
-    bash "$PLUGIN/hooks/scripts/sync-check.sh"
+    ROOT="$(cd "$(dirname "{{source_file()}}")/.." && pwd)"
+    bash "$ROOT/scripts/test_claude_plugin.sh"
 
 # List all plugin components
 list:
