@@ -42,28 +42,11 @@ echo "Package: ${PACKAGE_NAME}@${VERSION}"
 echo "Dist tag: ${NPM_DIST_TAG}"
 echo "Package directory: ${PACKAGE_DIR}"
 
-can_prompt_for_otp() {
-    [ "${NPM_OTP_PROMPT:-auto}" != "never" ] &&
+can_publish_interactively() {
+    [ "${NPM_PUBLISH_INTERACTIVE:-auto}" != "never" ] &&
         [ "${CI:-}" != "true" ] &&
         [ -r /dev/tty ] &&
         [ -w /dev/tty ]
-}
-
-prompt_for_otp() {
-    local otp
-
-    printf 'npm OTP: ' >/dev/tty
-    stty -echo </dev/tty
-    IFS= read -r otp </dev/tty
-    stty echo </dev/tty
-    printf '\n' >/dev/tty
-
-    if [ -z "$otp" ]; then
-        echo "::error::npm OTP was empty" >&2
-        return 1
-    fi
-
-    NPM_CONFIG_OTP="$otp" npm "${publish_args[@]}"
 }
 
 if [ "${NPM_SKIP_EXISTING_CHECK:-false}" != "true" ] && npm view "${PACKAGE_NAME}@${VERSION}" version >/dev/null 2>&1; then
@@ -79,6 +62,13 @@ publish_args=(publish --access public --tag "$NPM_DIST_TAG")
 if [ "${NPM_PUBLISH_DRY_RUN:-false}" = "true" ]; then
     publish_args+=(--dry-run)
 fi
+
+if can_publish_interactively; then
+    npm "${publish_args[@]}"
+    popd >/dev/null
+    exit 0
+fi
+
 publish_output="$(npm "${publish_args[@]}" 2>&1)"
 publish_status=$?
 set -e
@@ -86,13 +76,7 @@ printf '%s\n' "$publish_output"
 
 if [ "$publish_status" -ne 0 ]; then
     if printf '%s\n' "$publish_output" | grep -q 'EOTP'; then
-        if can_prompt_for_otp; then
-            echo "npm publish requires a one-time password."
-            prompt_for_otp
-            exit $?
-        fi
-
-        echo "::error::npm publish requires OTP. Re-run locally with an authenticator code, configure npm trusted publishing for .github/workflows/release.yaml, or replace NPM_TOKEN with a granular token that has bypass 2FA enabled." >&2
+        echo "::error::npm publish requires OTP. Re-run from an interactive terminal so npm can prompt for your configured verification method, configure npm trusted publishing for .github/workflows/release.yaml, or replace NPM_TOKEN with a granular token that has bypass 2FA enabled." >&2
     fi
     exit "$publish_status"
 fi
