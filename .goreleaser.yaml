@@ -92,7 +92,7 @@ nfpms:
     description: |-
       Festival Methodology CLI suite.
       AI-native project planning with fest and camp.
-    license: "BUSL-1.1"
+    license: "FSL-1.1-ALv2"
     formats:
       - deb
       - rpm
@@ -121,7 +121,7 @@ aurs:
     description: "Festival Methodology CLI suite (fest + camp) - AI-native project planning"
     maintainers:
       - "Obedience Corp <contact@obediencecorp.com>"
-    license: "BUSL-1.1"
+    license: "FSL-1.1-ALv2"
     private_key: "{{ .Env.AUR_SSH_KEY }}"
     git_url: "ssh://aur@aur.archlinux.org/festival-bin.git"
     skip_upload: auto
@@ -151,7 +151,7 @@ aurs:
 #       token: "{{ .Env.SCOOP_GITHUB_TOKEN }}"
 #     homepage: "https://fest.build"
 #     description: "Festival Methodology CLI suite (fest + camp) - AI-native project planning"
-#     license: "BUSL-1.1"
+#     license: "FSL-1.1-ALv2"
 
 checksum:
   name_template: 'checksums.txt'
@@ -179,7 +179,7 @@ homebrew_casks:
       - festival-suite
     homepage: "https://github.com/Obedience-Corp/festival"
     description: "Festival Methodology CLI suite (fest + camp)"
-    license: "BUSL-1.1"
+    license: "FSL-1.1-ALv2"
     skip_upload: auto
     directory: Casks
 
