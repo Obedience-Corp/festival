@@ -7,7 +7,7 @@
 [private]
 [no-cd]
 default:
-    @go -C tools/release-operator run . help
+    @just --list --justfile {{source_file()}}
 
 # Pin submodules to latest stable tags without creating a festival release
 [no-cd]
@@ -33,6 +33,11 @@ require-stable-publish-credentials:
 [no-cd]
 status:
     go -C tools/release-operator run . status --repo-root ../..
+
+# Show the release operator's detailed workflow help
+[no-cd]
+operator-help:
+    go -C tools/release-operator run . help
 
 # Pre-release checks: show submodule versions, dirty state, and build validation
 [no-cd]

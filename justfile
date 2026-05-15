@@ -28,10 +28,7 @@ mod plugin '.justfiles/plugin.just'
 
 [private]
 default:
-    #!/usr/bin/env bash
-    echo "festival - Festival Methodology CLI Distribution"
-    echo ""
-    just --list --unsorted
+    @just --list --justfile {{source_file()}}
 
 # Pin submodules to latest stable tags and regenerate CLI docs
 refresh:
