@@ -72,6 +72,18 @@ stable fest="latest" camp="latest":
 dry-run:
     goreleaser release --snapshot --clean --skip=publish,announce
 
+# Publish the npm wrapper for an already-created GitHub release.
+# This is a manual backfill path only; tag releases should normally publish npm from CI.
+[no-cd]
+[confirm("This will publish the npm wrapper for an existing Festival GitHub release. Already-published versions are skipped. Continue?")]
+npm-publish version="latest" mode="stable":
+    scripts/publish_existing_release_npm.sh "{{version}}" "{{mode}}"
+
+# Preview the manual npm backfill without publishing to the registry.
+[no-cd]
+npm-publish-dry-run version="latest" mode="stable":
+    NPM_PUBLISH_DRY_RUN=true scripts/publish_existing_release_npm.sh "{{version}}" "{{mode}}"
+
 # First stable release bootstrap:
 # - create/push fest + camp stable tags at their current HEAD
 # - pin festival submodules to those tags
