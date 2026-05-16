@@ -16,6 +16,9 @@ mod docs '.justfiles/docs.just'
 [doc('Release management')]
 mod release '.justfiles/release.just'
 
+[doc('Distribution metrics')]
+mod metrics '.justfiles/metrics.just'
+
 [doc('Submodule management')]
 mod sub '.justfiles/sub.just'
 
