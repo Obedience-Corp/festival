@@ -1,5 +1,5 @@
 name = "Festival"
-license = "BSL-1.1"
+license = "FSL-1.1-ALv2"
 description = "Custom theme for Festival documentation matching the festui design system"
 min_version = "0.100.0"
 
