@@ -4,8 +4,6 @@
 npm_package := env("FESTIVAL_NPM_PACKAGE", "@obedience-corp/festival")
 homebrew_cask := env("FESTIVAL_HOMEBREW_CASK", "obedience-corp/tap/festival")
 github_repo := env("FESTIVAL_GITHUB_REPO", "Obedience-Corp/festival")
-compare_npm_package := env("COMPARE_NPM_PACKAGE", "@openparachute/vault")
-compare_github_repo := env("COMPARE_GITHUB_REPO", "ParachuteComputer/parachute-vault")
 
 [private]
 default:
@@ -113,49 +111,3 @@ github repo=github_repo:
     macos="$(jq '[.[] | .assets[]? | select(.name | test("macOS-all\\.tar\\.gz$")) | .download_count] | add // 0' <<<"$releases")"
     echo "release_asset_downloads: ${total}"
     echo "macos_archive_downloads: ${macos}"
-
-# Compare Festival npm/GitHub metrics against another package and repository
-[no-cd]
-compare package=compare_npm_package repo=compare_github_repo:
-    #!/usr/bin/env bash
-    set -euo pipefail
-    command -v curl >/dev/null || { echo "curl is required" >&2; exit 1; }
-    command -v gh >/dev/null || { echo "gh is required" >&2; exit 1; }
-    command -v jq >/dev/null || { echo "jq is required" >&2; exit 1; }
-
-    encode_package() {
-        local value="$1"
-        value="${value//@/%40}"
-        value="${value//\//%2F}"
-        printf '%s' "$value"
-    }
-
-    npm_downloads() {
-        local period="$1"
-        local package="$2"
-        local encoded
-        encoded="$(encode_package "$package")"
-        curl -fsSL "https://api.npmjs.org/downloads/point/${period}/${encoded}" 2>/dev/null |
-            jq -r '.downloads | tostring' 2>/dev/null || printf 'unavailable'
-    }
-
-    repo_stars() {
-        gh repo view "$1" --json stargazerCount --jq '.stargazerCount'
-    }
-
-    festival_package="{{npm_package}}"
-    festival_repo="{{github_repo}}"
-
-    echo "npm downloads"
-    printf "%-32s %12s %12s\n" "package" "last-week" "last-month"
-    printf "%-32s %12s %12s\n" "$festival_package" "$(npm_downloads last-week "$festival_package")" "$(npm_downloads last-month "$festival_package")"
-    printf "%-32s %12s %12s\n" "{{package}}" "$(npm_downloads last-week "{{package}}")" "$(npm_downloads last-month "{{package}}")"
-
-    echo ""
-    echo "GitHub stars"
-    printf "%-36s %8s\n" "repo" "stars"
-    printf "%-36s %8s\n" "$festival_repo" "$(repo_stars "$festival_repo")"
-    printf "%-36s %8s\n" "{{repo}}" "$(repo_stars "{{repo}}")"
-
-    echo ""
-    echo "Note: npm downloads are download events, not unique users. Homebrew cask analytics are not included here because they only apply when both projects ship comparable casks."
