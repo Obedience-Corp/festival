@@ -321,11 +321,11 @@ func collectState(repoRoot, channel, festSelector, campSelector string) (operato
 		return operator.BundleInput{}, err
 	}
 
-	currentFestTag, err := exactTagAt(filepath.Join(repoRoot, "fest"))
+	currentFestTag, err := exactTagAtForMode(filepath.Join(repoRoot, "fest"), channel)
 	if err != nil {
 		return operator.BundleInput{}, err
 	}
-	currentCampTag, err := exactTagAt(filepath.Join(repoRoot, "camp"))
+	currentCampTag, err := exactTagAtForMode(filepath.Join(repoRoot, "camp"), channel)
 	if err != nil {
 		return operator.BundleInput{}, err
 	}
@@ -390,21 +390,36 @@ func collectState(repoRoot, channel, festSelector, campSelector string) (operato
 	return state, nil
 }
 
-// exactTagAt returns the tag pointing at HEAD in dir, or "" if HEAD is untagged.
-// Uses `git tag --points-at HEAD` because it exits 0 with empty stdout for the
-// untagged-HEAD case, avoiding locale- and version-dependent stderr parsing that
-// `git describe --exact-match` would require. If multiple tags point at HEAD,
-// the first line (sorted lexicographically by git) is returned.
+// exactTagAt returns the newest tag pointing at HEAD in dir, or "" if HEAD is
+// untagged. Uses `git tag --points-at HEAD` because it exits 0 with empty
+// stdout for the untagged-HEAD case, avoiding locale- and version-dependent
+// stderr parsing that `git describe --exact-match` would require.
 func exactTagAt(dir string) (string, error) {
-	out, err := gitOutput(dir, "tag", "--points-at", "HEAD")
+	tags, err := exactTagsAt(dir)
 	if err != nil {
 		return "", err
 	}
-	if out == "" {
+	if len(tags) == 0 {
 		return "", nil
 	}
-	first, _, _ := strings.Cut(out, "\n")
-	return first, nil
+	return tags[0], nil
+}
+
+func exactTagAtForMode(dir, mode string) (string, error) {
+	tags, err := exactTagsAt(dir)
+	if err != nil {
+		return "", err
+	}
+	for _, tag := range tags {
+		if operator.TagMatchesMode(tag, mode) {
+			return tag, nil
+		}
+	}
+	return "", nil
+}
+
+func exactTagsAt(dir string) ([]string, error) {
+	return gitLines(dir, "tag", "--points-at", "HEAD", "--sort=-v:refname")
 }
 
 func resolveSelectedTag(dir, mode, selector string) (string, error) {
@@ -418,7 +433,7 @@ func resolveSelectedTag(dir, mode, selector string) (string, error) {
 		}
 		return tag, nil
 	case "keep":
-		tag, err := exactTagAt(dir)
+		tag, err := exactTagAtForMode(dir, mode)
 		if err != nil {
 			return "", err
 		}

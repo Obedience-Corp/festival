@@ -137,12 +137,12 @@ func (r *repoContext) exactTag(name string) (string, error) {
 	return exactTagAt(r.submodulePath(name))
 }
 
-func (r *repoContext) exactComponentTags() (string, string, error) {
-	festTag, err := r.exactTag("fest")
+func (r *repoContext) exactComponentTags(modeName string) (string, string, error) {
+	festTag, err := exactTagAtForMode(r.submodulePath("fest"), modeName)
 	if err != nil {
 		return "", "", err
 	}
-	campTag, err := r.exactTag("camp")
+	campTag, err := exactTagAtForMode(r.submodulePath("camp"), modeName)
 	if err != nil {
 		return "", "", err
 	}
@@ -515,7 +515,7 @@ func runDraftFromLatest(ctx *repoContext, version string, mode releaseMode, iter
 		return err
 	}
 
-	festTag, campTag, err := ctx.exactComponentTags()
+	festTag, campTag, err := ctx.exactComponentTags(mode.Name)
 	if err != nil {
 		return err
 	}
