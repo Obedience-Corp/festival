@@ -61,7 +61,6 @@ camp init [path] [flags]
       --no-git               Skip git repository initialization
       --no-register          Don't add to global registry
       --repair               Add missing files to existing campaign
-      --skip-fest            Skip automatic Festival Methodology initialization
   -t, --type string          Campaign type (product, research, tools, personal) (default "product")
       --yes                  Skip repair confirmation prompt (for scripting)
 ```

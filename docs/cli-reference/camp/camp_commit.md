@@ -39,9 +39,10 @@ camp commit [flags]
 ```
   -a, --all              Stage all changes before committing (default true)
       --amend            Amend the previous commit
+      --auto-write       Run configured commit message writer
   -h, --help             help for commit
       --include-refs     Include submodule ref changes when staging at campaign root
-  -m, --message string   Commit message (required)
+  -m, --message string   Commit message (required unless --auto-write)
   -p, --project string   Operate on a specific project/submodule path
       --sub              Operate on the submodule detected from current directory
 ```

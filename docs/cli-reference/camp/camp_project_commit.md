@@ -32,8 +32,9 @@ camp project commit [flags]
 ```
   -a, --all              Stage all changes (default true)
       --amend            Amend the previous commit
+      --auto-write       Run configured commit message writer
   -h, --help             help for commit
-  -m, --message string   Commit message (required)
+  -m, --message string   Commit message (required unless --auto-write)
   -p, --project string   Project name (auto-detected from cwd if not specified)
       --sync             Sync submodule ref at campaign root after commit (opt-in)
 ```

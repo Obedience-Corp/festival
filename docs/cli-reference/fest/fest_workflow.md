@@ -76,8 +76,11 @@ Examples:
 * [fest](../fest/)	 - Festival Methodology CLI - goal-oriented project management for AI agents
 * [fest workflow advance](../fest_workflow_advance/)	 - Complete current step and move to next
 * [fest workflow approve](../fest_workflow_approve/)	 - Approve a blocking checkpoint
+* [fest workflow init](../fest_workflow_init/)	 - Initialize standalone workflow runtime
 * [fest workflow reject](../fest_workflow_reject/)	 - Reject checkpoint with feedback
 * [fest workflow reset](../fest_workflow_reset/)	 - Reset workflow to step 1
+* [fest workflow runs](../fest_workflow_runs/)	 - List runs of a standalone workflow
 * [fest workflow show](../fest_workflow_show/)	 - Display current step details
 * [fest workflow skip](../fest_workflow_skip/)	 - Operator override: mark workflow steps as skipped/completed
+* [fest workflow start](../fest_workflow_start/)	 - Start a new run for a standalone workflow
 * [fest workflow status](../fest_workflow_status/)	 - Show workflow progress

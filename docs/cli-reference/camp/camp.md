@@ -49,13 +49,16 @@ camp [flags]
 
 ### SEE ALSO
 
+* [camp attach](../camp_attach/)	 - Attach an external directory to a campaign
 * [camp cache](../camp_cache/)	 - Manage the navigation index cache
 * [camp clone](../camp_clone/)	 - Clone a campaign with full submodule setup
 * [camp commit](../camp_commit/)	 - Commit changes in the campaign root
 * [camp completion](../camp_completion/)	 - Generate the autocompletion script for the specified shell
 * [camp concepts](../camp_concepts/)	 - List configured concepts
 * [camp copy](../camp_copy/)	 - Copy a file or directory within the campaign
+* [camp create](../camp_create/)	 - Create a new campaign at the default campaigns directory
 * [camp date](../camp_date/)	 - Append date suffix to file or directory name
+* [camp detach](../camp_detach/)	 - Remove the attachment marker from a directory
 * [camp doctor](../camp_doctor/)	 - Diagnose and fix campaign health issues
 * [camp dungeon](../camp_dungeon/)	 - Manage the campaign dungeon
 * [camp fresh](../camp_fresh/)	 - Post-merge branch cycling: sync to default branch and optionally create a new working branch
@@ -83,6 +86,7 @@ camp [flags]
 * [camp shell-init](../camp_shell-init/)	 - Output shell initialization code
 * [camp shortcuts](../camp_shortcuts/)	 - List all available shortcuts
 * [camp skills](../camp_skills/)	 - Manage campaign skill directory links
+* [camp stage](../camp_stage/)	 - Stage changes in the campaign root
 * [camp status](../camp_status/)	 - Show git status of the campaign
 * [camp switch](../camp_switch/)	 - Switch to a different campaign
 * [camp sync](../camp_sync/)	 - Safely synchronize submodules
@@ -90,3 +94,4 @@ camp [flags]
 * [camp unpin](../camp_unpin/)	 - Remove a saved pin
 * [camp unregister](../camp_unregister/)	 - Remove campaign from registry
 * [camp version](../camp_version/)	 - Show version information
+* [camp workitem](../camp_workitem/)	 - View active campaign work items
