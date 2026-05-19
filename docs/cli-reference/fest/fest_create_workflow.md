@@ -38,10 +38,12 @@ fest create workflow [flags]
       --festival string     Festival root override
   -h, --help                help for workflow
       --json                Emit JSON output
+      --no-init             skip .workflow/ runtime init (standalone mode only)
       --path string         Phase directory path (default ".")
       --position string     Workflow position relative to sequences (before|after) (default "after")
       --steps string        Inline JSON with workflow definition
       --steps-file string   Path to JSON file with workflow definition
+      --type string         workflow type (standalone mode only) (default "task")
 ```
 
 ### Options inherited from parent commands

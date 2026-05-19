@@ -57,6 +57,9 @@ Examples:
 
   fest commit --stage=false -m "Only commit staged"
   # Skip auto-staging, commit only what's already staged
+
+  fest commit --auto-write
+  # Run the configured campaign commit-message hook from the target repo
 ```
 
 ```
@@ -66,10 +69,11 @@ fest commit [flags]
 ### Options
 
 ```
+      --auto-write        run configured commit message writer
       --festival string   festival name or ID (overrides auto-detection)
   -h, --help              help for commit
       --json              output result as JSON
-  -m, --message string    commit message
+  -m, --message string    commit message (required unless --auto-write)
       --no-root           skip campaign root commit (project commit only)
       --no-tag            don't prepend task reference
       --stage             auto-stage all changes before commit (default true)

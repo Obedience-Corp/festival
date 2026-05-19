@@ -61,6 +61,7 @@ camp intent [flags]
 * [camp intent add](../camp_intent_add/)	 - Create a new intent
 * [camp intent archive](../camp_intent_archive/)	 - Archive an intent
 * [camp intent count](../camp_intent_count/)	 - Count intents by status directory
+* [camp intent crawl](../camp_intent_crawl/)	 - Interactive intent triage
 * [camp intent edit](../camp_intent_edit/)	 - Edit an existing intent
 * [camp intent explore](../camp_intent_explore/)	 - Interactive intent explorer
 * [camp intent find](../camp_intent_find/)	 - Search for intents by title or content
