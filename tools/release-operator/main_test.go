@@ -169,16 +169,18 @@ func TestResolveSelectedTag(t *testing.T) {
 		runGit(t, repo, "add", "CHANGELOG.md")
 		runGit(t, repo, "commit", "-m", "stable release")
 		runGit(t, repo, "tag", "v0.2.0")
+		runGit(t, repo, "tag", "v0.2.1")
+		runGit(t, repo, "tag", "v0.2.2-dev.1")
 
 		if got, err := resolveSelectedTag(repo, "stable", "latest"); err != nil {
 			t.Fatalf("resolveSelectedTag(latest) error = %v", err)
-		} else if want := "v0.2.0"; got != want {
+		} else if want := "v0.2.1"; got != want {
 			t.Fatalf("resolveSelectedTag(latest) = %q, want %q", got, want)
 		}
 
 		if got, err := resolveSelectedTag(repo, "stable", "keep"); err != nil {
 			t.Fatalf("resolveSelectedTag(keep) error = %v", err)
-		} else if want := "v0.2.0"; got != want {
+		} else if want := "v0.2.1"; got != want {
 			t.Fatalf("resolveSelectedTag(keep) = %q, want %q", got, want)
 		}
 
@@ -231,17 +233,43 @@ func TestExactTagAt(t *testing.T) {
 
 	t.Run("returns a single tag when HEAD has multiple", func(t *testing.T) {
 		repo := initTestRepo(t)
-		runGit(t, repo, "tag", "v0.1.0-alias")
+		runGit(t, repo, "tag", "v0.1.1")
 
 		got, err := exactTagAt(repo)
 		if err != nil {
 			t.Fatalf("exactTagAt returned error: %v", err)
 		}
-		if got == "" {
-			t.Fatal("exactTagAt returned empty string, want one of the HEAD tags")
+		if want := "v0.1.1"; got != want {
+			t.Fatalf("exactTagAt = %q, want newest exact tag %q", got, want)
 		}
-		if got != "v0.1.0" && got != "v0.1.0-alias" {
-			t.Fatalf("exactTagAt = %q, want one of v0.1.0 or v0.1.0-alias", got)
+	})
+
+	t.Run("returns newest exact tag for requested mode", func(t *testing.T) {
+		repo := initTestRepo(t)
+		runGit(t, repo, "tag", "v0.2.7")
+		runGit(t, repo, "tag", "v0.2.8")
+		runGit(t, repo, "tag", "v0.3.0-dev.1")
+		runGit(t, repo, "tag", "v0.3.0-rc.1")
+
+		tests := []struct {
+			mode string
+			want string
+		}{
+			{mode: "stable", want: "v0.2.8"},
+			{mode: "dev", want: "v0.3.0-dev.1"},
+			{mode: "rc", want: "v0.3.0-rc.1"},
+		}
+
+		for _, tt := range tests {
+			t.Run(tt.mode, func(t *testing.T) {
+				got, err := exactTagAtForMode(repo, tt.mode)
+				if err != nil {
+					t.Fatalf("exactTagAtForMode returned error: %v", err)
+				}
+				if got != tt.want {
+					t.Fatalf("exactTagAtForMode(%q) = %q, want %q", tt.mode, got, tt.want)
+				}
+			})
 		}
 	})
 }
