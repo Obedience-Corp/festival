@@ -123,6 +123,50 @@ fest --version
 camp --version
 ```
 
+## Upgrading
+
+How you upgrade depends on how you installed Festival.
+
+### Homebrew
+
+```bash
+brew update
+brew upgrade --cask festival
+```
+
+`brew outdated --cask` will surface a new festival release when one is available.
+
+### npm / pnpm / bun
+
+```bash
+npm install -g @obedience-corp/festival@latest
+```
+
+### Debian / Ubuntu, Fedora / RHEL, Alpine
+
+Download the latest package from [GitHub Releases](https://github.com/Obedience-Corp/festival/releases/latest) and reinstall using the same `dpkg -i`, `rpm -i`, or `apk add` command from the install steps above.
+
+### Arch Linux (AUR)
+
+```bash
+yay -Syu festival-bin
+```
+
+### Shell Script
+
+Re-run the installer. It will replace the binaries in `~/.local/bin` with the latest release:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Obedience-Corp/festival/main/install.sh | bash
+```
+
+### From Source
+
+```bash
+go install github.com/Obedience-Corp/fest/cmd/fest@latest
+go install github.com/Obedience-Corp/camp/cmd/camp@latest
+```
+
 ## Shell Integration
 
 Enable navigation features by adding to your `~/.zshrc` or `~/.bashrc`:
