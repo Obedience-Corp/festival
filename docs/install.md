@@ -22,6 +22,13 @@ Or use Homebrew:
 brew install --cask Obedience-Corp/tap/festival
 ```
 
+To upgrade an existing Homebrew install:
+
+```bash
+brew update
+brew upgrade --cask festival
+```
+
 Or download the latest macOS release directly:
 
 <a href="https://github.com/Obedience-Corp/festival/releases/latest" class="btn btn--primary">Download for macOS</a>
