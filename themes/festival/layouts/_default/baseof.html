@@ -8,6 +8,7 @@
   {{ $css := resources.Get "css/main.css" | minify | fingerprint }}
   <link rel="stylesheet" href="{{ $css.RelPermalink }}">
   <link href="{{ "pagefind/pagefind-ui.css" | relURL }}" rel="stylesheet">
+  {{ template "_internal/google_analytics.html" . }}
 </head>
 <body class="{{ if .IsHome }}site-body--home{{ else }}site-body--docs{{ end }}">
   {{ partial "header.html" . }}

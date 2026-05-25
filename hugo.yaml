@@ -3,6 +3,8 @@ title: Festival
 theme: festival
 contentDir: docs
 
+googleAnalytics: G-2CT5B4LDH2
+
 params:
   description: "Mission-based AI workspace management for developers using AI coding tools"
   repo: "https://github.com/Obedience-Corp/festival"
