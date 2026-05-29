@@ -43,6 +43,10 @@ menu:
     - name: Methodology
       identifier: methodology
       weight: 20
+    - name: Why Festival
+      parent: methodology
+      url: /methodology/why-festival/
+      weight: 20
     - name: Overview
       parent: methodology
       url: /methodology/overview/

@@ -99,9 +99,15 @@ After installing, see the [quick start guide](https://docs.fest.build/getting-st
 
 ## The Problem
 
-AI coding tools are fast. But speed without context and direction just means you burn tokens faster. Every new session starts from zero: no memory of the larger goal, no structure for multi-step work, no way to pick up where you left off. You end up re-explaining the same context, getting inconsistent results, and losing coherence across sessions.
+If you work on more than a few things at once, staying organized becomes a job of its own.
 
-Traditional tools don't solve this because they weren't designed for it. You need:
+Your work spreads across repositories, documents, chats, notes, bookmarks, and AI conversations. Finding where something belongs becomes work. Remembering what you were doing becomes work. Switching between efforts becomes work.
+
+AI makes this harder, not easier. It generates plans, code, research, and tasks faster than you can file them. The bottleneck moves from producing work to organizing it.
+
+So every new AI session starts from zero. No memory of the larger goal, no structure for multi-step work, no way to pick up where you left off. You re-explain the same context, get inconsistent results, and lose coherence across sessions.
+
+Festival is the organizational layer for work done with AI. Instead of asking "where should this go?" you put it in the campaign it belongs to. Instead of asking "what was I working on?" you resume the campaign. To turn that organization into outcomes, Festival gives every mission three things:
 
 1. **Context**: a workspace that holds all projects, docs, and planning for a mission in one place
 2. **Direction**: structured plans that AI agents can pick up, execute, and resume without losing the thread
