@@ -17,6 +17,18 @@ to reject and request revisions.
 
 The feedback will be recorded in the workflow state for reference.
 
+Failed gates with remediation:
+  Use --remediation-phase to record that a phase gate did not pass and
+  to link a remediation phase that will correct the underlying issues.
+  After the remediation phase completes, 'fest next' routes back to the
+  failed gate for re-evaluation rather than treating it as approved.
+
+Examples:
+```bash
+  fest workflow reject --reason "needs revision"
+  fest workflow reject --reason "PR not ready" --remediation-phase 005_FIX_PR_302
+```
+
 ```
 fest workflow reject [flags]
 ```
@@ -24,8 +36,9 @@ fest workflow reject [flags]
 ### Options
 
 ```
-  -h, --help            help for reject
-  -r, --reason string   reason for rejection (required)
+  -h, --help                       help for reject
+  -r, --reason string              reason for rejection (required)
+      --remediation-phase string   link a remediation phase for a failed gate (e.g. 005_FIX_PR_302)
 ```
 
 ### Options inherited from parent commands

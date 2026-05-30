@@ -17,6 +17,7 @@ camp workitem adopt <dir> [flags]
 ```
   -h, --help           help for adopt
       --id string      override the generated id
+      --quest string   capture quest_id from this quest (defaults to CAMP_QUEST env var if set)
       --title string   human-readable title
       --type string    workitem type (feature, bug, chore, or custom) (default "feature")
 ```

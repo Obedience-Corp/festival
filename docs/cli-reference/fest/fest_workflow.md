@@ -78,9 +78,11 @@ Examples:
 * [fest workflow approve](../fest_workflow_approve/)	 - Approve a blocking checkpoint
 * [fest workflow init](../fest_workflow_init/)	 - Initialize standalone workflow runtime
 * [fest workflow reject](../fest_workflow_reject/)	 - Reject checkpoint with feedback
+* [fest workflow renumber](../fest_workflow_renumber/)	 - Renumber step headings in a WORKFLOW.md to a contiguous 1-indexed sequence
 * [fest workflow reset](../fest_workflow_reset/)	 - Reset workflow to step 1
 * [fest workflow runs](../fest_workflow_runs/)	 - List runs of a standalone workflow
 * [fest workflow show](../fest_workflow_show/)	 - Display current step details
 * [fest workflow skip](../fest_workflow_skip/)	 - Operator override: mark workflow steps as skipped/completed
 * [fest workflow start](../fest_workflow_start/)	 - Start a new run for a standalone workflow
 * [fest workflow status](../fest_workflow_status/)	 - Show workflow progress
+* [fest workflow validate](../fest_workflow_validate/)	 - Validate WORKFLOW.md step numbering
