@@ -71,6 +71,14 @@ menu:
       parent: methodology
       url: /methodology/tasks/
       weight: 26
+    - name: Work Items
+      parent: methodology
+      url: /methodology/work-items/
+      weight: 27
+    - name: Workflows & Gates
+      parent: methodology
+      url: /methodology/workflows-and-gates/
+      weight: 28
 
     - name: Guides
       identifier: guides
