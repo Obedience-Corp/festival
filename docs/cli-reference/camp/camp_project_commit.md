@@ -30,13 +30,14 @@ camp project commit [flags]
 ### Options
 
 ```
-  -a, --all              Stage all changes (default true)
-      --amend            Amend the previous commit
-      --auto-write       Run configured commit message writer
-  -h, --help             help for commit
-  -m, --message string   Commit message (required unless --auto-write)
-  -p, --project string   Project name (auto-detected from cwd if not specified)
-      --sync             Sync submodule ref at campaign root after commit (opt-in)
+  -a, --all               Stage all changes (default true)
+      --amend             Amend the previous commit
+      --auto-write        Run configured commit message writer
+  -h, --help              help for commit
+  -m, --message string    Commit message (required unless --auto-write)
+  -p, --project string    Project name (auto-detected from cwd if not specified)
+      --sync              Sync submodule ref at campaign root after commit (opt-in)
+      --workitem string   explicit workitem selector for the commit tag (overrides cwd-based resolution)
 ```
 
 ### Options inherited from parent commands

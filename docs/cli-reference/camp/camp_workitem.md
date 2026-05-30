@@ -50,4 +50,12 @@ camp workitem [flags]
 
 * [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces
 * [camp workitem adopt](../camp_workitem_adopt/)	 - Attach .workitem metadata to an existing directory
+* [camp workitem commit](../camp_workitem_commit/)	 - Commit changes scoped to the resolved workitem
+* [camp workitem commits](../camp_workitem_commits/)	 - List commits referencing a workitem across linked repos
 * [camp workitem create](../camp_workitem_create/)	 - Create a new workitem with v1 minimum metadata
+* [camp workitem current](../camp_workitem_current/)	 - Get, set, or clear the local current workitem
+* [camp workitem doctor](../camp_workitem_doctor/)	 - Report workitem link-registry health issues
+* [camp workitem link](../camp_workitem_link/)	 - Attach a workitem to a project, festival, worktree, or campaign path
+* [camp workitem links](../camp_workitem_links/)	 - List workitem links
+* [camp workitem resolve](../camp_workitem_resolve/)	 - Print the workitem the current context resolves to (read-only)
+* [camp workitem unlink](../camp_workitem_unlink/)	 - Remove one or more workitem links

@@ -15,6 +15,8 @@ Move items within the dungeon or from the parent directory into the dungeon.
 Without --triage, moves an item already in the dungeon root to a status directory.
 With --triage, moves an item from the parent directory into the dungeon.
 With --triage and --to-docs, routes an item to an existing campaign-root docs/<subdirectory>.
+With --workitem, resolves a campaign workitem from anywhere and moves its directory
+into the workitem type's local dungeon.
 Moves are always auto-committed so dungeon history remains auditable.
 
 Statuses: completed, archived, someday
@@ -25,6 +27,7 @@ Examples:
   camp dungeon move old-project --triage         Move parent item into dungeon root
   camp dungeon move old-project archived --triage Move parent item directly to archived
   camp dungeon move stale-note.md --triage --to-docs architecture/api Route to docs subdirectory
+  camp dungeon move feature-slug archived --workitem Move workitem directory to its local archive
 
 ```
 camp dungeon move <item> [status] [flags]
@@ -36,6 +39,7 @@ camp dungeon move <item> [status] [flags]
   -h, --help             help for move
       --to-docs string   Route triage item into an existing campaign-root docs/<subdir> (requires --triage)
       --triage           Move from parent directory (not from dungeon root)
+      --workitem         Resolve item as a campaign workitem and move its directory to the local dungeon
 ```
 
 ### Options inherited from parent commands

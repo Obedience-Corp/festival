@@ -18,6 +18,8 @@ camp workitem create <slug> [flags]
       --dir string     parent dir override (default: workflow/<type>)
   -h, --help           help for create
       --id string      override the generated id
+      --json           emit a structured JSON result
+      --quest string   capture quest_id from this quest (defaults to CAMP_QUEST env var if set)
       --title string   human-readable title
       --type string    workitem type (feature, bug, chore, or custom) (default "feature")
 ```
