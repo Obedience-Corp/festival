@@ -15,7 +15,7 @@ A campaign solves this by isolating one mission into a single, navigable workspa
 
 ## What is a Campaign?
 
-A campaign is an isolated workspace for a single mission. It groups all related projects, as git submodules or as links to repositories already on your machine, all festival plans in a structured hierarchy, and all supporting materials - documentation, research, workflow configs, design artifacts - into a standard directory layout.
+A campaign is an isolated workspace for a single mission, a high-level purpose such as a startup, a job, or an open-source project you maintain. A mission is broad and long-lived, so a campaign grows with it over months and years. It groups all related projects, as git submodules or as links to repositories already on your machine, all festival plans in a structured hierarchy, and all supporting materials - documentation, research, workflow configs, design artifacts - into a standard directory layout.
 
 The key property is **navigability**. Both humans and AI agents can enter a campaign and immediately understand its structure. Projects are in `projects/`. Plans are in `festivals/`. Docs are in `docs/`. There is no guessing, no project-specific convention to learn, no onboarding friction.
 

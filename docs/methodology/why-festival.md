@@ -32,9 +32,11 @@ spend your time re-explaining context that an organized workspace would make obv
 Festival is a workspace system built for that reality. It organizes work into
 campaigns.
 
-A campaign is a workspace for a single mission. Everything related to that mission
-lives in one place: projects, repositories, plans, documentation, research, and the
-work your AI agents produce.
+A campaign is a workspace for a mission: a high-level purpose like your startup, your
+job, or a hobby you keep coming back to. A mission is not a single task. It is a
+durable area of focus that grows over time, accumulating many projects, plans,
+documents, research, and decisions. A campaign keeps all of that in one place, however
+large it gets and however long it runs.
 
 Instead of asking:
 
