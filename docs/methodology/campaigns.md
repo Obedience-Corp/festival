@@ -15,7 +15,7 @@ A campaign solves this by isolating one mission into a single, navigable workspa
 
 ## What is a Campaign?
 
-A campaign is an isolated workspace for a single mission. It groups all related projects as git submodules, all festival plans in a structured hierarchy, and all supporting materials - documentation, research, workflow configs, design artifacts - into a standard directory layout.
+A campaign is an isolated workspace for a single mission, a high-level purpose such as a startup, a job, or an open-source project you maintain. A mission is broad and long-lived, so a campaign grows with it over months and years. It groups all related projects, as git submodules or as links to repositories already on your machine, all festival plans in a structured hierarchy, and all supporting materials - documentation, research, workflow configs, design artifacts - into a standard directory layout.
 
 The key property is **navigability**. Both humans and AI agents can enter a campaign and immediately understand its structure. Projects are in `projects/`. Plans are in `festivals/`. Docs are in `docs/`. There is no guessing, no project-specific convention to learn, no onboarding friction.
 
@@ -90,12 +90,55 @@ cgo w           # Jump to workflow/
 cgo p api       # Jump to projects/api-service/ (fuzzy match)
 ```
 
-### Project Management
+### Adding Projects
+
+A project can join a campaign two ways, depending on where the code already lives.
+
+**As a submodule.** If the project is a remote git repository, add it as a tracked
+submodule under `projects/`. Camp clones it and records the ref:
 
 ```bash
-camp project add git@github.com:org/repo.git    # Add a submodule
-camp project list                                # List all projects
-camp project remove old-project                  # Remove a submodule
+camp project add git@github.com:org/repo.git    # Clone a remote repo as a submodule
+camp project new my-service                      # Scaffold a brand-new project in the campaign
+```
+
+**As a linked workspace.** If the project already exists on your machine, link it
+instead of cloning a second copy. Camp creates a symlink at `projects/<name>` pointing
+at the real directory and writes a `.camp` marker so commands run from inside that
+directory know which campaign owns it. The original checkout is left exactly where it is:
+
+```bash
+camp project link ~/code/my-project              # Link an existing local directory
+camp project link                                # Link the current directory
+camp project link ~/code/api --name backend      # Override the project name
+```
+
+Linking is the right choice for repositories you already clone and work on outside any
+campaign. Your existing branches, remotes, and history stay in place; the campaign just
+gains a navigable reference to them. Both humans (`cgo p backend`) and AI agents treat a
+linked workspace exactly like a submodule project.
+
+To list, unlink, or remove projects:
+
+```bash
+camp project list                                # List all projects (submodules and links)
+camp project unlink my-project                   # Remove a link (leaves the external workspace intact)
+camp project remove old-service                  # Remove a submodule project
+```
+
+`unlink` removes only the symlink and the campaign marker. The external workspace and
+its git history are never touched. Use `remove` for submodule projects.
+
+### Attaching Other Directories
+
+Not every directory a campaign should own is a project. A notes folder, a scratch
+directory, or an external reference repo can be attached without becoming a project.
+`camp attach` writes a `.camp` marker at the target so commands run from inside it
+resolve to the right campaign. You manage the symlink, if any, yourself:
+
+```bash
+camp attach ~/scratch/research-notes             # Attach a non-project directory
+camp detach ~/scratch/research-notes             # Remove the attachment marker
 ```
 
 ### Health and Sync
