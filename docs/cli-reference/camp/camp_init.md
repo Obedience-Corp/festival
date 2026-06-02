@@ -60,6 +60,7 @@ camp init [path] [flags]
   -n, --name string          Campaign name (defaults to directory name)
       --no-git               Skip git repository initialization
       --no-register          Don't add to global registry
+      --no-skills            Skip linking campaign skills into .claude/skills and .agents/skills
       --repair               Add missing files to existing campaign
   -t, --type string          Campaign type (product, research, tools, personal) (default "product")
       --yes                  Skip repair confirmation prompt (for scripting)
