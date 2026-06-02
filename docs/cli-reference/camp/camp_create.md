@@ -34,6 +34,7 @@ camp create <name> [flags]
   -m, --mission string       Campaign mission statement
   -n, --name string          Campaign display name (defaults to <name> positional)
       --no-git               Skip git repository initialization
+      --no-skills            Skip linking campaign skills into .claude/skills and .agents/skills
       --path string          Override the base campaigns directory (campaign created at <path>/<name>/)
   -t, --type string          Campaign type (product, research, tools, personal) (default "product")
 ```
