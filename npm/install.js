@@ -8,6 +8,18 @@ const { spawnSync } = require("child_process");
 
 const REPO = "Obedience-Corp/festival";
 const BINARIES = ["fest", "camp"];
+const ASSET_DIRECTORIES = ["completions", "shell"];
+const REQUIRED_ASSET_FILES = [
+  ["completions", "fest.bash"],
+  ["completions", "_fest"],
+  ["completions", "fest.fish"],
+  ["completions", "camp.bash"],
+  ["completions", "_camp"],
+  ["completions", "camp.fish"],
+  ["shell", "festival.bash"],
+  ["shell", "festival.zsh"],
+  ["shell", "festival.fish"],
+];
 const DOWNLOAD_ATTEMPTS = 3;
 const DOWNLOAD_TIMEOUT_MS = 60_000;
 const RETRY_BASE_DELAY_MS = 750;
@@ -61,8 +73,15 @@ function binaryPath(name) {
   return path.join(__dirname, "bin", binaryName);
 }
 
-function haveBinaries() {
-  return BINARIES.every((name) => fs.existsSync(binaryPath(name)));
+function assetPath(...parts) {
+  return path.join(__dirname, "share", "festival", ...parts);
+}
+
+function haveInstallArtifacts() {
+  return (
+    BINARIES.every((name) => fs.existsSync(binaryPath(name))) &&
+    REQUIRED_ASSET_FILES.every(([dir, file]) => fs.existsSync(assetPath(dir, file)))
+  );
 }
 
 function sleep(ms) {
@@ -201,7 +220,7 @@ function extractArchive(archivePath, destDir) {
 async function install(options = {}) {
   const force = options.force === true;
 
-  if (!force && haveBinaries()) {
+  if (!force && haveInstallArtifacts()) {
     return;
   }
 
@@ -236,6 +255,19 @@ async function install(options = {}) {
       if (process.platform !== "win32") {
         fs.chmodSync(targetPath, 0o755);
       }
+    }
+
+    for (const dir of ASSET_DIRECTORIES) {
+      const extractedPath = path.join(tempDir, dir);
+      const targetPath = assetPath(dir);
+
+      if (!fs.existsSync(extractedPath)) {
+        throw new Error(`${dir} assets not found in ${filename}`);
+      }
+
+      fs.rmSync(targetPath, { recursive: true, force: true });
+      fs.mkdirSync(path.dirname(targetPath), { recursive: true });
+      fs.cpSync(extractedPath, targetPath, { recursive: true });
     }
 
     console.log("Installed Festival successfully");

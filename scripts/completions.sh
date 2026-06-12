@@ -1,18 +1,26 @@
 #!/usr/bin/env bash
-# Generate shell completions for fest.
+# Generate shell completions for the bundled CLIs.
 # Called by goreleaser before.hooks.
 set -euo pipefail
 
 mkdir -p completions
 
-# Build a temporary fest binary for the host platform
-echo "Building temporary fest binary for completion generation..."
+cleanup() {
+    rm -f completions/.fest-tmp completions/.camp-tmp
+}
+trap cleanup EXIT
+
+echo "Building temporary binaries for completion generation..."
 (cd fest && go build -o ../completions/.fest-tmp ./cmd/fest)
+(cd camp && go build -o ../completions/.camp-tmp ./cmd/camp)
 
 echo "Generating completions..."
 ./completions/.fest-tmp completion bash > completions/fest.bash
 ./completions/.fest-tmp completion zsh  > completions/_fest
 ./completions/.fest-tmp completion fish > completions/fest.fish
 
-rm -f completions/.fest-tmp
+./completions/.camp-tmp completion bash > completions/camp.bash
+./completions/.camp-tmp completion zsh  > completions/_camp
+./completions/.camp-tmp completion fish > completions/camp.fish
+
 echo "Completions generated in completions/"

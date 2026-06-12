@@ -74,7 +74,12 @@ Use `fest system update --force` only when you intentionally want to overwrite l
 ## Quick Start
 
 ```bash
-# Shell integration (add to ~/.zshrc)
+# Shell integration (add one setup path to ~/.zshrc)
+
+# Preferred when installed with install.sh:
+source ~/.local/share/festival/shell/festival.zsh
+
+# Or, if no helper file is installed:
 eval "$(camp shell-init zsh)"
 eval "$(fest shell-init zsh)"
 
@@ -163,7 +168,20 @@ Every project, every plan, every piece of context for this mission lives here. `
 
 ## Navigation
 
-Shell integration gives you shorthand functions that make navigating a campaign instant. Add these to your shell config:
+Shell integration gives you shorthand functions that make navigating a campaign instant. Package installs include helper files that load both CLIs:
+
+```bash
+# install.sh default location
+source ~/.local/share/festival/shell/festival.zsh
+
+# Homebrew
+source "$(brew --prefix)/share/festival/shell/festival.zsh"
+
+# Linux packages
+source /usr/share/festival/shell/festival.zsh
+```
+
+For bash, use `festival.bash`; for fish, use `festival.fish`. If no helper file is installed, use the dynamic fallback:
 
 ```bash
 eval "$(camp shell-init zsh)"   # gives you: cgo, cr, csw, cint

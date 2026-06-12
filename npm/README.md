@@ -38,8 +38,17 @@ are re-enabled.
 ## How It Works
 
 This package downloads the matching Festival GitHub release archive for your
-platform, verifies it against the release `checksums.txt`, and exposes `fest`
-and `camp` on your PATH.
+platform, verifies it against the release `checksums.txt`, exposes `fest`
+and `camp` on your PATH, and keeps the release completion and shell-helper
+assets under `share/festival/` inside the installed npm package.
+
+The npm installer does not edit shell startup files. Add shell integration
+manually with:
+
+```bash
+eval "$(camp shell-init zsh)"
+eval "$(fest shell-init zsh)"
+```
 
 ## Maintainer Notes
 
