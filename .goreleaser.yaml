@@ -78,6 +78,7 @@ archives:
       - LICENSE
       - install.sh
       - completions/*
+      - shell/*
 
 nfpms:
   - id: festival
@@ -112,6 +113,18 @@ nfpms:
         dst: /usr/share/zsh/vendor-completions/_fest
       - src: ./completions/fest.fish
         dst: /usr/share/fish/vendor_completions.d/fest.fish
+      - src: ./completions/camp.bash
+        dst: /usr/share/bash-completion/completions/camp
+      - src: ./completions/_camp
+        dst: /usr/share/zsh/vendor-completions/_camp
+      - src: ./completions/camp.fish
+        dst: /usr/share/fish/vendor_completions.d/camp.fish
+      - src: ./shell/festival.bash
+        dst: /usr/share/festival/shell/festival.bash
+      - src: ./shell/festival.zsh
+        dst: /usr/share/festival/shell/festival.zsh
+      - src: ./shell/festival.fish
+        dst: /usr/share/festival/shell/festival.fish
 
 aurs:
   - name: festival-bin
@@ -138,6 +151,12 @@ aurs:
       install -Dm644 "./completions/fest.bash" "${pkgdir}/usr/share/bash-completion/completions/fest"
       install -Dm644 "./completions/_fest" "${pkgdir}/usr/share/zsh/site-functions/_fest"
       install -Dm644 "./completions/fest.fish" "${pkgdir}/usr/share/fish/vendor_completions.d/fest.fish"
+      install -Dm644 "./completions/camp.bash" "${pkgdir}/usr/share/bash-completion/completions/camp"
+      install -Dm644 "./completions/_camp" "${pkgdir}/usr/share/zsh/site-functions/_camp"
+      install -Dm644 "./completions/camp.fish" "${pkgdir}/usr/share/fish/vendor_completions.d/camp.fish"
+      install -Dm644 "./shell/festival.bash" "${pkgdir}/usr/share/festival/shell/festival.bash"
+      install -Dm644 "./shell/festival.zsh" "${pkgdir}/usr/share/festival/shell/festival.zsh"
+      install -Dm644 "./shell/festival.fish" "${pkgdir}/usr/share/festival/shell/festival.fish"
     commit_msg_template: "Update to {{ .Tag }}"
 
 # Scoop publishing is temporarily disabled while Windows support is stabilized.
@@ -197,21 +216,29 @@ homebrew_casks:
           if OS.mac?
             system_command "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "#{staged_path}/fest", "#{staged_path}/camp"]
           end
+          shell_dir = "#{HOMEBREW_PREFIX}/share/festival/shell"
+          system_command "/bin/mkdir", args: ["-p", shell_dir, "#{HOMEBREW_PREFIX}/etc/bash_completion.d", "#{HOMEBREW_PREFIX}/share/zsh/site-functions", "#{HOMEBREW_PREFIX}/share/fish/vendor_completions.d"]
+          system_command "/bin/cp", args: ["#{staged_path}/shell/festival.bash", "#{shell_dir}/festival.bash"]
+          system_command "/bin/cp", args: ["#{staged_path}/shell/festival.zsh", "#{shell_dir}/festival.zsh"]
+          system_command "/bin/cp", args: ["#{staged_path}/shell/festival.fish", "#{shell_dir}/festival.fish"]
+          system_command "/bin/cp", args: ["#{staged_path}/completions/camp.bash", "#{HOMEBREW_PREFIX}/etc/bash_completion.d/camp"]
+          system_command "/bin/cp", args: ["#{staged_path}/completions/_camp", "#{HOMEBREW_PREFIX}/share/zsh/site-functions/_camp"]
+          system_command "/bin/cp", args: ["#{staged_path}/completions/camp.fish", "#{HOMEBREW_PREFIX}/share/fish/vendor_completions.d/camp.fish"]
+        uninstall: |
+          system_command "/bin/rm", args: ["-f", "#{HOMEBREW_PREFIX}/share/festival/shell/festival.bash", "#{HOMEBREW_PREFIX}/share/festival/shell/festival.zsh", "#{HOMEBREW_PREFIX}/share/festival/shell/festival.fish", "#{HOMEBREW_PREFIX}/etc/bash_completion.d/camp", "#{HOMEBREW_PREFIX}/share/zsh/site-functions/_camp", "#{HOMEBREW_PREFIX}/share/fish/vendor_completions.d/camp.fish"]
 
     caveats: |
-      To activate shell completions and camp shell integration, add to your shell config:
+      Homebrew installs static fest and camp completions. To activate navigation helpers
+      (cgo, cr, csw, cint, fgo, fls) as well, add one line to your shell config:
 
         # bash (~/.bashrc)
-        eval \"$(camp shell-init bash)\"
-        source <(fest completion bash)
+        source \"$(brew --prefix)/share/festival/shell/festival.bash\"
 
         # zsh (~/.zshrc)
-        eval \"$(camp shell-init zsh)\"
-        source <(fest completion zsh)
+        source \"$(brew --prefix)/share/festival/shell/festival.zsh\"
 
         # fish (~/.config/fish/config.fish)
-        camp shell-init fish | source
-        fest completion fish | source
+        source \"$(brew --prefix)/share/festival/shell/festival.fish\"
 
 release:
   github:

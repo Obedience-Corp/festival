@@ -14,7 +14,10 @@ Create your first campaign and festival in under 5 minutes.
 ## 1. Set Up Shell Integration
 
 ```bash
-# Add to ~/.zshrc (or ~/.bashrc)
+# Add to ~/.zshrc when installed with install.sh
+source ~/.local/share/festival/shell/festival.zsh
+
+# Or, if no helper file is installed:
 eval "$(camp shell-init zsh)"
 eval "$(fest shell-init zsh)"
 

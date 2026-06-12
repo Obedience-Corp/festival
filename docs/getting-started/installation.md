@@ -20,7 +20,8 @@ npm install -g @obedience-corp/festival
 
 The npm package downloads the matching Festival GitHub release archive for your
 platform, verifies it against the release checksums, and exposes both `fest` and
-`camp`.
+`camp`. It also keeps the release completion and shell-helper assets inside the
+installed package, but it does not edit your shell startup files.
 
 {{< tabs names="macOS, Linux, Windows (Temporarily Paused)" >}}
 
@@ -100,6 +101,8 @@ curl -fsSL https://raw.githubusercontent.com/Obedience-Corp/festival/main/instal
 {{< note >}}
 This downloads pre-built binaries to `~/.local/bin`.
 The installer checks for `git` and stops early if it is missing. If `scc` is not installed, the installer continues and warns that `camp leverage` features will be unavailable until you add it.
+It also installs completion files and shell-helper source files under `~/.local/share/festival/`.
+When run from an interactive terminal, it asks whether to add the helper source line to your detected shell config; the default answer is yes.
 [Review the script source](https://github.com/Obedience-Corp/festival/blob/main/install.sh) before running.
 {{< /note >}}
 
@@ -169,11 +172,27 @@ go install github.com/Obedience-Corp/camp/cmd/camp@latest
 
 ## Shell Integration
 
-Enable navigation features by adding to your `~/.zshrc` or `~/.bashrc`:
+Package installs include sourceable helper files for shell functions such as
+`cgo`, `cr`, `csw`, `cint`, `fgo`, and `fls`. Add the line for your install
+method and shell:
 
 ```bash
-eval "$(fest shell-init zsh)"
+# install.sh default location
+source ~/.local/share/festival/shell/festival.zsh
+
+# Homebrew
+source "$(brew --prefix)/share/festival/shell/festival.zsh"
+
+# Linux packages
+source /usr/share/festival/shell/festival.zsh
+```
+
+For bash, use `festival.bash`; for fish, use `festival.fish`.
+The portable fallback is still:
+
+```bash
 eval "$(camp shell-init zsh)"
+eval "$(fest shell-init zsh)"
 ```
 
 See [Shell Setup]({{< ref "/getting-started/shell-setup" >}}) for details.

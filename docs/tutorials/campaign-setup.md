@@ -34,10 +34,17 @@ my-startup/
 
 ## Shell Integration
 
-Add camp and fest shell functions to your shell config:
+Add camp and fest shell functions to your shell config. If your installer
+created helper files, source the helper:
 
 ```bash
 # Add to ~/.zshrc
+source ~/.local/share/festival/shell/festival.zsh
+```
+
+If no helper file is installed, use the dynamic fallback:
+
+```bash
 eval "$(camp shell-init zsh)"
 eval "$(fest shell-init zsh)"
 ```

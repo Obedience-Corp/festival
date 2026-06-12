@@ -7,6 +7,7 @@ set -euo pipefail
 REPO="Obedience-Corp/festival"
 INSTALL_DIR="${INSTALL_DIR:-$HOME/.local/bin}"
 VERSION="${VERSION:-latest}"
+SHELL_SETUP="${FESTIVAL_INSTALL_SHELL:-auto}"
 
 # Colors
 RED='\033[0;31m'
@@ -22,6 +23,45 @@ error() { echo -e "${RED}Error:${NC} $1" >&2; exit 1; }
 
 command_exists() {
     command -v "$1" >/dev/null 2>&1
+}
+
+usage() {
+    cat <<'EOF'
+Festival installer
+
+Usage:
+  install.sh [--setup-shell|--no-shell]
+
+Environment:
+  VERSION                    Release tag to install, or "latest" (default: latest)
+  INSTALL_DIR                Binary install directory (default: ~/.local/bin)
+  FESTIVAL_INSTALL_SHELL     auto, 1, or 0 (default: auto)
+
+Shell setup:
+  --setup-shell              Add a guarded source block to the detected shell rc file
+  --no-shell                 Install binaries and helper files only
+EOF
+}
+
+parse_args() {
+    while [ "$#" -gt 0 ]; do
+        case "$1" in
+            --setup-shell)
+                SHELL_SETUP=1
+                ;;
+            --no-shell)
+                SHELL_SETUP=0
+                ;;
+            -h|--help)
+                usage
+                exit 0
+                ;;
+            *)
+                error "Unknown argument: $1"
+                ;;
+        esac
+        shift
+    done
 }
 
 # Detect OS
@@ -203,8 +243,185 @@ warn_optional_scc() {
     echo "    $(install_hint scc)"
 }
 
+install_prefix() {
+    local install_dir
+    install_dir="${INSTALL_DIR%/}"
+    case "$install_dir" in
+        */bin) echo "${install_dir%/bin}" ;;
+        *) dirname "$install_dir" ;;
+    esac
+}
+
+shell_helper_dir() {
+    echo "$(install_prefix)/share/festival/shell"
+}
+
+completion_asset_dir() {
+    echo "$(install_prefix)/share/festival/completions"
+}
+
+install_completion_assets() {
+    local tmp_dir="$1"
+    local completions_dir="$2"
+
+    if [ ! -d "${tmp_dir}/completions" ]; then
+        warning "Completion files were not found in the release archive"
+        return 1
+    fi
+
+    mkdir -p "$completions_dir"
+    cp "${tmp_dir}/completions/fest.bash" "$completions_dir/fest.bash"
+    cp "${tmp_dir}/completions/_fest" "$completions_dir/_fest"
+    cp "${tmp_dir}/completions/fest.fish" "$completions_dir/fest.fish"
+    cp "${tmp_dir}/completions/camp.bash" "$completions_dir/camp.bash"
+    cp "${tmp_dir}/completions/_camp" "$completions_dir/_camp"
+    cp "${tmp_dir}/completions/camp.fish" "$completions_dir/camp.fish"
+    success "Installed completion files to ${completions_dir}"
+}
+
+install_shell_helpers() {
+    local tmp_dir="$1"
+    local helper_dir="$2"
+
+    if [ ! -d "${tmp_dir}/shell" ]; then
+        warning "Shell helper files were not found in the release archive"
+        return 1
+    fi
+
+    mkdir -p "$helper_dir"
+    cp "${tmp_dir}/shell/festival.bash" "$helper_dir/festival.bash"
+    cp "${tmp_dir}/shell/festival.zsh" "$helper_dir/festival.zsh"
+    cp "${tmp_dir}/shell/festival.fish" "$helper_dir/festival.fish"
+    success "Installed shell helper files to ${helper_dir}"
+}
+
+detected_shell() {
+    basename "${SHELL:-}" 2>/dev/null || true
+}
+
+shell_rc_file() {
+    case "$1" in
+        zsh) echo "${ZDOTDIR:-$HOME}/.zshrc" ;;
+        bash) echo "$HOME/.bashrc" ;;
+        fish) echo "$HOME/.config/fish/config.fish" ;;
+        *) return 1 ;;
+    esac
+}
+
+should_setup_shell() {
+    local rc_file="$1"
+    local reply
+
+    case "$SHELL_SETUP" in
+        1|true|TRUE|yes|YES|y|Y)
+            return 0
+            ;;
+        0|false|FALSE|no|NO|n|N)
+            return 1
+            ;;
+        auto|"")
+            if [ -r /dev/tty ] && [ -w /dev/tty ]; then
+                printf "Add Festival shell helpers to %s? [Y/n] " "$rc_file" > /dev/tty
+                IFS= read -r reply < /dev/tty || reply=""
+                case "$reply" in
+                    n|N|no|NO)
+                        return 1
+                        ;;
+                    *)
+                        return 0
+                        ;;
+                esac
+            fi
+            return 1
+            ;;
+        *)
+            warning "Ignoring unknown FESTIVAL_INSTALL_SHELL value: ${SHELL_SETUP}"
+            return 1
+            ;;
+    esac
+}
+
+append_shell_block() {
+    local shell_name="$1"
+    local rc_file="$2"
+    local helper_dir="$3"
+
+    mkdir -p "$(dirname "$rc_file")"
+    touch "$rc_file"
+
+    if grep -Fq ">>> festival shell integration >>>" "$rc_file"; then
+        success "Shell helpers already configured in ${rc_file}"
+        return 0
+    fi
+
+    {
+        echo ""
+        echo "# >>> festival shell integration >>>"
+        echo "# Added by the Festival installer. Remove this block to disable cgo/fgo helpers."
+        case "$shell_name" in
+            bash)
+                echo "case \":\$PATH:\" in"
+                echo "  *\":${INSTALL_DIR}:\"*) ;;"
+                echo "  *) export PATH=\"${INSTALL_DIR}:\$PATH\" ;;"
+                echo "esac"
+                echo "source \"${helper_dir}/festival.bash\""
+                ;;
+            zsh)
+                echo "case \":\$PATH:\" in"
+                echo "  *\":${INSTALL_DIR}:\"*) ;;"
+                echo "  *) export PATH=\"${INSTALL_DIR}:\$PATH\" ;;"
+                echo "esac"
+                echo "source \"${helper_dir}/festival.zsh\""
+                ;;
+            fish)
+                echo "if not contains \"${INSTALL_DIR}\" \$PATH"
+                echo "    set -gx PATH \"${INSTALL_DIR}\" \$PATH"
+                echo "end"
+                echo "source \"${helper_dir}/festival.fish\""
+                ;;
+        esac
+        echo "# <<< festival shell integration <<<"
+    } >> "$rc_file"
+
+    success "Added shell helpers to ${rc_file}"
+}
+
+configure_shell_startup() {
+    local helper_dir="$1"
+    local shell_name rc_file
+
+    shell_name="$(detected_shell)"
+    if [ -z "$shell_name" ] || ! rc_file="$(shell_rc_file "$shell_name")"; then
+        warning "Could not detect a supported shell for automatic helper setup"
+        return 1
+    fi
+
+    if should_setup_shell "$rc_file"; then
+        append_shell_block "$shell_name" "$rc_file" "$helper_dir"
+        return 0
+    fi
+
+    return 1
+}
+
+print_shell_setup_hint() {
+    local helper_dir="$1"
+
+    echo ""
+    info "To enable shell integration manually, add the line for your shell:"
+    echo ""
+    echo "  # bash (~/.bashrc)"
+    echo "  source \"${helper_dir}/festival.bash\""
+    echo ""
+    echo "  # zsh (~/.zshrc)"
+    echo "  source \"${helper_dir}/festival.zsh\""
+    echo ""
+    echo "  # fish (~/.config/fish/config.fish)"
+    echo "  source \"${helper_dir}/festival.fish\""
+}
+
 main() {
-    local os arch version archive_name download_url release_metadata tmp_dir=""
+    local os arch version archive_name download_url release_metadata tmp_dir="" helper_dir completions_dir shell_configured=0
 
     require_git
 
@@ -259,6 +476,11 @@ main() {
 
     success "Installed fest and camp to ${INSTALL_DIR}"
 
+    helper_dir="$(shell_helper_dir)"
+    completions_dir="$(completion_asset_dir)"
+    install_completion_assets "$tmp_dir" "$completions_dir" || true
+    install_shell_helpers "$tmp_dir" "$helper_dir" || true
+
     # Verify
     if command -v fest &>/dev/null; then
         success "fest $(fest --version 2>/dev/null || echo 'installed')"
@@ -277,14 +499,19 @@ main() {
         echo "  export PATH=\"${INSTALL_DIR}:\$PATH\""
     fi
 
-    # Shell integration
-    echo ""
-    info "To enable shell integration, add to your ~/.zshrc or ~/.bashrc:"
-    echo ""
-    echo "  eval \"\$(fest shell-init zsh)\""
-    echo "  eval \"\$(camp shell-init zsh)\""
-    echo ""
+    if configure_shell_startup "$helper_dir"; then
+        shell_configured=1
+        echo ""
+        info "Restart your shell or source your shell config to use cgo/fgo helpers."
+    fi
+
+    if [ "$shell_configured" -eq 0 ]; then
+        print_shell_setup_hint "$helper_dir"
+        echo ""
+    fi
+
     success "Installation complete"
 }
 
+parse_args "$@"
 main "$@"
