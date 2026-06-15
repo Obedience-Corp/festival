@@ -1,0 +1,20 @@
+{
+  "name": "festival",
+  "description": "Festival Methodology for Claude Code: fest and camp CLI integration and methodology guidance.",
+  "owner": {
+    "name": "Obedience Corp",
+    "url": "https://obediencecorp.com"
+  },
+  "plugins": [
+    {
+      "name": "festival",
+      "description": "Festival Methodology for Claude Code — goal-oriented project management for human-AI development workflows. Provides fest and camp CLI integration, automatic installation, and methodology guidance.",
+      "version": "1.0.1",
+      "source": "./claude-plugin",
+      "author": {
+        "name": "Obedience Corp",
+        "url": "https://obediencecorp.com"
+      }
+    }
+  ]
+}
