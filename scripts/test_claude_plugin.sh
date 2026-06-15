@@ -32,6 +32,51 @@ if (!manifest.name || !manifest.description || !manifest.repository) {
 ' "$plugin_dir/.claude-plugin/plugin.json"
 }
 
+frontmatter_check() {
+    node -e '
+const fs = require("fs");
+const path = require("path");
+const pluginDir = process.argv[1];
+
+function frontmatter(file) {
+  const text = fs.readFileSync(file, "utf8");
+  if (!text.startsWith("---")) throw new Error(`${file}: missing frontmatter`);
+  const end = text.indexOf("\n---", 3);
+  if (end === -1) throw new Error(`${file}: unterminated frontmatter`);
+  const block = text.slice(3, end);
+  const keys = {};
+  for (const line of block.split("\n")) {
+    const m = line.match(/^([A-Za-z0-9_]+):\s*(.*)$/);
+    if (m) keys[m[1]] = m[2].replace(/^["\x27]|["\x27]$/g, "").trim();
+  }
+  return keys;
+}
+
+function requireKeys(file, keys, names) {
+  for (const n of names) {
+    if (!keys[n]) throw new Error(`${file}: frontmatter missing ${n}`);
+  }
+}
+
+for (const dir of fs.readdirSync(path.join(pluginDir, "skills"))) {
+  const file = path.join(pluginDir, "skills", dir, "SKILL.md");
+  const keys = frontmatter(file);
+  requireKeys(file, keys, ["name", "description"]);
+  if (keys.name !== dir) throw new Error(`${file}: name "${keys.name}" must equal dir "${dir}"`);
+}
+
+for (const sub of ["commands", "agents"]) {
+  const base = path.join(pluginDir, sub);
+  if (!fs.existsSync(base)) continue;
+  for (const f of fs.readdirSync(base)) {
+    if (!f.endsWith(".md")) continue;
+    const file = path.join(base, f);
+    requireKeys(file, frontmatter(file), ["description"]);
+  }
+}
+' "$1"
+}
+
 target_for_host() {
     local os arch
 
@@ -193,6 +238,7 @@ require_command bash
 json_check "$plugin_dir/.claude-plugin/plugin.json"
 json_check "$plugin_dir/hooks/hooks.json"
 plugin_version_check
+frontmatter_check "$plugin_dir"
 bash -n "$plugin_dir/hooks/scripts/ensure-festival.sh" "$plugin_dir/hooks/scripts/sync-check.sh"
 
 if [ -x "$repo_root/fest/bin/fest" ] && [ -x "$repo_root/camp/bin/camp" ]; then
