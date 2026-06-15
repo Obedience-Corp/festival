@@ -1,6 +1,6 @@
 ---
 name: fest-methodology
-description: Auto-activates when working in a festivals/ directory or when the user mentions festivals, fest CLI, phases, sequences, or tasks. Provides core methodology knowledge so Claude understands the Festival planning system.
+description: Use when the user mentions festivals, the fest CLI, phases, sequences, or tasks, or when working inside a `festivals/` directory. Provides the core Festival methodology model so Claude understands the planning system.
 ---
 
 # Festival Methodology
