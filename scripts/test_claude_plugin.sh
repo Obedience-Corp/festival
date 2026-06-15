@@ -32,6 +32,21 @@ if (!manifest.name || !manifest.description || !manifest.repository) {
 ' "$plugin_dir/.claude-plugin/plugin.json"
 }
 
+manifest_consistency_check() {
+    node -e '
+const fs = require("fs");
+const plugin = JSON.parse(fs.readFileSync(process.argv[1], "utf8"));
+const market = JSON.parse(fs.readFileSync(process.argv[2], "utf8"));
+const entry = (market.plugins || [])[0] || {};
+if (entry.version !== plugin.version) {
+  throw new Error(`version mismatch: plugin.json=${plugin.version} marketplace.json=${entry.version}`);
+}
+if (entry.description !== plugin.description) {
+  throw new Error("marketplace.json plugin description must match plugin.json description");
+}
+' "$1" "$2"
+}
+
 frontmatter_check() {
     node -e '
 const fs = require("fs");
@@ -258,6 +273,7 @@ require_command bash
 json_check "$plugin_dir/.claude-plugin/plugin.json"
 json_check "$plugin_dir/hooks/hooks.json"
 plugin_version_check
+manifest_consistency_check "$plugin_dir/.claude-plugin/plugin.json" "$repo_root/.claude-plugin/marketplace.json"
 frontmatter_check "$plugin_dir"
 hook_reference_check "$plugin_dir"
 bash -n "$plugin_dir/hooks/scripts/ensure-festival.sh" "$plugin_dir/hooks/scripts/sync-check.sh"
