@@ -77,6 +77,26 @@ for (const sub of ["commands", "agents"]) {
 ' "$1"
 }
 
+hook_reference_check() {
+    node -e '
+const fs = require("fs");
+const path = require("path");
+const pluginDir = process.argv[1];
+const hooks = JSON.parse(fs.readFileSync(path.join(pluginDir, "hooks", "hooks.json"), "utf8"));
+
+const refs = new Set();
+const re = /\$\{CLAUDE_PLUGIN_ROOT\}\/([^"\s]+)/g;
+JSON.stringify(hooks).replace(re, (_, p) => { refs.add(p); return _; });
+
+for (const rel of refs) {
+  const target = path.join(pluginDir, rel);
+  if (!fs.existsSync(target)) throw new Error(`hooks.json references missing file: ${rel}`);
+  fs.accessSync(target, fs.constants.R_OK);
+}
+if (refs.size === 0) throw new Error("hooks.json: no CLAUDE_PLUGIN_ROOT references found (expected at least one)");
+' "$1"
+}
+
 target_for_host() {
     local os arch
 
@@ -239,6 +259,7 @@ json_check "$plugin_dir/.claude-plugin/plugin.json"
 json_check "$plugin_dir/hooks/hooks.json"
 plugin_version_check
 frontmatter_check "$plugin_dir"
+hook_reference_check "$plugin_dir"
 bash -n "$plugin_dir/hooks/scripts/ensure-festival.sh" "$plugin_dir/hooks/scripts/sync-check.sh"
 
 if [ -x "$repo_root/fest/bin/fest" ] && [ -x "$repo_root/camp/bin/camp" ]; then
