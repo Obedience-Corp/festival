@@ -2,6 +2,8 @@
 
 ![Festival Banner](docs/images/festival_banner.png)
 
+[![Watch the demo](docs/images/demo_video_thumb.jpg)](https://youtu.be/FY6vm74oa8o?si=ZFg87vA7u9G_79bX)
+
 **A standardized workspace and workflow for solving difficult, multi-faceted problems with AI.**
 
 To use AI to solve hard problems you need three things: **context**, **direction**, and **verification**. Festival provides a structured layer for each, resulting in dramatically fewer tokens and less time spent getting to the outcome you want.
