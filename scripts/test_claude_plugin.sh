@@ -303,6 +303,29 @@ if (skills.length === 0) throw new Error(`.cursor-plugin/skills/ resolves but co
 ' "$repo_root" "$1"
 }
 
+opencode_target_check() {
+    local plugin="$repo_root/.opencode/plugins/festival.js"
+    node --check "$plugin" || {
+        echo ".opencode/plugins/festival.js failed node --check" >&2
+        return 1
+    }
+    node -e '
+const fs = require("fs");
+const path = require("path");
+const ocDir = path.join(process.argv[1], ".opencode");
+
+const installer = path.join(ocDir, "scripts", "ensure-festival.sh");
+if (!fs.existsSync(installer)) {
+  throw new Error(".opencode/plugins/festival.js references missing installer: scripts/ensure-festival.sh");
+}
+
+const skillsDir = path.join(ocDir, "skills");
+if (!fs.existsSync(skillsDir)) throw new Error(".opencode/skills/ missing (plugin relies on auto-discovery)");
+const skills = fs.readdirSync(skillsDir).filter((d) => fs.existsSync(path.join(skillsDir, d, "SKILL.md")));
+if (skills.length === 0) throw new Error(".opencode/skills/ resolves but contains no SKILL.md");
+' "$repo_root"
+}
+
 target_for_host() {
     local os arch
 
@@ -470,6 +493,7 @@ hook_reference_check "$plugin_dir"
 generated_targets_check
 codex_target_check "$plugin_dir/.claude-plugin/plugin.json"
 cursor_target_check "$plugin_dir/.claude-plugin/plugin.json"
+opencode_target_check
 bash -n "$plugin_dir/hooks/scripts/ensure-festival.sh" "$plugin_dir/hooks/scripts/sync-check.sh"
 
 if [ -x "$repo_root/fest/bin/fest" ] && [ -x "$repo_root/camp/bin/camp" ]; then
