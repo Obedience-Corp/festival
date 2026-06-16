@@ -124,6 +124,8 @@ Festival ships two CLIs (`camp` and `fest`) that solve the three problems above.
 
 **`camp`** manages campaigns: isolated workspaces that hold all the projects, docs, research, and planning for a single mission, a high-level purpose like your startup, your job, or a hobby. A mission grows over time, and the campaign grows with it. It gives you instant navigation across everything in the workspace, project lifecycle management, and shell shortcuts that make `cd` obsolete.
 
+Work items are the campaign-level work queue. `camp workitem` surfaces intents, design docs, explore notes, festivals, and custom tracked work through one dashboard. It can mark current work, link work to projects or festivals, and commit changes scoped to the resolved work item.
+
 **`fest`** manages festivals: structured plans that break work into phases, sequences, and tasks. The hierarchy is designed for AI agents to execute autonomously, pause, and resume without context loss. Run `fest next` and the agent gets its next task with full surrounding context. Run `fest commit` and every commit traces back to the plan.
 
 ### Where Festival Fits
@@ -255,6 +257,9 @@ Full reference: [fest CLI](https://docs.fest.build/cli-reference/fest/) | [camp 
 camp init my-startup             # Create a campaign
 camp project add <url>           # Add a project as submodule
 camp p commit -m "fix auth"      # Commit in a project (auto-stages all changes)
+camp workitem                    # Dashboard across intents, designs, explore docs, festivals
+camp workitem current my-feature # Mark the current work item
+camp workitem commit -m "msg"    # Commit changes scoped to the resolved work item
 camp status all                  # Dashboard of all project statuses
 camp doctor                      # Health check the workspace
 camp intent add "idea"           # Capture an idea to the inbox
@@ -309,8 +314,15 @@ Full documentation at **[docs.fest.build](https://docs.fest.build)**:
 
 - [Methodology Overview](https://docs.fest.build/methodology/overview/): core principles and concepts
 - [Agent Workflows](https://docs.fest.build/guides/agent-workflows/): using Festival with AI coding tools
+- [Work Items](https://docs.fest.build/methodology/work-items/): campaign-level work discovery, current work, links, and scoped commits
 - [First Festival Tutorial](https://docs.fest.build/tutorials/first-festival/): end-to-end walkthrough
 - [CI Integration](https://docs.fest.build/tutorials/ci-integration/): release smoke ownership and launch-path verification
+
+Repository entry points:
+
+- [README.zh-CN.md](README.zh-CN.md): Simplified Chinese overview for Chinese developers
+- [Examples](examples/): before/after shapes for resumable AI coding work
+- [Templates](templates/): reusable planning scaffolds for AI-assisted feature work
 
 ## License
 
