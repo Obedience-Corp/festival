@@ -244,7 +244,7 @@ const path = require("path");
 const repoRoot = process.argv[1];
 const plugin = JSON.parse(fs.readFileSync(process.argv[2], "utf8"));
 const codexDir = path.join(repoRoot, ".codex-plugin");
-const manifest = JSON.parse(fs.readFileSync(path.join(codexDir, "plugin.json"), "utf8"));
+const manifest = JSON.parse(fs.readFileSync(path.join(codexDir, ".codex-plugin", "plugin.json"), "utf8"));
 
 for (const key of ["name", "version", "description"]) {
   if (!manifest[key]) throw new Error(`.codex-plugin/plugin.json missing required key: ${key}`);
@@ -275,8 +275,9 @@ const entry = (market.plugins || [])[0] || {};
 if (entry.version !== plugin.version) {
   throw new Error(`.agents/plugins/marketplace.json version ${entry.version} != plugin.json ${plugin.version}`);
 }
-if (!entry.source || !fs.existsSync(path.resolve(repoRoot, entry.source))) {
-  throw new Error(`.agents/plugins/marketplace.json source does not resolve: ${entry.source}`);
+const srcPath = typeof entry.source === "string" ? entry.source : (entry.source && entry.source.path);
+if (!srcPath || !fs.existsSync(path.resolve(repoRoot, srcPath))) {
+  throw new Error(`.agents/plugins/marketplace.json source does not resolve: ${JSON.stringify(entry.source)}`);
 }
 ' "$repo_root" "$1"
 }
