@@ -11,7 +11,10 @@
       "name": "festival",
       "description": "Festival Methodology: goal-oriented project management for human-AI development workflows. Provides fest and camp CLI integration, automatic installation, and methodology guidance.",
       "version": "1.1.0",
-      "source": "./.codex-plugin",
+      "source": {
+        "source": "local",
+        "path": "./.codex-plugin"
+      },
       "author": {
         "name": "Obedience Corp",
         "url": "https://obediencecorp.com"
