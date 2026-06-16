@@ -78,6 +78,7 @@ function makeContext(generated, outRoot) {
     commands: readDocs("commands"),
     agents: readDocs("agents"),
     sourceHooks: JSON.parse(readFileSync(join(PLUGIN_DIR, "hooks", "hooks.json"), "utf8")),
+    readPluginFile: (rel) => readFileSync(join(PLUGIN_DIR, rel), "utf8"),
     templatePath: (harness, ext) => join(TARGETS_DIR, `${harness}.template.${ext}`),
     readTemplate: (harness, ext) => readFileSync(join(TARGETS_DIR, `${harness}.template.${ext}`), "utf8"),
     readTemplateJSON: (harness) =>

@@ -27,3 +27,10 @@ supports as plugin components, per `packaging/survey/codex.md` and `packaging/su
   `commands` field. The same workflows run through the `fest`/`camp` CLIs that the hook installs.
 - **Agents** — Festival's 2 agents do NOT ship as Codex plugin components. Codex
   subagents are config-scope only (`~/.codex/agents/`, `.codex/agents/` TOML), not manifest-bundled.
+
+## Install
+
+Auto-install, per the `survey/codex.md` decision: the bundled `SessionStart` command hook runs
+`bash ${PLUGIN_ROOT}/hooks/scripts/ensure-festival.sh` on every session start. The script is
+idempotent (it no-ops when `fest`/`camp` are already current), mirroring the Claude Code hook.
+No manual step is required after `/plugin install festival`.

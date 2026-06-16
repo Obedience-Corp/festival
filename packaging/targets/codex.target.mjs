@@ -22,7 +22,27 @@ ${skills}
   \`commands\` field. The same workflows run through the \`fest\`/\`camp\` CLIs that the hook installs.
 - **Agents** — Festival's ${ctx.agents.length} agents do NOT ship as Codex plugin components. Codex
   subagents are config-scope only (\`~/.codex/agents/\`, \`.codex/agents/\` TOML), not manifest-bundled.
+
+## Install
+
+Auto-install, per the \`survey/codex.md\` decision: the bundled \`SessionStart\` command hook runs
+\`bash \${PLUGIN_ROOT}/hooks/scripts/ensure-festival.sh\` on every session start. The script is
+idempotent (it no-ops when \`fest\`/\`camp\` are already current), mirroring the Claude Code hook.
+No manual step is required after \`/plugin install festival\`.
 `;
+}
+
+function codexHooks(ctx) {
+  const swapped = JSON.parse(
+    JSON.stringify(ctx.sourceHooks).replaceAll("${CLAUDE_PLUGIN_ROOT}", "${PLUGIN_ROOT}"),
+  );
+  return { _generated: ctx.banner, ...swapped };
+}
+
+function bundledInstaller(ctx) {
+  const src = ctx.readPluginFile("hooks/scripts/ensure-festival.sh");
+  const nl = src.indexOf("\n");
+  return src.slice(0, nl + 1) + `# ${ctx.banner}\n` + src.slice(nl + 1);
 }
 
 export default {
@@ -42,6 +62,8 @@ export default {
       keywords: m.keywords,
       ...ctx.readTemplateJSON("codex"),
     });
+    ctx.writeJSON(".codex-plugin/hooks/hooks.json", codexHooks(ctx));
+    ctx.writeText(".codex-plugin/hooks/scripts/ensure-festival.sh", bundledInstaller(ctx));
     ctx.writeText(".codex-plugin/README.md", readme(ctx));
   },
 };
