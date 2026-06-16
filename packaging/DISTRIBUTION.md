@@ -1,0 +1,48 @@
+# Festival plugin distribution
+
+How each generated target reaches users. Every decision cites the verified survey under
+`packaging/survey/` (decision D006, revised: publish where a real channel exists, document the
+in-repo surface where it does not). No fork-PR sync exists; the Superpowers
+`openai-codex-plugins` flow was unverified and is not used.
+
+## Codex
+
+- **Channel**: self-hosted marketplace. The generator emits `.agents/plugins/marketplace.json`
+  pointing at `.codex-plugin/`.
+- **Install**: `/plugin marketplace add Obedience-Corp/festival` then `/plugin install festival`.
+- **Note**: OpenAI's official curated directory has no self-serve publishing yet ("coming soon").
+- **Surface**: `.codex-plugin/` + `.agents/plugins/marketplace.json` (generated, drift-covered).
+- Source: `packaging/survey/codex.md`.
+
+## Cursor
+
+- **Channel**: Cursor Marketplace. Submit the public git repo at `cursor.com/marketplace/publish`
+  (MANUAL review); in-editor install is `/add-plugin`. This is a one-time human web submission, not a
+  scriptable sync. Multi-plugin repos may add a `.cursor-plugin/marketplace.json`; Festival is a
+  single plugin, so `.cursor-plugin/plugin.json` is the distribution unit.
+- **Surface**: the in-repo `.cursor-plugin/` (generated, drift-covered).
+- Source: `packaging/survey/cursor.md`.
+
+## opencode
+
+- **Channel**: no official curated marketplace. Distribute as an npm package
+  (`npm publish` / `bun publish`) or a git URL referenced in a user's `opencode.json` `plugin` array;
+  list on the community `awesome-opencode` repo. No review pipeline, so nothing to script here.
+- **Surface**: the in-repo `.opencode/` (plugin js + skills + INSTALL.md, generated, drift-covered).
+- Source: `packaging/survey/opencode.md`.
+
+## Gemini
+
+- **Channel**: `gemini extensions install Obedience-Corp/festival` (GitHub shorthand) installs the
+  repo directly, with `--ref=` pinning; `gemini extensions update` updates it. The gallery at
+  `geminicli.com/extensions` auto-indexes repos carrying the `gemini-cli-extension` topic, so
+  publishing is "add the repo topic," not a scripted push.
+- **Surface**: the repo root itself (`gemini-extension.json` + `GEMINI.md`, generated, drift-covered).
+- Source: `packaging/survey/gemini.md`.
+
+## Summary
+
+Only Codex needs a generated distribution artifact (`marketplace.json`). Cursor is a manual web
+submission, and opencode and Gemini install straight from the git repo, so for those three the
+distribution surface is the in-repo generated target plus its INSTALL notes. The acceptance sweep
+(sequence 08) proves each path with a `--dry-run` or no-push check and captures the output.
