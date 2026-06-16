@@ -2,26 +2,34 @@
 
 ![Festival Banner](docs/images/festival_banner.png)
 
-**A standardized workspace and workflow for solving difficult, multi-faceted problems with AI.**
+**Make Claude Code work across days and projects without losing the thread.**
 
-To use AI to solve hard problems you need three things: **context**, **direction**, and **verification**. Festival provides a structured layer for each, resulting in dramatically fewer tokens and less time spent getting to the outcome you want.
+Festival gives Claude Code, Codex, Cursor, and other AI coding agents persistent project memory, structured plans, and resumable next actions.
 
-> [Get started](https://docs.fest.build/getting-started/quickstart) (takes ~5 minutes).
+It is a local-first workflow layer for long-running AI coding work: plans live in files, decisions survive sessions, and `fest next` always gives the next agent enough context to continue.
 
-```mermaid
-graph TD
-    HP["<b>Hard, multi-faceted problem</b>"]
+> Star this repo if you want local-first workflows for long-running AI coding work.
 
-    HP --> C["<b>Context</b><br/><br/>a campaign workspace with<br/>all projects, docs, and research"]
-    HP --> D["<b>Direction</b><br/><br/>a structured plan that AI agents<br/>can execute, pause, and resume"]
-    HP --> V["<b>Verification</b><br/><br/>all work captured in reviewable<br/>files you can trace and audit"]
+## Start With Claude Code
 
-    C --> O["<b>Fewer tokens · less time · better outcomes</b>"]
-    D --> O
-    V --> O
+Install the Festival plugin:
+
+```bash
+claude plugin add --source git-subdir --url Obedience-Corp/festival --path claude-plugin
 ```
 
-## Install
+Then open Claude Code in a project and run:
+
+```text
+/fest-create
+/fest-next
+```
+
+The plugin installs `fest` and `camp` automatically if they are missing. It also adds slash commands, methodology skills, and planning/execution agents for Claude Code.
+
+## Install the CLI
+
+Use the CLI directly from Codex, Cursor, Aider, OpenCode, terminal sessions, or any agent that can read files and run shell commands.
 
 **npm / pnpm / bun:**
 
@@ -45,6 +53,28 @@ yay -S festival-bin
 
 **Windows:** Stable Windows packages are temporarily paused while support is being hardened.
 For now, use WSL2 and the Linux install method above.
+
+## What It Feels Like
+
+Without Festival, every AI coding session starts with the same setup: explain the project, restate the plan, paste old decisions, and hope the model does not miss a step.
+
+With Festival, the workflow is:
+
+```bash
+fest next                 # Get the next action with the right context
+# do the work with your agent
+fest task completed       # Mark progress in the filesystem
+fest commit -m "message"  # Commit with traceable plan context
+```
+
+Come back tomorrow, switch agents, or move to another repo in the same campaign. `fest next` still knows where the work left off.
+
+## Steal the Workflow
+
+- [Claude Code workflow example](examples/claude-code-workflow/) - a tiny before/after showing how Festival makes a multi-step feature resumable.
+- [Agentic feature build template](templates/agentic-feature-build/) - a reusable plan format for AI-assisted feature work.
+- [README.zh-CN.md](README.zh-CN.md) - Simplified Chinese overview for Chinese developers.
+- [Full docs](https://docs.fest.build) - methodology, CLI reference, tutorials, and agent workflows.
 
 ## Requirements
 
@@ -101,6 +131,23 @@ fest next
 ```
 
 After installing, see the [quick start guide](https://docs.fest.build/getting-started/quickstart/) for shell setup and first steps.
+
+## The Model
+
+To use AI to solve hard problems you need three things: **context**, **direction**, and **verification**. Festival provides a structured layer for each, resulting in fewer tokens and less time spent getting to the outcome you want.
+
+```mermaid
+graph TD
+    HP["<b>Hard, multi-faceted problem</b>"]
+
+    HP --> C["<b>Context</b><br/><br/>a campaign workspace with<br/>all projects, docs, and research"]
+    HP --> D["<b>Direction</b><br/><br/>a structured plan that AI agents<br/>can execute, pause, and resume"]
+    HP --> V["<b>Verification</b><br/><br/>all work captured in reviewable<br/>files you can trace and audit"]
+
+    C --> O["<b>Fewer tokens · less time · better outcomes</b>"]
+    D --> O
+    V --> O
+```
 
 ## The Problem
 
