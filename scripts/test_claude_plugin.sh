@@ -237,6 +237,40 @@ generated_targets_check() {
     fi
 }
 
+codex_target_check() {
+    node -e '
+const fs = require("fs");
+const path = require("path");
+const repoRoot = process.argv[1];
+const plugin = JSON.parse(fs.readFileSync(process.argv[2], "utf8"));
+const codexDir = path.join(repoRoot, ".codex-plugin");
+const manifest = JSON.parse(fs.readFileSync(path.join(codexDir, "plugin.json"), "utf8"));
+
+for (const key of ["name", "version", "description"]) {
+  if (!manifest[key]) throw new Error(`.codex-plugin/plugin.json missing required key: ${key}`);
+}
+if (manifest.version !== plugin.version) {
+  throw new Error(`.codex-plugin/plugin.json version ${manifest.version} != plugin.json ${plugin.version}`);
+}
+
+const refs = [manifest.skills, manifest.hooks].filter((r) => typeof r === "string");
+for (const ref of refs) {
+  const target = path.resolve(codexDir, ref);
+  const rel = path.relative(codexDir, target);
+  if (rel.startsWith("..") || path.isAbsolute(rel)) {
+    throw new Error(`.codex-plugin/plugin.json references out-of-bundle path: ${ref}`);
+  }
+  if (!fs.existsSync(target)) {
+    throw new Error(`.codex-plugin/plugin.json references missing path: ${ref}`);
+  }
+}
+
+const skillsDir = path.resolve(codexDir, manifest.skills);
+const skills = fs.readdirSync(skillsDir).filter((d) => fs.existsSync(path.join(skillsDir, d, "SKILL.md")));
+if (skills.length === 0) throw new Error(`.codex-plugin/skills/ resolves but contains no SKILL.md`);
+' "$repo_root" "$1"
+}
+
 target_for_host() {
     local os arch
 
@@ -402,6 +436,7 @@ manifest_consistency_check "$repo_root" "$plugin_dir/.claude-plugin/plugin.json"
 frontmatter_check "$plugin_dir"
 hook_reference_check "$plugin_dir"
 generated_targets_check
+codex_target_check "$plugin_dir/.claude-plugin/plugin.json"
 bash -n "$plugin_dir/hooks/scripts/ensure-festival.sh" "$plugin_dir/hooks/scripts/sync-check.sh"
 
 if [ -x "$repo_root/fest/bin/fest" ] && [ -x "$repo_root/camp/bin/camp" ]; then

@@ -64,6 +64,9 @@ export default {
     });
     ctx.writeJSON(".codex-plugin/hooks/hooks.json", codexHooks(ctx));
     ctx.writeText(".codex-plugin/hooks/scripts/ensure-festival.sh", bundledInstaller(ctx));
+    for (const skill of ctx.skills) {
+      ctx.writeText(`.codex-plugin/skills/${skill.name}/SKILL.md`, ctx.readPluginFile(skill.path));
+    }
     ctx.writeText(".codex-plugin/README.md", readme(ctx));
   },
 };
