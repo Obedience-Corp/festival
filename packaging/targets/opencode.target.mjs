@@ -1,3 +1,40 @@
+function installDoc(ctx) {
+  return `<!-- ${ctx.banner} -->
+
+# Festival on opencode
+
+## Install
+
+opencode discovers plugins from \`.opencode/plugins/\` (project) or
+\`~/.config/opencode/plugins/\` (global), or via the \`opencode.json\` \`plugin\` array (an npm
+package or a git URL). To use Festival:
+
+- **Project**: this repo's \`.opencode/plugins/festival.js\` is picked up automatically.
+- **Global**: copy \`.opencode/plugins/\`, \`.opencode/scripts/\`, and \`.opencode/skills/\` into
+  \`~/.config/opencode/\`.
+- **Package/git**: add the Festival package or git URL to your \`opencode.json\` \`plugin\` array.
+
+## Auto-install of the CLIs
+
+At load the plugin runs \`scripts/ensure-festival.sh\` through opencode's Bun shell to install or
+update the \`fest\` and \`camp\` CLIs. It is best-effort and idempotent, and it never blocks plugin
+load (failures are swallowed so opencode still starts).
+
+## Skills
+
+The ${ctx.skills.length} Festival skills ship under \`.opencode/skills/\` and are picked up by
+opencode's native skill auto-discovery. No manual registration is required.
+
+## Manual fallback
+
+If the auto-install cannot run (offline, or the shell is unavailable), install the CLIs by hand:
+
+\`\`\`bash
+curl -fsSL https://raw.githubusercontent.com/Obedience-Corp/festival/main/install.sh | bash
+\`\`\`
+`;
+}
+
 export default {
   harness: "opencode",
   manifests: [],
@@ -8,5 +45,6 @@ export default {
     for (const skill of ctx.skills) {
       ctx.writeText(`.opencode/skills/${skill.name}/SKILL.md`, ctx.readPluginFile(skill.path));
     }
+    ctx.writeText(".opencode/INSTALL.md", installDoc(ctx));
   },
 };
