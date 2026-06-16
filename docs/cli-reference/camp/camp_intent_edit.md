@@ -74,6 +74,7 @@ camp intent edit [id] [flags]
       --set-status string         Change the intent status
       --set-type string           Change the intent type (idea, feature, bug, research, chore)
   -s, --status string             Filter picker by status
+      --tag stringArray           Replace the intent's tags (repeatable)
       --title string              Set a new title
   -t, --type string               Filter picker by type
 ```

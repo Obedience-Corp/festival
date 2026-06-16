@@ -10,10 +10,10 @@ Visualize chain dependency graph
 
 ### Synopsis
 
-Render the chain's dependency graph as ASCII waves or Mermaid diagram syntax.
+Render the chain's dependency graph as ASCII waves or Mermaid diagram syntax. The chain id is optional when it can be inferred from the current festival or linked project, or selected interactively in a terminal.
 
 ```
-fest chain graph <chain-id> [flags]
+fest chain graph [chain-id] [flags]
 ```
 
 ### Options

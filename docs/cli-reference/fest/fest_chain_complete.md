@@ -14,8 +14,13 @@ Mark a chain as completed and move it to festivals/dungeon/completed/chains/.
 
 All festivals in the chain must be completed unless --force is used.
 
+The chain id is optional when it can be inferred from the current festival or
+linked project, or selected interactively. Because this archives the chain, an
+inferred or picked target must be confirmed, and a non-interactive run requires
+the chain id to be passed explicitly.
+
 ```
-fest chain complete <chain-id> [flags]
+fest chain complete [chain-id] [flags]
 ```
 
 ### Options
