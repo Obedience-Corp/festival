@@ -1,0 +1,11 @@
+{
+  "skills": "./skills/",
+  "hooks": "./hooks/hooks.json",
+  "interface": {
+    "displayName": "Festival",
+    "shortDescription": "Goal-oriented project management for human-AI development workflows.",
+    "category": "project-management",
+    "capabilities": ["skills", "hooks"],
+    "defaultPrompt": "Use the fest CLI to plan and execute the active festival; run 'fest next' for the next actionable step."
+  }
+}
