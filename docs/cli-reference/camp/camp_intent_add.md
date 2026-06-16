@@ -26,6 +26,7 @@ PROGRAMMATIC (agent) FLAGS:
   --body              Set intent body from a literal string
   --body-file         Read intent body from a file (- for stdin)
   --concept           Set the concept field (e.g., "projects/camp")
+  --note              Create a note instead of a lifecycle intent
   --author            Override the default author attribution
 
   --body and --body-file are mutually exclusive.
@@ -38,6 +39,8 @@ Examples:
   camp intent add                        Fast TUI (3-step form)
   camp intent add --campaign             Pick a target campaign interactively
   camp intent add --full                 Full TUI (includes body)
+  camp intent add --note                 Note TUI (title + body, no type/concept)
+  camp intent add --note "Meeting note" --body "Follow up next week"
   camp intent add -e "Complex feature"   Deep capture with editor
   camp intent add -t feature "New API"   Set type explicitly
   camp intent add "Fix login" --body "The login page returns 500"
@@ -60,6 +63,8 @@ camp intent add [title] [flags]
   -f, --full               Full TUI mode with body textarea
   -h, --help               help for add
       --no-commit          Don't create a git commit
+      --note               Create a note instead of a lifecycle intent
+      --tag stringArray    Add a tag (repeatable)
   -t, --type string        Intent type (idea, feature, bug, research, chore) (default "idea")
 ```
 

@@ -16,6 +16,7 @@ fest chain list [flags]
 
 ```
   -h, --help            help for list
+      --json            emit structured JSON result
       --status string   filter by status (planning|active|completed)
 ```
 

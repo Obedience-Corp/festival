@@ -10,10 +10,10 @@ Check if a festival is unblocked within its chain
 
 ### Synopsis
 
-Quick check whether a specific festival's hard dependencies are met.
+Quick check whether a specific festival's hard dependencies are met. The festival ref or id is optional when it can be inferred from the current festival or linked project.
 
 ```
-fest chain check <ref-or-id> [flags]
+fest chain check [ref-or-id] [flags]
 ```
 
 ### Options
