@@ -67,9 +67,19 @@ func run(args []string) error {
 	if err != nil {
 		return fmt.Errorf("fetch camp release %s: %w", campTag, err)
 	}
+	festivalNotes, err := fetchGeneratedReleaseNotes("Obedience-Corp/festival", *tag)
+	if err != nil {
+		return fmt.Errorf("fetch festival release notes %s: %w", *tag, err)
+	}
 
 	rendered, err := notes.Render(notes.ReleaseNotesInput{
 		FestivalTag: *tag,
+		Festival: notes.ReleaseInfo{
+			Repo: "festival",
+			Tag:  *tag,
+			URL:  releaseURL("Obedience-Corp/festival", *tag),
+			Body: festivalNotes.Body,
+		},
 		Fest: notes.ReleaseInfo{
 			Repo: "fest",
 			Tag:  festRelease.TagName,
@@ -99,7 +109,7 @@ func run(args []string) error {
 	}
 
 	fmt.Printf("Wrote release notes to %s\n", absOutput)
-	fmt.Printf("Included fest %s and camp %s\n", festRelease.TagName, campRelease.TagName)
+	fmt.Printf("Included festival %s, fest %s, and camp %s\n", *tag, festRelease.TagName, campRelease.TagName)
 	return nil
 }
 
@@ -132,6 +142,25 @@ func fetchRelease(repo, tag string) (releaseView, error) {
 		return releaseView{}, fmt.Errorf("release %s in %s returned incomplete metadata", tag, repo)
 	}
 	return view, nil
+}
+
+func fetchGeneratedReleaseNotes(repo, tag string) (releaseView, error) {
+	out, err := cmdOutput("", "gh", "api", "repos/"+repo+"/releases/generate-notes", "-f", "tag_name="+tag)
+	if err != nil {
+		return releaseView{}, err
+	}
+
+	var view releaseView
+	if err := json.Unmarshal([]byte(out), &view); err != nil {
+		return releaseView{}, fmt.Errorf("parse generated release notes output: %w", err)
+	}
+	view.TagName = tag
+	view.URL = releaseURL(repo, tag)
+	return view, nil
+}
+
+func releaseURL(repo, tag string) string {
+	return fmt.Sprintf("https://github.com/%s/releases/tag/%s", repo, tag)
 }
 
 func isReleaseMissing(err error) bool {

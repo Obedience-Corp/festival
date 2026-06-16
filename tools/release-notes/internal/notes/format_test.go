@@ -8,6 +8,12 @@ import (
 func TestRenderIncludesComponentReleaseBodies(t *testing.T) {
 	out, err := Render(ReleaseNotesInput{
 		FestivalTag: "v0.1.2",
+		Festival: ReleaseInfo{
+			Repo: "festival",
+			Tag:  "v0.1.2",
+			URL:  "https://example.com/festival/v0.1.2",
+			Body: "## What's Changed\n* Festival packaging fix\n\n**Full Changelog**: https://example.com/festival/compare/v0.1.1...v0.1.2",
+		},
 		Fest: ReleaseInfo{
 			Repo: "fest",
 			Tag:  "v0.1.1",
@@ -29,6 +35,9 @@ func TestRenderIncludesComponentReleaseBodies(t *testing.T) {
 		"## Festival v0.1.2",
 		"- `fest` v0.1.1 ([release](https://example.com/fest/v0.1.1))",
 		"- `camp` v0.1.1 ([release](https://example.com/camp/v0.1.1))",
+		"## Festival Changes",
+		"### What's Changed",
+		"* Festival packaging fix",
 		"## fest v0.1.1",
 		"* Fest fix",
 		"## camp v0.1.1",
@@ -45,6 +54,11 @@ func TestRenderIncludesComponentReleaseBodies(t *testing.T) {
 func TestRenderFallsBackWhenComponentBodyMissing(t *testing.T) {
 	out, err := Render(ReleaseNotesInput{
 		FestivalTag: "v0.1.2",
+		Festival: ReleaseInfo{
+			Repo: "festival",
+			Tag:  "v0.1.2",
+			URL:  "https://example.com/festival/v0.1.2",
+		},
 		Fest: ReleaseInfo{
 			Repo: "fest",
 			Tag:  "v0.1.1",
@@ -61,6 +75,7 @@ func TestRenderFallsBackWhenComponentBodyMissing(t *testing.T) {
 	}
 
 	for _, want := range []string{
+		"_No Festival repository changes were reported for this release._",
 		"_No published release notes found for fest v0.1.1._",
 		"_No published release notes found for camp v0.1.1._",
 	} {

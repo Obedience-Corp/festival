@@ -14,6 +14,7 @@ type ReleaseInfo struct {
 
 type ReleaseNotesInput struct {
 	FestivalTag string
+	Festival    ReleaseInfo
 	Fest        ReleaseInfo
 	Camp        ReleaseInfo
 }
@@ -29,6 +30,7 @@ func Render(in ReleaseNotesInput) (string, error) {
 		return "", fmt.Errorf("camp release info is incomplete")
 	}
 
+	festivalBody := normalizeGeneratedNotes(in.Festival.Body)
 	festBody := normalizeBody(in.Fest.Body, in.Fest.Repo, in.Fest.Tag)
 	campBody := normalizeBody(in.Camp.Body, in.Camp.Repo, in.Camp.Tag)
 
@@ -46,7 +48,13 @@ func Render(in ReleaseNotesInput) (string, error) {
 	writeLine(fmt.Sprintf("- `fest` %s ([release](%s))", in.Fest.Tag, in.Fest.URL))
 	writeLine(fmt.Sprintf("- `camp` %s ([release](%s))", in.Camp.Tag, in.Camp.URL))
 	writeLine("")
-	writeLine("The component release notes below describe the actual CLI changes in this bundle.")
+	writeLine("This release also includes Festival distribution, packaging, documentation, and plugin changes.")
+	writeLine("")
+	writeLine("## Festival Changes")
+	writeLine("")
+	writeLine(festivalBody)
+	writeLine("")
+	writeLine("The component release notes below describe the bundled CLI changes.")
 	writeLine("")
 	writeLine("## fest " + in.Fest.Tag)
 	writeLine("")
@@ -84,4 +92,22 @@ func normalizeBody(body, repo, tag string) string {
 		repo = "component"
 	}
 	return fmt.Sprintf("_No published release notes found for %s %s._", repo, tag)
+}
+
+func normalizeGeneratedNotes(body string) string {
+	trimmed := strings.TrimSpace(body)
+	if trimmed == "" {
+		return "_No Festival repository changes were reported for this release._"
+	}
+	return demoteMarkdownHeadings(trimmed)
+}
+
+func demoteMarkdownHeadings(markdown string) string {
+	lines := strings.Split(markdown, "\n")
+	for i, line := range lines {
+		if strings.HasPrefix(line, "#") {
+			lines[i] = "#" + line
+		}
+	}
+	return strings.Join(lines, "\n")
 }
