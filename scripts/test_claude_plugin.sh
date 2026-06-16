@@ -268,6 +268,16 @@ for (const ref of refs) {
 const skillsDir = path.resolve(codexDir, manifest.skills);
 const skills = fs.readdirSync(skillsDir).filter((d) => fs.existsSync(path.join(skillsDir, d, "SKILL.md")));
 if (skills.length === 0) throw new Error(`.codex-plugin/skills/ resolves but contains no SKILL.md`);
+
+const marketPath = path.join(repoRoot, ".agents", "plugins", "marketplace.json");
+const market = JSON.parse(fs.readFileSync(marketPath, "utf8"));
+const entry = (market.plugins || [])[0] || {};
+if (entry.version !== plugin.version) {
+  throw new Error(`.agents/plugins/marketplace.json version ${entry.version} != plugin.json ${plugin.version}`);
+}
+if (!entry.source || !fs.existsSync(path.resolve(repoRoot, entry.source))) {
+  throw new Error(`.agents/plugins/marketplace.json source does not resolve: ${entry.source}`);
+}
 ' "$repo_root" "$1"
 }
 

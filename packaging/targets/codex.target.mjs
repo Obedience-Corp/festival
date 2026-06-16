@@ -25,10 +25,18 @@ ${skills}
 
 ## Install
 
-Auto-install, per the \`survey/codex.md\` decision: the bundled \`SessionStart\` command hook runs
-\`bash \${PLUGIN_ROOT}/hooks/scripts/ensure-festival.sh\` on every session start. The script is
-idempotent (it no-ops when \`fest\`/\`camp\` are already current), mirroring the Claude Code hook.
-No manual step is required after \`/plugin install festival\`.
+Codex installs from the self-hosted marketplace (per the \`survey/codex.md\` distribution decision;
+OpenAI's official directory has no self-serve publishing yet):
+
+\`\`\`
+/plugin marketplace add Obedience-Corp/festival
+/plugin install festival
+\`\`\`
+
+The bundled \`SessionStart\` command hook then runs
+\`bash \${PLUGIN_ROOT}/hooks/scripts/ensure-festival.sh\` on every session start to auto-install the
+\`fest\` and \`camp\` CLIs. The script is idempotent (it no-ops when they are already current),
+mirroring the Claude Code hook, so no manual step is required after \`/plugin install festival\`.
 `;
 }
 
@@ -37,6 +45,25 @@ function codexHooks(ctx) {
     JSON.stringify(ctx.sourceHooks).replaceAll("${CLAUDE_PLUGIN_ROOT}", "${PLUGIN_ROOT}"),
   );
   return { _generated: ctx.banner, ...swapped };
+}
+
+function codexMarketplace(ctx) {
+  const m = ctx.manifest;
+  return {
+    _generated: ctx.banner,
+    name: m.name,
+    description: m.description,
+    owner: m.author,
+    plugins: [
+      {
+        name: m.name,
+        description: m.description,
+        version: m.version,
+        source: "./.codex-plugin",
+        author: m.author,
+      },
+    ],
+  };
 }
 
 export default {
@@ -61,6 +88,7 @@ export default {
     for (const skill of ctx.skills) {
       ctx.writeText(`.codex-plugin/skills/${skill.name}/SKILL.md`, ctx.readPluginFile(skill.path));
     }
+    ctx.writeJSON(".agents/plugins/marketplace.json", codexMarketplace(ctx));
     ctx.writeText(".codex-plugin/README.md", readme(ctx));
   },
 };

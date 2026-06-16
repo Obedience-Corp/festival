@@ -30,7 +30,15 @@ supports as plugin components, per `packaging/survey/codex.md` and `packaging/su
 
 ## Install
 
-Auto-install, per the `survey/codex.md` decision: the bundled `SessionStart` command hook runs
-`bash ${PLUGIN_ROOT}/hooks/scripts/ensure-festival.sh` on every session start. The script is
-idempotent (it no-ops when `fest`/`camp` are already current), mirroring the Claude Code hook.
-No manual step is required after `/plugin install festival`.
+Codex installs from the self-hosted marketplace (per the `survey/codex.md` distribution decision;
+OpenAI's official directory has no self-serve publishing yet):
+
+```
+/plugin marketplace add Obedience-Corp/festival
+/plugin install festival
+```
+
+The bundled `SessionStart` command hook then runs
+`bash ${PLUGIN_ROOT}/hooks/scripts/ensure-festival.sh` on every session start to auto-install the
+`fest` and `camp` CLIs. The script is idempotent (it no-ops when they are already current),
+mirroring the Claude Code hook, so no manual step is required after `/plugin install festival`.
