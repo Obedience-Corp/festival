@@ -123,3 +123,19 @@ menu:
       parent: cli-reference
       url: /cli-reference/camp/
       weight: 52
+
+    - name: 简体中文
+      identifier: zh-cn
+      weight: 60
+    - name: 快速开始
+      parent: zh-cn
+      url: /zh-cn/quickstart/
+      weight: 61
+    - name: 为什么需要 Festival
+      parent: zh-cn
+      url: /zh-cn/why-festival/
+      weight: 62
+    - name: AI 编程代理工作流
+      parent: zh-cn
+      url: /zh-cn/agent-workflow/
+      weight: 63
