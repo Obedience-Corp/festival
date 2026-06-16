@@ -8,10 +8,10 @@ See `survey/MATRIX.md` for the verified per-harness facts these decisions rest o
 ## Source of truth
 
 `claude-plugin/` is canonical:
-- `claude-plugin/.claude-plugin/plugin.json` — name, version, description, author, repository, keywords.
-- `claude-plugin/skills/<name>/SKILL.md` — the 8 skills (portable nearly as-is across harnesses).
-- `claude-plugin/commands/*.md`, `claude-plugin/agents/*.md` — carried where a harness supports them.
-- `claude-plugin/hooks/scripts/ensure-festival.sh` — the CLI install/update logic, reused by every
+- `claude-plugin/.claude-plugin/plugin.json`: name, version, description, author, repository, keywords.
+- `claude-plugin/skills/<name>/SKILL.md`: the 8 skills (portable nearly as-is across harnesses).
+- `claude-plugin/commands/*.md`, `claude-plugin/agents/*.md`: carried where a harness supports them.
+- `claude-plugin/hooks/scripts/ensure-festival.sh`: the CLI install/update logic, reused by every
   harness's session-start hook.
 
 ## Derived vs per-target template
@@ -24,20 +24,24 @@ The generator computes the **derived** fields once and merges them with a small 
 - Per-target template (`packaging/targets/<harness>.*`): the bits only that harness has, e.g. the
   Codex `interface` block, the opencode JS plugin body, the Gemini extension keys.
 
-## Targets and output locations (all at the repo root, like the FP0005 marketplace.json)
+## Targets and output locations (as built)
+
+Each target is a self-registering module under `packaging/targets/<harness>.target.mjs` that the
+generator discovers and runs. Bundled skills/commands/agents are byte-identical copies of the source.
 
 | Target | Output | Template | Notes (per survey) |
 |---|---|---|---|
-| Codex | `.codex-plugin/plugin.json` + repo-root `marketplace.json` entry | `targets/codex.template.json` | skills + hook + `AGENTS.md`; commands/agents do NOT bundle |
-| Cursor | `.cursor-plugin/plugin.json` (+ `.cursor-plugin/marketplace.json`) | `targets/cursor.template.json` | skills/commands/agents/hooks all bundle |
-| opencode | `.opencode/plugins/festival.js` + `.opencode/INSTALL.md` | `targets/opencode.template.js` | JS installs CLI at load; reads `.claude/skills/` |
-| Gemini | `gemini-extension.json` + `GEMINI.md` | `targets/gemini.template.*` | `GEMINI.md` `@`-imports each SKILL.md (one level) |
-| shared | `hooks/hooks.json` (SessionStart command) | generated | reused by Codex, Cursor, Gemini, and Claude Code |
-| shared | root `AGENTS.md` | `targets/agents.template.md` | describes the plugin; no coercion (D007) |
+| Codex | `.codex-plugin/` (`plugin.json`, `hooks/`, `skills/`, `README.md`) + `.agents/plugins/marketplace.json` | `targets/codex.template.json` | skills + SessionStart hook + `AGENTS.md`; commands/agents documented as not bundled |
+| Cursor | `.cursor-plugin/` (`plugin.json`, `skills/`, `commands/`, `agents/`, `hooks/`, `README.md`) | `targets/cursor.template.json` | all four surfaces bundle |
+| opencode | `.opencode/` (`plugins/festival.js`, `scripts/`, `skills/`, `INSTALL.md`) | `targets/opencode.template.js` | JS runs the installer at load; skills via `.opencode/skills/` auto-discovery |
+| Gemini | `gemini-extension.json` + `GEMINI.md` + `hooks/hooks.json` | `targets/gemini.template.json` | `GEMINI.md` `@`-imports each SKILL.md (one level); the repo-root `hooks/hooks.json` is the Gemini extension hook |
+| docs | root `AGENTS.md` | generated in `targets/agents.target.mjs` | describes the plugin; no coercion (D007) |
 
-Install behavior (D003, revised): all four auto-install via a session-start shell hook running
-`ensure-festival.sh` (idempotent). Cursor uses a blocking `preToolUse` hook, not `sessionStart`
-(fire-and-forget). Distribution (D006, revised): each harness's native channel; no fork-PR sync.
+Install behavior (D003): every harness auto-installs the `fest`/`camp` CLIs via `ensure-festival.sh`
+(idempotent). Codex and Gemini use a `SessionStart` command hook; Cursor uses a blocking
+`beforeShellExecution` hook (its `sessionStart` is fire-and-forget); opencode runs the installer in
+its plugin body at load. Codex/Cursor bundle the installer under their plugin root; Gemini and
+opencode reference the in-repo script (`${extensionPath}` / `import.meta.url`).
 
 ## Generator CLI contract
 
@@ -58,4 +62,13 @@ Install behavior (D003, revised): all four auto-install via a session-start shel
 ## Version consistency (D004)
 
 `plugin.json` `version` is the single source. `just plugin bump <version>` bumps it and regenerates
-(so every target inherits it); `manifest_consistency_check` asserts every target equals `plugin.json`.
+(so every target inherits it); `manifest_consistency_check` asserts every target manifest equals
+`plugin.json` (driven by `node packaging/generate.mjs --manifests`).
+
+## Distribution (D006)
+
+Each harness uses its own native channel; there is no fork-PR sync. Only Codex needs a generated
+artifact (`.agents/plugins/marketplace.json`); Cursor is a manual Cursor Marketplace submission, and
+opencode and Gemini install straight from the git repo. `packaging/DISTRIBUTION.md` records every
+channel with its install command, and `just plugin dist-check` confirms each surface is present
+without performing any live push.
