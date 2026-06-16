@@ -18,7 +18,7 @@ check:
     ROOT="$(cd "$(dirname "{{source_file()}}")/.." && pwd)"
     bash "$ROOT/scripts/test_claude_plugin.sh"
 
-# Bump the plugin version in plugin.json and marketplace.json together
+# Bump the plugin version across plugin.json, marketplace.json, and all generated targets
 bump version:
     #!/usr/bin/env bash
     set -euo pipefail
@@ -37,7 +37,8 @@ bump version:
     fs.writeFileSync(file, JSON.stringify(j, null, 2) + "\n");
     ' "$f" "{{version}}"
     done
-    echo "Bumped plugin to {{version}}"
+    node "$ROOT/packaging/generate.mjs" >/dev/null
+    echo "Bumped plugin to {{version}} (plugin.json, marketplace.json, generated targets)"
 
 # List all plugin components
 list:

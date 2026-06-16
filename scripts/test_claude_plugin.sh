@@ -35,8 +35,10 @@ if (!manifest.name || !manifest.description || !manifest.repository) {
 manifest_consistency_check() {
     node -e '
 const fs = require("fs");
-const plugin = JSON.parse(fs.readFileSync(process.argv[1], "utf8"));
-const market = JSON.parse(fs.readFileSync(process.argv[2], "utf8"));
+const path = require("path");
+const repoRoot = process.argv[1];
+const plugin = JSON.parse(fs.readFileSync(process.argv[2], "utf8"));
+const market = JSON.parse(fs.readFileSync(process.argv[3], "utf8"));
 const entry = (market.plugins || [])[0] || {};
 if (entry.version !== plugin.version) {
   throw new Error(`version mismatch: plugin.json=${plugin.version} marketplace.json=${entry.version}`);
@@ -44,7 +46,14 @@ if (entry.version !== plugin.version) {
 if (entry.description !== plugin.description) {
   throw new Error("marketplace.json plugin description must match plugin.json description");
 }
-' "$1" "$2"
+for (const file of process.argv.slice(4)) {
+  const target = JSON.parse(fs.readFileSync(file, "utf8"));
+  const rel = path.relative(repoRoot, file);
+  if (target.version !== plugin.version) {
+    throw new Error(`version mismatch: plugin.json=${plugin.version} ${rel}=${target.version}`);
+  }
+}
+' "$@"
 }
 
 frontmatter_check() {
@@ -389,7 +398,7 @@ require_command bash
 json_check "$plugin_dir/.claude-plugin/plugin.json"
 json_check "$plugin_dir/hooks/hooks.json"
 plugin_version_check
-manifest_consistency_check "$plugin_dir/.claude-plugin/plugin.json" "$repo_root/.claude-plugin/marketplace.json"
+manifest_consistency_check "$repo_root" "$plugin_dir/.claude-plugin/plugin.json" "$repo_root/.claude-plugin/marketplace.json" $(node "$repo_root/packaging/generate.mjs" --manifests)
 frontmatter_check "$plugin_dir"
 hook_reference_check "$plugin_dir"
 generated_targets_check

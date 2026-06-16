@@ -20,11 +20,13 @@ const BANNER =
 
 function parseArgs(argv) {
   let out = null;
+  let listManifests = false;
   for (let i = 0; i < argv.length; i++) {
     if (argv[i] === "--out") out = argv[++i];
     else if (argv[i].startsWith("--out=")) out = argv[i].slice("--out=".length);
+    else if (argv[i] === "--manifests") listManifests = true;
   }
-  return { out };
+  return { out, listManifests };
 }
 
 function frontmatter(text) {
@@ -99,6 +101,7 @@ function makeContext(generated, outRoot) {
 
 const sharedTarget = {
   harness: "shared",
+  manifests: [],
   emit(ctx) {
     ctx.writeJSON("hooks/hooks.json", {
       _generated: ctx.banner,
@@ -120,11 +123,21 @@ async function loadTargets() {
 }
 
 async function main() {
-  const { out } = parseArgs(process.argv.slice(2));
+  const { out, listManifests } = parseArgs(process.argv.slice(2));
+  const targets = [sharedTarget, ...(await loadTargets())];
+
+  if (listManifests) {
+    const manifests = targets
+      .flatMap((target) => target.manifests ?? [])
+      .sort()
+      .map((rel) => join(REPO_ROOT, rel));
+    for (const file of manifests) console.log(file);
+    return;
+  }
+
   const outRoot = out ? resolve(out) : REPO_ROOT;
   const generated = [];
   const ctx = makeContext(generated, outRoot);
-  const targets = [sharedTarget, ...(await loadTargets())];
 
   console.log(
     `source: ${ctx.skills.length} skills, ${ctx.commands.length} commands, ${ctx.agents.length} agents (v${ctx.manifest.version})`,
