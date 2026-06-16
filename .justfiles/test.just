@@ -7,7 +7,7 @@ default:
 
 # Test all projects
 [no-cd]
-all: fest camp release-operator release-notes
+all: fest camp release-operator release-notes plugin
     @echo "All tests passed"
 
 # Check mirrored camp/fest doc copies against their source repos

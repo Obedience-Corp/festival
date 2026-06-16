@@ -32,6 +32,175 @@ if (!manifest.name || !manifest.description || !manifest.repository) {
 ' "$plugin_dir/.claude-plugin/plugin.json"
 }
 
+manifest_consistency_check() {
+    node -e '
+const fs = require("fs");
+const plugin = JSON.parse(fs.readFileSync(process.argv[1], "utf8"));
+const market = JSON.parse(fs.readFileSync(process.argv[2], "utf8"));
+const entry = (market.plugins || [])[0] || {};
+if (entry.version !== plugin.version) {
+  throw new Error(`version mismatch: plugin.json=${plugin.version} marketplace.json=${entry.version}`);
+}
+if (entry.description !== plugin.description) {
+  throw new Error("marketplace.json plugin description must match plugin.json description");
+}
+' "$1" "$2"
+}
+
+frontmatter_check() {
+    node -e '
+const fs = require("fs");
+const path = require("path");
+const pluginDir = process.argv[1];
+
+function badLine(file, line) {
+  throw new Error(`${file}: unsupported frontmatter line: ${line}`);
+}
+
+function validateScalar(file, key, value) {
+  const v = value.trim();
+  if (!v) return "";
+  if (/^[\[{]/.test(v)) throw new Error(`${file}: unsupported frontmatter value for ${key}`);
+  const first = v[0];
+  const last = v[v.length - 1];
+  if (first === "\"" || first === "\x27") return validateQuotedScalar(file, key, v, first);
+  if (last === "\"" || last === "\x27") throw new Error(`${file}: unmatched quote in frontmatter value for ${key}`);
+  return v;
+}
+
+function validateQuotedScalar(file, key, value, quote) {
+  if (value.length < 2 || value[value.length - 1] !== quote) {
+    throw new Error(`${file}: unmatched quote in frontmatter value for ${key}`);
+  }
+  if (quote === "\"") {
+    try {
+      return JSON.parse(value).trim();
+    } catch {
+      throw new Error(`${file}: invalid quoted frontmatter value for ${key}`);
+    }
+  }
+  const body = value.slice(1, -1);
+  for (let i = 0; i < body.length; i++) {
+    if (body[i] !== "\x27") continue;
+    if (body[i + 1] === "\x27") {
+      i++;
+      continue;
+    }
+    throw new Error(`${file}: invalid quoted frontmatter value for ${key}`);
+  }
+  return body.replace(/\x27\x27/g, "\x27").trim();
+}
+
+function frontmatter(file, allowedKeys) {
+  const text = fs.readFileSync(file, "utf8");
+  if (!text.startsWith("---")) throw new Error(`${file}: missing frontmatter`);
+  const end = text.indexOf("\n---", 3);
+  if (end === -1) throw new Error(`${file}: unterminated frontmatter`);
+  const block = text.slice(3, end);
+  const keys = {};
+  let inArguments = false;
+  for (const line of block.split("\n")) {
+    if (!line.trim()) continue;
+    const top = line.match(/^([A-Za-z0-9_]+):\s*(.*)$/);
+    if (top) {
+      const key = top[1];
+      const value = top[2];
+      if (!allowedKeys.has(key)) throw new Error(`${file}: unsupported frontmatter key ${key}`);
+      if (key === "arguments") {
+        if (value.trim()) throw new Error(`${file}: arguments must be a list`);
+        keys[key] = "present";
+        inArguments = true;
+        continue;
+      }
+      keys[key] = validateScalar(file, key, value);
+      inArguments = false;
+      continue;
+    }
+    if (inArguments) {
+      const item = line.match(/^  - name:\s*(.+)$/);
+      const description = line.match(/^    description:\s*(.+)$/);
+      const required = line.match(/^    required:\s*(true|false)$/);
+      if (item) {
+        validateScalar(file, "arguments.name", item[1]);
+        continue;
+      }
+      if (description) {
+        validateScalar(file, "arguments.description", description[1]);
+        continue;
+      }
+      if (required) continue;
+    }
+    badLine(file, line);
+  }
+  return keys;
+}
+
+function requireKeys(file, keys, names) {
+  for (const n of names) {
+    if (!keys[n]) throw new Error(`${file}: frontmatter missing ${n}`);
+  }
+}
+
+for (const invalid of ["\"unterminated", "unterminated\"", "{bad", "[bad"]) {
+  try {
+    validateScalar("frontmatter self-test", "description", invalid);
+  } catch {
+    continue;
+  }
+  throw new Error(`frontmatter validator accepted invalid scalar: ${invalid}`);
+}
+
+for (const dir of fs.readdirSync(path.join(pluginDir, "skills"))) {
+  const file = path.join(pluginDir, "skills", dir, "SKILL.md");
+  const keys = frontmatter(file, new Set(["name", "description"]));
+  requireKeys(file, keys, ["name", "description"]);
+  if (keys.name !== dir) throw new Error(`${file}: name "${keys.name}" must equal dir "${dir}"`);
+}
+
+for (const sub of ["commands", "agents"]) {
+  const base = path.join(pluginDir, sub);
+  if (!fs.existsSync(base)) continue;
+  for (const f of fs.readdirSync(base)) {
+    if (!f.endsWith(".md")) continue;
+    const file = path.join(base, f);
+    const allowed = sub === "commands" ? new Set(["name", "description", "arguments"]) : new Set(["description"]);
+    requireKeys(file, frontmatter(file, allowed), ["description"]);
+  }
+}
+' "$1"
+}
+
+hook_reference_check() {
+    node -e '
+const fs = require("fs");
+const path = require("path");
+const pluginDir = process.argv[1];
+const hooks = JSON.parse(fs.readFileSync(path.join(pluginDir, "hooks", "hooks.json"), "utf8"));
+
+const refs = new Set();
+const re = /\$\{CLAUDE_PLUGIN_ROOT\}\/([^"\s]+)/g;
+JSON.stringify(hooks).replace(re, (_, p) => { refs.add(p); return _; });
+
+const root = fs.realpathSync(pluginDir);
+const normalizedRoot = path.resolve(pluginDir);
+
+function inside(rootPath, target) {
+  const rel = path.relative(rootPath, target);
+  return rel && !rel.startsWith("..") && !path.isAbsolute(rel);
+}
+
+for (const rel of refs) {
+  const target = path.resolve(pluginDir, rel);
+  if (!inside(normalizedRoot, target)) throw new Error(`hooks.json references out-of-bundle file: ${rel}`);
+  if (!fs.existsSync(target)) throw new Error(`hooks.json references missing file: ${rel}`);
+  const realTarget = fs.realpathSync(target);
+  if (!inside(root, realTarget)) throw new Error(`hooks.json references out-of-bundle file: ${rel}`);
+  fs.accessSync(target, fs.constants.R_OK);
+}
+if (refs.size === 0) throw new Error("hooks.json: no CLAUDE_PLUGIN_ROOT references found (expected at least one)");
+' "$1"
+}
+
 target_for_host() {
     local os arch
 
@@ -193,6 +362,9 @@ require_command bash
 json_check "$plugin_dir/.claude-plugin/plugin.json"
 json_check "$plugin_dir/hooks/hooks.json"
 plugin_version_check
+manifest_consistency_check "$plugin_dir/.claude-plugin/plugin.json" "$repo_root/.claude-plugin/marketplace.json"
+frontmatter_check "$plugin_dir"
+hook_reference_check "$plugin_dir"
 bash -n "$plugin_dir/hooks/scripts/ensure-festival.sh" "$plugin_dir/hooks/scripts/sync-check.sh"
 
 if [ -x "$repo_root/fest/bin/fest" ] && [ -x "$repo_root/camp/bin/camp" ]; then
