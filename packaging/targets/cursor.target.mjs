@@ -1,3 +1,19 @@
+function cursorHooks(ctx) {
+  return {
+    _generated: ctx.banner,
+    version: 1,
+    hooks: {
+      beforeShellExecution: [{ command: "bash ./hooks/scripts/ensure-festival.sh" }],
+    },
+  };
+}
+
+function bundledInstaller(ctx) {
+  const src = ctx.readPluginFile("hooks/scripts/ensure-festival.sh");
+  const nl = src.indexOf("\n");
+  return src.slice(0, nl + 1) + `# ${ctx.banner}\n` + src.slice(nl + 1);
+}
+
 export default {
   harness: "cursor",
   manifests: [".cursor-plugin/plugin.json"],
@@ -24,5 +40,7 @@ export default {
     for (const agent of ctx.agents) {
       ctx.writeText(`.cursor-plugin/agents/${agent.name}.md`, ctx.readPluginFile(agent.path));
     }
+    ctx.writeJSON(".cursor-plugin/hooks/hooks.json", cursorHooks(ctx));
+    ctx.writeText(".cursor-plugin/hooks/scripts/ensure-festival.sh", bundledInstaller(ctx));
   },
 };
