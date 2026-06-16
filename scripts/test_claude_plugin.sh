@@ -46,7 +46,7 @@ if (entry.version !== plugin.version) {
 if (entry.description !== plugin.description) {
   throw new Error("marketplace.json plugin description must match plugin.json description");
 }
-for (const file of process.argv.slice(4)) {
+for (const file of (process.argv[4] || "").split("\n").filter(Boolean)) {
   const target = JSON.parse(fs.readFileSync(file, "utf8"));
   const rel = path.relative(repoRoot, file);
   if (target.version !== plugin.version) {
@@ -398,7 +398,7 @@ require_command bash
 json_check "$plugin_dir/.claude-plugin/plugin.json"
 json_check "$plugin_dir/hooks/hooks.json"
 plugin_version_check
-manifest_consistency_check "$repo_root" "$plugin_dir/.claude-plugin/plugin.json" "$repo_root/.claude-plugin/marketplace.json" $(node "$repo_root/packaging/generate.mjs" --manifests)
+manifest_consistency_check "$repo_root" "$plugin_dir/.claude-plugin/plugin.json" "$repo_root/.claude-plugin/marketplace.json" "$(node "$repo_root/packaging/generate.mjs" --manifests)"
 frontmatter_check "$plugin_dir"
 hook_reference_check "$plugin_dir"
 generated_targets_check
