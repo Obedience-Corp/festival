@@ -13,13 +13,17 @@ fail=0
 require() {
     local label="$1"
     shift
+    local missing=0
     for p in "$@"; do
         if [ ! -e "$repo_root/$p" ]; then
             echo "  MISSING surface: $p" >&2
             fail=1
+            missing=1
         fi
     done
-    echo "  surface: $* (present)"
+    if [ "$missing" -eq 0 ]; then
+        echo "  surface: $* (present)"
+    fi
     echo "  $label"
 }
 
