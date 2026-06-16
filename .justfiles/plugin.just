@@ -18,6 +18,12 @@ check:
     ROOT="$(cd "$(dirname "{{source_file()}}")/.." && pwd)"
     bash "$ROOT/scripts/test_claude_plugin.sh"
 
+# Dry-run each target's distribution surface (no live push)
+dist-check:
+    #!/usr/bin/env bash
+    ROOT="$(cd "$(dirname "{{source_file()}}")/.." && pwd)"
+    bash "$ROOT/packaging/scripts/distribution-dry-run.sh"
+
 # Bump the plugin version across plugin.json, marketplace.json, and all generated targets
 bump version:
     #!/usr/bin/env bash
