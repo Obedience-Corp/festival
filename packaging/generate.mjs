@@ -79,6 +79,11 @@ function makeContext(generated, outRoot) {
     agents: readDocs("agents"),
     sourceHooks: JSON.parse(readFileSync(join(PLUGIN_DIR, "hooks", "hooks.json"), "utf8")),
     readPluginFile: (rel) => readFileSync(join(PLUGIN_DIR, rel), "utf8"),
+    bundledScript(rel) {
+      const src = readFileSync(join(PLUGIN_DIR, rel), "utf8");
+      const nl = src.indexOf("\n");
+      return src.slice(0, nl + 1) + `# ${banner}\n` + src.slice(nl + 1);
+    },
     templatePath: (harness, ext) => join(TARGETS_DIR, `${harness}.template.${ext}`),
     readTemplate: (harness, ext) => readFileSync(join(TARGETS_DIR, `${harness}.template.${ext}`), "utf8"),
     readTemplateJSON: (harness) =>

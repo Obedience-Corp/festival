@@ -37,12 +37,6 @@ function cursorHooks(ctx) {
   };
 }
 
-function bundledInstaller(ctx) {
-  const src = ctx.readPluginFile("hooks/scripts/ensure-festival.sh");
-  const nl = src.indexOf("\n");
-  return src.slice(0, nl + 1) + `# ${ctx.banner}\n` + src.slice(nl + 1);
-}
-
 export default {
   harness: "cursor",
   manifests: [".cursor-plugin/plugin.json"],
@@ -70,7 +64,7 @@ export default {
       ctx.writeText(`.cursor-plugin/agents/${agent.name}.md`, ctx.readPluginFile(agent.path));
     }
     ctx.writeJSON(".cursor-plugin/hooks/hooks.json", cursorHooks(ctx));
-    ctx.writeText(".cursor-plugin/hooks/scripts/ensure-festival.sh", bundledInstaller(ctx));
+    ctx.writeText(".cursor-plugin/hooks/scripts/ensure-festival.sh", ctx.bundledScript("hooks/scripts/ensure-festival.sh"));
     ctx.writeText(".cursor-plugin/README.md", readme(ctx));
   },
 };

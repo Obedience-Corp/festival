@@ -39,12 +39,6 @@ function codexHooks(ctx) {
   return { _generated: ctx.banner, ...swapped };
 }
 
-function bundledInstaller(ctx) {
-  const src = ctx.readPluginFile("hooks/scripts/ensure-festival.sh");
-  const nl = src.indexOf("\n");
-  return src.slice(0, nl + 1) + `# ${ctx.banner}\n` + src.slice(nl + 1);
-}
-
 export default {
   harness: "codex",
   manifests: [".codex-plugin/plugin.json"],
@@ -63,7 +57,7 @@ export default {
       ...ctx.readTemplateJSON("codex"),
     });
     ctx.writeJSON(".codex-plugin/hooks/hooks.json", codexHooks(ctx));
-    ctx.writeText(".codex-plugin/hooks/scripts/ensure-festival.sh", bundledInstaller(ctx));
+    ctx.writeText(".codex-plugin/hooks/scripts/ensure-festival.sh", ctx.bundledScript("hooks/scripts/ensure-festival.sh"));
     for (const skill of ctx.skills) {
       ctx.writeText(`.codex-plugin/skills/${skill.name}/SKILL.md`, ctx.readPluginFile(skill.path));
     }
