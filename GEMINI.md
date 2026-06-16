@@ -6,6 +6,14 @@ Festival is a goal-oriented project management methodology for human and AI deve
 workflows, driven by the `fest` and `camp` CLIs. The skills imported below describe how to plan
 and execute festivals. Load them when working with festivals, phases, sequences, or tasks.
 
+The `fest` and `camp` CLIs install automatically on session start via the bundled
+`hooks/hooks.json` SessionStart hook (idempotent, per `packaging/survey/gemini.md`). If that hook
+cannot run, install them by hand:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Obedience-Corp/festival/main/install.sh | bash
+```
+
 @./claude-plugin/skills/camp-navigation/SKILL.md
 @./claude-plugin/skills/camp-projects/SKILL.md
 @./claude-plugin/skills/campaign-commit/SKILL.md

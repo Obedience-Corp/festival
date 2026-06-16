@@ -105,17 +105,6 @@ function makeContext(generated, outRoot) {
   };
 }
 
-const sharedTarget = {
-  harness: "shared",
-  manifests: [],
-  emit(ctx) {
-    ctx.writeJSON("hooks/hooks.json", {
-      _generated: ctx.banner,
-      ...ctx.sourceHooks,
-    });
-  },
-};
-
 async function loadTargets() {
   if (!existsSync(TARGETS_DIR)) return [];
   const files = readdirSync(TARGETS_DIR).filter((file) => file.endsWith(".target.mjs")).sort();
@@ -130,7 +119,7 @@ async function loadTargets() {
 
 async function main() {
   const { out, listManifests } = parseArgs(process.argv.slice(2));
-  const targets = [sharedTarget, ...(await loadTargets())];
+  const targets = await loadTargets();
 
   if (listManifests) {
     const manifests = targets
