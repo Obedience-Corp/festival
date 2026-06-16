@@ -43,6 +43,13 @@ Install behavior (D003): every harness auto-installs the `fest`/`camp` CLIs via 
 its plugin body at load. Codex/Cursor bundle the installer under their plugin root; Gemini and
 opencode reference the in-repo script (`${extensionPath}` / `import.meta.url`).
 
+The installer's update check reads GitHub Releases (`/releases/latest`) and depends on the current
+response shape (the `tag_name` and `browser_download_url` fields, verified 2026-06-16); it uses
+`grep`/`sed` rather than a `jq` dependency to keep the bootstrap dependency-free. If that shape
+changes, the relevant function returns empty and the user falls back to the documented manual
+install, so a shape change degrades gracefully rather than breaking. Update checks are rate-limited
+to once per day and downloads are checksum-verified before install.
+
 ## Generator CLI contract
 
 - `just plugin generate` runs `node packaging/generate.mjs`, which emits every enabled target.
