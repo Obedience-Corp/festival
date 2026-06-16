@@ -5,6 +5,13 @@
 default:
     @just --list --justfile {{source_file()}}
 
+# Generate per-harness targets from claude-plugin/ (single source of truth)
+generate:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    ROOT="$(cd "$(dirname "{{source_file()}}")/.." && pwd)"
+    node "$ROOT/packaging/generate.mjs"
+
 # Check plugin commands match installed CLI
 check:
     #!/usr/bin/env bash
