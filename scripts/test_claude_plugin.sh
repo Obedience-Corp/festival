@@ -326,6 +326,36 @@ if (skills.length === 0) throw new Error(".opencode/skills/ resolves but contain
 ' "$repo_root"
 }
 
+gemini_target_check() {
+    node -e '
+const fs = require("fs");
+const path = require("path");
+const repoRoot = process.argv[1];
+const plugin = JSON.parse(fs.readFileSync(process.argv[2], "utf8"));
+const ext = JSON.parse(fs.readFileSync(path.join(repoRoot, "gemini-extension.json"), "utf8"));
+
+for (const key of ["name", "version"]) {
+  if (!ext[key]) throw new Error(`gemini-extension.json missing required key: ${key}`);
+}
+if (ext.version !== plugin.version) {
+  throw new Error(`gemini-extension.json version ${ext.version} != plugin.json ${plugin.version}`);
+}
+
+const contextFile = ext.contextFileName || "GEMINI.md";
+const contextPath = path.join(repoRoot, contextFile);
+if (!fs.existsSync(contextPath)) throw new Error(`gemini-extension.json contextFileName missing: ${contextFile}`);
+
+const imports = fs.readFileSync(contextPath, "utf8").split("\n").filter((l) => l.startsWith("@"));
+if (imports.length === 0) throw new Error(`${contextFile}: no @-import lines found`);
+for (const line of imports) {
+  const ref = line.slice(1).trim();
+  if (!fs.existsSync(path.resolve(path.dirname(contextPath), ref))) {
+    throw new Error(`${contextFile} @-import does not resolve: ${ref}`);
+  }
+}
+' "$repo_root" "$1"
+}
+
 target_for_host() {
     local os arch
 
@@ -494,6 +524,7 @@ generated_targets_check
 codex_target_check "$plugin_dir/.claude-plugin/plugin.json"
 cursor_target_check "$plugin_dir/.claude-plugin/plugin.json"
 opencode_target_check
+gemini_target_check "$plugin_dir/.claude-plugin/plugin.json"
 bash -n "$plugin_dir/hooks/scripts/ensure-festival.sh" "$plugin_dir/hooks/scripts/sync-check.sh"
 
 if [ -x "$repo_root/fest/bin/fest" ] && [ -x "$repo_root/camp/bin/camp" ]; then
