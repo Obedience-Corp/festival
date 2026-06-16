@@ -201,6 +201,33 @@ if (refs.size === 0) throw new Error("hooks.json: no CLAUDE_PLUGIN_ROOT referenc
 ' "$1"
 }
 
+generated_targets_check() {
+    local tmp drift=0
+    tmp="$(mktemp -d "${TMPDIR:-/tmp}/festival-generated.XXXXXX")"
+    trap 'rm -rf "$tmp"' RETURN
+
+    node "$repo_root/packaging/generate.mjs" --out "$tmp" >/dev/null
+
+    while IFS= read -r fresh; do
+        local rel="${fresh#"$tmp"/}"
+        local committed="$repo_root/$rel"
+        if [ ! -f "$committed" ]; then
+            echo "generated target missing from repo (run 'just plugin generate'): $rel" >&2
+            drift=1
+            continue
+        fi
+        if ! diff -u "$committed" "$fresh" >&2; then
+            echo "generated target drifted from source (run 'just plugin generate'): $rel" >&2
+            drift=1
+        fi
+    done < <(find "$tmp" -type f | sort)
+
+    if [ "$drift" -ne 0 ]; then
+        echo "generated_targets_check failed: committed targets do not match claude-plugin/" >&2
+        return 1
+    fi
+}
+
 target_for_host() {
     local os arch
 
@@ -365,6 +392,7 @@ plugin_version_check
 manifest_consistency_check "$plugin_dir/.claude-plugin/plugin.json" "$repo_root/.claude-plugin/marketplace.json"
 frontmatter_check "$plugin_dir"
 hook_reference_check "$plugin_dir"
+generated_targets_check
 bash -n "$plugin_dir/hooks/scripts/ensure-festival.sh" "$plugin_dir/hooks/scripts/sync-check.sh"
 
 if [ -x "$repo_root/fest/bin/fest" ] && [ -x "$repo_root/camp/bin/camp" ]; then
