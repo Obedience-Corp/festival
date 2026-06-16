@@ -61,7 +61,34 @@ function validateScalar(file, key, value) {
   const v = value.trim();
   if (!v) return "";
   if (/^[\[{]/.test(v)) throw new Error(`${file}: unsupported frontmatter value for ${key}`);
-  return v.replace(/^["\x27]|["\x27]$/g, "").trim();
+  const first = v[0];
+  const last = v[v.length - 1];
+  if (first === "\"" || first === "\x27") return validateQuotedScalar(file, key, v, first);
+  if (last === "\"" || last === "\x27") throw new Error(`${file}: unmatched quote in frontmatter value for ${key}`);
+  return v;
+}
+
+function validateQuotedScalar(file, key, value, quote) {
+  if (value.length < 2 || value[value.length - 1] !== quote) {
+    throw new Error(`${file}: unmatched quote in frontmatter value for ${key}`);
+  }
+  if (quote === "\"") {
+    try {
+      return JSON.parse(value).trim();
+    } catch {
+      throw new Error(`${file}: invalid quoted frontmatter value for ${key}`);
+    }
+  }
+  const body = value.slice(1, -1);
+  for (let i = 0; i < body.length; i++) {
+    if (body[i] !== "\x27") continue;
+    if (body[i + 1] === "\x27") {
+      i++;
+      continue;
+    }
+    throw new Error(`${file}: invalid quoted frontmatter value for ${key}`);
+  }
+  return body.replace(/\x27\x27/g, "\x27").trim();
 }
 
 function frontmatter(file, allowedKeys) {
@@ -112,6 +139,15 @@ function requireKeys(file, keys, names) {
   for (const n of names) {
     if (!keys[n]) throw new Error(`${file}: frontmatter missing ${n}`);
   }
+}
+
+for (const invalid of ["\"unterminated", "unterminated\"", "{bad", "[bad"]) {
+  try {
+    validateScalar("frontmatter self-test", "description", invalid);
+  } catch {
+    continue;
+  }
+  throw new Error(`frontmatter validator accepted invalid scalar: ${invalid}`);
 }
 
 for (const dir of fs.readdirSync(path.join(pluginDir, "skills"))) {
