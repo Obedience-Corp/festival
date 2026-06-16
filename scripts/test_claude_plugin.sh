@@ -271,6 +271,38 @@ if (skills.length === 0) throw new Error(`.codex-plugin/skills/ resolves but con
 ' "$repo_root" "$1"
 }
 
+cursor_target_check() {
+    node -e '
+const fs = require("fs");
+const path = require("path");
+const repoRoot = process.argv[1];
+const plugin = JSON.parse(fs.readFileSync(process.argv[2], "utf8"));
+const cursorDir = path.join(repoRoot, ".cursor-plugin");
+const manifest = JSON.parse(fs.readFileSync(path.join(cursorDir, "plugin.json"), "utf8"));
+
+if (!manifest.name) throw new Error(".cursor-plugin/plugin.json missing required key: name");
+if (manifest.version !== plugin.version) {
+  throw new Error(`.cursor-plugin/plugin.json version ${manifest.version} != plugin.json ${plugin.version}`);
+}
+
+const refs = [manifest.skills, manifest.commands, manifest.agents, manifest.hooks].filter((r) => typeof r === "string");
+for (const ref of refs) {
+  const target = path.resolve(cursorDir, ref);
+  const rel = path.relative(cursorDir, target);
+  if (rel.startsWith("..") || path.isAbsolute(rel)) {
+    throw new Error(`.cursor-plugin/plugin.json references out-of-bundle path: ${ref}`);
+  }
+  if (!fs.existsSync(target)) {
+    throw new Error(`.cursor-plugin/plugin.json references missing path: ${ref}`);
+  }
+}
+
+const skillsDir = path.resolve(cursorDir, manifest.skills);
+const skills = fs.readdirSync(skillsDir).filter((d) => fs.existsSync(path.join(skillsDir, d, "SKILL.md")));
+if (skills.length === 0) throw new Error(`.cursor-plugin/skills/ resolves but contains no SKILL.md`);
+' "$repo_root" "$1"
+}
+
 target_for_host() {
     local os arch
 
@@ -437,6 +469,7 @@ frontmatter_check "$plugin_dir"
 hook_reference_check "$plugin_dir"
 generated_targets_check
 codex_target_check "$plugin_dir/.claude-plugin/plugin.json"
+cursor_target_check "$plugin_dir/.claude-plugin/plugin.json"
 bash -n "$plugin_dir/hooks/scripts/ensure-festival.sh" "$plugin_dir/hooks/scripts/sync-check.sh"
 
 if [ -x "$repo_root/fest/bin/fest" ] && [ -x "$repo_root/camp/bin/camp" ]; then
