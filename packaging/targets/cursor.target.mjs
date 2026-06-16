@@ -9,11 +9,11 @@ supports as plugin components, per \`packaging/survey/cursor.md\` and \`packagin
 
 ## Bundled (all four surfaces)
 
-- **Skills** (\`skills: "./skills/"\`) — ${ctx.skills.length}:
+- **Skills** (\`skills: "./skills/"\`), ${ctx.skills.length}:
 ${skills}
-- **Commands** (\`commands: "./commands/"\`) — ${ctx.commands.length} slash commands.
-- **Agents** (\`agents: "./agents/"\`) — ${ctx.agents.length} agents.
-- **Hooks** (\`hooks: "./hooks/hooks.json"\`) — the blocking install hook described below.
+- **Commands** (\`commands: "./commands/"\`): ${ctx.commands.length} slash commands.
+- **Agents** (\`agents: "./agents/"\`): ${ctx.agents.length} agents.
+- **Hooks** (\`hooks: "./hooks/hooks.json"\`): the blocking install hook described below.
 
 ## Install
 

@@ -1,5 +1,5 @@
 function readme(ctx) {
-  const skills = ctx.skills.map((s) => `  - \`${s.name}\` — ${s.description}`).join("\n");
+  const skills = ctx.skills.map((s) => `  - \`${s.name}\`: ${s.description}`).join("\n");
   return `<!-- ${ctx.banner} -->
 
 # Festival on Codex
@@ -9,18 +9,20 @@ supports as plugin components, per \`packaging/survey/codex.md\` and \`packaging
 
 ## Bundled
 
-- **Skills** (\`skills: "./skills/"\`) — ${ctx.skills.length} skills:
+- **Skills** (\`skills: "./skills/"\`), ${ctx.skills.length} skills:
 ${skills}
-- **Session-start hook** (\`hooks: "./hooks/hooks.json"\`) — runs \`ensure-festival.sh\` to install
+- **Session-start hook** (\`hooks: "./hooks/hooks.json"\`) runs \`ensure-festival.sh\` to install
   and update the \`fest\` and \`camp\` CLIs on every session start (idempotent).
-- **AGENTS.md** — read automatically by Codex as persistent instructions.
+
+The repo-root \`AGENTS.md\` (not part of this bundle) describes the plugin and is read by Codex as
+workspace instructions when you work in the Festival repo.
 
 ## Not bundled on Codex (documented gap, not faked)
 
-- **Commands** — Festival's ${ctx.commands.length} slash commands do NOT ship as Codex plugin
+- **Commands**: Festival's ${ctx.commands.length} slash commands do NOT ship as Codex plugin
   components. Codex custom prompts are deprecated in favor of skills, and the manifest spec has no
   \`commands\` field. The same workflows run through the \`fest\`/\`camp\` CLIs that the hook installs.
-- **Agents** — Festival's ${ctx.agents.length} agents do NOT ship as Codex plugin components. Codex
+- **Agents**: Festival's ${ctx.agents.length} agents do NOT ship as Codex plugin components. Codex
   subagents are config-scope only (\`~/.codex/agents/\`, \`.codex/agents/\` TOML), not manifest-bundled.
 
 ## Install
