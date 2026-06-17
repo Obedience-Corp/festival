@@ -14,7 +14,6 @@ Initialize a new campaign directory structure.
 
 Creates the standard campaign directories:
   .campaign/              - Campaign configuration and metadata
-  .campaign/quests/       - Quest execution contexts
   .campaign/intents/      - System-managed intent state
   projects/               - Project repositories (submodules or worktrees)
   projects/worktrees/     - Git worktrees for parallel development
@@ -63,15 +62,14 @@ camp init [path] [flags]
       --no-skills            Skip linking campaign skills into .claude/skills and .agents/skills
       --repair               Add missing files to existing campaign
   -t, --type string          Campaign type (product, research, tools, personal) (default "product")
+  -v, --verbose              Show skipped optional setup details
       --yes                  Skip repair confirmation prompt (for scripting)
 ```
 
 ### Options inherited from parent commands
 
 ```
-      --config string   config file (default: ~/.obey/campaign/config.json)
-      --no-color        disable colored output
-      --verbose         enable verbose output
+      --no-color   disable colored output
 ```
 
 ### SEE ALSO

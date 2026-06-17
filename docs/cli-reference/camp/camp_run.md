@@ -23,7 +23,8 @@ and executed from the campaign root directory.
 Use @shortcut prefix to run from a shortcut's directory instead of root.
 Only navigation shortcuts (those with paths) can be used.
 
-All arguments after 'run' (or '@shortcut') are passed directly to the shell.
+Raw command arguments after 'run' (or '@shortcut') are passed directly to the
+shell. Project just-dispatch passes recipe arguments directly to just.
 
 ```
 camp run [project | @shortcut] [command | recipe] [args...] [flags]
@@ -56,9 +57,7 @@ camp run [project | @shortcut] [command | recipe] [args...] [flags]
 ### Options inherited from parent commands
 
 ```
-      --config string   config file (default: ~/.obey/campaign/config.json)
-      --no-color        disable colored output
-      --verbose         enable verbose output
+      --no-color   disable colored output
 ```
 
 ### SEE ALSO

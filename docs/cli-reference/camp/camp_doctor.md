@@ -23,8 +23,8 @@ CHECKS PERFORMED:
 
 EXIT CODES:
   0  All checks passed (no warnings or errors)
-  1  Warnings found (but no errors)
-  2  Errors found
+  1  Warnings or errors found
+  2  Usage error (bad flags or args)
   3  Fix attempted but some issues remain
 
 EXAMPLES:
@@ -61,8 +61,7 @@ camp doctor [flags]
 ### Options inherited from parent commands
 
 ```
-      --config string   config file (default: ~/.obey/campaign/config.json)
-      --no-color        disable colored output
+      --no-color   disable colored output
 ```
 
 ### SEE ALSO

@@ -8,6 +8,15 @@ description: "List workitem links"
 
 List workitem links
 
+### Synopsis
+
+List workitem links recorded in the campaign link registry.
+
+The command reads .campaign/workitems/links.yaml and prints every link, or only
+links for the supplied workitem selector. Use this to audit which projects,
+festivals, worktrees, or paths are attached to a workitem. Use --json for
+machine-readable link lists.
+
 ```
 camp workitem links [selector] [flags]
 ```
@@ -22,9 +31,7 @@ camp workitem links [selector] [flags]
 ### Options inherited from parent commands
 
 ```
-      --config string   config file (default: ~/.obey/campaign/config.json)
-      --no-color        disable colored output
-      --verbose         enable verbose output
+      --no-color   disable colored output
 ```
 
 ### SEE ALSO

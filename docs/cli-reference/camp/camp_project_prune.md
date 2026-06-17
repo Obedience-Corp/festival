@@ -32,6 +32,7 @@ camp project prune [project-name] [flags]
 ### Options
 
 ```
+      --discard-dirty    Allow removal of worktrees with uncommitted changes (for branches with worktrees)
   -n, --dry-run          Preview without deleting
   -f, --force            Skip local branch deletion confirmation
   -h, --help             help for prune
@@ -43,9 +44,7 @@ camp project prune [project-name] [flags]
 ### Options inherited from parent commands
 
 ```
-      --config string   config file (default: ~/.obey/campaign/config.json)
-      --no-color        disable colored output
-      --verbose         enable verbose output
+      --no-color   disable colored output
 ```
 
 ### SEE ALSO

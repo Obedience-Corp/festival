@@ -41,10 +41,8 @@ camp project remote rename <old> <new> [flags]
 ### Options inherited from parent commands
 
 ```
-      --config string    config file (default: ~/.obey/campaign/config.json)
       --no-color         disable colored output
   -p, --project string   Project name (auto-detected from cwd if not specified)
-      --verbose          enable verbose output
 ```
 
 ### SEE ALSO

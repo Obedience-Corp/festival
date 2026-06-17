@@ -34,16 +34,14 @@ camp workitem [flags]
       --limit int           Maximum number of items to return
       --print               Print path only (for shell integration)
       --query string        Search query to filter items
-      --stage stringArray   Filter by lifecycle stage (inbox, active, ready, planning)
+      --stage stringArray   Filter by lifecycle stage (none, inbox, active, ready, planning, ritual, chains)
       --type stringArray    Filter by workflow type (builtin: intent, design, explore, festival; or any slug-safe custom type produced by 'camp workitem create --type <name>')
 ```
 
 ### Options inherited from parent commands
 
 ```
-      --config string   config file (default: ~/.obey/campaign/config.json)
-      --no-color        disable colored output
-      --verbose         enable verbose output
+      --no-color   disable colored output
 ```
 
 ### SEE ALSO

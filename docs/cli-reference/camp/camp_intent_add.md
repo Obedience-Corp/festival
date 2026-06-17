@@ -60,8 +60,9 @@ camp intent add [title] [flags]
   -c, --campaign string    Target campaign by name or ID; omit value to pick interactively
       --concept string     Set the concept field (e.g., projects/camp)
   -e, --edit               Open in $EDITOR for deep capture
-  -f, --full               Full TUI mode with body textarea
+      --full               Full TUI mode with body textarea
   -h, --help               help for add
+      --json               emit a structured JSON result
       --no-commit          Don't create a git commit
       --note               Create a note instead of a lifecycle intent
       --tag stringArray    Add a tag (repeatable)
@@ -71,9 +72,7 @@ camp intent add [title] [flags]
 ### Options inherited from parent commands
 
 ```
-      --config string   config file (default: ~/.obey/campaign/config.json)
-      --no-color        disable colored output
-      --verbose         enable verbose output
+      --no-color   disable colored output
 ```
 
 ### SEE ALSO

@@ -8,6 +8,14 @@ description: "Manage navigation shortcuts for workflow collections"
 
 Manage navigation shortcuts for workflow collections
 
+### Synopsis
+
+Manage navigation shortcuts for custom workflow collections.
+
+Workflow shortcuts are stored in campaign configuration and point to
+workflow/<type>/ directories. Use subcommands to attach or repair shortcut
+entries after creating or moving workflow collections.
+
 ### Options
 
 ```
@@ -17,9 +25,7 @@ Manage navigation shortcuts for workflow collections
 ### Options inherited from parent commands
 
 ```
-      --config string   config file (default: ~/.obey/campaign/config.json)
-      --no-color        disable colored output
-      --verbose         enable verbose output
+      --no-color   disable colored output
 ```
 
 ### SEE ALSO

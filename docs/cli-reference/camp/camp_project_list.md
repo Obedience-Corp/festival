@@ -22,6 +22,7 @@ Output formats:
 
 Examples:
   camp project list               List projects in table format
+  camp project list --json        Output as JSON
   camp project list --format json Output as JSON
   camp project list --format simple  Names only for scripting
 
@@ -34,14 +35,13 @@ camp project list [flags]
 ```
   -f, --format string   Output format (table, simple, json) (default "table")
   -h, --help            help for list
+      --json            Output as JSON (shorthand for --format json)
 ```
 
 ### Options inherited from parent commands
 
 ```
-      --config string   config file (default: ~/.obey/campaign/config.json)
-      --no-color        disable colored output
-      --verbose         enable verbose output
+      --no-color   disable colored output
 ```
 
 ### SEE ALSO

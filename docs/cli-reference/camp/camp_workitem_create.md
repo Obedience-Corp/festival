@@ -8,6 +8,16 @@ description: "Create a new workitem with v1 minimum metadata"
 
 Create a new workitem with v1 minimum metadata
 
+### Synopsis
+
+Create a new workitem directory with minimal v1 metadata.
+
+The workitem is created under workflow/<type>/<slug>/ unless --dir supplies a
+different campaign-relative parent directory. A .workitem file is written with
+the id, type, title, ref, creation metadata, and optional quest link. Use --json
+for machine-readable output containing the new workitem identity and next-step
+location.
+
 ```
 camp workitem create <slug> [flags]
 ```
@@ -19,7 +29,7 @@ camp workitem create <slug> [flags]
   -h, --help           help for create
       --id string      override the generated id
       --json           emit a structured JSON result
-      --quest string   capture quest_id from this quest (defaults to CAMP_QUEST env var if set)
+      --quest string   quest ID to associate (requires dev-profile camp; forward-compatible flag)
       --title string   human-readable title
       --type string    workitem type (feature, bug, chore, or custom) (default "feature")
 ```
@@ -27,9 +37,7 @@ camp workitem create <slug> [flags]
 ### Options inherited from parent commands
 
 ```
-      --config string   config file (default: ~/.obey/campaign/config.json)
-      --no-color        disable colored output
-      --verbose         enable verbose output
+      --no-color   disable colored output
 ```
 
 ### SEE ALSO

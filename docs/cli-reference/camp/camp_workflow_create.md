@@ -8,6 +8,16 @@ description: "Create a custom workflow collection"
 
 Create a custom workflow collection
 
+### Synopsis
+
+Create a custom workflow collection under workflow/<type>/.
+
+The command creates the workflow directory, terminal dungeon directories,
+.gitkeep files, and an OBEY.md guide, then registers the collection in
+campaign configuration through a concept and navigation shortcut. A shortcut is
+required. Use --dry-run to inspect planned writes and --json for
+machine-readable planning or apply results.
+
 ```
 camp workflow create <type> [flags]
 ```
@@ -26,9 +36,7 @@ camp workflow create <type> [flags]
 ### Options inherited from parent commands
 
 ```
-      --config string   config file (default: ~/.obey/campaign/config.json)
-      --no-color        disable colored output
-      --verbose         enable verbose output
+      --no-color   disable colored output
 ```
 
 ### SEE ALSO

@@ -8,6 +8,15 @@ description: "Get, set, or clear the local current workitem"
 
 Get, set, or clear the local current workitem
 
+### Synopsis
+
+Get, set, or clear the campaign-local current workitem pointer.
+
+The selection is stored in .campaign/workitems/current.yaml and is used by
+commands that need a default workitem when cwd alone is ambiguous. Pass a
+selector to set the current workitem, omit it to read the selection, or use
+--clear to remove it. Use --json for machine-readable current selection output.
+
 ```
 camp workitem current [selector] [flags]
 ```
@@ -23,9 +32,7 @@ camp workitem current [selector] [flags]
 ### Options inherited from parent commands
 
 ```
-      --config string   config file (default: ~/.obey/campaign/config.json)
-      --no-color        disable colored output
-      --verbose         enable verbose output
+      --no-color   disable colored output
 ```
 
 ### SEE ALSO

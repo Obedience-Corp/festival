@@ -26,6 +26,7 @@ Examples:
   camp dungeon list                  List dungeon root items
   camp dungeon list --triage         List parent items eligible for triage
   cd workflow/design/subdir && camp dungeon list  Uses nearest dungeon context from nested path
+  camp dungeon list --json           JSON output for scripting
   camp dungeon list -f json          JSON output for scripting
   camp dungeon list -f simple        Names only, pipe to other commands
 
@@ -38,15 +39,14 @@ camp dungeon list [flags]
 ```
   -f, --format string   Output format: table, simple, json (default "table")
   -h, --help            help for list
+      --json            Output as JSON (shorthand for --format json)
       --triage          List parent items eligible for triage into dungeon
 ```
 
 ### Options inherited from parent commands
 
 ```
-      --config string   config file (default: ~/.obey/campaign/config.json)
-      --no-color        disable colored output
-      --verbose         enable verbose output
+      --no-color   disable colored output
 ```
 
 ### SEE ALSO

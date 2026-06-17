@@ -8,6 +8,15 @@ description: "Print the workitem the current context resolves to (read-only)"
 
 Print the workitem the current context resolves to (read-only)
 
+### Synopsis
+
+Resolve the active workitem from the current campaign context.
+
+Resolution checks explicit selectors, cwd, festival context, linked scopes,
+and the current-workitem file without mutating any files. Use --explain to show
+the tier-by-tier trace used to choose the result. Use --json for
+machine-readable resolution details and trace data.
+
 ```
 camp workitem resolve [flags]
 ```
@@ -25,9 +34,7 @@ camp workitem resolve [flags]
 ### Options inherited from parent commands
 
 ```
-      --config string   config file (default: ~/.obey/campaign/config.json)
-      --no-color        disable colored output
-      --verbose         enable verbose output
+      --no-color   disable colored output
 ```
 
 ### SEE ALSO

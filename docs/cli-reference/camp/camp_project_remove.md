@@ -13,7 +13,8 @@ Remove a project from campaign
 Remove a project from the campaign.
 
 By default, this only removes the project from git submodule tracking.
-The project files remain in place for you to handle manually.
+The project directory is removed from the working tree by git rm. Pass --delete
+to also remove any worktree directories managed by camp.
 
 For linked projects, prefer 'camp project unlink'. Linked projects are
 machine-local symlinks and are never deleted through this command.
@@ -44,9 +45,7 @@ camp project remove <name> [flags]
 ### Options inherited from parent commands
 
 ```
-      --config string   config file (default: ~/.obey/campaign/config.json)
-      --no-color        disable colored output
-      --verbose         enable verbose output
+      --no-color   disable colored output
 ```
 
 ### SEE ALSO

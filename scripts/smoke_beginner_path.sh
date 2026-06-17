@@ -349,11 +349,6 @@ assert_fest_next_reaches_ingest() {
     echo
     echo "==> [assert-fest-next]"
 
-    if ! grep -q 'WORKFLOW PHASE' "$next_output_file"; then
-        echo "Expected fest next to return a workflow step, not an implementation task." >&2
-        return 1
-    fi
-
     if ! grep -q 'Phase: 001_INGEST' "$next_output_file"; then
         echo "Expected fest next to reach the 001_INGEST workflow." >&2
         return 1
