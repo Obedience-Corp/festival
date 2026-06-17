@@ -82,9 +82,11 @@ fest next
 
 After installing, see the [quick start guide](https://docs.fest.build/getting-started/quickstart/) for shell setup and first steps.
 
-[![Watch the demo](docs/images/demo_video_thumb.jpg)](https://youtu.be/FY6vm74oa8o?si=ZFg87vA7u9G_79bX)
+<p align="center">
+  <a href="https://youtu.be/FY6vm74oa8o?si=ZFg87vA7u9G_79bX"><img src="docs/images/demo_video_thumb.jpg" alt="Watch the demo" width="720"></a>
+</p>
 
-_[More walkthroughs, demos, and speed runs &rarr;](https://docs.fest.build/videos/)_
+<p align="center"><em><a href="https://docs.fest.build/videos/">More walkthroughs, demos, and speed runs &rarr;</a></em></p>
 
 ## The Problem
 
