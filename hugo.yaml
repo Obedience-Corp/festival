@@ -99,6 +99,10 @@ menu:
       parent: guides
       url: /guides/best-practices/
       weight: 33
+    - name: Loops & Orchestration
+      parent: guides
+      url: /guides/loops-and-orchestration/
+      weight: 34
 
     - name: Tutorials
       identifier: tutorials
