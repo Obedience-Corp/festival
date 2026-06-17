@@ -51,10 +51,6 @@ For now, use WSL2 and the Linux install method above.
 - `git` is required. `camp` and `fest` use git internally for campaign init, project management, template sync, and commit-aware workflows.
 - `scc` is recommended but optional. Without it, `camp leverage` features will not work.
 
-[![Watch the demo](docs/images/demo_video_thumb.jpg)](https://youtu.be/FY6vm74oa8o?si=ZFg87vA7u9G_79bX)
-
-_[More walkthroughs, demos, and speed runs &rarr;](https://docs.fest.build/videos/)_
-
 ## Quick Start
 
 ```bash
@@ -85,6 +81,12 @@ fest next
 ```
 
 After installing, see the [quick start guide](https://docs.fest.build/getting-started/quickstart/) for shell setup and first steps.
+
+<p align="center">
+  <a href="https://youtu.be/FY6vm74oa8o?si=ZFg87vA7u9G_79bX"><img src="docs/images/demo_video_thumb.jpg" alt="Watch the demo" width="720"></a>
+</p>
+
+<p align="center"><em><a href="https://docs.fest.build/videos/">More walkthroughs, demos, and speed runs &rarr;</a></em></p>
 
 ## The Problem
 
