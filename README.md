@@ -2,10 +2,6 @@
 
 ![Festival Banner](docs/images/festival_banner.png)
 
-[![Watch the demo](docs/images/demo_video_thumb.jpg)](https://youtu.be/FY6vm74oa8o?si=ZFg87vA7u9G_79bX)
-
-_[More walkthroughs, demos, and speed runs &rarr;](https://docs.fest.build/videos/)_
-
 **A standardized workspace and workflow for solving difficult, multi-faceted problems with AI.**
 
 To use AI to solve hard problems you need three things: **context**, **direction**, and **verification**. Festival provides a structured layer for each, resulting in dramatically fewer tokens and less time spent getting to the outcome you want.
@@ -55,25 +51,9 @@ For now, use WSL2 and the Linux install method above.
 - `git` is required. `camp` and `fest` use git internally for campaign init, project management, template sync, and commit-aware workflows.
 - `scc` is recommended but optional. Without it, `camp leverage` features will not work.
 
-## Updating Templates After Upgrades
+[![Watch the demo](docs/images/demo_video_thumb.jpg)](https://youtu.be/FY6vm74oa8o?si=ZFg87vA7u9G_79bX)
 
-Festival releases may include updated methodology files, agents, examples, and templates. Upgrading the `fest` binary does not automatically rewrite those files because users often customize their `.festival/` methodology directory and template files.
-
-When a release includes template changes, update in two explicit steps:
-
-```bash
-# Refresh the local system template cache
-fest system sync
-
-# Preview campaign methodology/template changes before applying them
-fest system update --dry-run
-
-# Apply interactively, or create backups before updating
-fest system update
-fest system update --backup
-```
-
-Use `fest system update --force` only when you intentionally want to overwrite local changes. The manual update flow protects customized templates from accidental replacement.
+_[More walkthroughs, demos, and speed runs &rarr;](https://docs.fest.build/videos/)_
 
 ## Quick Start
 
@@ -148,7 +128,7 @@ Here's what `obey-campaign` looks like, a real campaign that orchestrates Obedie
 
 ```
 obey-campaign/
-├── projects/                     # 19 project submodules
+├── projects/                     # 32 project submodules
 │   ├── camp/                     # Campaign CLI
 │   ├── fest/                     # Festival planning CLI
 │   ├── festival/                 # Distribution repo (this one)
@@ -157,14 +137,19 @@ obey-campaign/
 │   ├── guild-core/               # Reference implementation
 │   ├── obediencecorp.com/        # Company website
 │   ├── prototypes/               # Experiment sandbox
-│   └── ...                       # 11 more projects
+│   └── ...                       # 24 more projects
 ├── festivals/                    # Festival lifecycle workspace
 │   ├── planning/                 # Festivals being designed
 │   ├── active/                   # Currently executing
 │   ├── ready/                    # Prepared, awaiting execution
 │   ├── ritual/                   # Recurring processes
+│   ├── chains/                   # Linked festival workflows
 │   └── dungeon/                  # completed/ | archived/ | someday/
-├── workflow/                     # Intents, code reviews, pipelines
+├── .campaign/                    # Campaign state and work queue
+│   ├── intents/                  # Captured ideas, bugs, and future work
+│   ├── quests/                   # Long-lived working contexts
+│   └── workitems/                # Tracked work-item metadata
+├── workflow/                     # Design docs, explore notes, code reviews, pipelines
 ├── ai_docs/                      # AI research and documentation
 ├── docs/                         # Human-authored documentation
 └── CLAUDE.md                     # Agent instructions
@@ -207,7 +192,7 @@ cgo w                 # Jump to workflow/
 cgo wt api@feat       # Jump to a worktree branch
 ```
 
-Single-letter category shortcuts (`p`, `f`, `w`, `a`, `d`, `i`, `wt`, `du`, `cr`, `de`) map to top-level campaign directories. After the category, any additional argument is a fuzzy search. `cgo p mono` lands you in `obey-platform-monorepo/`. Tab completion works at every level.
+Category shortcuts (`p`, `f`, `w`, `a`, `d`, `i`, `wt`, `du`, `cr`, `de`) map to common campaign locations (`i` jumps to `.campaign/intents/`, `de` to `workflow/design/`, and so on). After the category, any additional argument is a fuzzy search. `cgo p mono` lands you in `obey-platform-monorepo/`. Tab completion works at every level.
 
 You can also run a command without leaving your current directory:
 
@@ -308,9 +293,29 @@ If `fest` and `camp` aren't already installed, the plugin installs them automati
 
 | Component | Examples |
 |-----------|---------|
-| **Slash commands** | `/fest-next`, `/fest-create`, `/fest-done`, `/fest-commit`, `/fest-validate`, `/camp-intent`, `/camp-init` |
+| **Slash commands** | `/fest-next`, `/fest-create`, `/fest-commit`, `/fest-validate`, `/fest-status`, `/camp-intent`, `/camp-init` |
 | **Skills** | Auto-activating methodology knowledge, execution workflows, planning guidance |
 | **Agents** | `fest-planner` for designing festivals, `fest-executor` for working through tasks |
+
+## Updating Templates After Upgrades
+
+Festival releases may include updated methodology files, agents, examples, and templates. Upgrading the `fest` binary does not automatically rewrite those files because users often customize their `.festival/` methodology directory and template files.
+
+When a release includes template changes, update in two explicit steps:
+
+```bash
+# Refresh the local system template cache
+fest system sync
+
+# Preview campaign methodology/template changes before applying them
+fest system update --dry-run
+
+# Apply interactively, or create backups before updating
+fest system update
+fest system update --backup
+```
+
+Use `fest system update --force` only when you intentionally want to overwrite local changes. The manual update flow protects customized templates from accidental replacement.
 
 ## Documentation
 
