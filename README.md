@@ -128,7 +128,7 @@ Here's what `obey-campaign` looks like, a real campaign that orchestrates Obedie
 
 ```
 obey-campaign/
-├── projects/                     # 19 project submodules
+├── projects/                     # 32 project submodules
 │   ├── camp/                     # Campaign CLI
 │   ├── fest/                     # Festival planning CLI
 │   ├── festival/                 # Distribution repo (this one)
@@ -137,14 +137,19 @@ obey-campaign/
 │   ├── guild-core/               # Reference implementation
 │   ├── obediencecorp.com/        # Company website
 │   ├── prototypes/               # Experiment sandbox
-│   └── ...                       # 11 more projects
+│   └── ...                       # 24 more projects
 ├── festivals/                    # Festival lifecycle workspace
 │   ├── planning/                 # Festivals being designed
 │   ├── active/                   # Currently executing
 │   ├── ready/                    # Prepared, awaiting execution
 │   ├── ritual/                   # Recurring processes
+│   ├── chains/                   # Linked festival workflows
 │   └── dungeon/                  # completed/ | archived/ | someday/
-├── workflow/                     # Intents, code reviews, pipelines
+├── .campaign/                    # Campaign state and work queue
+│   ├── intents/                  # Captured ideas, bugs, and future work
+│   ├── quests/                   # Long-lived working contexts
+│   └── workitems/                # Tracked work-item metadata
+├── workflow/                     # Design docs, explore notes, code reviews, pipelines
 ├── ai_docs/                      # AI research and documentation
 ├── docs/                         # Human-authored documentation
 └── CLAUDE.md                     # Agent instructions
@@ -187,7 +192,7 @@ cgo w                 # Jump to workflow/
 cgo wt api@feat       # Jump to a worktree branch
 ```
 
-Single-letter category shortcuts (`p`, `f`, `w`, `a`, `d`, `i`, `wt`, `du`, `cr`, `de`) map to top-level campaign directories. After the category, any additional argument is a fuzzy search. `cgo p mono` lands you in `obey-platform-monorepo/`. Tab completion works at every level.
+Category shortcuts (`p`, `f`, `w`, `a`, `d`, `i`, `wt`, `du`, `cr`, `de`) map to common campaign locations (`i` jumps to `.campaign/intents/`, `de` to `workflow/design/`, and so on). After the category, any additional argument is a fuzzy search. `cgo p mono` lands you in `obey-platform-monorepo/`. Tab completion works at every level.
 
 You can also run a command without leaving your current directory:
 
@@ -288,7 +293,7 @@ If `fest` and `camp` aren't already installed, the plugin installs them automati
 
 | Component | Examples |
 |-----------|---------|
-| **Slash commands** | `/fest-next`, `/fest-create`, `/fest-done`, `/fest-commit`, `/fest-validate`, `/camp-intent`, `/camp-init` |
+| **Slash commands** | `/fest-next`, `/fest-create`, `/fest-commit`, `/fest-validate`, `/fest-status`, `/camp-intent`, `/camp-init` |
 | **Skills** | Auto-activating methodology knowledge, execution workflows, planning guidance |
 | **Agents** | `fest-planner` for designing festivals, `fest-executor` for working through tasks |
 
