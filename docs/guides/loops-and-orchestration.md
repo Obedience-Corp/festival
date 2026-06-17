@@ -5,68 +5,106 @@ weight: 34
 
 # Loops & Orchestration
 
-A campaign runs as loops inside loops. The same `fest next` engine that walks a
-five-step checklist also drives a multi-phase festival, and the same work-item
-dashboard that tells you where you left off can be handed to an agent as a queue
-to work through. This guide shows how to match the loop to the work, and how to
-build orchestrations that pull context in from outside the campaign and turn it
-into work an agent can loop through.
+The festival system is built to run as loops, and most loops start with something
+you say to an agent. This guide covers the kinds of loops you can build, the
+prompts that start them, and how one campaign acts as a shared planning substrate
+for orchestrating work across many projects at once.
 
-## Match the loop to the work
+## Two kinds of loop
 
-| The work is... | Build | The loop |
-|---|---|---|
-| A fixed, ordered process you repeat | a standalone **WORKFLOW.md** | `fest next` to read the step, `fest workflow advance` to move on |
-| Complex work that needs decomposition and verification | a **festival** | `fest next` to get the task, `fest commit` to record it |
-| A stream of work arriving from outside the campaign | an **ingestion pipeline** that lands work items, then a loop over them | `just <pipeline>`, then loop over `camp workitem --json` |
+It helps to separate two things that both get called "the loop":
 
-Each rung reuses the one below it. A festival's planning phases are themselves
-WORKFLOW.md loops. An orchestration's queue is filled with intents and festivals.
-Start at the lowest rung the work actually needs.
+- **Tool-driven loops (`fest next`).** `fest next` reads on-disk structure and
+  hands you the next step: a step in a `WORKFLOW.md`, or a task in a festival plan
+  under `festivals/`. The tool computes the next move from state; you or an agent
+  execute it and commit. Deterministic and structured. `fest next` only knows about
+  workflows and festival plans, so it only drives those.
+- **Agent-driven orchestration loops.** Here the agent is the loop. You prompt it
+  to read the work-item queue, pull items down, fan them out across projects with
+  subagents and worktrees, and drive each one to completion (often via its own
+  `fest next` loop). `fest next` does not drive this outer loop. The agent does.
 
-## Simple structured loops: a WORKFLOW.md
+Both run on one shared substrate: the campaign, which holds your intents, designs,
+explore notes, and festivals, and spans every project in the workspace.
 
-A `WORKFLOW.md` is an ordered list of steps. Each step carries a goal, the actions
-to take, the expected output, and an optional `APPROVAL REQUIRED` checkpoint that
-blocks until a human signs off. You do not need a festival to use one.
+## Loops start with a prompt
 
-Outside a festival, `fest create workflow` writes a `WORKFLOW.md` in the current
-directory, initializes its runtime state, and starts a tracked run so `fest next`
-works immediately:
+A loop usually begins with an instruction you give an agent at the start of a
+session. These prompts are the human interface to the loops below; the rest of this
+guide is what each one does under the hood.
+
+Start a festival:
+
+> Execute this festival with the fest next loop: run `fest next`, do the task it
+> prints, then `fest commit`, and repeat until it reports the festival is complete.
+> Stop at any approval gate and ask me before continuing.
+
+Walk a standalone workflow:
+
+> Walk this `WORKFLOW.md` with `fest next` and `fest workflow advance`, one step at
+> a time, until the workflow is done.
+
+Orchestrate work items across projects:
+
+> List the ready work items with `camp workitem --json`. For each one, create a
+> worktree for its project, dispatch a subagent to implement it there, then open a
+> PR. Work through the queue until it is empty, and report what landed.
+
+## Tool-driven loops
+
+### Simple: a standalone WORKFLOW.md
+
+A `WORKFLOW.md` is an ordered list of steps, each with a goal, the actions to take,
+and the expected output. Outside a festival, `fest create workflow` writes one in
+the current directory, initializes its runtime state, and starts a tracked run so
+`fest next` works immediately:
 
 ```bash
 fest create workflow release-check     # standalone WORKFLOW.md + tracked run
 fest next                              # print the current step
 fest workflow advance                  # complete the step, move to the next
-fest workflow approve                  # clear an APPROVAL REQUIRED checkpoint
-fest workflow reject                   # send a checkpoint back for revision
 fest workflow status                   # where am I in the workflow
 ```
 
-This is a real loop, not just a list. A checkpoint holds the loop until you
-`approve`, and a `reject` routes back to an earlier step. The step list is the
-loop body; the checkpoints are its conditions.
+Standalone workflows advance **linearly**. They do not yet support blocking
+approval checkpoints: `fest workflow approve` and `reject` are festival-scoped, so
+a standalone `WORKFLOW.md` cannot hold for human sign-off. When you need an
+approval gate inside the loop, use a festival phase workflow (below).
 
-Agents and scripts can generate a workflow instead of writing it by hand. Pass the
-definition as inline JSON or a file:
+Agents and scripts can generate a workflow instead of writing it by hand:
 
 ```bash
 fest create workflow triage --steps '{"title":"Triage","steps":[ ... ]}'
 fest create workflow triage --steps-file steps.json
 ```
 
-Reach for a standalone workflow when the **steps are known and fixed**: a review
-process, a research sweep, an onboarding sequence, a release checklist, any
-repeatable ordered process. The same `WORKFLOW.md` mechanism runs the INGEST,
-PLAN, and REVIEW phases inside a festival, so learning it once pays off at both
-scales. See [Workflows & Gates]({{< ref "/methodology/workflows-and-gates" >}}).
+Reach for a standalone workflow when the **steps are known, fixed, and linear**: a
+research sweep, a release checklist, an onboarding sequence, any repeatable ordered
+process.
 
-## Complex structured loops: a festival
+### Gated: a festival phase workflow
+
+Inside a festival, the planning phases (INGEST, PLAN, REVIEW) use the same
+`WORKFLOW.md` format, but with `APPROVAL REQUIRED` checkpoints that block until a
+human signs off. This is where the human-gated loop behavior lives:
+
+```bash
+fest workflow status      # the current step or gate
+fest workflow advance     # complete a step
+fest workflow approve     # clear an APPROVAL REQUIRED checkpoint
+fest workflow reject      # send it back for revision
+```
+
+A `reject` routes the loop back to an earlier step, so PRESENT to reject to
+DECOMPOSE to forward again is a real cycle. See
+[Workflows & Gates]({{< ref "/methodology/workflows-and-gates" >}}).
+
+### Complex: a festival
 
 When the work needs decomposition, parallel tracks, and enforced verification, use
-a festival. A festival organizes work as phases, sequences, and tasks. `fest next`
-walks that structure by dependency and progress; `fest commit` records each step
-with a traceability tag and advances the loop:
+a festival. It organizes work as phases, sequences, and tasks. `fest next` walks
+that structure by dependency and progress; `fest commit` records each step with a
+traceability tag and advances the loop:
 
 ```bash
 fest next                  # the next actionable task, by dependency and progress
@@ -74,11 +112,10 @@ fest next                  # the next actionable task, by dependency and progres
 fest commit -m "..."       # commit with the FE-<id> tag, then loop
 ```
 
-What keeps the loop honest is the verification built into the structure. Every
-implementation sequence ends in a `testing -> review -> iterate` tail, and every
-phase ends in a gate. A failing review keeps the loop cycling inside the same
-sequence instead of advancing past broken code. For an unattended run, wrap the
-loop and bound it:
+Verification is built into the structure: every implementation sequence ends in a
+`testing -> review -> iterate` tail, and every phase ends in a gate. A failing
+review keeps the loop cycling inside the same sequence instead of advancing past
+broken code. For an unattended run, wrap the loop and bound it:
 
 ```bash
 i=0
@@ -90,129 +127,104 @@ done
 ```
 
 For when to choose a festival over a lighter artifact, see
-[Intent vs Design vs Festival]({{< ref "/guides/intent-design-festival" >}}). For
-keeping enough festivals queued, see
-[Work Pipeline]({{< ref "/guides/work-pipeline" >}}).
+[Intent vs Design vs Festival]({{< ref "/guides/intent-design-festival" >}}). The
+escalation path is `intent -> workflow -> festival`, and you only climb as far as
+the work requires.
 
-## How intents, workflows, festivals, and work items relate
+## Work items: the shared planning substrate
 
-These are not competing systems. They are the same idea at four levels of loop
-structure:
+Work items unify intents, designs, explore notes, and festivals into one model with
+a stable id, a type, and a location. They are the substrate both kinds of loop run
+on, and they span every project in the campaign.
 
-- An **intent** is a captured seed. It lives in the intent funnel and costs
-  seconds to create. Most intents are triaged out; the ones that survive become
-  real work.
-- A **WORKFLOW.md** is an ordered step loop. It runs a known process, standalone
-  or as a phase inside a festival.
-- A **festival** is the full structured loop: phases, sequences, tasks, and gates,
-  for work too large or too risky for a single pass.
-- **Work items** are the unifying view across all of the above. An intent, a
-  design doc, an explore note, and a festival are all surfaced the same way.
+They exist for two reasons, both about loops:
 
-The escalation path is `intent -> workflow -> festival`, but you only climb as far
-as the work requires. An already-actionable intent gets executed directly; a fixed
-process becomes a workflow; only genuinely complex work becomes a festival.
-
-## Work items: the loop you orchestrate over
-
-Work items exist for two reasons, and both are about loops.
-
-The first is **resuming**: when you come back to a campaign, `camp workitem` tells
-you what exists and what you were on, so you do not have to reconstruct it from
-memory or the git log.
-
-The second is **orchestration**: `camp workitem --json` is a machine-readable
-queue. You can hand it to an agent and have it loop through the work, picking the
-next item, acting on it, and moving on.
+- **Resuming.** When you come back to a campaign, `camp workitem` tells you what
+  exists and what you were on, so you do not reconstruct it from memory or the git
+  log.
+- **Orchestration.** `camp workitem --json` is a machine-readable queue. You hand it
+  to an agent and it loops through the work, picking the next item, acting, and
+  moving on.
 
 ```bash
-camp workitem                                   # interactive dashboard: what exists, what am I on
+camp workitem                                   # dashboard: what exists, what am I on
 camp workitem --json                            # the queue, machine-readable
 camp workitem --json --type intent --stage ready
 camp workitem current <id>                      # mark the active item (your resume anchor)
 ```
 
-The orchestration loop has one shape:
-
-```
-camp workitem --json  ->  pick the next item  ->  execute it (workflow or festival)  ->  commit  ->  repeat
-```
-
 Because the queue lives on disk, the loop survives a stopped session. You can walk
 away and pick it back up, and so can a different agent.
 
-## Orchestrating external context
+## Multi-project orchestration
 
-The highest-leverage loops start outside the campaign: pull context from an
-external source, land it in the campaign as a structured checklist of work, loop
-over that work, and optionally write the results back to the source.
+A campaign is not a single repository. It holds many projects (`projects/*` and
+their worktrees) and one shared planning layer over all of them. Intents, work
+items, and festivals can reference work in any project, which makes the campaign a
+**shared planning substrate for orchestrating multiple projects at once**.
 
-The mechanism is a `just` recipe that triggers a pipeline script. A common, real
-case is pulling AI code-review findings, for example a GitHub Copilot PR review,
-into the campaign so an agent can work through them:
+This is the agent-driven loop in its fullest form. You point an agent at the work
+queue and let it fan work out across projects:
 
-1. **Pull.** A `just` recipe calls the source's API or CLI and collects the units
-   of work. With the GitHub CLI that is `gh api .../pulls/<n>/reviews` and
-   `.../comments`, filtered to the reviewer you care about.
-2. **Land it as a checklist.** The script writes one structured Markdown file per
-   source unit under `workflow/pipelines/<source>/`, with one `- [ ]` checkbox per
-   finding, a code-location heading, and a `> Notes:` block for the response. A
-   stable per-item marker (an HTML comment carrying the source id) lets re-runs
-   dedupe and append only what is new.
-3. **Loop.** An agent reads the file, fixes each item, checks the box, and records
-   what it did in the Notes block. The checklist is the loop body; the unchecked
-   boxes are the remaining work.
-4. **Write back (optional).** A second `just` recipe parses the annotated file and
-   posts each response back to the source, then resolves the thread. The loop now
-   closes at the external system, not just inside the campaign.
-
-```just
-# justfiles/pipelines.just  (the shape of the pattern)
-ingest-reviews repo pr:
-    ./scripts/pull_reviews.sh {{repo}} {{pr}}    # -> workflow/pipelines/reviews/{{repo}}/{{pr}}.md
-reply-reviews repo pr:
-    ./scripts/reply_reviews.sh {{repo}} {{pr}}   # parse checked items, post replies, resolve threads
 ```
+camp workitem --json
+  -> pick the next item
+  -> camp p worktree add <name> --project <p>     # isolate the target project
+  -> dispatch a subagent to implement it in that worktree
+  -> commit / open a PR
+  -> repeat until the queue is empty
+```
+
+The commands that support it:
 
 ```bash
-just ingest-reviews api 1234        # pull and land as a checklist
-# the agent loops the checklist in workflow/pipelines/reviews/api/1234.md
-just reply-reviews api 1234         # write the resolutions back to the PR
+camp workitem link <id> --project <name>     # attach a work item to a project
+camp workitem link <id> --festival <id>      # or to a festival plan
+camp p worktree add <name> --project <p>     # isolated worktree at projects/worktrees/<p>/<name>/
+cr just <recipe>                             # run a project's own just recipe from anywhere
 ```
 
-You have two ways to land the pulled units, and they serve different needs:
+Each work item carries its own links and traceability, so an agent can run several
+in parallel, in separate worktrees, without losing track of which change belongs to
+which project. The shared substrate is what makes this coherent: one queue across
+the whole portfolio, resumable as a unit, with every change traceable back to its
+project and its plan. Festivals can also run fully in parallel, one agent session
+each. See [Work Pipeline]({{< ref "/guides/work-pipeline" >}}).
 
-- **As a checklist file** (above) when the units are fine-grained and you just need
-  to loop through and resolve them. Lightweight, with no campaign bookkeeping.
-- **As work items** when a unit is real planned work. `camp intent add` captures it
-  into the funnel, or `camp workitem create --type <source> --json` lands a typed
-  work item under `workflow/<source>/`. Either one then appears in `camp workitem`
-  and can be promoted to a festival.
+## Feeding the substrate from outside
 
-The shipped reference for the second form is `camp gather`, which imports external
-data into the intent system as trackable intents with checkboxes:
+The queue does not have to be filled by hand. A `just` recipe can run a script that
+pulls context from an external source (open issues, review findings, an API export)
+and lands each unit as a work item the loops above can pick up:
+
+```bash
+camp intent add "<one captured unit>"                    # land it in the funnel
+camp workitem create <slug> --type <source> --json       # or as a typed work item
+```
+
+The shipped primitive for this shape is `camp gather`, which imports external data
+into the intent system as trackable intents with checkboxes:
 
 ```bash
 camp gather feedback     # import festival feedback observations into intents
 ```
 
-Today the built-in gather source is festival feedback; other sources (a GitHub
-project, a Jira board, an internal API) are a short `just` recipe and script away,
-following the same shape.
-
-Landing external context this way, rather than processing it inline, buys four
-things: the work survives the session so you can stop and resume; the same
-dashboard shows external work next to everything else; an agent can be pointed at
-the checklist or queue and loop autonomously; and each unit gains traceability once
-it is executed.
+Today the built-in gather source is festival feedback. Other sources are a short
+`just` recipe and script away, following the same shape: pull, land as work items,
+then loop over the queue. Landing external context as work items rather than
+processing it inline means the work survives the session, shows up next to
+everything else in `camp workitem`, and can be handed to an agent to loop through
+autonomously.
 
 ## Choosing the loop
 
-| You have | Build | The loop |
+| You have | Build | Driver |
 |---|---|---|
-| A repeatable ordered process | a standalone `WORKFLOW.md` | `fest create workflow`, then `fest next` / `fest workflow advance` |
-| Complex multi-step work | a festival | `fest next` / `fest commit` |
-| A backlog arriving from outside | an ingestion pipeline | `just <pipeline>`, then loop over `camp workitem --json` |
+| A repeatable, linear process | a standalone `WORKFLOW.md` | `fest next` |
+| A process that needs human approval gates | a festival phase workflow | `fest next` + `fest workflow approve`/`reject` |
+| Complex multi-step work | a festival | `fest next` + `fest commit` |
+| A queue of work spanning projects | an agent orchestration loop | the agent (work items + worktrees + subagents) |
+| An external signal to ingest | a `just` pipeline into work items | `just` + `camp` |
 
 ## See also
 
