@@ -17,6 +17,13 @@ Each transition validates readiness:
   ready → active:      Festival is ready to begin execution
   active → completed:  All tasks must be completed
 
+By default, promotes the festival you are currently inside. From elsewhere in a
+campaign, pass a festival name or run promote interactively to pick one:
+```bash
+  fest promote my-feature       Promote a festival by name (tab completion)
+  fest promote                  Pick a festival from a fuzzy picker (in a terminal)
+```
+
 Use --dungeon to send a festival directly to a dungeon status:
 ```bash
   fest promote --dungeon someday     Shelve for later
@@ -25,7 +32,7 @@ Use --dungeon to send a festival directly to a dungeon status:
 ```
 
 ```
-fest promote [flags]
+fest promote [festival] [flags]
 ```
 
 ### Options

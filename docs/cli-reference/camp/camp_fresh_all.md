@@ -33,13 +33,11 @@ camp fresh all [flags]
 
 ```
   -b, --branch string   Branch to create after syncing (overrides config)
-      --config string   config file (default: ~/.obey/campaign/config.json)
   -n, --dry-run         Preview without making changes
       --no-branch       Skip branch creation even if configured
       --no-color        disable colored output
       --no-prune        Skip pruning merged branches
       --no-push         Skip pushing the new branch upstream
-      --verbose         enable verbose output
 ```
 
 ### SEE ALSO

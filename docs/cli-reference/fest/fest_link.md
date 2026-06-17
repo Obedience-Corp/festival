@@ -43,9 +43,10 @@ fest link [path] [flags]
 ### Options
 
 ```
-  -h, --help   help for link
-      --json   output in JSON format
-      --show   show current link
+      --force   overwrite an existing active festival link
+  -h, --help    help for link
+      --json    output in JSON format
+      --show    show current link
 ```
 
 ### Options inherited from parent commands

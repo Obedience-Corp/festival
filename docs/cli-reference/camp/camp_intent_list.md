@@ -38,6 +38,7 @@ camp intent list [flags]
   -f, --format string    Output format: table, simple, json (default "table")
   -h, --help             help for list
       --horizon string   Filter by horizon
+      --json             emit a structured JSON result
   -n, --limit int        Limit results (0 = no limit)
   -p, --project string   Filter by project
   -S, --sort string      Sort by: updated, created, priority, title (default "updated")
@@ -48,9 +49,7 @@ camp intent list [flags]
 ### Options inherited from parent commands
 
 ```
-      --config string   config file (default: ~/.obey/campaign/config.json)
-      --no-color        disable colored output
-      --verbose         enable verbose output
+      --no-color   disable colored output
 ```
 
 ### SEE ALSO

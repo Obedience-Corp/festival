@@ -17,30 +17,35 @@ of the campaign root repository.
 
 Use --sub to show status of the submodule detected from your current directory.
 Use --project/-p to show status of a specific project.
-
-Examples:
-  camp status           # Full status
-  camp status -s        # Short format (git flag)
-  camp status --short   # Short format (git flag)
-  camp status --sub     # Status of current submodule
-  camp status -p projects/camp  # Status of camp project
+Pass git status flags after -- to forward them directly to git.
 
 ```
-camp status [flags]
+camp status [flags] [-- <git-flags>]
+```
+
+### Examples
+
+```
+  camp status           # Full status
+  camp status -s        # Short format
+  camp status --sub     # Status of current submodule
+  camp status -p projects/camp  # Status of camp project
 ```
 
 ### Options
 
 ```
-  -h, --help   help for status
+  -h, --help             help for status
+  -p, --project string   Status of a specific project path
+  -s, --short            Give output in short format
+      --show-refs        Show campaign root submodule ref changes
+      --sub              Status of the submodule detected from current directory
 ```
 
 ### Options inherited from parent commands
 
 ```
-      --config string   config file (default: ~/.obey/campaign/config.json)
-      --no-color        disable colored output
-      --verbose         enable verbose output
+      --no-color   disable colored output
 ```
 
 ### SEE ALSO

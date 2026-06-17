@@ -18,9 +18,21 @@ Add to your shell config:
   fish: camp shell-init fish | source
 
 This provides:
+  - A camp shell function that wraps the camp binary
   - cgo function for navigation
   - Tab completion for camp commands
   - Category shortcuts (p, c, f, etc.)
+
+IMPORTANT: this defines a shell function named 'camp' that wraps the camp
+binary. The function intercepts 'camp switch' and 'camp go' to perform
+directory changes in the current shell session.
+
+The following shell aliases and functions are also installed:
+  cr     camp run (run a just recipe in a project)
+  csw    camp switch (shorthand)
+  cint   camp intent add (quick idea capture)
+  cnote  camp intent note (add a note to an existing intent)
+  cie    camp intent explore (interactive intent browser)
 
 The cgo function enables quick navigation:
   cgo                 Interactive picker or jump to campaign root
@@ -54,9 +66,7 @@ camp shell-init <shell> [flags]
 ### Options inherited from parent commands
 
 ```
-      --config string   config file (default: ~/.obey/campaign/config.json)
-      --no-color        disable colored output
-      --verbose         enable verbose output
+      --no-color   disable colored output
 ```
 
 ### SEE ALSO

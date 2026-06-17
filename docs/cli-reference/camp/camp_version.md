@@ -12,6 +12,8 @@ Show version information
 
 Show camp version, build information, and runtime details.
 
+When both --short and --json are provided, --json wins.
+
 Examples:
   camp version           Show full version info
   camp version --short   Show only version number
@@ -32,9 +34,7 @@ camp version [flags]
 ### Options inherited from parent commands
 
 ```
-      --config string   config file (default: ~/.obey/campaign/config.json)
-      --no-color        disable colored output
-      --verbose         enable verbose output
+      --no-color   disable colored output
 ```
 
 ### SEE ALSO

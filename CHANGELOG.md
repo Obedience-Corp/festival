@@ -16,7 +16,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - `just test all` now includes the `plugin` gate, so plugin bundle breakage surfaces on every local default test run, not only in the release workflow.
 - Audited all 8 plugin skill descriptions for trigger accuracy and removed the `fest-methodology` "auto-activates" claim.
-- Updated bundled CLI release pins to `camp` v0.2.9 and `fest` v0.4.3.
+- Updated bundled CLI release pins to `camp` v0.2.10 and `fest` v0.4.4.
 - Bumped the plugin manifests to 1.1.0.
 
 ## [0.1.0] - 2026-03-04

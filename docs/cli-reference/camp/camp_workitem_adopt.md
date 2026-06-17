@@ -8,6 +8,16 @@ description: "Attach .workitem metadata to an existing directory"
 
 Attach .workitem metadata to an existing directory
 
+### Synopsis
+
+Attach workitem metadata to an existing campaign directory without moving it.
+
+The target directory must already exist and must not already contain a
+.workitem file. The command writes that .workitem metadata file with the
+selected type, title, generated or supplied id, and optional quest link. Use
+this when a workflow directory already exists and needs to become a tracked
+workitem.
+
 ```
 camp workitem adopt <dir> [flags]
 ```
@@ -17,7 +27,7 @@ camp workitem adopt <dir> [flags]
 ```
   -h, --help           help for adopt
       --id string      override the generated id
-      --quest string   capture quest_id from this quest (defaults to CAMP_QUEST env var if set)
+      --quest string   quest ID to associate (requires dev-profile camp; forward-compatible flag)
       --title string   human-readable title
       --type string    workitem type (feature, bug, chore, or custom) (default "feature")
 ```
@@ -25,9 +35,7 @@ camp workitem adopt <dir> [flags]
 ### Options inherited from parent commands
 
 ```
-      --config string   config file (default: ~/.obey/campaign/config.json)
-      --no-color        disable colored output
-      --verbose         enable verbose output
+      --no-color   disable colored output
 ```
 
 ### SEE ALSO

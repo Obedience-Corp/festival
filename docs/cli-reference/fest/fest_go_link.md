@@ -41,7 +41,8 @@ fest go link [path] [flags]
 ### Options
 
 ```
-  -h, --help   help for link
+      --force   overwrite an existing active festival link
+  -h, --help    help for link
 ```
 
 ### Options inherited from parent commands

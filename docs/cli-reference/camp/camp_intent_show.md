@@ -37,14 +37,13 @@ camp intent show <id> [flags]
 ```
   -f, --format string   Output format: text, json, yaml (default "text")
   -h, --help            help for show
+      --json            emit a structured JSON result
 ```
 
 ### Options inherited from parent commands
 
 ```
-      --config string   config file (default: ~/.obey/campaign/config.json)
-      --no-color        disable colored output
-      --verbose         enable verbose output
+      --no-color   disable colored output
 ```
 
 ### SEE ALSO
