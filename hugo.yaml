@@ -39,6 +39,10 @@ menu:
       parent: getting-started
       url: /getting-started/shell-setup/
       weight: 13
+    - name: Videos
+      parent: getting-started
+      url: /videos/
+      weight: 14
 
     - name: Methodology
       identifier: methodology
