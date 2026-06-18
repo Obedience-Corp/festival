@@ -30,26 +30,32 @@ explore notes, and festivals, and spans every project in the workspace.
 ## Loops start with a prompt
 
 A loop begins with an instruction you give an agent, and the first thing that
-instruction does is point the agent at the right working directory. This matters: a
-festival does its work in its **linked project or worktree**, not in the festival
-folder, so the loop runs from there. The bracketed paths below are where you point
-the agent (in most agent harnesses, with path autocomplete).
+instruction does is point the agent at the right working directory. Where that is
+depends on the work: **planning** a festival runs the loop in the festival directory
+itself, while **implementing** one runs it in the festival's linked project or
+worktree. `fest go` (the `fgo` shortcut) toggles between a festival and its linked
+working directory, so you move between the two as the work moves from planning to
+implementation. The bracketed paths below are where you point the agent (in most
+agent harnesses, with path autocomplete).
 
-Start a festival, when you know where it is linked:
+Plan a festival:
+
+> Navigate to `<festival path>` and run the fest next loop: run `fest next`, do the
+> step it prints, advance, and repeat. Stop at any approval gate and ask me.
+
+Implement a festival, when you know where it is linked:
 
 > Navigate to `<linked project or worktree path>` and run the fest next loop: run
 > `fest next`, do the task it prints, then `fest commit`, and repeat until the
-> festival is complete. Stop at any approval gate and ask me before continuing.
+> festival is complete.
 
-Start a festival, when you are not sure where it is linked:
+Implement a festival, when you are not sure where it is linked:
 
-> Navigate to `<festival path>`, run `fest go project` to jump to its linked working
+> Navigate to `<festival path>`, run `fest go` to toggle to its linked working
 > directory, then run the fest next loop there.
 
-`fest go project` (alias `fgo project`) moves from a festival to its linked project
-or worktree, and `fest go fest` goes back. Links are created with `fest link` from
-inside a festival and listed with `fest links`; if a festival has no link yet,
-`fest link` attaches one.
+Links are created with `fest link` from inside a festival and listed with
+`fest links`; if a festival has no link yet, `fest link` attaches one.
 
 Walk a standalone WORKFLOW.md (outside a festival):
 
@@ -114,10 +120,11 @@ DECOMPOSE to forward again is a real cycle. See
 ### Complex: a festival
 
 When the work needs decomposition, parallel tracks, and enforced verification, use
-a festival. It organizes work as phases, sequences, and tasks. Run the loop from
-the festival's linked project or worktree (`fest go project` gets you there).
-`fest next` walks that structure by dependency and progress; `fest commit` records
-each step with a traceability tag and advances the loop:
+a festival. It organizes work as phases, sequences, and tasks. Plan it from the
+festival directory, then implement it from the festival's linked project or worktree
+(`fest go` toggles between the two). `fest next` walks that structure by dependency
+and progress; `fest commit` records each step with a traceability tag and advances
+the loop:
 
 ```bash
 fest next                  # the next actionable task, by dependency and progress
