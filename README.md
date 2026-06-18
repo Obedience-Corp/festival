@@ -189,7 +189,7 @@ The same machinery runs at three scales, smallest first:
 
 > List the ready work items with `camp workitem --json`, and for each one create a worktree, dispatch a subagent to implement it, and open a PR.
 
-Full guide: **[Loops & Orchestration](https://docs.fest.build/guides/loops-and-orchestration/)**.
+Full guide: **[Loops & Orchestration](https://docs.fest.build/guides/loops-and-orchestration/)**. See a complete worked festival, plan to execution, in the [examples](https://github.com/Obedience-Corp/examples).
 
 ## Navigation
 
@@ -354,6 +354,7 @@ Full documentation at **[docs.fest.build](https://docs.fest.build)**:
 Repository entry points:
 
 - [README.zh-CN.md](README.zh-CN.md): Simplified Chinese overview for Chinese developers
+- [Example campaigns & festivals](https://github.com/Obedience-Corp/examples): real, cloneable example campaigns and festivals to read and run
 - [Examples](examples/): before/after shapes for resumable AI coding work
 - [Templates](templates/): reusable planning scaffolds for AI-assisted feature work
 

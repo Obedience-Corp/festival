@@ -43,6 +43,10 @@ menu:
       parent: getting-started
       url: /videos/
       weight: 14
+    - name: Examples
+      parent: getting-started
+      url: /examples/
+      weight: 15
 
     - name: Methodology
       identifier: methodology
