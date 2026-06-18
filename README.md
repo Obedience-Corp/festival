@@ -159,6 +159,38 @@ obey-campaign/
 
 Every project, every plan, every piece of context for this mission lives here. `cgo p fest` jumps to the fest project. `fgo` toggles between a festival and its linked project. Everything is navigable by both humans and AI agents.
 
+## Agentic Loops
+
+Festival is built to be run as a loop: you point an agent at a plan, and it works the plan one step at a time, committing as it goes, until the work is done. The same loop scales from a single checklist to an orchestration across many projects.
+
+```mermaid
+graph LR
+    A[fest next] --> B[Do the work]
+    B --> C[fest task completed]
+    C --> D[fest commit]
+    D --> A
+```
+
+`fest next` is the entry point: it resolves the next task with context from every level of the hierarchy, the agent does the work, `fest commit` records it, and the loop repeats until the festival is complete.
+
+You start a loop with a prompt that points the agent at the work and tells it to run the loop:
+
+> Navigate to `<linked project or worktree>` and run the fest next loop.
+
+> Navigate to `<festival path>`, run `fest go` to jump to its linked working directory, then run the fest next loop there.
+
+> Open `<path to a standalone WORKFLOW.md>` and run the fest next loop.
+
+The same machinery runs at three scales, smallest first:
+
+- **A standalone `WORKFLOW.md`** drives an ordered, repeatable process (a review, a release checklist) step by step with `fest next`.
+- **A festival** drives complex, multi-step work through phases, sequences, and tasks with quality gates. Plan it from the festival directory; implement it from the festival's linked project or worktree (`fest go` toggles between the two).
+- **An agent orchestration loop** reads the `camp workitem` queue and fans work out across projects, spinning up subagents and worktrees per item. Here the agent is the loop, not `fest next`:
+
+> List the ready work items with `camp workitem --json`, and for each one create a worktree, dispatch a subagent to implement it, and open a PR.
+
+Full guide: **[Loops & Orchestration](https://docs.fest.build/guides/loops-and-orchestration/)**.
+
 ## Navigation
 
 Shell integration gives you shorthand functions that make navigating a campaign instant. Package installs include helper files that load both CLIs:
@@ -259,8 +291,6 @@ camp leverage                    # Measure productivity leverage across projects
 
 ### fest: planning and execution
 
-The core workflow: create a festival, then let `fest next` drive execution.
-
 ```bash
 fest create festival --name "my-feature" --type standard  # Scaffold the beginner path
 fest next                        # Get the next task with layered context (festival -> phase -> sequence -> task)
@@ -271,15 +301,7 @@ fest commit -m "implement auth"  # Git commit with automatic festival/task refer
 fest understand                  # Teach an AI agent the full methodology
 ```
 
-`fest next` is the entry point for agents. It resolves what to do next, includes surrounding context from every level of the hierarchy, and respects workflow ordering and completion criteria.
-
-```mermaid
-graph LR
-    A[fest next] --> B[Do the work]
-    B --> C[fest task completed]
-    C --> D[fest commit]
-    D --> A
-```
+`fest next` is the entry point for agents: it resolves the next task with context from every level of the hierarchy and respects workflow ordering and completion criteria. See [Agentic Loops](#agentic-loops) for how it drives execution end to end.
 
 ## Claude Code Plugin
 
