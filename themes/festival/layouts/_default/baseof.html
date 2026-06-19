@@ -62,12 +62,26 @@
     try {
       urlTheme = new URLSearchParams(window.location.search).get('theme');
     } catch (e) {}
-    var defaultTheme = {{ if .IsHome }}"light"{{ else }}"dark"{{ end }};
+    var stored = null;
+    try { stored = localStorage.getItem('theme'); } catch (e) {}
+    var systemDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
     var theme = (urlTheme === 'dark' || urlTheme === 'light')
       ? urlTheme
-      : (localStorage.getItem('theme') || defaultTheme);
+      : (stored || (systemDark ? 'dark' : 'light'));
     document.documentElement.setAttribute('data-theme', theme);
   })();
+
+  // Follow the system color scheme when the user has not picked a theme manually.
+  if (window.matchMedia) {
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+      var picked = false;
+      try { picked = !!localStorage.getItem('theme'); } catch (err) {}
+      if (!picked) {
+        document.documentElement.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+        if (typeof updateThemeIcon === 'function') updateThemeIcon();
+      }
+    });
+  }
 
   function toggleTheme() {
     var current = document.documentElement.getAttribute('data-theme');
