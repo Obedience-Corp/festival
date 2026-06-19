@@ -83,10 +83,10 @@ fest next
 After installing, see the [quick start guide](https://docs.fest.build/getting-started/quickstart/) for shell setup and first steps.
 
 <p align="center">
-  <a href="https://youtu.be/FY6vm74oa8o?si=ZFg87vA7u9G_79bX"><img src="docs/images/demo_video_thumb.jpg" alt="Watch the demo" width="720"></a>
+  <img src="docs/images/fest-show.gif" alt="Animated fest show tree for the camp-hardening CH0001 festival" width="400">
 </p>
 
-<p align="center"><em><a href="https://docs.fest.build/videos/">More walkthroughs, demos, and speed runs &rarr;</a></em></p>
+<p align="center"><em><a href="https://github.com/Festival-Examples/example-camp-hardening-festival">See the festival behind this demo &rarr;</a></em></p>
 
 ## The Problem
 
@@ -357,6 +357,14 @@ Repository entry points:
 - [Example campaigns & festivals](https://github.com/Obedience-Corp/examples): real, cloneable example campaigns and festivals to read and run
 - [Examples](examples/): before/after shapes for resumable AI coding work
 - [Templates](templates/): reusable planning scaffolds for AI-assisted feature work
+
+### Watch
+
+<p align="center">
+  <a href="https://youtu.be/FY6vm74oa8o?si=ZFg87vA7u9G_79bX"><img src="docs/images/demo_video_thumb.jpg" alt="Watch the demo" width="720"></a>
+</p>
+
+<p align="center"><em><a href="https://docs.fest.build/videos/">More walkthroughs, demos, and speed runs &rarr;</a></em></p>
 
 ## License
 
