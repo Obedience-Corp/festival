@@ -85,7 +85,7 @@ fest next
 After installing, see the [quick start guide](https://docs.fest.build/getting-started/quickstart/) for shell setup and first steps.
 
 <p align="center">
-  <img src="docs/images/fest-show.gif" alt="Animated fest show tree for the camp-hardening CH0001 festival" width="400">
+  <img src="docs/images/fest-show.gif" alt="Animated fest watch tree for the camp-hardening CH0001 festival" width="400">
 </p>
 
 <p align="center"><em><a href="https://github.com/Festival-Examples/example-camp-hardening-festival">See the festival behind this demo &rarr;</a></em></p>
