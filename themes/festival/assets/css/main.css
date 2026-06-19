@@ -1155,6 +1155,16 @@ summary {
   text-align: center;
 }
 
+.home-hero__visual {
+  display: flex;
+  justify-content: center;
+}
+
+.home-hero__visual .terminal-demo {
+  width: 100%;
+  max-width: 360px;
+}
+
 .home-hero__stats {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
