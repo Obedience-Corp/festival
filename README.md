@@ -2,6 +2,8 @@
 
 ![Festival Banner](docs/images/festival_banner.png)
 
+<p align="center"><a href="https://github.com/Obedience-Corp/festival/stargazers"><img src="https://img.shields.io/github/stars/Obedience-Corp/festival?style=social" alt="Star Festival on GitHub"></a></p>
+
 **A standardized workspace and workflow for solving difficult, multi-faceted problems with AI.**
 
 To use AI to solve hard problems you need three things: **context**, **direction**, and **verification**. Festival provides a structured layer for each, resulting in dramatically fewer tokens and less time spent getting to the outcome you want.
@@ -365,6 +367,8 @@ Repository entry points:
 </p>
 
 <p align="center"><em><a href="https://docs.fest.build/videos/">More walkthroughs, demos, and speed runs &rarr;</a></em></p>
+
+<p align="center"><strong>Find Festival useful?</strong> <a href="https://github.com/Obedience-Corp/festival">Star the repo</a> so others can find it.</p>
 
 ## License
 
