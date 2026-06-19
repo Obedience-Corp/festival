@@ -39,5 +39,10 @@ destructive commands, more consistent JSON output contracts, and stronger git-ba
 workflows. Planned and executed end to end as 4 phases, 12 sequences, and 145 tasks,
 then promoted to `dungeon/completed`.
 
+**How it was built:** roughly four days of real work across three different agents,
+drafted in Fathom, built with Grok, and finished in Codex. The festival plan carried
+context and progress across all three, so each agent resumed where the last left off,
+a real demonstration of the agent-agnostic, resumable execution Festival is built for.
+
 More examples are added over time in the
 [Festival-Examples](https://github.com/Festival-Examples) organization.
