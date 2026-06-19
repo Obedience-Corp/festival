@@ -7,7 +7,8 @@
       <p>
         AI generates plans, code, and research faster than you can organize it.
         Festival gives every mission one workspace, so you stop asking
-        "where should this go?" and "what was I working on?" and start shipping outcomes.
+        "where should this go?" and "what was I working on?" Structured loops carry
+        long-running goals all the way to done, not just to a plan that stalls.
       </p>
 
       <div class="home-hero__actions">
@@ -16,6 +17,9 @@
         {{ end }}
         {{ with site.GetPage "/getting-started/quickstart" }}
           <a href="{{ .RelPermalink }}" class="btn btn--secondary">Read the Quick Start</a>
+        {{ end }}
+        {{ with site.Params.repo }}
+          <a href="{{ . }}" class="btn btn--secondary" target="_blank" rel="noopener">★ Star on GitHub</a>
         {{ end }}
       </div>
 
@@ -43,21 +47,11 @@
             <span class="terminal-demo__dot terminal-demo__dot--yellow"></span>
             <span class="terminal-demo__dot terminal-demo__dot--green"></span>
           </div>
-          <span class="terminal-demo__title">~/my-startup</span>
+          <span class="terminal-demo__title">fest watch</span>
         </div>
-        <div class="terminal-demo__body">
-          <div class="terminal-demo__line"><span class="terminal-demo__prompt">$</span> cgo f</div>
-          <div class="terminal-demo__line terminal-demo__line--muted">~/my-startup/festivals</div>
-          <div class="terminal-demo__line"><span class="terminal-demo__prompt">$</span> fest create festival --name "search-rewrite" --type standard</div>
-          <div class="terminal-demo__line terminal-demo__line--accent">✓ Festival created: search-rewrite</div>
-          <div class="terminal-demo__line terminal-demo__line--muted">001_INGEST/ 002_PLAN/ 003_IMPLEMENT/</div>
-          <div class="terminal-demo__line"><span class="terminal-demo__prompt">$</span> fest validate</div>
-          <div class="terminal-demo__line terminal-demo__line--accent">✓ Festival is valid. Ready for execution.</div>
-          <div class="terminal-demo__line"><span class="terminal-demo__prompt">$</span> fest next</div>
-          <div class="terminal-demo__line terminal-demo__line--highlight">→ 003_IMPLEMENT/01/03 search_query_builder</div>
-          <div class="terminal-demo__line terminal-demo__line--muted">3 festivals active. Agents working autonomously.</div>
-        </div>
+        <img src="/images/fest-show.gif" alt="fest watch rendering a worked festival tree of phases, sequences, and tasks" style="display:block;width:100%;height:auto;" loading="lazy">
       </div>
+      <p class="home-hero__visual-caption"><code>fest watch</code> on a real festival. fest is the planning system that breaks a long-running, complex, or highly specific goal into structured work and drives it to completion.</p>
     </div>
   </section>
 
@@ -119,10 +113,11 @@
 
   <section class="home-section home-section--contrast">
     <div class="home-section__intro">
-      <h2 class="home-section__heading">Why Teams Use Festival</h2>
+      <h2 class="home-section__heading">Why People Use Festival</h2>
       <p class="home-section__lede">
-        AI coding tools are fast inside a repo. The work they produce still has to live somewhere.
-        Festival is the organizational layer that keeps it in order.
+        AI generates a flood of plans, code, and research. Getting good results out of it still
+        takes constant manual steering. People use Festival because they want AI to do the work
+        the right way the first time, not after a dozen rounds of correction.
       </p>
     </div>
 
@@ -153,10 +148,14 @@
       <div class="home-install__copy">
         <h2 class="home-section__heading">Install and Start Fast</h2>
         <p class="home-section__lede">
-          The launch-critical path is simple: install Festival, create a campaign, and get to the first actionable `fest next`.
+          The launch-critical path is simple: install Festival with npm or Homebrew, create a campaign, and get to the first actionable `fest next`.
         </p>
       </div>
       <div class="home-install__actions">
+        <div class="home-install__terminal">
+          <span class="home-install__prompt">$</span>
+          <code>npm install -g @obedience-corp/festival</code>
+        </div>
         <div class="home-install__terminal">
           <span class="home-install__prompt">$</span>
           <code>brew install --cask Obedience-Corp/tap/festival</code>
@@ -180,6 +179,9 @@
       <span>Codex</span>
       <span>OpenCode</span>
       <span>Crush</span>
+      <span>Grok build</span>
+      <span>OpenClaw</span>
+      <span>Hermes</span>
       <span>Aider</span>
       <span>Cursor Agents</span>
       <span>Custom tooling</span>
