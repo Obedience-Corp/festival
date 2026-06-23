@@ -84,6 +84,9 @@ fest next
 
 After installing, see the [quick start guide](https://docs.fest.build/getting-started/quickstart/) for shell setup and first steps.
 
+<p align="center"><strong>A 4-day festival, planned and built across three AI tools</strong></p>
+<p align="center"><em>Planned in Claude Code (Fathom), promoted to active, then the <code>fest next</code> loop ran in grok-build, stopped 2 days in, and finished in Codex.</em></p>
+
 <p align="center">
   <img src="docs/images/fest-show.gif" alt="Animated fest watch tree for the camp-hardening CH0001 festival" width="400">
 </p>
