@@ -96,7 +96,7 @@ Run 'fest understand' to learn the methodology before executing tasks.
 * [fest unlink](../fest_unlink/)	 - Remove festival-project link (context-aware)
 * [fest validate](../fest_validate/)	 - Check festival structure - find missing task files and issues
 * [fest version](../fest_version/)	 - Show version information
-* [fest walk](../fest_walk/)	 - Guided overview of a festival
+* [fest walk](../fest_walk/)	 - Guided overview of a festival or workflow
 * [fest watch](../fest_watch/)	 - Watch a festival's in-progress work
 * [fest wizard](../fest_wizard/)	 - Interactive guidance and assistance for festival creation
 * [fest workflow](../fest_workflow/)	 - Manage workflow-based phase execution

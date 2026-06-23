@@ -16,6 +16,10 @@ Run from the directory containing WORKFLOW.md. The command refuses to run
 inside a festival phase. Use --force to overwrite an existing
 .workflow/workflow.yaml.
 
+To scaffold a new WORKFLOW.md and initialize its runtime in one step, use
+'fest workflow create <name>' (alias of 'fest create workflow'). init is for a
+WORKFLOW.md you have already authored.
+
 This command does not create .workitem; that file is owned by camp
 (see 'camp workitem create' and 'camp workitem adopt').
 

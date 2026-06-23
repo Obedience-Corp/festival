@@ -1,28 +1,32 @@
 ---
 title: "fest walk"
 linkTitle: "fest walk"
-description: "Guided overview of a festival"
+description: "Guided overview of a festival or workflow"
 ---
 
 ## fest walk
 
-Guided overview of a festival
+Guided overview of a festival or workflow
 
 ### Synopsis
 
-Display a guided orientation overview of a festival.
+Display a guided orientation overview of a festival or workflow.
 
-Shows what the festival is, where it is, its current status and progress,
-the next task, blocked tasks, active quality gates, and any warnings.
-This is a read-only orientation command; it never mutates festival state.
+For festivals, shows what the festival is, where it is, its current status
+and progress, the next task, blocked tasks, active quality gates, and any
+warnings. For standalone WORKFLOW.md files, shows workflow mode, run status,
+step progress, and the current step. This is a read-only orientation command;
+it never mutates festival or workflow state.
 
-Useful for quickly orienting inside a festival before continuing work,
-especially for rituals where the template and active run are distinct.
+Useful for quickly orienting inside a festival or standalone workflow before
+continuing work, especially for rituals where the template and active run are
+distinct.
 
 EXAMPLES:
 ```bash
-  fest walk                      # Walk current festival from cwd
+  fest walk                      # Walk current festival or WORKFLOW.md from cwd
   fest walk festivals/active/my-festival
+  fest walk path/to/workflow-dir
   fest walk --json               # Machine-readable output
 ```
 
