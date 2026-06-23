@@ -59,6 +59,7 @@ camp [flags]
 * [camp detach](../camp_detach/)	 - Remove the attachment marker from a directory
 * [camp doctor](../camp_doctor/)	 - Diagnose and fix campaign health issues
 * [camp dungeon](../camp_dungeon/)	 - Manage the campaign dungeon
+* [camp festivals](../camp_festivals/)	 - List festivals across campaigns, filtered by org/tag
 * [camp fresh](../camp_fresh/)	 - Post-merge branch cycling: sync to default branch and optionally create a new working branch
 * [camp gather](../camp_gather/)	 - Import external data into the intent system
 * [camp go](../camp_go/)	 - Navigate to campaign directories
@@ -66,13 +67,16 @@ camp [flags]
 * [camp init](../camp_init/)	 - Initialize a new campaign
 * [camp intent](../camp_intent/)	 - Manage campaign intents
 * [camp leverage](../camp_leverage/)	 - Compute leverage scores for campaign projects
+* [camp lifecycle](../camp_lifecycle/)	 - Manage campaign lifecycle status
 * [camp list](../camp_list/)	 - List all registered campaigns
 * [camp log](../camp_log/)	 - Show git log of the campaign
 * [camp move](../camp_move/)	 - Move a file or directory within the campaign
+* [camp org](../camp_org/)	 - Group campaigns into orgs
 * [camp pin](../camp_pin/)	 - Pin a directory
 * [camp pins](../camp_pins/)	 - List all pinned directories
 * [camp plugins](../camp_plugins/)	 - List discovered camp plugins on PATH
 * [camp project](../camp_project/)	 - Manage campaign projects
+* [camp promote](../camp_promote/)	 - Promote any intent, workitem, or festival (universal front door)
 * [camp pull](../camp_pull/)	 - Pull latest changes from remote
 * [camp push](../camp_push/)	 - Push campaign changes to remote
 * [camp refs-sync](../camp_refs-sync/)	 - Sync submodule ref pointers in campaign root
@@ -82,13 +86,13 @@ camp [flags]
 * [camp run](../camp_run/)	 - Execute command from campaign root, or just recipe in a project
 * [camp settings](../camp_settings/)	 - Manage camp configuration
 * [camp shell-init](../camp_shell-init/)	 - Output shell initialization code
-* [camp shelve](../camp_shelve/)	 - Shelve the workitem at cwd to a dungeon status
 * [camp shortcuts](../camp_shortcuts/)	 - List all available shortcuts
 * [camp skills](../camp_skills/)	 - Manage campaign skill directory links
 * [camp stage](../camp_stage/)	 - Stage changes in the campaign root
 * [camp status](../camp_status/)	 - Show git status of the campaign
 * [camp switch](../camp_switch/)	 - Switch to a different campaign
 * [camp sync](../camp_sync/)	 - Safely synchronize submodules
+* [camp tag](../camp_tag/)	 - Label campaigns with tags
 * [camp transfer](../camp_transfer/)	 - Copy files between campaigns
 * [camp unpin](../camp_unpin/)	 - Remove a saved pin
 * [camp unregister](../camp_unregister/)	 - Remove campaign from registry

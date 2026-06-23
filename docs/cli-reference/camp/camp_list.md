@@ -31,6 +31,7 @@ Examples:
   camp list --format json    Output as JSON
   camp list --sort name      Sort by name
   camp list --format simple  Names only for scripting
+  camp list --count          Print only the total number of campaigns
 
 ```
 camp list [flags]
@@ -39,10 +40,17 @@ camp list [flags]
 ### Options
 
 ```
+      --all              Show all statuses (default hides inactive/reference)
+      --count            Print only the total number of campaigns
   -f, --format string    Output format (table, simple, json) (default "table")
+      --group            Force org grouping
   -h, --help             help for list
       --json             Output as JSON (shorthand for --format json)
+      --no-group         Suppress org grouping
+      --org string       Only campaigns in this org
   -s, --sort string      Sort by (name, accessed, type) (default "accessed")
+      --status string    Only campaigns in this status (active, inactive, reference)
+      --tag strings      Only campaigns carrying this tag (repeat for AND)
       --verify-verbose   Show detailed verification output
 ```
 

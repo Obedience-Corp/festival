@@ -25,6 +25,7 @@ Examples:
   camp project list --json        Output as JSON
   camp project list --format json Output as JSON
   camp project list --format simple  Names only for scripting
+  camp project list --count       Print only the total number of projects
 
 ```
 camp project list [flags]
@@ -33,6 +34,7 @@ camp project list [flags]
 ### Options
 
 ```
+      --count           Print only the total number of projects
   -f, --format string   Output format (table, simple, json) (default "table")
   -h, --help            help for list
       --json            Output as JSON (shorthand for --format json)
