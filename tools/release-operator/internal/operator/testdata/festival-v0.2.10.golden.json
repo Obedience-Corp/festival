@@ -1,0 +1,122 @@
+{
+  "schema_version": 1,
+  "id": "obedience-corp/festival",
+  "class": "product",
+  "display_name": "Festival Suite",
+  "summary": "The camp + fest CLI suite, released and versioned together.",
+  "description": "Festival Methodology CLI suite. camp and fest are co-tested and shipped as one versioned product; both binaries report the festival release version.",
+  "homepage": "https://fest.build",
+  "licenses": [
+    "FSL-1.1-ALv2"
+  ],
+  "aliases": [
+    "festival",
+    "camp",
+    "fest"
+  ],
+  "tags": [
+    "festival",
+    "planning",
+    "cli"
+  ],
+  "supported_scopes": [
+    "user"
+  ],
+  "provides_binaries": [
+    "camp",
+    "fest"
+  ],
+  "host_runtimes": [
+    {
+      "runtime": "camp-cli",
+      "display_name": "Camp CLI plugins",
+      "features": []
+    },
+    {
+      "runtime": "fest-cli",
+      "display_name": "Fest CLI plugins",
+      "features": []
+    },
+    {
+      "runtime": "fest-extension",
+      "display_name": "Fest methodology extensions",
+      "features": [
+        "marketplace_extension_source_v1"
+      ]
+    }
+  ],
+  "releases": [
+    {
+      "version": "0.2.10",
+      "channel": "stable",
+      "published_at": "2026-06-23T00:50:22Z",
+      "components": {
+        "camp": "0.2.11",
+        "fest": "0.4.5"
+      },
+      "compatibility": {
+        "os": [
+          "darwin",
+          "linux"
+        ],
+        "arch": [
+          "amd64",
+          "arm64"
+        ]
+      },
+      "dependencies": [],
+      "artifacts": [
+        {
+          "kind": "suite-archive",
+          "os": "darwin",
+          "arch": "all",
+          "filename": "festival-0.2.10-macOS-all.tar.gz",
+          "url": "https://github.com/Obedience-Corp/festival/releases/download/v0.2.10/festival-0.2.10-macOS-all.tar.gz",
+          "sha256": "4eab84d04cb088a8abf98bd740c0b20b685be5e8e6863c4752edc0d939f915a3",
+          "binaries": [
+            "camp",
+            "fest"
+          ]
+        },
+        {
+          "kind": "suite-archive",
+          "os": "linux",
+          "arch": "amd64",
+          "filename": "festival-0.2.10-linux-x86_64.tar.gz",
+          "url": "https://github.com/Obedience-Corp/festival/releases/download/v0.2.10/festival-0.2.10-linux-x86_64.tar.gz",
+          "sha256": "faab388d34c7d1224c3a7d940256b45b1e52af9f89f8e72a1b50ef377a42d0aa",
+          "binaries": [
+            "camp",
+            "fest"
+          ]
+        },
+        {
+          "kind": "suite-archive",
+          "os": "linux",
+          "arch": "arm64",
+          "filename": "festival-0.2.10-linux-arm64.tar.gz",
+          "url": "https://github.com/Obedience-Corp/festival/releases/download/v0.2.10/festival-0.2.10-linux-arm64.tar.gz",
+          "sha256": "2f92ec66886efd8a4eca34db169c49dff9408ab7c565dec7f8557e4ddd61302b",
+          "binaries": [
+            "camp",
+            "fest"
+          ]
+        }
+      ],
+      "install": {
+        "entries": [
+          {
+            "kind": "binary",
+            "source": "camp",
+            "executable_name": "camp"
+          },
+          {
+            "kind": "binary",
+            "source": "fest",
+            "executable_name": "fest"
+          }
+        ]
+      }
+    }
+  ]
+}

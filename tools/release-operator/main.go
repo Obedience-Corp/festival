@@ -162,9 +162,107 @@ func run(args []string) error {
 			return err
 		}
 		return runCleanup(ctx, *tag)
+	case "emit-marketplace-entry":
+		fs := commandFlags("emit-marketplace-entry")
+		repoRoot := fs.String("repo-root", ".", "festival repo root")
+		tag := fs.String("tag", "", "release tag, e.g. v0.2.10 (required)")
+		channel := fs.String("channel", "stable", "release channel")
+		checksums := fs.String("checksums", "dist/checksums.txt", "path to checksums.txt")
+		output := fs.String("output", "dist/marketplace/obey-package.json", "output path for the generated product manifest")
+		publishedAt := fs.String("published-at", "", "RFC3339 published timestamp (optional)")
+		if err := fs.Parse(args[1:]); err != nil {
+			return err
+		}
+		if *tag == "" {
+			return errors.New("missing required --tag")
+		}
+		return runEmitMarketplaceEntry(*repoRoot, *tag, *channel, *checksums, *output, *publishedAt)
 	default:
 		return fmt.Errorf("unknown command %q", args[0])
 	}
+}
+
+func runEmitMarketplaceEntry(repoRoot, tag, channel, checksumsPath, outputPath, publishedAt string) error {
+	festTag, err := exactTagAt(filepath.Join(repoRoot, "fest"))
+	if err != nil {
+		return fmt.Errorf("resolve fest tag: %w", err)
+	}
+	campTag, err := exactTagAt(filepath.Join(repoRoot, "camp"))
+	if err != nil {
+		return fmt.Errorf("resolve camp tag: %w", err)
+	}
+	if festTag == "" || campTag == "" {
+		return fmt.Errorf("fest/camp submodules are not pinned to exact tags (fest=%q camp=%q)", festTag, campTag)
+	}
+
+	checksumsAbs := checksumsPath
+	if !filepath.IsAbs(checksumsAbs) {
+		checksumsAbs = filepath.Join(repoRoot, checksumsPath)
+	}
+	arts, err := suiteArtifactsFromChecksums(checksumsAbs, tag)
+	if err != nil {
+		return err
+	}
+
+	out, err := operator.BuildMarketplaceEntry(operator.MarketplaceEntryInput{
+		FestivalVersion: strings.TrimPrefix(tag, "v"),
+		Channel:         channel,
+		PublishedAt:     publishedAt,
+		CampVersion:     strings.TrimPrefix(campTag, "v"),
+		FestVersion:     strings.TrimPrefix(festTag, "v"),
+		Artifacts:       arts,
+	})
+	if err != nil {
+		return err
+	}
+
+	outAbs := outputPath
+	if !filepath.IsAbs(outAbs) {
+		outAbs = filepath.Join(repoRoot, outputPath)
+	}
+	if err := os.MkdirAll(filepath.Dir(outAbs), 0o755); err != nil {
+		return fmt.Errorf("create output dir: %w", err)
+	}
+	if err := os.WriteFile(outAbs, out, 0o644); err != nil {
+		return fmt.Errorf("write %s: %w", outAbs, err)
+	}
+	fmt.Printf("wrote %s (%d bytes)\n", outAbs, len(out))
+	return nil
+}
+
+func suiteArtifactsFromChecksums(path, tag string) ([]operator.ArtifactInput, error) {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return nil, fmt.Errorf("read checksums: %w", err)
+	}
+	platform := map[string][2]string{
+		"macOS-all.tar.gz":    {"darwin", "all"},
+		"linux-x86_64.tar.gz": {"linux", "amd64"},
+		"linux-arm64.tar.gz":  {"linux", "arm64"},
+	}
+	var arts []operator.ArtifactInput
+	for _, line := range strings.Split(strings.TrimSpace(string(data)), "\n") {
+		fields := strings.Fields(line)
+		if len(fields) != 2 {
+			continue
+		}
+		sum, name := fields[0], fields[1]
+		for suffix, osarch := range platform {
+			if strings.HasSuffix(name, suffix) {
+				arts = append(arts, operator.ArtifactInput{
+					OS:       osarch[0],
+					Arch:     osarch[1],
+					Filename: name,
+					URL:      fmt.Sprintf("https://github.com/Obedience-Corp/festival/releases/download/%s/%s", tag, name),
+					SHA256:   sum,
+				})
+			}
+		}
+	}
+	if len(arts) != 3 {
+		return nil, fmt.Errorf("expected 3 suite artifacts in %s, found %d", path, len(arts))
+	}
+	return arts, nil
 }
 
 func runDraftCommand(args []string, modeName string) error {
