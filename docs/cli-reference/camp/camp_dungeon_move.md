@@ -12,8 +12,10 @@ Move dungeon items between statuses
 
 Move items within the dungeon or from the parent directory into the dungeon.
 
-Without --triage, moves an item already in the dungeon root to a status directory.
-With --triage, moves an item from the parent directory into the dungeon.
+By default, moves an item already in the dungeon root to a status directory.
+When the item exists in the parent directory and not in the dungeon root, the
+command automatically treats it as triage work and moves it into the dungeon.
+Use --triage to force a parent-directory move.
 With --triage and --to-docs, routes an item to an existing campaign-root docs/<subdirectory>.
 With --workitem, resolves a campaign workitem from anywhere and moves its directory
 into the workitem type's local dungeon.
