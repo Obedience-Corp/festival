@@ -81,9 +81,10 @@ jobs:
         env:
           HOMEBREW_TAP_GITHUB_TOKEN: ${{ secrets.HOMEBREW_TAP_GITHUB_TOKEN }}
           AUR_SSH_KEY: ${{ secrets.AUR_SSH_KEY }}
+          MARKETPLACE_PUBLISH_TOKEN: ${{ secrets.MARKETPLACE_PUBLISH_TOKEN }}
         run: |
           missing=0
-          for name in HOMEBREW_TAP_GITHUB_TOKEN AUR_SSH_KEY; do
+          for name in HOMEBREW_TAP_GITHUB_TOKEN AUR_SSH_KEY MARKETPLACE_PUBLISH_TOKEN; do
             if [ -z "${!name:-}" ]; then
               echo "::error::Missing required secret ${name}"
               missing=1
@@ -166,6 +167,22 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           RELEASE_MODE: ${{ steps.release_channel.outputs.mode }}
         run: scripts/publish_npm_package.sh
+
+      - name: Generate marketplace entry
+        run: |
+          go -C tools/release-operator run . emit-marketplace-entry \
+            --repo-root ../.. \
+            --tag "${GITHUB_REF_NAME}" \
+            --channel "${{ steps.release_channel.outputs.mode }}" \
+            --checksums dist/checksums.txt \
+            --output dist/marketplace/obey-package.json
+
+      - name: Publish marketplace entry
+        env:
+          MARKETPLACE_PUBLISH_TOKEN: ${{ secrets.MARKETPLACE_PUBLISH_TOKEN }}
+          FESTIVAL_TAG: ${{ github.ref_name }}
+          RELEASE_CHANNEL: ${{ steps.release_channel.outputs.mode }}
+        run: scripts/publish_marketplace_entry.sh
 
   npm-publish:
     if: github.event_name == 'workflow_dispatch'
