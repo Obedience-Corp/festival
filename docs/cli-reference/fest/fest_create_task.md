@@ -28,16 +28,19 @@ TEMPLATE VARIABLES (automatically set from --name):
 
 EXAMPLES:
 ```bash
-  # Create single task in current sequence
+  # Create single task in current sequence (appends at the end)
   fest create task --name "design endpoints" --json
 
-  # Create multiple tasks at once (sequential numbering)
+  # Create multiple tasks at once (sequential numbering, appended at end)
   fest create task --name "requirements" --name "design" --name "implement"
   # Creates: 01_requirements.md, 02_design.md, 03_implement.md
 
-  # Create tasks starting after position 2
+  # Insert tasks after position 2 (existing tasks renumber down, reported)
   fest create task --after 2 --name "new step" --name "another step"
   # Creates: 03_new_step.md, 04_another_step.md
+
+  # Insert at the beginning
+  fest create task --after 0 --name "prerequisite"
 
   # Create task in specific sequence
   fest create task --name "setup" --path ./002_IMPLEMENT/01_api --json
@@ -65,7 +68,7 @@ fest create task [flags]
 ### Options
 
 ```
-      --after int             Insert after this number (0 inserts at beginning)
+      --after int             Insert after this task number (-1 or omit to append at end; 0 inserts at beginning) (default -1)
       --agent                 Strict mode: require markers, auto-validate, block on errors, JSON output
       --dry-run               Show template markers without creating file
   -h, --help                  help for task
