@@ -7,7 +7,8 @@ title: "Camp and Fest Plugins"
 Camp and Fest plugins use the same idea as Git plugins: put an executable with
 the right name on your `PATH`, and the CLI can run it as a subcommand.
 
-That is all a basic plugin needs.
+There is no SDK, registration step, or required manifest for the basic case. If
+you can write a command-line script, you can write a Camp or Fest plugin.
 
 ## The Short Version
 
@@ -36,11 +37,12 @@ fest <name>
 ```
 
 The plugin can be a shell script, Python script, Go binary, Node script, Rust
-binary, or anything else your operating system can execute.
+binary, or anything else your operating system can execute. Camp and Fest do
+not care what language it is written in.
 
-## Create A Camp Plugin
+## Create a Camp Plugin
 
-Create a file named `camp-hello`:
+Here is a complete Camp plugin. Create a file named `camp-hello`:
 
 ```bash
 #!/usr/bin/env bash
@@ -65,16 +67,16 @@ camp hello
 camp hello --name Ada
 ```
 
-Camp looks for `camp-hello`, runs it, and forwards the arguments after
-`hello`. If Camp can detect the current campaign root, it also sets `CAMP_ROOT`
-for the plugin process.
+When you run `camp hello`, Camp looks for `camp-hello`, runs it, and forwards
+the arguments after `hello`. If Camp can detect the current campaign root, it
+also sets `CAMP_ROOT` for the plugin process.
 
 The current public example of this pattern is `camp-graph`: installing the
 `camp-graph` executable makes `camp graph` available.
 
-## Create A Fest Plugin
+## Create a Fest Plugin
 
-Create a file named `fest-stats`:
+Fest works the same way. Create a file named `fest-stats`:
 
 ```bash
 #!/usr/bin/env bash
@@ -114,9 +116,9 @@ FEST_PLUGIN_COMMAND=<resolved command>
 
 ## Optional Fest Manifest
 
-Fest can discover simple `fest-*` executables directly from `PATH`. A manifest
-is optional; use one when you want richer metadata such as summaries, examples,
-or usage hints.
+Fest can discover simple `fest-*` executables directly from `PATH`, so you do
+not need a manifest for your first plugin. Add one when you want richer metadata
+such as summaries, examples, or usage hints.
 
 ```yaml
 version: 1
@@ -128,7 +130,7 @@ plugins:
       - "fest export jira --project PROJ"
 ```
 
-Manifest-based plugins are useful for team config repos and future help
+Manifest-based plugins are useful for team config repos and richer help
 surfaces. For a first plugin, start with an executable on `PATH`.
 
 ## Shipping Support Files
