@@ -74,6 +74,7 @@ Run 'fest understand' to learn the methodology before executing tasks.
 * [fest move](../fest_move/)	 - Move files between festival and linked project
 * [fest next](../fest_next/)	 - Find the next task to work on
 * [fest parse](../fest_parse/)	 - Parse festival documents into structured output
+* [fest plugins](../fest_plugins/)	 - List discovered fest plugins
 * [fest progress](../fest_progress/)	 - Track and display festival execution progress
 * [fest promote](../fest_promote/)	 - Promote a festival to the next lifecycle status
 * [fest remove](../fest_remove/)	 - Remove festival elements and renumber

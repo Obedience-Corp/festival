@@ -16,7 +16,7 @@ Refuses on linked-project markers; use 'camp project unlink' for those.
 The user-managed symlink (if any) is not modified.
 
 Examples:
-  camp detach ai_docs/examples/external-repo
+  camp detach docs/examples/external-repo
   camp detach ~/scratch/notes-link
 
 ```

@@ -18,7 +18,6 @@ Creates the standard campaign directories:
   projects/               - Project repositories (submodules or worktrees)
   projects/worktrees/     - Git worktrees for parallel development
   festivals/              - Festival methodology workspace (via fest init)
-  ai_docs/                - AI-generated documentation
   docs/                   - Human-authored documentation
   dungeon/                - Archived and deprioritized work
   workflow/               - Workflow management
