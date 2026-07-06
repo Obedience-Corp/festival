@@ -318,6 +318,10 @@ claude plugin add --source git-subdir --url Obedience-Corp/festival --path claud
 
 If `fest` and `camp` aren't already installed, the plugin installs them automatically on first session. It also checks for updates once per day and notifies you when a new release is available.
 
+Building an Obedience Corp plugin? See the [plugin authoring guide](docs/guides/plugin-authoring.md)
+for runtime asset layout and install conventions, including the standard
+`~/.obey/plugins/<plugin-name>` managed directory.
+
 ### What you get
 
 | Component | Examples |
