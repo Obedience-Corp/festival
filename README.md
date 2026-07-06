@@ -318,6 +318,10 @@ claude plugin add --source git-subdir --url Obedience-Corp/festival --path claud
 
 If `fest` and `camp` aren't already installed, the plugin installs them automatically on first session. It also checks for updates once per day and notifies you when a new release is available.
 
+Building a Camp or Fest plugin? See the [plugin authoring guide](docs/guides/plugin-authoring.md).
+The basic model is the same as Git plugins: put a `camp-<name>` or `fest-<name>`
+executable on your `PATH`.
+
 ### What you get
 
 | Component | Examples |
