@@ -12,6 +12,8 @@ import (
 	"github.com/Obedience-Corp/festival/tools/release-operator/internal/operator"
 )
 
+const festivalRepoSlug = "Obedience-Corp/festival"
+
 var submodules = []string{"fest", "camp"}
 
 type repoContext struct {
@@ -182,7 +184,25 @@ func releaseCommitMessage(currentFestTag, currentCampTag, festTag, campTag strin
 	}
 }
 
-func (r *repoContext) commitPinnedArtifacts(currentFestTag, currentCampTag, festTag, campTag string) error {
+const shipBranchPrefix = "release-pin/"
+
+func shipBranchName(releaseTag string) string {
+	return shipBranchPrefix + releaseTag
+}
+
+func shipsViaPullRequest(branch string) bool {
+	return branch == "main"
+}
+
+func releasePRBody(releaseTag, message string) string {
+	return fmt.Sprintf("%s.\n\nCreated by the release operator: main only accepts changes through pull requests, so the pin commit ships through this PR. After the squash merge, the operator tags %s on main to trigger release CI.", message, releaseTag)
+}
+
+func (r *repoContext) currentBranch() (string, error) {
+	return r.git("rev-parse", "--abbrev-ref", "HEAD")
+}
+
+func (r *repoContext) shipPinnedArtifacts(releaseTag, currentFestTag, currentCampTag, festTag, campTag string) error {
 	hasDiff, err := r.cachedDiffExists("fest", "camp", "docs/cli-reference")
 	if err != nil {
 		return err
@@ -191,10 +211,104 @@ func (r *repoContext) commitPinnedArtifacts(currentFestTag, currentCampTag, fest
 		fmt.Printf("Submodule pointers and docs already at fest=%s, camp=%s; no release commit needed.\n", festTag, campTag)
 		return nil
 	}
-	if err := r.runGit("commit", "-m", releaseCommitMessage(currentFestTag, currentCampTag, festTag, campTag)); err != nil {
+
+	branch, err := r.currentBranch()
+	if err != nil {
 		return err
 	}
-	return r.runGit("push", "origin", "HEAD")
+	message := releaseCommitMessage(currentFestTag, currentCampTag, festTag, campTag)
+	if !shipsViaPullRequest(branch) {
+		if err := r.runGit("commit", "-m", message); err != nil {
+			return err
+		}
+		return r.runGit("push", "origin", "HEAD")
+	}
+	return r.shipViaPullRequest(branch, releaseTag, message)
+}
+
+func (r *repoContext) shipViaPullRequest(baseBranch, releaseTag, message string) error {
+	if !ghAuthenticated() {
+		return fmt.Errorf("%s only accepts changes through pull requests and gh is not authenticated; run 'gh auth login' and retry", baseBranch)
+	}
+
+	shipBranch := shipBranchName(releaseTag)
+	if err := r.runGit("switch", "-C", shipBranch); err != nil {
+		return err
+	}
+	if err := r.runGit("commit", "-m", message); err != nil {
+		return err
+	}
+	if err := r.runGit("push", "-f", "-u", "origin", shipBranch); err != nil {
+		return err
+	}
+
+	if !r.hasOpenPullRequest(shipBranch) {
+		if err := runCmd(r.Root, nil, "gh", "pr", "create", "--repo", festivalRepoSlug, "--base", baseBranch, "--head", shipBranch, "--title", message, "--body", releasePRBody(releaseTag, message)); err != nil {
+			return err
+		}
+	}
+	if err := runCmd(r.Root, nil, "gh", "pr", "merge", shipBranch, "--repo", festivalRepoSlug, "--squash", "--delete-branch"); err != nil {
+		return fmt.Errorf("merge release PR for %s: %w (resolve it on GitHub, then rerun the same release command)", shipBranch, err)
+	}
+
+	if err := r.runGit("switch", baseBranch); err != nil {
+		return err
+	}
+	if _, err := r.git("rev-parse", "--verify", "refs/heads/"+shipBranch); err == nil {
+		if err := r.runGit("branch", "-D", shipBranch); err != nil {
+			return err
+		}
+	}
+	if err := r.runGit("pull", "--ff-only", "origin", baseBranch); err != nil {
+		return err
+	}
+	if err := r.runGit("submodule", "update", "--init"); err != nil {
+		return err
+	}
+	dirty, err := worktreeDirty(r.Root)
+	if err != nil {
+		return err
+	}
+	if dirty {
+		return fmt.Errorf("festival repo is dirty after merging %s; resolve manually before tagging", shipBranch)
+	}
+	return nil
+}
+
+func (r *repoContext) hasOpenPullRequest(branch string) bool {
+	out, err := cmdOutput(r.Root, nil, "gh", "pr", "view", branch, "--repo", festivalRepoSlug, "--json", "state", "--jq", ".state")
+	if err != nil {
+		return false
+	}
+	return strings.TrimSpace(out) == "OPEN"
+}
+
+func (r *repoContext) prepareMainForBundle() error {
+	branch, err := r.currentBranch()
+	if err != nil {
+		return err
+	}
+	if strings.HasPrefix(branch, shipBranchPrefix) {
+		if err := r.runGit("switch", "main"); err != nil {
+			return err
+		}
+		if err := r.runGit("branch", "-D", branch); err != nil {
+			return err
+		}
+		branch = "main"
+	}
+	if branch != "main" {
+		return nil
+	}
+	if dirty, err := worktreeDirty(r.Root); err != nil {
+		return err
+	} else if dirty {
+		return errors.New("festival repo has uncommitted changes")
+	}
+	if err := r.runGit("pull", "--ff-only", "origin", "main"); err != nil {
+		return err
+	}
+	return r.runGit("submodule", "update", "--init")
 }
 
 func (r *repoContext) ensureTagAbsent(tag string) error {
@@ -523,7 +637,7 @@ func runDraftFromLatest(ctx *repoContext, version string, mode releaseMode, iter
 		return fmt.Errorf("submodules are not pinned to exact %s tags after refresh", mode.Name)
 	}
 
-	if err := ctx.commitPinnedArtifacts(currentFestTag, currentCampTag, festTag, campTag); err != nil {
+	if err := ctx.shipPinnedArtifacts(releaseTag, currentFestTag, currentCampTag, festTag, campTag); err != nil {
 		return err
 	}
 	if err := runPreflight(ctx, mode); err != nil {
@@ -614,7 +728,7 @@ func runDraftBootstrap(ctx *repoContext, festivalVersion, festVersion, campVersi
 	if err := ctx.stageReleaseArtifacts(); err != nil {
 		return err
 	}
-	if err := ctx.commitPinnedArtifacts("", "", festTag, campTag); err != nil {
+	if err := ctx.shipPinnedArtifacts(releaseTag, "", "", festTag, campTag); err != nil {
 		return err
 	}
 
@@ -680,6 +794,10 @@ func runBundleWithRoot(opts bundleOptions) error {
 		return err
 	}
 
+	if err := ctx.prepareMainForBundle(); err != nil {
+		return err
+	}
+
 	state, err := collectState(ctx.Root, opts.Channel, opts.FestSelector, opts.CampSelector)
 	if err != nil {
 		return err
@@ -710,7 +828,7 @@ func runBundleWithRoot(opts bundleOptions) error {
 
 func runCleanup(ctx *repoContext, tag string) error {
 	fmt.Printf("Deleting GitHub release %s...\n", tag)
-	if err := runCmd(ctx.Root, nil, "gh", "release", "delete", tag, "--repo", "Obedience-Corp/festival", "--yes"); err != nil {
+	if err := runCmd(ctx.Root, nil, "gh", "release", "delete", tag, "--repo", festivalRepoSlug, "--yes"); err != nil {
 		fmt.Printf("  No GitHub release found for %s\n", tag)
 	}
 	fmt.Printf("Deleting remote tag %s...\n", tag)
@@ -726,7 +844,7 @@ func runCleanup(ctx *repoContext, tag string) error {
 }
 
 func ghSecretNames(dir string) ([]string, error) {
-	out, err := cmdOutput(dir, nil, "gh", "secret", "list", "--repo", "Obedience-Corp/festival")
+	out, err := cmdOutput(dir, nil, "gh", "secret", "list", "--repo", festivalRepoSlug)
 	if err != nil {
 		return nil, err
 	}
