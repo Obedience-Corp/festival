@@ -4,7 +4,8 @@
 
 A domain plugin that teaches Claude Code to drive the `fest` and `camp` CLIs and
 the Festival methodology. It bundles slash commands, methodology skills,
-specialized agents, and a session hook that keeps the CLIs installed.
+specialized agents, a session hook that keeps the CLIs installed, and a
+commit-discipline guard.
 
 It is not a generic engineering-process library. Its scope is the Festival
 methodology and the fest/camp toolchain. For the methodology itself, see the
@@ -19,8 +20,9 @@ claude-plugin/
   commands/                     10 fest-* and camp-* slash commands
   agents/                       fest-executor, fest-planner
   hooks/
-    hooks.json                  SessionStart hook wiring
+    hooks.json                  SessionStart + PreToolUse hook wiring
     scripts/ensure-festival.sh  installs and updates fest and camp
+    scripts/commit-guard.sh     blocks raw `git commit` inside a campaign
     scripts/sync-check.sh       checks plugin command refs against the CLIs
 ```
 
@@ -62,6 +64,24 @@ On first session the `SessionStart` hook (`hooks/scripts/ensure-festival.sh`)
 downloads `fest` and `camp` if they are missing, checksum-verifies the archive,
 and installs them. It also checks for updates once per day and notifies you when
 a new release is available.
+
+## Commit guard
+
+A `PreToolUse` (Bash) hook (`hooks/scripts/commit-guard.sh`) enforces campaign
+commit discipline: commits must route through `camp commit` (campaign root),
+`camp p commit` (inside `projects/*`), or `fest commit` (during festivals) so
+festival traceability and campaign bookkeeping are preserved.
+
+Because a plugin hook fires in every session, the guard self-scopes. It blocks a
+Bash command only when all of the following hold, and otherwise exits without
+interfering:
+
+- the command is a raw `git commit` (not a `camp`/`fest` wrapper), and
+- the session is inside a campaign (detected via `camp id`), and
+- `camp` and `jq` are both available.
+
+Outside a campaign, in repos without `camp`, or on machines without `jq`, it
+fails open. Set `CAMP_ALLOW_RAW_GIT=1` to override deliberately for one command.
 
 ## Local development gate
 
