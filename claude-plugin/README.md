@@ -23,6 +23,7 @@ claude-plugin/
     hooks.json                  SessionStart + PreToolUse hook wiring
     scripts/ensure-festival.sh  installs and updates fest and camp
     scripts/commit-guard.sh     blocks raw `git commit` inside a campaign
+    scripts/commit-guard.test.sh  unit tests for the guard (run by the gate)
     scripts/sync-check.sh       checks plugin command refs against the CLIs
 ```
 
@@ -76,12 +77,20 @@ Because a plugin hook fires in every session, the guard self-scopes. It blocks a
 Bash command only when all of the following hold, and otherwise exits without
 interfering:
 
-- the command is a raw `git commit` (not a `camp`/`fest` wrapper), and
+- the command has a raw `git commit` segment, and
 - the session is inside a campaign (detected via `camp id`), and
 - `camp` and `jq` are both available.
 
+The command is split on `;`, `&&`, `||`, and newlines and each segment is
+matched start-anchored, so a raw commit hidden after a wrapper in a compound
+command (`fest commit ...; git commit ...`) is still caught, and a `git commit`
+appearing only inside a wrapper's quoted message is not a false positive.
+Detection is a discipline guard, not a security control: it does not defeat
+deliberate obfuscation (`bash -c`, aliases, `eval`).
+
 Outside a campaign, in repos without `camp`, or on machines without `jq`, it
 fails open. Set `CAMP_ALLOW_RAW_GIT=1` to override deliberately for one command.
+`commit-guard.test.sh` encodes the detection matrix and runs in the plugin gate.
 
 ## Local development gate
 
