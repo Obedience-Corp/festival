@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"os"
 	"path/filepath"
 	"strings"
@@ -48,6 +49,158 @@ func TestShipPinnedArtifactsNoDiffIsNoop(t *testing.T) {
 	}
 	if after := gitRevParse(t, repo, "HEAD"); after != before {
 		t.Fatalf("HEAD moved from %s to %s without staged changes", before, after)
+	}
+}
+
+// fakeGH is an in-memory ghClient. mergePullRequest simulates GitHub's
+// squash-merge by fast-forwarding the bare origin's main to the pushed ship
+// branch tip and deleting the branch, so the operator's post-merge ff-only
+// pull of main behaves as it would after a real merge.
+type fakeGH struct {
+	t           *testing.T
+	bare        string
+	authed      bool
+	canMerge    bool
+	canMergeErr error
+	openNumber  string
+	openErr     error
+	createErr   error
+	mergeErr    error
+	created     int
+	merged      int
+}
+
+func (f *fakeGH) authenticated() bool { return f.authed }
+
+func (f *fakeGH) viewerCanMerge(string) (bool, error) {
+	return f.canMerge, f.canMergeErr
+}
+
+func (f *fakeGH) openPullRequestNumber(_, _ string) (string, error) {
+	return f.openNumber, f.openErr
+}
+
+func (f *fakeGH) createPullRequest(_, _, _, _, _ string) error {
+	if f.createErr != nil {
+		return f.createErr
+	}
+	f.created++
+	return nil
+}
+
+func (f *fakeGH) mergePullRequest(_, branch string) error {
+	if f.mergeErr != nil {
+		return f.mergeErr
+	}
+	f.merged++
+	tip := gitRevParse(f.t, f.bare, "refs/heads/"+branch)
+	runGit(f.t, f.bare, "update-ref", "refs/heads/main", tip)
+	runGit(f.t, f.bare, "update-ref", "-d", "refs/heads/"+branch)
+	return nil
+}
+
+func TestShipPinnedArtifactsShipsViaPullRequestOnMain(t *testing.T) {
+	repo := initTestRepo(t)
+	bare := addBareOrigin(t, repo)
+	ctx := testRepoContext(t, repo)
+	gh := &fakeGH{t: t, bare: bare, authed: true, canMerge: true}
+	ctx.gh = gh
+
+	stagePinnedDocChange(t, repo, "stable pin\n")
+
+	if err := ctx.shipPinnedArtifacts("v0.2.12", "v0.4.8", "v0.2.17", "v0.4.9", "v0.2.17"); err != nil {
+		t.Fatalf("shipPinnedArtifacts returned error: %v", err)
+	}
+
+	if gh.created != 1 {
+		t.Fatalf("createPullRequest called %d times, want 1", gh.created)
+	}
+	if gh.merged != 1 {
+		t.Fatalf("mergePullRequest called %d times, want 1", gh.merged)
+	}
+	if branch := gitRevParse(t, repo, "--abbrev-ref", "HEAD"); branch != "main" {
+		t.Fatalf("current branch = %q, want main", branch)
+	}
+	if local, remote := gitRevParse(t, repo, "HEAD"), gitRevParse(t, bare, "main"); local != remote {
+		t.Fatalf("local main = %s, origin main = %s; want fast-forwarded to merged commit", local, remote)
+	}
+	if _, err := gitOutput(repo, "rev-parse", "--verify", "refs/heads/release-pin/v0.2.12"); err == nil {
+		t.Fatal("local ship branch release-pin/v0.2.12 was not deleted")
+	}
+}
+
+func TestShipViaPullRequestSkipsCreateWhenPROpen(t *testing.T) {
+	repo := initTestRepo(t)
+	bare := addBareOrigin(t, repo)
+	ctx := testRepoContext(t, repo)
+	gh := &fakeGH{t: t, bare: bare, authed: true, canMerge: true, openNumber: "77"}
+	ctx.gh = gh
+
+	stagePinnedDocChange(t, repo, "resumed pin\n")
+
+	if err := ctx.shipPinnedArtifacts("v0.2.12", "v0.4.8", "v0.2.17", "v0.4.9", "v0.2.17"); err != nil {
+		t.Fatalf("shipPinnedArtifacts returned error: %v", err)
+	}
+	if gh.created != 0 {
+		t.Fatalf("createPullRequest called %d times, want 0 when a PR is already open", gh.created)
+	}
+	if gh.merged != 1 {
+		t.Fatalf("mergePullRequest called %d times, want 1", gh.merged)
+	}
+}
+
+func TestShipViaPullRequestPropagatesOpenPRQueryError(t *testing.T) {
+	repo := initTestRepo(t)
+	bare := addBareOrigin(t, repo)
+	ctx := testRepoContext(t, repo)
+	gh := &fakeGH{t: t, bare: bare, authed: true, canMerge: true, openErr: errors.New("gh: network unreachable")}
+	ctx.gh = gh
+
+	stagePinnedDocChange(t, repo, "pin\n")
+
+	err := ctx.shipPinnedArtifacts("v0.2.12", "v0.4.8", "v0.2.17", "v0.4.9", "v0.2.17")
+	if err == nil {
+		t.Fatal("expected a transient open-PR query error to propagate, got nil")
+	}
+	if gh.created != 0 {
+		t.Fatalf("createPullRequest called %d times; a query failure must not fall through to create", gh.created)
+	}
+	if gh.merged != 0 {
+		t.Fatalf("mergePullRequest called %d times, want 0", gh.merged)
+	}
+}
+
+func TestShipViaPullRequestFailsFastWhenCannotMerge(t *testing.T) {
+	repo := initTestRepo(t)
+	bare := addBareOrigin(t, repo)
+	ctx := testRepoContext(t, repo)
+	gh := &fakeGH{t: t, bare: bare, authed: true, canMerge: false}
+	ctx.gh = gh
+
+	stagePinnedDocChange(t, repo, "pin\n")
+
+	err := ctx.shipPinnedArtifacts("v0.2.12", "v0.4.8", "v0.2.17", "v0.4.9", "v0.2.17")
+	if err == nil {
+		t.Fatal("expected an error when the account cannot merge")
+	}
+	if branch := gitRevParse(t, repo, "--abbrev-ref", "HEAD"); branch != "main" {
+		t.Fatalf("current branch = %q; permission check must run before any branch switch", branch)
+	}
+	if gh.created != 0 || gh.merged != 0 {
+		t.Fatalf("create=%d merge=%d; nothing should be attempted when merge is impossible", gh.created, gh.merged)
+	}
+}
+
+func TestShipViaPullRequestFailsWhenUnauthenticated(t *testing.T) {
+	repo := initTestRepo(t)
+	bare := addBareOrigin(t, repo)
+	ctx := testRepoContext(t, repo)
+	ctx.gh = &fakeGH{t: t, bare: bare, authed: false, canMerge: true}
+
+	stagePinnedDocChange(t, repo, "pin\n")
+
+	if err := ctx.shipPinnedArtifacts("v0.2.12", "v0.4.8", "v0.2.17", "v0.4.9", "v0.2.17"); err == nil {
+		t.Fatal("expected an error when gh is not authenticated")
 	}
 }
 

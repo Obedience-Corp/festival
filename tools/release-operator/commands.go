@@ -16,8 +16,20 @@ const festivalRepoSlug = "Obedience-Corp/festival"
 
 var submodules = []string{"fest", "camp"}
 
+// ghClient abstracts the GitHub CLI operations the ship-via-PR path needs so
+// the PR create/merge flow can be exercised in tests without hitting GitHub.
+type ghClient interface {
+	authenticated() bool
+	viewerCanMerge(repo string) (bool, error)
+	openPullRequestNumber(repo, branch string) (string, error)
+	createPullRequest(repo, base, head, title, body string) error
+	mergePullRequest(repo, branch string) error
+}
+
 type repoContext struct {
 	Root string
+	// gh overrides the GitHub CLI seam in tests; nil means shell out to gh.
+	gh ghClient
 }
 
 func newRepoContext(root string) (*repoContext, error) {
@@ -26,6 +38,50 @@ func newRepoContext(root string) (*repoContext, error) {
 		return nil, fmt.Errorf("resolve repo root: %w", err)
 	}
 	return &repoContext{Root: absRoot}, nil
+}
+
+func (r *repoContext) ghClient() ghClient {
+	if r.gh != nil {
+		return r.gh
+	}
+	return cliGH{dir: r.Root}
+}
+
+// cliGH is the production ghClient backed by the gh binary.
+type cliGH struct {
+	dir string
+}
+
+func (g cliGH) authenticated() bool {
+	return ghAuthenticated()
+}
+
+func (g cliGH) viewerCanMerge(repo string) (bool, error) {
+	out, err := cmdOutput(g.dir, nil, "gh", "api", "repos/"+repo, "--jq", ".permissions.push")
+	if err != nil {
+		return false, fmt.Errorf("check push permission on %s: %w", repo, err)
+	}
+	return strings.TrimSpace(out) == "true", nil
+}
+
+// openPullRequestNumber returns the number of an open PR for branch, or "" when
+// none is open. Unlike `gh pr view`, `gh pr list` exits 0 with an empty array
+// for the no-PR case, so a non-nil error here is a real gh/network failure and
+// must not be mistaken for "no PR".
+func (g cliGH) openPullRequestNumber(repo, branch string) (string, error) {
+	out, err := cmdOutput(g.dir, nil, "gh", "pr", "list", "--repo", repo, "--head", branch, "--state", "open", "--json", "number", "--jq", ".[0].number // \"\"")
+	if err != nil {
+		return "", fmt.Errorf("query open PR for %s: %w", branch, err)
+	}
+	return strings.TrimSpace(out), nil
+}
+
+func (g cliGH) createPullRequest(repo, base, head, title, body string) error {
+	return runCmd(g.dir, nil, "gh", "pr", "create", "--repo", repo, "--base", base, "--head", head, "--title", title, "--body", body)
+}
+
+func (g cliGH) mergePullRequest(repo, branch string) error {
+	return runCmd(g.dir, nil, "gh", "pr", "merge", branch, "--repo", repo, "--squash", "--delete-branch")
 }
 
 func (r *repoContext) submodulePath(name string) string {
@@ -227,8 +283,18 @@ func (r *repoContext) shipPinnedArtifacts(releaseTag, currentFestTag, currentCam
 }
 
 func (r *repoContext) shipViaPullRequest(baseBranch, releaseTag, message string) error {
-	if !ghAuthenticated() {
+	gh := r.ghClient()
+	if !gh.authenticated() {
 		return fmt.Errorf("%s only accepts changes through pull requests and gh is not authenticated; run 'gh auth login' and retry", baseBranch)
+	}
+	// Verify the merge is possible before mutating anything, so a permission
+	// gap fails fast instead of after the branch and PR already exist.
+	canMerge, err := gh.viewerCanMerge(festivalRepoSlug)
+	if err != nil {
+		return err
+	}
+	if !canMerge {
+		return fmt.Errorf("the authenticated gh account lacks push permission on %s and cannot merge the release PR; switch to an account with write access (gh auth switch) and retry", festivalRepoSlug)
 	}
 
 	shipBranch := shipBranchName(releaseTag)
@@ -242,13 +308,17 @@ func (r *repoContext) shipViaPullRequest(baseBranch, releaseTag, message string)
 		return err
 	}
 
-	if !r.hasOpenPullRequest(shipBranch) {
-		if err := runCmd(r.Root, nil, "gh", "pr", "create", "--repo", festivalRepoSlug, "--base", baseBranch, "--head", shipBranch, "--title", message, "--body", releasePRBody(releaseTag, message)); err != nil {
+	open, err := gh.openPullRequestNumber(festivalRepoSlug, shipBranch)
+	if err != nil {
+		return err
+	}
+	if open == "" {
+		if err := gh.createPullRequest(festivalRepoSlug, baseBranch, shipBranch, message, releasePRBody(releaseTag, message)); err != nil {
 			return err
 		}
 	}
-	if err := runCmd(r.Root, nil, "gh", "pr", "merge", shipBranch, "--repo", festivalRepoSlug, "--squash", "--delete-branch"); err != nil {
-		return fmt.Errorf("merge release PR for %s: %w (resolve it on GitHub, then rerun the same release command)", shipBranch, err)
+	if err := gh.mergePullRequest(festivalRepoSlug, shipBranch); err != nil {
+		return fmt.Errorf("merge release PR for %s: %w\nThe pin commit is pushed and the PR exists; check the PR for unmet merge requirements (required approvals or status checks), merge it on GitHub, then rerun the same release command to continue tagging", shipBranch, err)
 	}
 
 	if err := r.runGit("switch", baseBranch); err != nil {
@@ -273,14 +343,6 @@ func (r *repoContext) shipViaPullRequest(baseBranch, releaseTag, message string)
 		return fmt.Errorf("festival repo is dirty after merging %s; resolve manually before tagging", shipBranch)
 	}
 	return nil
-}
-
-func (r *repoContext) hasOpenPullRequest(branch string) bool {
-	out, err := cmdOutput(r.Root, nil, "gh", "pr", "view", branch, "--repo", festivalRepoSlug, "--json", "state", "--jq", ".state")
-	if err != nil {
-		return false
-	}
-	return strings.TrimSpace(out) == "OPEN"
 }
 
 func (r *repoContext) prepareMainForBundle() error {
