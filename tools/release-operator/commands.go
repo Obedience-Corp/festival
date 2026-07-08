@@ -12,10 +12,24 @@ import (
 	"github.com/Obedience-Corp/festival/tools/release-operator/internal/operator"
 )
 
+const festivalRepoSlug = "Obedience-Corp/festival"
+
 var submodules = []string{"fest", "camp"}
+
+// ghClient abstracts the GitHub CLI operations the ship-via-PR path needs so
+// the PR create/merge flow can be exercised in tests without hitting GitHub.
+type ghClient interface {
+	authenticated() bool
+	viewerCanMerge(repo string) (bool, error)
+	openPullRequestNumber(repo, branch string) (string, error)
+	createPullRequest(repo, base, head, title, body string) error
+	mergePullRequest(repo, branch string) error
+}
 
 type repoContext struct {
 	Root string
+	// gh overrides the GitHub CLI seam in tests; nil means shell out to gh.
+	gh ghClient
 }
 
 func newRepoContext(root string) (*repoContext, error) {
@@ -24,6 +38,50 @@ func newRepoContext(root string) (*repoContext, error) {
 		return nil, fmt.Errorf("resolve repo root: %w", err)
 	}
 	return &repoContext{Root: absRoot}, nil
+}
+
+func (r *repoContext) ghClient() ghClient {
+	if r.gh != nil {
+		return r.gh
+	}
+	return cliGH{dir: r.Root}
+}
+
+// cliGH is the production ghClient backed by the gh binary.
+type cliGH struct {
+	dir string
+}
+
+func (g cliGH) authenticated() bool {
+	return ghAuthenticated()
+}
+
+func (g cliGH) viewerCanMerge(repo string) (bool, error) {
+	out, err := cmdOutput(g.dir, nil, "gh", "api", "repos/"+repo, "--jq", ".permissions.push")
+	if err != nil {
+		return false, fmt.Errorf("check push permission on %s: %w", repo, err)
+	}
+	return strings.TrimSpace(out) == "true", nil
+}
+
+// openPullRequestNumber returns the number of an open PR for branch, or "" when
+// none is open. Unlike `gh pr view`, `gh pr list` exits 0 with an empty array
+// for the no-PR case, so a non-nil error here is a real gh/network failure and
+// must not be mistaken for "no PR".
+func (g cliGH) openPullRequestNumber(repo, branch string) (string, error) {
+	out, err := cmdOutput(g.dir, nil, "gh", "pr", "list", "--repo", repo, "--head", branch, "--state", "open", "--json", "number", "--jq", ".[0].number // \"\"")
+	if err != nil {
+		return "", fmt.Errorf("query open PR for %s: %w", branch, err)
+	}
+	return strings.TrimSpace(out), nil
+}
+
+func (g cliGH) createPullRequest(repo, base, head, title, body string) error {
+	return runCmd(g.dir, nil, "gh", "pr", "create", "--repo", repo, "--base", base, "--head", head, "--title", title, "--body", body)
+}
+
+func (g cliGH) mergePullRequest(repo, branch string) error {
+	return runCmd(g.dir, nil, "gh", "pr", "merge", branch, "--repo", repo, "--squash", "--delete-branch")
 }
 
 func (r *repoContext) submodulePath(name string) string {
@@ -182,7 +240,25 @@ func releaseCommitMessage(currentFestTag, currentCampTag, festTag, campTag strin
 	}
 }
 
-func (r *repoContext) commitPinnedArtifacts(currentFestTag, currentCampTag, festTag, campTag string) error {
+const shipBranchPrefix = "release-pin/"
+
+func shipBranchName(releaseTag string) string {
+	return shipBranchPrefix + releaseTag
+}
+
+func shipsViaPullRequest(branch string) bool {
+	return branch == "main"
+}
+
+func releasePRBody(releaseTag, message string) string {
+	return fmt.Sprintf("%s.\n\nCreated by the release operator: main only accepts changes through pull requests, so the pin commit ships through this PR. After the squash merge, the operator tags %s on main to trigger release CI.", message, releaseTag)
+}
+
+func (r *repoContext) currentBranch() (string, error) {
+	return r.git("rev-parse", "--abbrev-ref", "HEAD")
+}
+
+func (r *repoContext) shipPinnedArtifacts(releaseTag, currentFestTag, currentCampTag, festTag, campTag string) error {
 	hasDiff, err := r.cachedDiffExists("fest", "camp", "docs/cli-reference")
 	if err != nil {
 		return err
@@ -191,10 +267,110 @@ func (r *repoContext) commitPinnedArtifacts(currentFestTag, currentCampTag, fest
 		fmt.Printf("Submodule pointers and docs already at fest=%s, camp=%s; no release commit needed.\n", festTag, campTag)
 		return nil
 	}
-	if err := r.runGit("commit", "-m", releaseCommitMessage(currentFestTag, currentCampTag, festTag, campTag)); err != nil {
+
+	branch, err := r.currentBranch()
+	if err != nil {
 		return err
 	}
-	return r.runGit("push", "origin", "HEAD")
+	message := releaseCommitMessage(currentFestTag, currentCampTag, festTag, campTag)
+	if !shipsViaPullRequest(branch) {
+		if err := r.runGit("commit", "-m", message); err != nil {
+			return err
+		}
+		return r.runGit("push", "origin", "HEAD")
+	}
+	return r.shipViaPullRequest(branch, releaseTag, message)
+}
+
+func (r *repoContext) shipViaPullRequest(baseBranch, releaseTag, message string) error {
+	gh := r.ghClient()
+	if !gh.authenticated() {
+		return fmt.Errorf("%s only accepts changes through pull requests and gh is not authenticated; run 'gh auth login' and retry", baseBranch)
+	}
+	// Verify the merge is possible before mutating anything, so a permission
+	// gap fails fast instead of after the branch and PR already exist.
+	canMerge, err := gh.viewerCanMerge(festivalRepoSlug)
+	if err != nil {
+		return err
+	}
+	if !canMerge {
+		return fmt.Errorf("the authenticated gh account lacks push permission on %s and cannot merge the release PR; switch to an account with write access (gh auth switch) and retry", festivalRepoSlug)
+	}
+
+	shipBranch := shipBranchName(releaseTag)
+	if err := r.runGit("switch", "-C", shipBranch); err != nil {
+		return err
+	}
+	if err := r.runGit("commit", "-m", message); err != nil {
+		return err
+	}
+	if err := r.runGit("push", "-f", "-u", "origin", shipBranch); err != nil {
+		return err
+	}
+
+	open, err := gh.openPullRequestNumber(festivalRepoSlug, shipBranch)
+	if err != nil {
+		return err
+	}
+	if open == "" {
+		if err := gh.createPullRequest(festivalRepoSlug, baseBranch, shipBranch, message, releasePRBody(releaseTag, message)); err != nil {
+			return err
+		}
+	}
+	if err := gh.mergePullRequest(festivalRepoSlug, shipBranch); err != nil {
+		return fmt.Errorf("merge release PR for %s: %w\nThe pin commit is pushed and the PR exists; check the PR for unmet merge requirements (required approvals or status checks), merge it on GitHub, then rerun the same release command to continue tagging", shipBranch, err)
+	}
+
+	if err := r.runGit("switch", baseBranch); err != nil {
+		return err
+	}
+	if _, err := r.git("rev-parse", "--verify", "refs/heads/"+shipBranch); err == nil {
+		if err := r.runGit("branch", "-D", shipBranch); err != nil {
+			return err
+		}
+	}
+	if err := r.runGit("pull", "--ff-only", "origin", baseBranch); err != nil {
+		return err
+	}
+	if err := r.runGit("submodule", "update", "--init"); err != nil {
+		return err
+	}
+	dirty, err := worktreeDirty(r.Root)
+	if err != nil {
+		return err
+	}
+	if dirty {
+		return fmt.Errorf("festival repo is dirty after merging %s; resolve manually before tagging", shipBranch)
+	}
+	return nil
+}
+
+func (r *repoContext) prepareMainForBundle() error {
+	branch, err := r.currentBranch()
+	if err != nil {
+		return err
+	}
+	if strings.HasPrefix(branch, shipBranchPrefix) {
+		if err := r.runGit("switch", "main"); err != nil {
+			return err
+		}
+		if err := r.runGit("branch", "-D", branch); err != nil {
+			return err
+		}
+		branch = "main"
+	}
+	if branch != "main" {
+		return nil
+	}
+	if dirty, err := worktreeDirty(r.Root); err != nil {
+		return err
+	} else if dirty {
+		return errors.New("festival repo has uncommitted changes")
+	}
+	if err := r.runGit("pull", "--ff-only", "origin", "main"); err != nil {
+		return err
+	}
+	return r.runGit("submodule", "update", "--init")
 }
 
 func (r *repoContext) ensureTagAbsent(tag string) error {
@@ -523,7 +699,7 @@ func runDraftFromLatest(ctx *repoContext, version string, mode releaseMode, iter
 		return fmt.Errorf("submodules are not pinned to exact %s tags after refresh", mode.Name)
 	}
 
-	if err := ctx.commitPinnedArtifacts(currentFestTag, currentCampTag, festTag, campTag); err != nil {
+	if err := ctx.shipPinnedArtifacts(releaseTag, currentFestTag, currentCampTag, festTag, campTag); err != nil {
 		return err
 	}
 	if err := runPreflight(ctx, mode); err != nil {
@@ -614,7 +790,7 @@ func runDraftBootstrap(ctx *repoContext, festivalVersion, festVersion, campVersi
 	if err := ctx.stageReleaseArtifacts(); err != nil {
 		return err
 	}
-	if err := ctx.commitPinnedArtifacts("", "", festTag, campTag); err != nil {
+	if err := ctx.shipPinnedArtifacts(releaseTag, "", "", festTag, campTag); err != nil {
 		return err
 	}
 
@@ -680,6 +856,10 @@ func runBundleWithRoot(opts bundleOptions) error {
 		return err
 	}
 
+	if err := ctx.prepareMainForBundle(); err != nil {
+		return err
+	}
+
 	state, err := collectState(ctx.Root, opts.Channel, opts.FestSelector, opts.CampSelector)
 	if err != nil {
 		return err
@@ -710,7 +890,7 @@ func runBundleWithRoot(opts bundleOptions) error {
 
 func runCleanup(ctx *repoContext, tag string) error {
 	fmt.Printf("Deleting GitHub release %s...\n", tag)
-	if err := runCmd(ctx.Root, nil, "gh", "release", "delete", tag, "--repo", "Obedience-Corp/festival", "--yes"); err != nil {
+	if err := runCmd(ctx.Root, nil, "gh", "release", "delete", tag, "--repo", festivalRepoSlug, "--yes"); err != nil {
 		fmt.Printf("  No GitHub release found for %s\n", tag)
 	}
 	fmt.Printf("Deleting remote tag %s...\n", tag)
@@ -726,7 +906,7 @@ func runCleanup(ctx *repoContext, tag string) error {
 }
 
 func ghSecretNames(dir string) ([]string, error) {
-	out, err := cmdOutput(dir, nil, "gh", "secret", "list", "--repo", "Obedience-Corp/festival")
+	out, err := cmdOutput(dir, nil, "gh", "secret", "list", "--repo", festivalRepoSlug)
 	if err != nil {
 		return nil, err
 	}

@@ -67,7 +67,7 @@ rc fest="latest" camp="latest":
     go -C tools/release-operator run . bundle --repo-root ../.. --fest-tag "{{fest}}" --camp-tag "{{camp}}" rc
 
 [no-cd]
-[confirm("This will create a stable festival release on main using the selected fest/camp tags. Run 'just release plan mode=stable fest=... camp=...' first if you want to see the exact tags. Continue?")]
+[confirm("This will create a stable festival release on main using the selected fest/camp tags (the pin commit ships through an auto-merged PR because main is PR-only). Run 'just release plan mode=stable fest=... camp=...' first if you want to see the exact tags. Continue?")]
 stable fest="latest" camp="latest":
     just test release-operator
     go -C tools/release-operator run . bundle --repo-root ../.. --fest-tag "{{fest}}" --camp-tag "{{camp}}" stable
@@ -92,7 +92,7 @@ npm-publish-dry-run version="latest" mode="stable":
 # First stable release bootstrap:
 # - create/push fest + camp stable tags at their current HEAD
 # - pin festival submodules to those tags
-# - commit/push submodule pointer update
+# - commit the submodule pointer update (through an auto-merged PR when on main)
 # - create/push festival stable tag
 [private]
 [no-cd]
@@ -104,7 +104,8 @@ draft-bootstrap version fest_version camp_version:
 # - mode=stable: latest stable tags (vX.Y.Z)
 # - mode=rc: latest rc tags (vX.Y.Z-rc.N)
 # - mode=dev: latest dev tags (vX.Y.Z-dev.N)
-# - pin submodules, refresh docs, commit/push pointer update if needed
+# - pin submodules, refresh docs, commit pointer update if needed
+#   (through an auto-merged PR when on main, direct push otherwise)
 # - create/push festival release tag for the selected channel
 [private]
 [no-cd]

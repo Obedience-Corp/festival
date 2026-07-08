@@ -382,6 +382,14 @@ func printHelp(out io.Writer) {
 	fmt.Fprintln(out, "  just test bundled-module-resolution")
 	fmt.Fprintln(out, "  just release dry-run")
 	fmt.Fprintln(out, "  just release cleanup <tag>")
+	fmt.Fprintln(out)
+	fmt.Fprintln(out, "Stable releases on main:")
+	fmt.Fprintln(out, "  main is PR-only, so the stable pin commit ships through a transient")
+	fmt.Fprintln(out, "  release-pin/<tag> branch that is auto-created and squash-merged.")
+	fmt.Fprintln(out, "  The active gh account needs push access to Obedience-Corp/festival.")
+	fmt.Fprintln(out, "  The main ruleset requires a PR with 0 approvals and no status checks,")
+	fmt.Fprintln(out, "  so a push-capable account merges immediately (no --admin bypass needed).")
+	fmt.Fprintln(out, "  If a run fails after the PR is created, rerun the same command to continue.")
 }
 
 func collectState(repoRoot, channel, festSelector, campSelector string) (operator.BundleInput, error) {
