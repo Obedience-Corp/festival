@@ -32,7 +32,7 @@ echo ""
 
 echo "Codex -> self-hosted marketplace"
 require "install: /plugin marketplace add Obedience-Corp/festival && /plugin install festival" \
-    .agents/plugins/marketplace.json .codex-plugin/plugin.json
+    .agents/plugins/marketplace.json plugins/festival/.codex-plugin/plugin.json
 
 echo ""
 echo "Cursor -> Cursor Marketplace (manual web submission)"

@@ -9,7 +9,7 @@ survey docs. Headline: all four targets are VIABLE; none dropped.
 | Capability | Claude Code (FP0005) | Codex | Cursor | opencode | Gemini |
 |---|---|---|---|---|---|
 | Plugin system current | yes | yes | yes (2.5, Feb'26) | yes | yes |
-| Manifest | `.claude-plugin/` | `.codex-plugin/plugin.json` | `.cursor-plugin/plugin.json` | `opencode.json`/`.opencode/plugins/*.js` | `gemini-extension.json` |
+| Manifest | `.claude-plugin/` | `plugins/festival/.codex-plugin/plugin.json` | `.cursor-plugin/plugin.json` | `opencode.json`/`.opencode/plugins/*.js` | `gemini-extension.json` |
 | Skills (`<name>/SKILL.md`) | yes | yes | yes | yes (auto-discovers `.claude/skills/`) | via GEMINI.md `@`-imports |
 | Commands bundled | yes | NO (deprecated/config-scope) | yes | yes (markdown) | yes (TOML) |
 | Agents bundled | yes | NO (config-scope only) | yes | yes (markdown) | yes |
@@ -32,7 +32,7 @@ Implication: the install behavior is a LARGELY SHARED artifact, not four bespoke
 
 There is no unified fork-PR sync (the Superpowers `openai-codex-plugins` flow is unverified). Each
 harness has its own native channel:
-- Codex: ship `.codex-plugin/` + a repo-root marketplace.json; `/plugin marketplace add Obedience-Corp/festival` (official self-serve directory not open yet).
+- Codex: ship `plugins/festival/` + a repo-root marketplace.json; `/plugin marketplace add Obedience-Corp/festival` (official self-serve directory not open yet).
 - Cursor: submit the git repo at cursor.com/marketplace/publish (manual review) + `.cursor-plugin/marketplace.json`.
 - opencode: git URL in `opencode.json` `plugin` array or npm publish; list on awesome-opencode.
 - Gemini: `gemini extensions install Obedience-Corp/festival` + add the `gemini-cli-extension` repo topic.

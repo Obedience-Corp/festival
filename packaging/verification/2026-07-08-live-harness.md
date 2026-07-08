@@ -10,7 +10,7 @@ Branch: `festival-plugin-live-harness`
 
 - `just plugin generate`: PASS. Generated 52 files from 5 targets at plugin version `1.1.0`.
 - `just plugin check`: PASS. Output: `All referenced commands found in CLI. Plugin looks current.` and `Claude plugin smoke passed`.
-- `just plugin dist-check`: initially FAIL before the fix in this verification pass because the generated Codex target and dry-run disagreed on the manifest path. The Codex target has been corrected to the documented `.codex-plugin/plugin.json` surface, and the dry-run now checks that path. PASS: all four distribution surfaces were present and no push was performed.
+- `just plugin dist-check`: initially FAIL before the fix in this verification pass because the generated Codex target and dry-run disagreed on the manifest path. The Codex target has been corrected to the documented plugin-root layout at `plugins/festival/.codex-plugin/plugin.json`, and the dry-run now checks that path. PASS: all four distribution surfaces were present and no push was performed.
 
 ## CLI availability on this machine
 
@@ -39,11 +39,11 @@ codex plugin list
 Evidence:
 
 - `codex plugin marketplace add --json "$PWD"` returned `marketplaceName: "festival"` and `alreadyAdded: false`.
-- `codex plugin list` found `festival@festival` at `.codex-plugin` before install.
+- `codex plugin list` found `festival@festival` at `plugins/festival` before install.
 - `codex plugin add --json festival@festival` returned `version: "1.1.0"`, `authPolicy: "ON_INSTALL"`, and an installed cache path.
 - `codex plugin list` then reported `festival@festival` as `installed, enabled` at version `1.1.0`.
 
-Result: PASS for local Codex marketplace parsing/install. This proves Codex CLI `0.142.5` accepts the generated `.agents/plugins/marketplace.json`, the generated Codex manifest at `.codex-plugin/plugin.json`, the generated `_generated` JSON keys, and the manifest's `interface` block containing `category: "project-management"` and `capabilities: ["skills", "hooks"]`.
+Result: PASS for local Codex marketplace parsing/install. This proves Codex CLI `0.142.5` accepts the generated `.agents/plugins/marketplace.json`, the generated Codex manifest at `plugins/festival/.codex-plugin/plugin.json`, the generated `_generated` JSON keys, and the manifest's `interface` block containing `category: "project-management"` and `capabilities: ["skills", "hooks"]`.
 
 Not proven: the interactive slash-command spelling from the older intent text (`/plugin marketplace add ...` and `/plugin install ...`) was not exercised because this verification used the noninteractive CLI. Codex CLI `0.142.5` exposes `codex plugin add`, not `codex plugin install`, for noninteractive installs.
 

@@ -3,7 +3,7 @@
 Verdict: STRONG fit. Codex shipped a real plugin system (~March 2026).
 
 ## Manifest
-- `.codex-plugin/plugin.json` at the plugin root (legacy `.claude-plugin/marketplace.json` honored).
+- `plugins/festival/.codex-plugin/plugin.json` for the generated repo-local plugin bundle (legacy `.claude-plugin/marketplace.json` honored).
 - Required: `name` (kebab), `version` (semver), `description`.
 - Optional: `author`, `homepage`, `repository`, `license`, `keywords`, `skills` (e.g. `"./skills/"`),
   `mcpServers`, `apps`, `hooks` (path/array/inline), `interface` (displayName, shortDescription,

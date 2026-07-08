@@ -243,8 +243,22 @@ const fs = require("fs");
 const path = require("path");
 const repoRoot = process.argv[1];
 const plugin = JSON.parse(fs.readFileSync(process.argv[2], "utf8"));
-const codexDir = path.join(repoRoot, ".codex-plugin");
-const manifest = JSON.parse(fs.readFileSync(path.join(codexDir, "plugin.json"), "utf8"));
+const marketPath = path.join(repoRoot, ".agents", "plugins", "marketplace.json");
+const market = JSON.parse(fs.readFileSync(marketPath, "utf8"));
+const entry = (market.plugins || [])[0] || {};
+const srcPath = typeof entry.source === "string" ? entry.source : (entry.source && entry.source.path);
+if (!srcPath || !srcPath.startsWith("./")) {
+  throw new Error(`.agents/plugins/marketplace.json source must be a ./-relative plugin root: ${JSON.stringify(entry.source)}`);
+}
+const pluginRoot = path.resolve(repoRoot, srcPath);
+const pluginRootRel = path.relative(repoRoot, pluginRoot);
+if (pluginRootRel.startsWith("..") || path.isAbsolute(pluginRootRel)) {
+  throw new Error(`.agents/plugins/marketplace.json source escapes repo root: ${JSON.stringify(entry.source)}`);
+}
+if (!fs.existsSync(pluginRoot)) {
+  throw new Error(`.agents/plugins/marketplace.json source does not resolve: ${JSON.stringify(entry.source)}`);
+}
+const manifest = JSON.parse(fs.readFileSync(path.join(pluginRoot, ".codex-plugin", "plugin.json"), "utf8"));
 
 for (const key of ["name", "version", "description"]) {
   if (!manifest[key]) throw new Error(`.codex-plugin/plugin.json missing required key: ${key}`);
@@ -255,8 +269,8 @@ if (manifest.version !== plugin.version) {
 
 const refs = [manifest.skills, manifest.hooks].filter((r) => typeof r === "string");
 for (const ref of refs) {
-  const target = path.resolve(codexDir, ref);
-  const rel = path.relative(codexDir, target);
+  const target = path.resolve(pluginRoot, ref);
+  const rel = path.relative(pluginRoot, target);
   if (rel.startsWith("..") || path.isAbsolute(rel)) {
     throw new Error(`.codex-plugin/plugin.json references out-of-bundle path: ${ref}`);
   }
@@ -265,19 +279,12 @@ for (const ref of refs) {
   }
 }
 
-const skillsDir = path.resolve(codexDir, manifest.skills);
+const skillsDir = path.resolve(pluginRoot, manifest.skills);
 const skills = fs.readdirSync(skillsDir).filter((d) => fs.existsSync(path.join(skillsDir, d, "SKILL.md")));
 if (skills.length === 0) throw new Error(`.codex-plugin/skills/ resolves but contains no SKILL.md`);
 
-const marketPath = path.join(repoRoot, ".agents", "plugins", "marketplace.json");
-const market = JSON.parse(fs.readFileSync(marketPath, "utf8"));
-const entry = (market.plugins || [])[0] || {};
 if (entry.version !== plugin.version) {
   throw new Error(`.agents/plugins/marketplace.json version ${entry.version} != plugin.json ${plugin.version}`);
-}
-const srcPath = typeof entry.source === "string" ? entry.source : (entry.source && entry.source.path);
-if (!srcPath || !fs.existsSync(path.resolve(repoRoot, srcPath))) {
-  throw new Error(`.agents/plugins/marketplace.json source does not resolve: ${JSON.stringify(entry.source)}`);
 }
 ' "$repo_root" "$1"
 }

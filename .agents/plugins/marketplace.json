@@ -13,7 +13,7 @@
       "version": "1.1.0",
       "source": {
         "source": "local",
-        "path": "./.codex-plugin"
+        "path": "./plugins/festival"
       },
       "author": {
         "name": "Obedience Corp",
