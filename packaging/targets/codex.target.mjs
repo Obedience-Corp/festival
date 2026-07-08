@@ -43,8 +43,15 @@ mirroring the Claude Code hook, so no manual step is required after \`/plugin in
 }
 
 function codexHooks(ctx) {
+  // Codex mirrors only the SessionStart install hook. Other event types in the
+  // Claude source (e.g. the PreToolUse commit guard) are Claude-Code-specific:
+  // they depend on Claude's tool-call payload schema and exit-code semantics,
+  // which Codex does not share, so we do not fake them here.
+  const source = ctx.sourceHooks.SessionStart
+    ? { SessionStart: ctx.sourceHooks.SessionStart }
+    : {};
   const swapped = JSON.parse(
-    JSON.stringify(ctx.sourceHooks).replaceAll("${CLAUDE_PLUGIN_ROOT}", "${PLUGIN_ROOT}"),
+    JSON.stringify(source).replaceAll("${CLAUDE_PLUGIN_ROOT}", "${PLUGIN_ROOT}"),
   );
   return { _generated: ctx.banner, ...swapped };
 }

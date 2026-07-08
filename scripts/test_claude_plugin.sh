@@ -536,7 +536,9 @@ codex_target_check "$plugin_dir/.claude-plugin/plugin.json"
 cursor_target_check "$plugin_dir/.claude-plugin/plugin.json"
 opencode_target_check
 gemini_target_check "$plugin_dir/.claude-plugin/plugin.json"
-bash -n "$plugin_dir/hooks/scripts/ensure-festival.sh" "$plugin_dir/hooks/scripts/sync-check.sh"
+bash -n "$plugin_dir/hooks/scripts/ensure-festival.sh" "$plugin_dir/hooks/scripts/sync-check.sh" \
+    "$plugin_dir/hooks/scripts/commit-guard.sh" "$plugin_dir/hooks/scripts/commit-guard.test.sh"
+bash "$plugin_dir/hooks/scripts/commit-guard.test.sh"
 
 if [ -x "$repo_root/fest/bin/fest" ] && [ -x "$repo_root/camp/bin/camp" ]; then
     FEST_BIN="$repo_root/fest/bin/fest" CAMP_BIN="$repo_root/camp/bin/camp" \
