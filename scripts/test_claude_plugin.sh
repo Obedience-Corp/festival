@@ -244,7 +244,7 @@ const path = require("path");
 const repoRoot = process.argv[1];
 const plugin = JSON.parse(fs.readFileSync(process.argv[2], "utf8"));
 const codexDir = path.join(repoRoot, ".codex-plugin");
-const manifest = JSON.parse(fs.readFileSync(path.join(codexDir, ".codex-plugin", "plugin.json"), "utf8"));
+const manifest = JSON.parse(fs.readFileSync(path.join(codexDir, "plugin.json"), "utf8"));
 
 for (const key of ["name", "version", "description"]) {
   if (!manifest[key]) throw new Error(`.codex-plugin/plugin.json missing required key: ${key}`);

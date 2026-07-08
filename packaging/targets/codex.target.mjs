@@ -70,10 +70,10 @@ function codexMarketplace(ctx) {
 
 export default {
   harness: "codex",
-  manifests: [".codex-plugin/.codex-plugin/plugin.json"],
+  manifests: [".codex-plugin/plugin.json"],
   emit(ctx) {
     const m = ctx.manifest;
-    ctx.writeJSON(".codex-plugin/.codex-plugin/plugin.json", {
+    ctx.writeJSON(".codex-plugin/plugin.json", {
       _generated: ctx.banner,
       name: m.name,
       version: m.version,
