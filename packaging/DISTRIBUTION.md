@@ -8,10 +8,10 @@ in-repo surface where it does not). No fork-PR sync exists; the Superpowers
 ## Codex
 
 - **Channel**: self-hosted marketplace. The generator emits `.agents/plugins/marketplace.json`
-  pointing at `.codex-plugin/`.
+  pointing at `plugins/festival/`.
 - **Install**: `/plugin marketplace add Obedience-Corp/festival` then `/plugin install festival`.
 - **Note**: OpenAI's official curated directory has no self-serve publishing yet ("coming soon").
-- **Surface**: `.codex-plugin/` + `.agents/plugins/marketplace.json` (generated, drift-covered).
+- **Surface**: `plugins/festival/` + `.agents/plugins/marketplace.json` (generated, drift-covered).
 - Source: `packaging/survey/codex.md`.
 
 ## Cursor

@@ -1,3 +1,5 @@
+const CODEX_PLUGIN_ROOT = "plugins/festival";
+
 function readme(ctx) {
   const skills = ctx.skills.map((s) => `  - \`${s.name}\`: ${s.description}`).join("\n");
   return `<!-- ${ctx.banner} -->
@@ -68,7 +70,7 @@ function codexMarketplace(ctx) {
         name: m.name,
         description: m.description,
         version: m.version,
-        source: { source: "local", path: "./.codex-plugin" },
+        source: { source: "local", path: `./${CODEX_PLUGIN_ROOT}` },
         author: m.author,
       },
     ],
@@ -77,10 +79,10 @@ function codexMarketplace(ctx) {
 
 export default {
   harness: "codex",
-  manifests: [".codex-plugin/.codex-plugin/plugin.json"],
+  manifests: [`${CODEX_PLUGIN_ROOT}/.codex-plugin/plugin.json`],
   emit(ctx) {
     const m = ctx.manifest;
-    ctx.writeJSON(".codex-plugin/.codex-plugin/plugin.json", {
+    ctx.writeJSON(`${CODEX_PLUGIN_ROOT}/.codex-plugin/plugin.json`, {
       _generated: ctx.banner,
       name: m.name,
       version: m.version,
@@ -92,12 +94,12 @@ export default {
       keywords: m.keywords,
       ...ctx.readTemplateJSON("codex"),
     });
-    ctx.writeJSON(".codex-plugin/hooks/hooks.json", codexHooks(ctx));
-    ctx.writeText(".codex-plugin/hooks/scripts/ensure-festival.sh", ctx.bundledScript("hooks/scripts/ensure-festival.sh"));
+    ctx.writeJSON(`${CODEX_PLUGIN_ROOT}/hooks/hooks.json`, codexHooks(ctx));
+    ctx.writeText(`${CODEX_PLUGIN_ROOT}/hooks/scripts/ensure-festival.sh`, ctx.bundledScript("hooks/scripts/ensure-festival.sh"));
     for (const skill of ctx.skills) {
-      ctx.writeText(`.codex-plugin/skills/${skill.name}/SKILL.md`, ctx.readPluginFile(skill.path));
+      ctx.writeText(`${CODEX_PLUGIN_ROOT}/skills/${skill.name}/SKILL.md`, ctx.readPluginFile(skill.path));
     }
     ctx.writeJSON(".agents/plugins/marketplace.json", codexMarketplace(ctx));
-    ctx.writeText(".codex-plugin/README.md", readme(ctx));
+    ctx.writeText(`${CODEX_PLUGIN_ROOT}/README.md`, readme(ctx));
   },
 };
