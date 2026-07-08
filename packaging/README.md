@@ -31,7 +31,7 @@ generator discovers and runs. Bundled skills/commands/agents are byte-identical 
 
 | Target | Output | Template | Notes (per survey) |
 |---|---|---|---|
-| Codex | `.codex-plugin/` (`plugin.json`, `hooks/`, `skills/`, `README.md`) + `.agents/plugins/marketplace.json` | `targets/codex.template.json` | skills + SessionStart hook + `AGENTS.md`; commands/agents documented as not bundled |
+| Codex | `.codex-plugin/` (`.codex-plugin/plugin.json`, `hooks/`, `skills/`, `README.md`) + `.agents/plugins/marketplace.json` | `targets/codex.template.json` | skills + SessionStart hook + `AGENTS.md`; commands/agents documented as not bundled |
 | Cursor | `.cursor-plugin/` (`plugin.json`, `skills/`, `commands/`, `agents/`, `hooks/`, `README.md`) | `targets/cursor.template.json` | all four surfaces bundle |
 | opencode | `.opencode/` (`plugins/festival.js`, `scripts/`, `skills/`, `INSTALL.md`) | `targets/opencode.template.js` | JS runs the installer at load; skills via `.opencode/skills/` auto-discovery |
 | Gemini | `gemini-extension.json` + `GEMINI.md` + `hooks/hooks.json` | `targets/gemini.template.json` | `GEMINI.md` `@`-imports each SKILL.md (one level); the repo-root `hooks/hooks.json` is the Gemini extension hook |
