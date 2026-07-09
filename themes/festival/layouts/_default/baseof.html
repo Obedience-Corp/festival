@@ -160,9 +160,45 @@
   document.addEventListener('DOMContentLoaded', syncHeaderState);
   window.addEventListener('scroll', syncHeaderState, { passive: true });
 
+  // How-it-works scroll reveal (progressive enhancement)
+  document.addEventListener('DOMContentLoaded', function() {
+    var rows = document.querySelectorAll('.howto__row');
+    if (!rows.length || !('IntersectionObserver' in window)) return;
+    document.documentElement.classList.add('reveal-ready');
+    var io = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { rootMargin: '-80px' });
+    rows.forEach(function(row) { io.observe(row); });
+  });
+
+  // Respect prefers-reduced-motion: swap animated demo GIFs for static posters,
+  // and restore the GIF if the preference is turned off.
+  (function() {
+    if (!window.matchMedia) return;
+    var mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    function apply() {
+      document.querySelectorAll('.terminal-demo__gif[data-poster]').forEach(function(img) {
+        var poster = img.getAttribute('data-poster');
+        if (mq.matches) {
+          if (!img.dataset.gif) img.dataset.gif = img.src;
+          if (poster) img.src = poster;
+        } else if (img.dataset.gif) {
+          img.src = img.dataset.gif;
+        }
+      });
+    }
+    document.addEventListener('DOMContentLoaded', apply);
+    if (mq.addEventListener) mq.addEventListener('change', apply);
+  })();
+
   // Code blocks — terminal window treatment
   document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('pre').forEach(function(pre) {
+    document.querySelectorAll('pre:not(.terminal-demo__pre)').forEach(function(pre) {
       var wrapper = document.createElement('div');
       wrapper.className = 'code-block';
       pre.parentNode.insertBefore(wrapper, pre);
