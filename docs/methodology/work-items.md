@@ -22,6 +22,8 @@ different filing systems and start thinking about one stream of work.
 This is the organizational primitive underneath a campaign. Campaigns give a mission
 a workspace; work items give the work inside that workspace a shared identity.
 
+{{< terminal-demo src="/images/demos/camp-workitems.gif" title="obey-campaign" alt="camp wi --list: festivals, designs, intents, and explores in one unified work list" >}}
+
 ## What Is a Work Item?
 
 A work item is any tracked unit of work in a campaign. It has a type, a stable id, a

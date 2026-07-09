@@ -76,6 +76,8 @@ cgo wt           # worktrees/
 
 No more typing long paths. Every important directory is one shortcut away.
 
+{{< terminal-demo src="/images/demos/cgo-navigation.gif" title="my-startup" alt="cgo jumping between projects, festivals, and design directories, plus csw to switch campaigns" >}}
+
 ## Add Projects
 
 Bring your codebases into the campaign as git submodules:
