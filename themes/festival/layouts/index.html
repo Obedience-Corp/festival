@@ -21,7 +21,7 @@
       <div class="home-hero__stats">
         <div class="home-stat">
           <div class="home-stat__value">Multi-project</div>
-          <div class="home-stat__label">campaigns at scale</div>
+          <div class="home-stat__label">Build anything at any scale</div>
         </div>
         <div class="home-stat">
           <div class="home-stat__value">Structured</div>
@@ -53,7 +53,7 @@
   <section class="home-section" id="how-it-works">
     <div class="home-section__intro">
       <h2 class="home-section__heading home-section__heading--centered">How it works</h2>
-      <p class="home-section__lede">Two CLI tools. One install. Works with any AI agent.</p>
+      <p class="home-section__lede">Toolsuite made for human AI collaboration at any scale.</p>
     </div>
 
     <div class="howto">
@@ -72,25 +72,7 @@
               <div class="terminal-demo__dots"><span class="terminal-demo__dot terminal-demo__dot--red"></span><span class="terminal-demo__dot terminal-demo__dot--yellow"></span><span class="terminal-demo__dot terminal-demo__dot--green"></span></div>
               <span class="terminal-demo__title">~</span>
             </div>
-            <div class="terminal-demo__body">
-              <div><span class="terminal-demo__prompt">$</span>camp init my-startup -d "AI startup" -m "Ship fast"</div>
-              <div class="terminal-demo__line--highlight">&check; Campaign Initialized</div>
-              <div class="terminal-demo__line--muted">Festivals: initialized</div>
-              <div><span class="terminal-demo__prompt">$</span>cd my-startup</div>
-              <pre class="terminal-demo__pre">my-startup/
-&#9500;&#9472;&#9472; projects/      <span class="terminal-demo__line--muted"># your code repos (git submodules)</span>
-&#9500;&#9472;&#9472; festivals/     <span class="terminal-demo__line--muted"># structured plans</span>
-&#9474;   &#9500;&#9472;&#9472; planning/
-&#9474;   &#9500;&#9472;&#9472; active/
-&#9474;   &#9492;&#9472;&#9472; dungeon/completed/
-&#9500;&#9472;&#9472; docs/          <span class="terminal-demo__line--muted"># your documentation</span>
-&#9492;&#9472;&#9472; .campaign/     <span class="terminal-demo__line--muted"># workspace config</span></pre>
-              <div><span class="terminal-demo__prompt">$</span>camp project add https://github.com/you/api-service</div>
-              <div class="terminal-demo__line--highlight">&check; Added project: api-service</div>
-              <div class="terminal-demo__line--muted"># instant navigation with shell integration</div>
-              <div><span class="terminal-demo__prompt">$</span>cgo p api</div>
-              <div class="terminal-demo__line--muted">~/my-startup/projects/api-service</div>
-            </div>
+            <img src="/images/demos/step1-organize.gif" class="terminal-demo__gif" alt="Terminal: camp init creates a campaign workspace, adds a project, and navigates with cgo" loading="lazy">
           </div>
         </div>
       </div>
@@ -108,22 +90,9 @@
           <div class="terminal-demo">
             <div class="terminal-demo__bar">
               <div class="terminal-demo__dots"><span class="terminal-demo__dot terminal-demo__dot--red"></span><span class="terminal-demo__dot terminal-demo__dot--yellow"></span><span class="terminal-demo__dot terminal-demo__dot--green"></span></div>
-              <span class="terminal-demo__title">~/my-startup/festivals</span>
+              <span class="terminal-demo__title">~/campaigns/my-startup</span>
             </div>
-            <div class="terminal-demo__body">
-              <div><span class="terminal-demo__prompt">$</span>fest create festival --name auth-system --type standard</div>
-              <div class="terminal-demo__line--highlight">&check; Created festival: auth-system-AS0001 <span class="terminal-demo__line--muted">(planning)</span></div>
-              <div class="terminal-demo__line--highlight">&check; Auto-created 2 phase(s): 001_INGEST, 002_PLAN</div>
-              <pre class="terminal-demo__pre">auth-system-AS0001/
-&#9500;&#9472;&#9472; FESTIVAL_GOAL.md       <span class="terminal-demo__line--muted"># what success looks like</span>
-&#9500;&#9472;&#9472; FESTIVAL_RULES.md      <span class="terminal-demo__line--muted"># quality contract</span>
-&#9500;&#9472;&#9472; fest.yaml
-&#9500;&#9472;&#9472; gates/                 <span class="terminal-demo__line--muted"># 4 quality gate templates</span>
-&#9500;&#9472;&#9472; 001_INGEST/
-&#9492;&#9472;&#9472; 002_PLAN/</pre>
-              <div><span class="terminal-demo__prompt">$</span>fest validate</div>
-              <div class="terminal-demo__line--highlight">&check; Structure valid. 37 markers to fill before execution.</div>
-            </div>
+            <img src="/images/demos/step2-plan.gif" class="terminal-demo__gif" alt="Terminal: fest create scaffolds an auth-system festival, then fest validate checks it" loading="lazy">
           </div>
         </div>
       </div>
@@ -141,22 +110,9 @@
           <div class="terminal-demo">
             <div class="terminal-demo__bar">
               <div class="terminal-demo__dots"><span class="terminal-demo__dot terminal-demo__dot--red"></span><span class="terminal-demo__dot terminal-demo__dot--yellow"></span><span class="terminal-demo__dot terminal-demo__dot--green"></span></div>
-              <span class="terminal-demo__title">~/my-startup/festivals/active/auth-system-AS0001</span>
+              <span class="terminal-demo__title">~/campaigns/my-startup · agent</span>
             </div>
-            <div class="terminal-demo__body">
-              <div class="terminal-demo__line--muted"># the core loop: one command, full context</div>
-              <div><span class="terminal-demo__prompt">$</span>fest next</div>
-              <div class="terminal-demo__line--accent">&#9472;&#9472;&#9472; Next Task &#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;</div>
-              <div><strong>Phase:</strong> <span class="terminal-demo__line--muted">003_IMPLEMENT</span></div>
-              <div><strong>Sequence:</strong> <span class="terminal-demo__line--muted">01_backend_auth</span></div>
-              <div><strong>Task:</strong> 01_create_user_model.md</div>
-              <div class="terminal-demo__line--muted">Create PostgreSQL users table and model with email, password_hash, created_at, updated_at.</div>
-              <div class="terminal-demo__line--muted"># agent executes autonomously, then:</div>
-              <div><span class="terminal-demo__prompt">$</span>fest task completed</div>
-              <div class="terminal-demo__line--highlight">&check; Task marked complete</div>
-              <div><span class="terminal-demo__prompt">$</span>fest commit -m "implement user model"</div>
-              <div class="terminal-demo__line--highlight">&check; Committed <span class="terminal-demo__line--muted">[OBEY-FE-AS0001]</span></div>
-            </div>
+            <img src="/images/demos/step3-execute.gif" class="terminal-demo__gif" alt="Terminal: the fest next loop hands an agent the next task, then fest task completed and fest commit" loading="lazy">
           </div>
         </div>
       </div>
@@ -174,24 +130,9 @@
           <div class="terminal-demo">
             <div class="terminal-demo__bar">
               <div class="terminal-demo__dots"><span class="terminal-demo__dot terminal-demo__dot--red"></span><span class="terminal-demo__dot terminal-demo__dot--yellow"></span><span class="terminal-demo__dot terminal-demo__dot--green"></span></div>
-              <span class="terminal-demo__title">~/my-startup</span>
+              <span class="terminal-demo__title">~/campaigns/my-startup</span>
             </div>
-            <div class="terminal-demo__body">
-              <div><span class="terminal-demo__prompt">$</span>fest list</div>
-              <pre class="terminal-demo__pre">ALL FESTIVALS
-<span class="terminal-demo__line--muted">Total 3</span>
-
-ACTIVE Festivals (2)
-  <span class="terminal-demo__line--highlight">auth-system-AS0001</span>  <span class="terminal-demo__line--muted">[62%]</span>
-  <span class="terminal-demo__line--highlight">payments-v2-PV0001</span>  <span class="terminal-demo__line--muted">[45%]</span>
-
-PLANNING Festivals (1)
-  <span class="terminal-demo__line--accent">search-rewrite-SR0001</span>  <span class="terminal-demo__line--muted">[0%]</span></pre>
-              <div class="terminal-demo__line--muted"># new agent session? picks up instantly</div>
-              <div><span class="terminal-demo__prompt">$</span>fest next</div>
-              <div class="terminal-demo__line--muted">&rarr; 003_IMPLEMENT/02_frontend_login/03_form_validation.md</div>
-              <div class="terminal-demo__line--muted">  Full context in the task. No re-explaining needed.</div>
-            </div>
+            <img src="/images/demos/step4-scale.gif" class="terminal-demo__gif" alt="Terminal: fest list shows festivals across the campaign and fest next resumes instantly" loading="lazy">
           </div>
         </div>
       </div>

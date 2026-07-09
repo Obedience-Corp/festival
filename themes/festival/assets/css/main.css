@@ -1371,6 +1371,13 @@ summary {
   .reveal-ready .howto__row { opacity: 1; transform: none; transition: none; }
 }
 
+/* Animated terminal GIF fills the terminal-demo card body (below the title bar). */
+.terminal-demo__gif {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
 .cards--steps {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
