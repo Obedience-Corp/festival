@@ -1,5 +1,5 @@
 {{ define "main" }}
-  {{ $isCliLeaf := and .File (in .File.Path "docs/cli-reference/") (ne .File.Path "docs/cli-reference/_index.md") }}
+  {{ $isCliLeaf := and (strings.HasPrefix .RelPermalink "/cli-reference/") (ne .RelPermalink "/cli-reference/") }}
   <article>
     <h1>{{ .Title }}</h1>
     {{ .Content }}
