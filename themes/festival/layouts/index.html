@@ -229,35 +229,6 @@ PLANNING Festivals (1)
     </div>
   </section>
 
-  <section class="home-section home-section--install">
-    <div class="home-install">
-      <div class="home-install__copy">
-        <h2 class="home-section__heading">Install and Start Fast</h2>
-        <p class="home-section__lede">
-          The launch-critical path is simple: install Festival with npm or Homebrew, create a campaign, and get to the first actionable `fest next`.
-        </p>
-      </div>
-      <div class="home-install__actions">
-        <div class="home-install__terminal">
-          <span class="home-install__prompt">$</span>
-          <code>npm install -g @obedience-corp/festival</code>
-        </div>
-        <div class="home-install__terminal">
-          <span class="home-install__prompt">$</span>
-          <code>brew install --cask Obedience-Corp/tap/festival</code>
-        </div>
-        <div class="home-install__buttons">
-          {{ with site.GetPage "/getting-started/installation" }}
-            <a href="{{ .RelPermalink }}" class="btn btn--light">Installation</a>
-          {{ end }}
-          {{ with site.GetPage "/getting-started/quickstart" }}
-            <a href="{{ .RelPermalink }}" class="btn btn--ghost-light">Quick Start</a>
-          {{ end }}
-        </div>
-      </div>
-    </div>
-  </section>
-
   <section class="home-section home-section--tools">
     <p class="home-tools__label">Works with any AI coding tool</p>
     <div class="home-tools__grid">
@@ -271,6 +242,31 @@ PLANNING Festivals (1)
       <span>Aider</span>
       <span>Cursor Agents</span>
       <span>Custom tooling</span>
+    </div>
+  </section>
+
+  <section class="home-section home-section--install">
+    <div class="home-install home-install--center">
+      <h2 class="home-section__heading">Structure the ambition. Let AI ship it.</h2>
+      <div class="home-install__terminals">
+        <div class="home-install__terminal">
+          <span class="home-install__prompt">$</span>
+          <code>brew install --cask Obedience-Corp/tap/festival</code>
+        </div>
+        <div class="home-install__terminal">
+          <span class="home-install__prompt">$</span>
+          <code>npm install -g @obedience-corp/festival</code>
+        </div>
+      </div>
+      <div class="home-install__buttons">
+        {{ with site.GetPage "/getting-started/installation" }}
+          <a href="{{ .RelPermalink }}" class="btn btn--light">Install Festival</a>
+        {{ end }}
+        {{ with site.GetPage "/getting-started/quickstart" }}
+          <a href="{{ .RelPermalink }}" class="btn btn--ghost-light">Quick Start Guide</a>
+        {{ end }}
+      </div>
+      <p class="home-install__note">Free to use. Works in 30 seconds.</p>
     </div>
   </section>
 </div>
