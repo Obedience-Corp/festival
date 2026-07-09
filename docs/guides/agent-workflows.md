@@ -38,6 +38,10 @@ fest next    → Gets next task with full context, executes it (repeat)
 
 On first contact, run `fest intro` once. After that, an agent can run `fest next` indefinitely across multiple sessions without losing state.
 
+Watch the work advance in real time with `fest watch` -- the progress bar and task icons update live as each step completes:
+
+{{< terminal-demo src="/images/demos/tui-fest-watch.gif" title="fest watch" alt="fest watch showing a festival's progress bar and task icons updating live as work completes" max="640" >}}
+
 ---
 
 ## fest as a Guidance System

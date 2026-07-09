@@ -46,6 +46,8 @@ There are two categories of type:
 opens an interactive dashboard across every work item in the campaign. For agents and
 scripts, the same data is available as JSON:
 
+{{< terminal-demo src="/images/demos/tui-workitems.gif" title="camp wi" alt="The camp wi dashboard: intents, designs, explores, and festivals in one unified list, narrowed by search" max="720" >}}
+
 ```bash
 camp workitem                          # interactive dashboard
 camp workitem --json                   # machine-readable output
