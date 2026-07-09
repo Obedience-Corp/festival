@@ -1017,6 +1017,13 @@ summary {
   min-height: 100%;
 }
 
+.cards--problem {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  max-width: 52rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .home-steps {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1806,7 +1813,8 @@ summary {
 
   .home-hero__stats,
   .cards--steps,
-  .cards--reasons {
+  .cards--reasons,
+  .cards--problem {
     grid-template-columns: 1fr;
   }
 
