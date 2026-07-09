@@ -52,56 +52,148 @@
 
   <section class="home-section" id="how-it-works">
     <div class="home-section__intro">
-      <h2 class="home-section__heading">How Festival Works</h2>
-      <p class="home-section__lede">
-        Campaigns keep your repos, docs, research, and planning in one workspace.
-        Festivals turn large goals into execution-ready work that agents can keep moving through.
-      </p>
+      <h2 class="home-section__heading home-section__heading--centered">How it works</h2>
+      <p class="home-section__lede">Two CLI tools. One install. Works with any AI agent.</p>
     </div>
 
-    <div class="cards cards--steps">
-      <div class="card card--step">
-        <div class="card__kicker">01 · Workspace</div>
-        <div class="card__title">Create a campaign workspace</div>
-        <div class="card__description">
-          One command gives you a structured place for projects, festivals, documentation, and AI research.
+    <div class="howto">
+      <div class="howto__row">
+        <div class="howto__copy">
+          <div class="howto__meta"><span class="howto__num">01</span><span class="howto__label">Organize</span></div>
+          <h3>Create a campaign workspace</h3>
+          <p>One command gives you a structured workspace that holds all your projects, plans, docs, and AI research in one place. Shell integration with cgo lets you navigate instantly.</p>
+          {{ with site.GetPage "/tutorials/campaign-setup" }}
+            <a href="{{ .RelPermalink }}" class="howto__link">Campaign setup &rarr;</a>
+          {{ end }}
         </div>
-        {{ with site.GetPage "/tutorials/campaign-setup" }}
-          <a href="{{ .RelPermalink }}" class="card__arrow">→ Campaign setup</a>
-        {{ end }}
+        <div class="howto__visual">
+          <div class="terminal-demo">
+            <div class="terminal-demo__bar">
+              <div class="terminal-demo__dots"><span class="terminal-demo__dot terminal-demo__dot--red"></span><span class="terminal-demo__dot terminal-demo__dot--yellow"></span><span class="terminal-demo__dot terminal-demo__dot--green"></span></div>
+              <span class="terminal-demo__title">~</span>
+            </div>
+            <div class="terminal-demo__body">
+              <div><span class="terminal-demo__prompt">$</span>camp init my-startup -d "AI startup" -m "Ship fast"</div>
+              <div class="terminal-demo__line--highlight">&check; Campaign Initialized</div>
+              <div class="terminal-demo__line--muted">Festivals: initialized</div>
+              <div><span class="terminal-demo__prompt">$</span>cd my-startup</div>
+              <pre class="terminal-demo__pre">my-startup/
+&#9500;&#9472;&#9472; projects/      <span class="terminal-demo__line--muted"># your code repos (git submodules)</span>
+&#9500;&#9472;&#9472; festivals/     <span class="terminal-demo__line--muted"># structured plans</span>
+&#9474;   &#9500;&#9472;&#9472; planning/
+&#9474;   &#9500;&#9472;&#9472; active/
+&#9474;   &#9492;&#9472;&#9472; dungeon/completed/
+&#9500;&#9472;&#9472; docs/          <span class="terminal-demo__line--muted"># your documentation</span>
+&#9492;&#9472;&#9472; .campaign/     <span class="terminal-demo__line--muted"># workspace config</span></pre>
+              <div><span class="terminal-demo__prompt">$</span>camp project add https://github.com/you/api-service</div>
+              <div class="terminal-demo__line--highlight">&check; Added project: api-service</div>
+              <div class="terminal-demo__line--muted"># instant navigation with shell integration</div>
+              <div><span class="terminal-demo__prompt">$</span>cgo p api</div>
+              <div class="terminal-demo__line--muted">~/my-startup/projects/api-service</div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div class="card card--step">
-        <div class="card__kicker">02 · Planning</div>
-        <div class="card__title">Break work into festivals</div>
-        <div class="card__description">
-          Use phases, sequences, and tasks to turn a goal into concrete steps with verification baked in.
+      <div class="howto__row">
+        <div class="howto__copy">
+          <div class="howto__meta"><span class="howto__num">02</span><span class="howto__label">Plan</span></div>
+          <h3>Structure work into festivals</h3>
+          <p>Festivals are goal-oriented plans broken into phases, sequences, and tasks. Each task is a detailed work unit an AI agent can execute autonomously, with exact requirements, file paths, and verification steps.</p>
+          {{ with site.GetPage "/methodology/overview" }}
+            <a href="{{ .RelPermalink }}" class="howto__link">Methodology overview &rarr;</a>
+          {{ end }}
         </div>
-        {{ with site.GetPage "/methodology/overview" }}
-          <a href="{{ .RelPermalink }}" class="card__arrow">→ Methodology overview</a>
-        {{ end }}
+        <div class="howto__visual">
+          <div class="terminal-demo">
+            <div class="terminal-demo__bar">
+              <div class="terminal-demo__dots"><span class="terminal-demo__dot terminal-demo__dot--red"></span><span class="terminal-demo__dot terminal-demo__dot--yellow"></span><span class="terminal-demo__dot terminal-demo__dot--green"></span></div>
+              <span class="terminal-demo__title">~/my-startup/festivals</span>
+            </div>
+            <div class="terminal-demo__body">
+              <div><span class="terminal-demo__prompt">$</span>fest create festival --name auth-system --type standard</div>
+              <div class="terminal-demo__line--highlight">&check; Created festival: auth-system-AS0001 <span class="terminal-demo__line--muted">(planning)</span></div>
+              <div class="terminal-demo__line--highlight">&check; Auto-created 2 phase(s): 001_INGEST, 002_PLAN</div>
+              <pre class="terminal-demo__pre">auth-system-AS0001/
+&#9500;&#9472;&#9472; FESTIVAL_GOAL.md       <span class="terminal-demo__line--muted"># what success looks like</span>
+&#9500;&#9472;&#9472; FESTIVAL_RULES.md      <span class="terminal-demo__line--muted"># quality contract</span>
+&#9500;&#9472;&#9472; fest.yaml
+&#9500;&#9472;&#9472; gates/                 <span class="terminal-demo__line--muted"># 4 quality gate templates</span>
+&#9500;&#9472;&#9472; 001_INGEST/
+&#9492;&#9472;&#9472; 002_PLAN/</pre>
+              <div><span class="terminal-demo__prompt">$</span>fest validate</div>
+              <div class="terminal-demo__line--highlight">&check; Structure valid. 37 markers to fill before execution.</div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div class="card card--step">
-        <div class="card__kicker">03 · Execution</div>
-        <div class="card__title">Run agents with context intact</div>
-        <div class="card__description">
-          `fest next` loads the next scoped task so an agent can continue cleanly across sessions and repos.
+      <div class="howto__row">
+        <div class="howto__copy">
+          <div class="howto__meta"><span class="howto__num">03</span><span class="howto__label">Execute</span></div>
+          <h3>fest next: the agent loop</h3>
+          <p>One command tells any agent exactly what to do next, with full context. The agent works, marks the task complete, commits with tracking, and gets the next task. No context window wasted on re-explanation.</p>
+          {{ with site.GetPage "/guides/agent-workflows" }}
+            <a href="{{ .RelPermalink }}" class="howto__link">Agent workflows &rarr;</a>
+          {{ end }}
         </div>
-        {{ with site.GetPage "/guides/agent-workflows" }}
-          <a href="{{ .RelPermalink }}" class="card__arrow">→ Agent workflows</a>
-        {{ end }}
+        <div class="howto__visual">
+          <div class="terminal-demo">
+            <div class="terminal-demo__bar">
+              <div class="terminal-demo__dots"><span class="terminal-demo__dot terminal-demo__dot--red"></span><span class="terminal-demo__dot terminal-demo__dot--yellow"></span><span class="terminal-demo__dot terminal-demo__dot--green"></span></div>
+              <span class="terminal-demo__title">~/my-startup/festivals/active/auth-system-AS0001</span>
+            </div>
+            <div class="terminal-demo__body">
+              <div class="terminal-demo__line--muted"># the core loop: one command, full context</div>
+              <div><span class="terminal-demo__prompt">$</span>fest next</div>
+              <div class="terminal-demo__line--accent">&#9472;&#9472;&#9472; Next Task &#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;</div>
+              <div><strong>Phase:</strong> <span class="terminal-demo__line--muted">003_IMPLEMENT</span></div>
+              <div><strong>Sequence:</strong> <span class="terminal-demo__line--muted">01_backend_auth</span></div>
+              <div><strong>Task:</strong> 01_create_user_model.md</div>
+              <div class="terminal-demo__line--muted">Create PostgreSQL users table and model with email, password_hash, created_at, updated_at.</div>
+              <div class="terminal-demo__line--muted"># agent executes autonomously, then:</div>
+              <div><span class="terminal-demo__prompt">$</span>fest task completed</div>
+              <div class="terminal-demo__line--highlight">&check; Task marked complete</div>
+              <div><span class="terminal-demo__prompt">$</span>fest commit -m "implement user model"</div>
+              <div class="terminal-demo__line--highlight">&check; Committed <span class="terminal-demo__line--muted">[OBEY-FE-AS0001]</span></div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div class="card card--step">
-        <div class="card__kicker">04 · Throughput</div>
-        <div class="card__title">Track multiple missions at once</div>
-        <div class="card__description">
-          Parallel festivals, visible progress, and quality gates make multi-project work operable instead of chaotic.
+      <div class="howto__row">
+        <div class="howto__copy">
+          <div class="howto__meta"><span class="howto__num">04</span><span class="howto__label">Scale</span></div>
+          <h3>Track progress across everything</h3>
+          <p>Multiple festivals running in parallel, across multiple projects, with different agents. fest status shows where everything stands. Any agent, any session, picks up exactly where you left off.</p>
+          {{ with site.GetPage "/getting-started/quickstart" }}
+            <a href="{{ .RelPermalink }}" class="howto__link">Quick start &rarr;</a>
+          {{ end }}
         </div>
-        {{ with site.GetPage "/getting-started/quickstart" }}
-          <a href="{{ .RelPermalink }}" class="card__arrow">→ Quick start</a>
-        {{ end }}
+        <div class="howto__visual">
+          <div class="terminal-demo">
+            <div class="terminal-demo__bar">
+              <div class="terminal-demo__dots"><span class="terminal-demo__dot terminal-demo__dot--red"></span><span class="terminal-demo__dot terminal-demo__dot--yellow"></span><span class="terminal-demo__dot terminal-demo__dot--green"></span></div>
+              <span class="terminal-demo__title">~/my-startup</span>
+            </div>
+            <div class="terminal-demo__body">
+              <div><span class="terminal-demo__prompt">$</span>fest list</div>
+              <pre class="terminal-demo__pre">ALL FESTIVALS
+<span class="terminal-demo__line--muted">Total 3</span>
+
+ACTIVE Festivals (2)
+  <span class="terminal-demo__line--highlight">auth-system-AS0001</span>  <span class="terminal-demo__line--muted">[62%]</span>
+  <span class="terminal-demo__line--highlight">payments-v2-PV0001</span>  <span class="terminal-demo__line--muted">[45%]</span>
+
+PLANNING Festivals (1)
+  <span class="terminal-demo__line--accent">search-rewrite-SR0001</span>  <span class="terminal-demo__line--muted">[0%]</span></pre>
+              <div class="terminal-demo__line--muted"># new agent session? picks up instantly</div>
+              <div><span class="terminal-demo__prompt">$</span>fest next</div>
+              <div class="terminal-demo__line--muted">&rarr; 003_IMPLEMENT/02_frontend_login/03_form_validation.md</div>
+              <div class="terminal-demo__line--muted">  Full context in the task. No re-explaining needed.</div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>

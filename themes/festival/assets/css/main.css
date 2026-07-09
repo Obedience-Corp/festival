@@ -1281,6 +1281,89 @@ summary {
   color: #50fa7b;
 }
 
+.howto {
+  display: flex;
+  flex-direction: column;
+  gap: 5rem;
+  margin-top: 2.5rem;
+}
+
+.howto__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 3rem;
+  align-items: center;
+}
+
+.howto__row:nth-child(even) .howto__copy { order: 2; }
+.howto__row:nth-child(even) .howto__visual { order: 1; }
+
+.howto__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+  font-family: var(--font-heading);
+}
+
+.howto__num {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--festival-400);
+}
+
+.howto__label {
+  font-size: 0.74rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--festival-400);
+}
+
+.howto__copy h3 {
+  margin: 0 0 0.75rem;
+  font-size: 1.6rem;
+  letter-spacing: -0.02em;
+}
+
+.howto__copy p {
+  margin: 0 0 1rem;
+  color: var(--festival-500);
+  line-height: 1.7;
+}
+
+.howto__link {
+  font-weight: 600;
+  font-size: 0.92rem;
+}
+
+.howto__visual { min-width: 0; }
+
+.terminal-demo__pre {
+  margin: 0;
+  padding: 0;
+  font: inherit;
+  white-space: pre;
+  overflow-x: auto;
+  color: #f8f8f2;
+  background: none;
+  border: 0;
+}
+
+.reveal-ready .howto__row {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.reveal-ready .howto__row.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-ready .howto__row { opacity: 1; transform: none; transition: none; }
+}
+
 .cards--steps {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
@@ -1726,6 +1809,17 @@ summary {
   .cards--reasons {
     grid-template-columns: 1fr;
   }
+
+  .howto { gap: 3rem; }
+
+  .howto__row {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  /* keep reading order on mobile: copy first, terminal second */
+  .howto__row:nth-child(even) .howto__copy { order: 1; }
+  .howto__row:nth-child(even) .howto__visual { order: 2; }
 
   .home-install {
     grid-template-columns: 1fr;
