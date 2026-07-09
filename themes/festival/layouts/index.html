@@ -2,22 +2,17 @@
 <div class="home-shell">
   <section class="home-hero">
     <div class="home-hero__copy">
-      <div class="home-hero__eyebrow">The organizational layer for AI work</div>
-      <h1>Where your AI work goes.</h1>
+      <h1>AI can generate the pieces.<br>Festival keeps the work coherent.</h1>
       <p>
-        AI generates plans, code, and research faster than you can organize it.
-        Festival gives every mission one workspace, so you stop asking
-        "where should this go?" and "what was I working on?" Structured loops carry
-        long-running goals all the way to done, not just to a plan that stalls.
+        A system for managing long-running AI-assisted work across months of
+        decisions, context, artifacts, reviews, and next actions.
       </p>
 
       <div class="home-hero__actions">
         {{ with site.GetPage "/getting-started/installation" }}
           <a href="{{ .RelPermalink }}" class="btn btn--primary">Install Festival</a>
         {{ end }}
-        {{ with site.GetPage "/getting-started/quickstart" }}
-          <a href="{{ .RelPermalink }}" class="btn btn--secondary">Read the Quick Start</a>
-        {{ end }}
+        <a href="#how-it-works" class="btn btn--secondary">See how it works</a>
         {{ with site.Params.repo }}
           <a href="{{ . }}" class="btn btn--secondary" target="_blank" rel="noopener">★ Star on GitHub</a>
         {{ end }}
