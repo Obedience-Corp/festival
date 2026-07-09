@@ -76,14 +76,7 @@ cgo wt           # worktrees/
 
 No more typing long paths. Every important directory is one shortcut away.
 
-<div class="terminal-demo" style="max-width:600px;margin:1.75rem 0;">
-  <div class="terminal-demo__bar">
-    <div class="terminal-demo__dots"><span class="terminal-demo__dot terminal-demo__dot--red"></span><span class="terminal-demo__dot terminal-demo__dot--yellow"></span><span class="terminal-demo__dot terminal-demo__dot--green"></span></div>
-    <span class="terminal-demo__title">my-startup</span>
-  </div>
-  <img src="/images/demos/cgo-navigation.gif" alt="cgo jumping between projects, festivals, and design directories, plus csw to switch campaigns" style="display:block;width:100%;height:auto;" loading="lazy">
-</div>
-
+{{< terminal-demo src="/images/demos/cgo-navigation.gif" title="my-startup" alt="cgo jumping between projects, festivals, and design directories, plus csw to switch campaigns" >}}
 
 ## Add Projects
 

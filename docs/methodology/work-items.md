@@ -22,14 +22,7 @@ different filing systems and start thinking about one stream of work.
 This is the organizational primitive underneath a campaign. Campaigns give a mission
 a workspace; work items give the work inside that workspace a shared identity.
 
-<div class="terminal-demo" style="max-width:600px;margin:1.75rem 0;">
-  <div class="terminal-demo__bar">
-    <div class="terminal-demo__dots"><span class="terminal-demo__dot terminal-demo__dot--red"></span><span class="terminal-demo__dot terminal-demo__dot--yellow"></span><span class="terminal-demo__dot terminal-demo__dot--green"></span></div>
-    <span class="terminal-demo__title">obey-campaign</span>
-  </div>
-  <img src="/images/demos/camp-workitems.gif" alt="camp wi --list: festivals, designs, intents, and explores in one unified work list" style="display:block;width:100%;height:auto;" loading="lazy">
-</div>
-
+{{< terminal-demo src="/images/demos/camp-workitems.gif" title="obey-campaign" alt="camp wi --list: festivals, designs, intents, and explores in one unified work list" >}}
 
 ## What Is a Work Item?
 

@@ -1,0 +1,11 @@
+{{- $src := .Get "src" -}}
+{{- $title := .Get "title" -}}
+{{- $alt := .Get "alt" -}}
+{{- $max := .Get "max" | default "600" -}}
+<div class="terminal-demo terminal-demo--embed" style="max-width:{{ $max }}px;">
+  <div class="terminal-demo__bar">
+    <div class="terminal-demo__dots"><span class="terminal-demo__dot terminal-demo__dot--red"></span><span class="terminal-demo__dot terminal-demo__dot--yellow"></span><span class="terminal-demo__dot terminal-demo__dot--green"></span></div>
+    <span class="terminal-demo__title">{{ $title }}</span>
+  </div>
+  <img src="{{ $src }}" alt="{{ $alt }}" class="terminal-demo__gif" style="display:block;width:100%;height:auto;" loading="lazy">
+</div>
