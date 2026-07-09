@@ -111,6 +111,15 @@ fest status            # Check progress on current festival
 
 Three active festivals means three agent sessions running independently. Five means five. Scale is limited by token budget, not methodology.
 
+<div class="terminal-demo" style="max-width:600px;margin:1.75rem 0;">
+  <div class="terminal-demo__bar">
+    <div class="terminal-demo__dots"><span class="terminal-demo__dot terminal-demo__dot--red"></span><span class="terminal-demo__dot terminal-demo__dot--yellow"></span><span class="terminal-demo__dot terminal-demo__dot--green"></span></div>
+    <span class="terminal-demo__title">obey-campaign</span>
+  </div>
+  <img src="/images/demos/fest-list.gif" alt="fest list showing 14 real festivals across active, ready, planning, and ritual" style="display:block;width:100%;height:auto;" loading="lazy">
+</div>
+
+
 ---
 
 ## Across Campaigns
