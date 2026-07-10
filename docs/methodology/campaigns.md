@@ -156,6 +156,10 @@ camp leverage                                    # Prioritize intents
 camp dungeon move old-festival                   # Archive completed work
 ```
 
+`camp dungeon crawl` reviews stale work interactively -- for each item, keep it, file it into the dungeon (completed, archived, or someday), or skip it:
+
+{{< terminal-demo src="/images/demos/tui-dungeon-crawl.gif" title="camp dungeon crawl" alt="camp dungeon crawl triaging stale items into the dungeon: move to archived, keep, or skip, ending in a committed summary" max="720" >}}
+
 ### Multiple Campaigns
 
 ```bash

@@ -32,6 +32,10 @@ camp intent list                                        # See the pipeline
 camp intent list --status ready                         # What's promotion-ready
 ```
 
+Running `camp intent add` with no arguments opens an interactive capture form -- title, type, an optional concept, and a description -- so an idea is committed in seconds:
+
+{{< terminal-demo src="/images/demos/tui-intent-add.gif" title="camp intent add" alt="The camp intent add capture form: title, type, concept, and description, then saved to the inbox" max="640" >}}
+
 Intents have a lifecycle:
 
 | Status | Meaning |
