@@ -21,6 +21,10 @@ Festivals use a three-level hierarchy to organize work:
 
 A simple festival might have one phase with two sequences. A complex festival might have five phases spanning weeks of autonomous agent work. The structure adapts to the work, not the other way around.
 
+`fest show` renders that hierarchy for any festival. In a campaign workspace it opens a cyclable view -- use the ←/→ keys to move between festivals:
+
+{{< terminal-demo src="/images/demos/tui-fest-show.gif" title="fest show" alt="fest show rendering a festival's phase, sequence, and task tree, cycling between festivals with the arrow keys" max="640" >}}
+
 ## Festival Types
 
 Every festival has a type that determines its default phase scaffolding.
