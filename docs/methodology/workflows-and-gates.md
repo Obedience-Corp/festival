@@ -114,6 +114,10 @@ automatically: the WORKFLOW.md runs first if it is incomplete, and the GATES.md 
 once phase work is done. You do not pick the document; `fest workflow status` and
 `fest next` target the right one for where the phase is.
 
+`fest gates apply` scaffolds sequence-end quality gates -- testing, review, iterate, and commit steps -- into a festival's implementation sequences. It previews the changes as a dry-run by default; add `--approve` to write them:
+
+{{< terminal-demo src="/images/demos/tui-fest-gates-apply.gif" title="fest gates apply" alt="fest gates apply showing a dry-run of the quality gates it would add to each sequence, then applying them with --approve" max="720" >}}
+
 ## Reject, Skip, and Failed-Gate Remediation
 
 Three operator actions look similar but record different audit trails. Pick the one
