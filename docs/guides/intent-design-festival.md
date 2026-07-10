@@ -37,6 +37,10 @@ camp intent add "Add copy button to API key screen"
 camp intent list
 ```
 
+Browse and triage everything you have captured with the interactive explorer (`camp intent explore`, aliased `cie`) -- intents grouped by status, with a live preview pane and fuzzy search:
+
+{{< terminal-demo src="/images/demos/tui-intent-explore.gif" title="camp intent explore" alt="The camp intent explore TUI: intents grouped by status with a live preview pane and fuzzy search" max="720" >}}
+
 If the intent grows into a larger change later, you can gather or promote it then. Starting with an intent is cheap.
 
 ---

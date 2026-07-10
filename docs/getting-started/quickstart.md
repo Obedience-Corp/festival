@@ -119,6 +119,10 @@ fest progress      # Detailed execution progress with phase/sequence breakdown
 
 `fest status` gives a high-level view. `fest progress` shows exactly where you are in the phase-sequence-task hierarchy.
 
+To see every festival in the campaign at once, grouped by status, use `fest list`:
+
+{{< terminal-demo src="/images/demos/tui-fest-list.gif" title="fest list" alt="fest list showing festivals grouped by status: active, ready, and planning" max="600" >}}
+
 ## What's Next?
 
 - [Methodology Overview]({{< ref "/methodology/overview" >}}) -- Understand the full phase-sequence-task system
