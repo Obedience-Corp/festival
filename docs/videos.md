@@ -18,7 +18,7 @@ Walkthroughs, demos, and speed runs of Festival in real use. New videos land on 
 ## Start Here
 
 <div class="video-grid">
-<a class="video-card" href="https://youtu.be/v7LhrRRG_RU"><img loading="lazy" src="https://i.ytimg.com/vi/v7LhrRRG_RU/hqdefault.jpg" alt="How I Manage 45+ Projects with AI Agents Using Festival Methodology"><div class="video-card__title">How I Manage 45+ Projects with AI Agents Using Festival Methodology</div></a>
+<a class="video-card" href="https://youtu.be/5Us2uoWvdwM"><img loading="lazy" src="https://i.ytimg.com/vi/5Us2uoWvdwM/hqdefault.jpg" alt="Building fest.build with fest.build"><div class="video-card__title">Building fest.build with fest.build</div></a>
 <a class="video-card" href="https://youtu.be/sqLdWwM70-Q"><img loading="lazy" src="https://i.ytimg.com/vi/sqLdWwM70-Q/hqdefault.jpg" alt="Engineering a Hierarchical AI Agent Planning System (2 Weeks to 30 Minutes)"><div class="video-card__title">Engineering a Hierarchical AI Agent Planning System (2 Weeks &rarr; 30 Minutes)</div></a>
 </div>
 
@@ -27,7 +27,7 @@ Walkthroughs, demos, and speed runs of Festival in real use. New videos land on 
 <div class="video-grid">
 <a class="video-card" href="https://youtu.be/-TCQnN39WSU"><img loading="lazy" src="https://i.ytimg.com/vi/-TCQnN39WSU/hqdefault.jpg" alt="Building 9 systems in parallel with fest.build, ghostty, claude code and codex"><div class="video-card__title">Building 9 Systems in Parallel with fest.build, Ghostty, Claude Code and Codex</div></a>
 <a class="video-card" href="https://youtu.be/VylG6X4eKSU"><img loading="lazy" src="https://i.ytimg.com/vi/VylG6X4eKSU/hqdefault.jpg" alt="Camp Dungeon Crawl Workflow"><div class="video-card__title">Camp Dungeon Crawl Workflow</div></a>
-<a class="video-card" href="https://youtu.be/5Us2uoWvdwM"><img loading="lazy" src="https://i.ytimg.com/vi/5Us2uoWvdwM/hqdefault.jpg" alt="Building fest.build with fest.build"><div class="video-card__title">Building fest.build with fest.build</div></a>
+<a class="video-card" href="https://www.tiktok.com/@ethanplusai/video/7619154198227143967"><img loading="lazy" src="/images/videos/tiktok-7619154198227143967.jpg" alt="How I Maximize Claude Usage to Speed Up Production (TikTok by @ethanplusai)"><div class="video-card__title">How I Maximize Claude Usage to Speed Up Production</div></a>
 <a class="video-card" href="https://youtu.be/oL5O7j1t6No"><img loading="lazy" src="https://i.ytimg.com/vi/oL5O7j1t6No/hqdefault.jpg" alt="Claude Code using fest cli to turn a monitoring desktop app into an agentic IDE"><div class="video-card__title">Claude Code Using fest CLI to Turn a Monitoring App into an Agentic IDE</div></a>
 </div>
 
