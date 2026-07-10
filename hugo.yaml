@@ -108,6 +108,34 @@ menu:
       url: /guides/loops-and-orchestration/
       weight: 34
 
+    - name: Use Cases
+      identifier: use-cases
+      weight: 35
+    - name: AI Agent Project Management
+      parent: use-cases
+      url: /use-cases/ai-agent-project-management/
+      weight: 35
+    - name: Long-Running AI Coding Sessions
+      parent: use-cases
+      url: /use-cases/long-running-ai-coding-sessions/
+      weight: 36
+    - name: Claude Code Project Management
+      parent: use-cases
+      url: /use-cases/claude-code-project-management/
+      weight: 37
+    - name: AI Agent Handoff
+      parent: use-cases
+      url: /use-cases/ai-agent-handoff/
+      weight: 38
+
+    - name: Compare
+      identifier: compare
+      weight: 39
+    - name: Festival vs Issue Trackers
+      parent: compare
+      url: /compare/festival-vs-issue-trackers/
+      weight: 39
+
     - name: Tutorials
       identifier: tutorials
       weight: 40

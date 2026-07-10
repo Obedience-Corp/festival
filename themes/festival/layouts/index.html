@@ -186,6 +186,47 @@
     </div>
   </section>
 
+  <section class="home-section home-section--next-steps">
+    <div class="home-section__intro">
+      <h2 class="home-section__heading home-section__heading--centered">Use Festival where AI work loses context</h2>
+      <p class="home-section__lede">
+        Start with the workflow problem you are trying to solve, then move into the installation
+        and command reference once the fit is clear.
+      </p>
+    </div>
+
+    <div class="cards">
+      {{ with site.GetPage "/use-cases/ai-agent-project-management" }}
+        <a href="{{ .RelPermalink }}" class="card">
+          <div class="card__title">AI agent project management</div>
+          <div class="card__description">Give agents goals, phases, tasks, status, and verification they can read from the workspace.</div>
+          <span class="card__arrow">Read the use case &rarr;</span>
+        </a>
+      {{ end }}
+      {{ with site.GetPage "/use-cases/long-running-ai-coding-sessions" }}
+        <a href="{{ .RelPermalink }}" class="card">
+          <div class="card__title">Long-running AI coding sessions</div>
+          <div class="card__description">Keep multi-day or multi-week implementation work coherent across context windows and interruptions.</div>
+          <span class="card__arrow">Read the use case &rarr;</span>
+        </a>
+      {{ end }}
+      {{ with site.GetPage "/use-cases/ai-agent-handoff" }}
+        <a href="{{ .RelPermalink }}" class="card">
+          <div class="card__title">AI agent handoff</div>
+          <div class="card__description">Let a new agent, model, or human reviewer resume from the actual next step.</div>
+          <span class="card__arrow">Read the use case &rarr;</span>
+        </a>
+      {{ end }}
+      {{ with site.GetPage "/compare/festival-vs-issue-trackers" }}
+        <a href="{{ .RelPermalink }}" class="card">
+          <div class="card__title">Festival vs issue trackers</div>
+          <div class="card__description">Use backlog tools for team coordination and Festival for executable AI work plans.</div>
+          <span class="card__arrow">Compare the workflow &rarr;</span>
+        </a>
+      {{ end }}
+    </div>
+  </section>
+
   <section class="home-section home-section--install">
     <div class="home-install home-install--center">
       <h2 class="home-section__heading">Structure the ambition. Let AI ship it.</h2>
