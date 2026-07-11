@@ -59,9 +59,9 @@
     <div class="howto">
       <div class="howto__row">
         <div class="howto__copy">
-          <div class="howto__meta"><span class="howto__num">01</span><span class="howto__label">Organize</span></div>
-          <h3>Create a campaign workspace</h3>
-          <p>One command gives you a structured workspace that holds all your projects, plans, docs, and AI research in one place. Shell integration with cgo lets you navigate instantly.</p>
+          <div class="howto__meta"><span class="howto__num">01</span><span class="howto__label">Set up</span></div>
+          <h3>Create your workspace</h3>
+          <p>One command scaffolds a campaign that holds every project, plan, and doc in one place. <code>csw</code> switches into it and <code>cgo</code> jumps you anywhere. That is the whole setup.</p>
           {{ with site.GetPage "/tutorials/campaign-setup" }}
             <a href="{{ .RelPermalink }}" class="howto__link">Campaign setup &rarr;</a>
           {{ end }}
@@ -70,38 +70,38 @@
           <div class="terminal-demo">
             <div class="terminal-demo__bar">
               <div class="terminal-demo__dots"><span class="terminal-demo__dot terminal-demo__dot--red"></span><span class="terminal-demo__dot terminal-demo__dot--yellow"></span><span class="terminal-demo__dot terminal-demo__dot--green"></span></div>
-              <span class="terminal-demo__title">~</span>
+              <span class="terminal-demo__title">camp create</span>
             </div>
-            <img src="/images/demos/step1-organize.gif" class="terminal-demo__gif" alt="Terminal: camp create scaffolds a campaign workspace, csw switches into it, then camp project add and cgo navigation" data-poster="/images/demos/step1-organize-poster.png" loading="lazy">
+            <img src="/images/demos/tui-setup.gif" class="terminal-demo__gif" alt="Terminal: camp create scaffolds a campaign, csw switches in, and cgo navigates to projects and festivals" data-poster="/images/demos/tui-setup-poster.png" loading="lazy">
           </div>
         </div>
       </div>
 
       <div class="howto__row">
         <div class="howto__copy">
-          <div class="howto__meta"><span class="howto__num">02</span><span class="howto__label">Plan</span></div>
-          <h3>Structure work into festivals</h3>
-          <p>Festivals are goal-oriented plans broken into phases, sequences, and tasks. Each task is a detailed work unit an AI agent can execute autonomously, with exact requirements, file paths, and verification steps.</p>
-          {{ with site.GetPage "/methodology/overview" }}
-            <a href="{{ .RelPermalink }}" class="howto__link">Methodology overview &rarr;</a>
+          <div class="howto__meta"><span class="howto__num">02</span><span class="howto__label">Delegate</span></div>
+          <h3>Describe the work to your agent</h3>
+          <p>Open your agent of choice, Claude Code, Codex, or Grok, and describe what you want in a sentence. It creates the design, scaffolds a festival, and plans the whole thing out into phases, sequences, and tasks. You do not touch the <code>fest</code> CLI.</p>
+          {{ with site.GetPage "/guides/intent-design-festival" }}
+            <a href="{{ .RelPermalink }}" class="howto__link">Intent, design, festival &rarr;</a>
           {{ end }}
         </div>
         <div class="howto__visual">
           <div class="terminal-demo">
             <div class="terminal-demo__bar">
               <div class="terminal-demo__dots"><span class="terminal-demo__dot terminal-demo__dot--red"></span><span class="terminal-demo__dot terminal-demo__dot--yellow"></span><span class="terminal-demo__dot terminal-demo__dot--green"></span></div>
-              <span class="terminal-demo__title">~/campaigns/my-startup</span>
+              <span class="terminal-demo__title">grok</span>
             </div>
-            <img src="/images/demos/step2-plan.gif" class="terminal-demo__gif" alt="Terminal: an agent creates the auth-system festival and runs the planning loop from a request" data-poster="/images/demos/step2-plan-poster.png" loading="lazy">
+            <img src="/images/demos/tui-delegate.gif" class="terminal-demo__gif" alt="The Grok agent TUI: one sentence delegates a design workitem and a festival planned across eight phases" data-poster="/images/demos/tui-delegate-poster.png" loading="lazy">
           </div>
         </div>
       </div>
 
       <div class="howto__row">
         <div class="howto__copy">
-          <div class="howto__meta"><span class="howto__num">03</span><span class="howto__label">Execute</span></div>
-          <h3>fest next: the agent loop</h3>
-          <p>One command tells any agent exactly what to do next, with full context. The agent works, marks the task complete, commits with tracking, and gets the next task. No context window wasted on re-explanation.</p>
+          <div class="howto__meta"><span class="howto__num">03</span><span class="howto__label">Watch</span></div>
+          <h3>Watch the plan get built</h3>
+          <p>Your agent works the <code>fest next</code> loop on its own, and you watch progress climb in real time as tasks complete and commit with tracking. Any session picks up exactly where the last one stopped.</p>
           {{ with site.GetPage "/guides/agent-workflows" }}
             <a href="{{ .RelPermalink }}" class="howto__link">Agent workflows &rarr;</a>
           {{ end }}
@@ -110,18 +110,18 @@
           <div class="terminal-demo">
             <div class="terminal-demo__bar">
               <div class="terminal-demo__dots"><span class="terminal-demo__dot terminal-demo__dot--red"></span><span class="terminal-demo__dot terminal-demo__dot--yellow"></span><span class="terminal-demo__dot terminal-demo__dot--green"></span></div>
-              <span class="terminal-demo__title">~/campaigns/my-startup · agent</span>
+              <span class="terminal-demo__title">fest watch</span>
             </div>
-            <img src="/images/demos/step3-execute.gif" class="terminal-demo__gif" alt="Terminal: the fest next loop hands an agent the next task, then fest task completed and fest commit" data-poster="/images/demos/step3-execute-poster.png" loading="lazy">
+            <img src="/images/demos/tui-fest-watch.gif" class="terminal-demo__gif" alt="fest watch: a festival's progress bar and task icons climbing live as the agent works" data-poster="/images/demos/tui-fest-watch-poster.png" loading="lazy">
           </div>
         </div>
       </div>
 
       <div class="howto__row">
         <div class="howto__copy">
-          <div class="howto__meta"><span class="howto__num">04</span><span class="howto__label">Scale</span></div>
-          <h3>Track progress across everything</h3>
-          <p>Multiple festivals running in parallel, across multiple projects, with different agents. fest status shows where everything stands. Any agent, any session, picks up exactly where you left off.</p>
+          <div class="howto__meta"><span class="howto__num">04</span><span class="howto__label">Track</span></div>
+          <h3>Track everything in one place</h3>
+          <p>Every festival, intent, design, and project across the campaign in one dashboard. Run many in parallel with different agents, and switch between them without losing the thread.</p>
           {{ with site.GetPage "/getting-started/quickstart" }}
             <a href="{{ .RelPermalink }}" class="howto__link">Quick start &rarr;</a>
           {{ end }}
@@ -130,9 +130,9 @@
           <div class="terminal-demo">
             <div class="terminal-demo__bar">
               <div class="terminal-demo__dots"><span class="terminal-demo__dot terminal-demo__dot--red"></span><span class="terminal-demo__dot terminal-demo__dot--yellow"></span><span class="terminal-demo__dot terminal-demo__dot--green"></span></div>
-              <span class="terminal-demo__title">~/campaigns/my-startup</span>
+              <span class="terminal-demo__title">camp wi</span>
             </div>
-            <img src="/images/demos/step4-scale.gif" class="terminal-demo__gif" alt="Terminal: fest list shows festivals across the campaign and fest next resumes instantly" data-poster="/images/demos/step4-scale-poster.png" loading="lazy">
+            <img src="/images/demos/tui-workitems.gif" class="terminal-demo__gif" alt="camp wi dashboard: every festival, intent, design, and project in one unified list" data-poster="/images/demos/tui-workitems-poster.png" loading="lazy">
           </div>
         </div>
       </div>
