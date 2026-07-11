@@ -133,6 +133,13 @@ After installing, see the [quick start guide](https://docs.fest.build/getting-st
   </tr>
 </table>
 
+<p align="center"><strong>The same tooling, in any agent's terminal</strong></p>
+<p align="center"><em><code>camp</code> and <code>fest</code> are just CLIs, so they render and run inside whatever agent you use, Claude Code, Codex, or grok-build below.</em></p>
+
+<p align="center">
+  <img src="docs/images/demos/grok-fest-show.gif" alt="fest show rendering a festival's phase and sequence tree inside a grok-build session" width="600">
+</p>
+
 <p align="center"><strong>A 4-day festival, planned and built across three AI tools</strong></p>
 <p align="center"><em>Planned in Claude Code (Fathom), promoted to active, then the <code>fest next</code> loop ran in grok-build, stopped 2 days in, and finished in Codex.</em></p>
 
