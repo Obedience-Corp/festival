@@ -133,11 +133,11 @@ After installing, see the [quick start guide](https://docs.fest.build/getting-st
   </tr>
 </table>
 
-<p align="center"><strong>The same tooling, in any agent's terminal</strong></p>
-<p align="center"><em><code>camp</code> and <code>fest</code> are just CLIs, so they render and run inside whatever agent you use, Claude Code, Codex, or grok-build below.</em></p>
+<p align="center"><strong>Delegate the planning to any agent, Grok Build below</strong></p>
+<p align="center"><em>Describe the work in a sentence and your agent scaffolds the design and plans the whole festival across phases, sequences, and tasks. No <code>fest</code> commands to memorize.</em></p>
 
 <p align="center">
-  <img src="docs/images/demos/grok-fest-show.gif" alt="fest show rendering a festival's phase and sequence tree inside a grok-build session" width="600">
+  <img src="docs/images/demos/tui-delegate.gif" alt="The Grok Build agent TUI: one sentence delegates a design workitem and a festival planned across eight phases, ending in fest show" width="700">
 </p>
 
 <p align="center"><strong>A 4-day festival, planned and built across three AI tools</strong></p>
