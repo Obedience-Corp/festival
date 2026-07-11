@@ -308,6 +308,55 @@ fest understand                  # Teach an AI agent the full methodology
 
 `fest next` is the entry point for agents: it resolves the next task with context from every level of the hierarchy and respects workflow ordering and completion criteria. See [Agentic Loops](#agentic-loops) for how it drives execution end to end.
 
+## See It in Action
+
+`camp` and `fest` are terminal-native. Here is what the core commands actually look like.
+
+<table>
+  <tr>
+    <td align="center" width="33%">
+      <img src="docs/images/demos/cgo-navigation.gif" alt="cgo jumping between projects, festivals, and design directories, plus csw to switch campaigns"><br>
+      <sub><b><code>cgo</code></b><br>Jump anywhere in the workspace</sub>
+    </td>
+    <td align="center" width="33%">
+      <img src="docs/images/demos/tui-workitems.gif" alt="The camp wi dashboard: intents, designs, explores, and festivals in one unified list, narrowed by search"><br>
+      <sub><b><code>camp wi</code></b><br>One queue for every kind of work</sub>
+    </td>
+    <td align="center" width="33%">
+      <img src="docs/images/demos/tui-intent-add.gif" alt="The camp intent add capture form: title, type, concept, and description, then saved to the inbox"><br>
+      <sub><b><code>camp intent add</code></b><br>Capture an idea in seconds</sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="33%">
+      <img src="docs/images/demos/tui-intent-explore.gif" alt="The camp intent explore TUI: intents grouped by status with a live preview pane and fuzzy search"><br>
+      <sub><b><code>camp intent explore</code></b><br>Browse and triage the inbox</sub>
+    </td>
+    <td align="center" width="33%">
+      <img src="docs/images/demos/tui-fest-list.gif" alt="fest list showing festivals grouped by status: active, ready, and planning"><br>
+      <sub><b><code>fest list</code></b><br>Every festival, grouped by status</sub>
+    </td>
+    <td align="center" width="33%">
+      <img src="docs/images/demos/tui-fest-show.gif" alt="fest show rendering a festival's phase, sequence, and task tree, cycling between festivals with the arrow keys"><br>
+      <sub><b><code>fest show</code></b><br>Read a plan's full structure</sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="33%">
+      <img src="docs/images/demos/tui-fest-watch.gif" alt="fest watch showing a festival's progress bar and task icons updating live as work completes"><br>
+      <sub><b><code>fest watch</code></b><br>Watch progress update live</sub>
+    </td>
+    <td align="center" width="33%">
+      <img src="docs/images/demos/tui-fest-gates-apply.gif" alt="fest gates apply showing a dry-run of the quality gates it would add to each sequence, then applying them with --approve"><br>
+      <sub><b><code>fest gates apply</code></b><br>Add quality gates in one command</sub>
+    </td>
+    <td align="center" width="33%">
+      <img src="docs/images/demos/tui-dungeon-crawl.gif" alt="camp dungeon crawl triaging stale items into the dungeon: move to archived, keep, or skip, ending in a committed summary"><br>
+      <sub><b><code>camp dungeon crawl</code></b><br>Triage stale work into the dungeon</sub>
+    </td>
+  </tr>
+</table>
+
 ## Claude Code Plugin
 
 Install the Festival plugin for Claude Code to get `fest` and `camp` CLI tools, slash commands, methodology skills, and specialized agents in one step:

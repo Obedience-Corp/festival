@@ -1378,6 +1378,31 @@ summary {
   height: auto;
 }
 
+/* Gallery of terminal-native command demos on the landing page. */
+.demo-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 2.5rem;
+}
+
+.demo-gallery__item {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.demo-gallery__item .terminal-demo {
+  border-radius: 16px;
+}
+
+.demo-gallery__caption {
+  font-size: 0.9rem;
+  color: var(--festival-500);
+  text-align: center;
+}
+
 .cards--steps {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
