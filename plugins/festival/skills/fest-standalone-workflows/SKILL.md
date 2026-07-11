@@ -17,7 +17,7 @@ WORKFLOW.md -> fest next -> do step -> fest workflow advance -> repeat
 ## When to Use This vs. a Full Festival
 
 - **Standalone workflow**: a short, repeatable checklist that can live in any
-  directory — a code-review checklist, a release-cut runbook, a one-off
+  directory: a code-review checklist, a release-cut runbook, a one-off
   investigation. Minimal ceremony, no phases/sequences.
 - **Full festival**: multi-phase work that needs planning, sequencing, and
   quality gates over an extended effort. Use `fest create festival` instead
@@ -56,7 +56,7 @@ This scaffolds `WORKFLOW.md`, initializes `.workflow/` runtime state, and
 starts a tracked run, so `fest next` works immediately.
 
 `fest workflow create <name>` is an alias of `fest create workflow <name>`
-and accepts the same flags — use whichever noun you reach for first.
+and accepts the same flags. Use whichever noun you reach for first.
 
 For human interactive creation, run the command without `--steps` from a TTY:
 
@@ -80,7 +80,7 @@ It prompts for title, intent, and step lines in `Name|Goal` form.
 - `--path <dir>` / `--festival <root>`: target a festival phase instead of
   standalone mode. Inside a festival phase, or with either of these flags
   set, the command writes the phase's `WORKFLOW.md` with no standalone
-  runtime — do not pass these when you want a standalone workflow.
+  runtime, so do not pass these when you want a standalone workflow.
 
 ## Step JSON Contract
 
@@ -119,10 +119,10 @@ fest next
 
 ## Common Mistakes
 
-- Passing `--path` or `--festival` when creating a standalone workflow —
+- Passing `--path` or `--festival` when creating a standalone workflow;
   those target a festival phase instead.
 - Using `title` inside each step object. Step objects require `name` and
   `goal`, not `title`.
-- Assuming `--no-init` is required before `fest next` will work. It is not —
+- Assuming `--no-init` is required before `fest next` will work. It is not:
   the default (no flag) already initializes runtime state and starts a
   tracked run in one step.
