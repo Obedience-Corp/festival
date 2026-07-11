@@ -7,7 +7,7 @@ supports as plugin components, per `packaging/survey/cursor.md` and `packaging/s
 
 ## Bundled (all four surfaces)
 
-- **Skills** (`skills: "./skills/"`), 8:
+- **Skills** (`skills: "./skills/"`), 9:
   - `camp-navigation`
   - `camp-projects`
   - `campaign-commit`
@@ -16,6 +16,7 @@ supports as plugin components, per `packaging/survey/cursor.md` and `packaging/s
   - `fest-execution`
   - `fest-methodology`
   - `fest-planning`
+  - `fest-standalone-workflows`
 - **Commands** (`commands: "./commands/"`): 10 slash commands.
 - **Agents** (`agents: "./agents/"`): 2 agents.
 - **Hooks** (`hooks: "./hooks/hooks.json"`): the blocking install hook described below.
