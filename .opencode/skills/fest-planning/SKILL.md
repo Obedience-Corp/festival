@@ -84,6 +84,24 @@ fgo fest
 fest scaffold from-plan --plan STRUCTURE.md --name my-festival
 ```
 
+## Standalone WORKFLOW.md (Outside a Festival)
+
+For a short, repeatable step checklist that does not need a full festival
+(phases/sequences/tasks), scaffold a standalone `WORKFLOW.md` instead:
+
+```bash
+fest create workflow <name>
+# or, equivalently:
+fest workflow create <name>
+```
+
+Both accept `--steps '<json>'` / `--steps-file <file>` for agent mode,
+`--type` for the standalone workflow type, and `--no-init` for advanced mode
+(skip runtime init and lazily bootstrap a tracked run on first
+`fest workflow advance`). See the `fest-standalone-workflows` skill for the
+full step-JSON schema and execution loop. Reach for a full festival instead
+when the work needs multi-phase planning, sequencing, or quality gates.
+
 ## Common Mistakes
 
 - Using `fest link --project ...` (invalid flag).

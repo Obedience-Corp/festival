@@ -16,7 +16,7 @@ docs linked at the end.
 ```
 claude-plugin/
   .claude-plugin/plugin.json    plugin manifest (name, version, description)
-  skills/                       8 skills, one SKILL.md each
+  skills/                       9 skills, one SKILL.md each
   commands/                     10 fest-* and camp-* slash commands
   agents/                       fest-executor, fest-planner
   hooks/
@@ -115,7 +115,7 @@ every local default test run, not only in the release workflow.
 - Supporting-file pattern. Keep `SKILL.md` short (when to use, core loop, key
   commands) and move heavy reference into sibling files loaded just in time.
   Split a skill when its `SKILL.md` crosses roughly 100 lines or carries a large
-  reference table. The current 8 skills are short and stay single-file.
+  reference table. The current 9 skills are short and stay single-file.
 
 ## Methodology docs
 

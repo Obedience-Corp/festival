@@ -22,3 +22,4 @@ curl -fsSL https://raw.githubusercontent.com/Obedience-Corp/festival/main/instal
 @./claude-plugin/skills/fest-execution/SKILL.md
 @./claude-plugin/skills/fest-methodology/SKILL.md
 @./claude-plugin/skills/fest-planning/SKILL.md
+@./claude-plugin/skills/fest-standalone-workflows/SKILL.md
