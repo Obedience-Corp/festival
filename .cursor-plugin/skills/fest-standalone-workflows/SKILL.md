@@ -108,6 +108,10 @@ Valid checkpoint values:
 - `documentation`
 - `approval_required`
 
+`approval_required` is accepted when the file is created, but standalone
+execution cannot advance through blocking approval checkpoints. Use a festival
+phase when the workflow needs user-approval gates.
+
 ## Execution Loop
 
 ```bash
@@ -126,3 +130,6 @@ fest next
 - Assuming `--no-init` is required before `fest next` will work. It is not:
   the default (no flag) already initializes runtime state and starts a
   tracked run in one step.
+- Adding `approval_required` to a standalone workflow. The file will validate
+  at creation time, but `fest workflow advance` cannot cross that blocking
+  checkpoint outside a festival phase.
