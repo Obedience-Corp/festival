@@ -13,8 +13,8 @@ Show discovered plugins
 Show all plugins discovered from various sources.
 
 Plugins extend fest with additional commands. They are discovered from:
-  1. User config repo manifest (~/.config/fest/active/user/plugins/manifest.yml)
-  2. User config repo bin directory (~/.config/fest/active/user/plugins/bin/)
+  1. User config repo manifest (~/.obey/fest/active/user/plugins/manifest.yml)
+  2. User config repo bin directory (~/.obey/fest/active/user/plugins/bin/)
   3. System PATH (executables named fest-*)
 
 Plugin executables follow the naming convention:
@@ -35,7 +35,7 @@ fest understand plugins [flags]
 ### Options inherited from parent commands
 
 ```
-      --config string   config file (default: ~/.config/fest/config.json)
+      --config string   config file (default: ~/.obey/fest/config.json)
       --debug           enable debug logging
       --no-color        disable colored output
       --verbose         enable verbose output

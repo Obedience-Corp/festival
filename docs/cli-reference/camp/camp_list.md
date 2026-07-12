@@ -39,6 +39,12 @@ Examples:
   camp list --sort org       Sort by org, then name
   camp list --format simple  Names only for scripting
   camp list --count          Print only the total number of campaigns
+  camp list --remote         Also list campaigns on machines in ~/.obey/machines.yaml
+
+--remote runs each machine's own 'camp list --json' through a login shell
+(sh -lc) so PATH entries a login profile exports (~/.profile, etc.) are
+picked up. If camp still can't be found on a machine, set
+CAMP_REMOTE_CAMP_PATH to its exact path there.
 
 ```
 camp list [flags]
@@ -56,6 +62,7 @@ camp list [flags]
       --json             Output as JSON (shorthand for --format json)
       --no-group         Suppress org grouping
       --org string       Only campaigns in this org
+      --remote           Also list campaigns on machines in ~/.obey/machines.yaml (ssh)
   -s, --sort string      Sort by (name, accessed, type, org) (default "accessed")
       --status string    Only campaigns in this status (active, inactive, reference)
       --tag strings      Only campaigns carrying this tag (repeat for AND)

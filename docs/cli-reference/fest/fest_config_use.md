@@ -12,7 +12,7 @@ Set active configuration repository
 
 Set a configuration repository as the active one.
 
-The active config repo is symlinked at ~/.config/fest/active and its
+The active config repo is symlinked at ~/.obey/fest/active and its
 contents are used for templates, policies, plugins, and extensions.
 
 ```
@@ -35,7 +35,7 @@ fest config use <name> [flags]
 ### Options inherited from parent commands
 
 ```
-      --config string   config file (default: ~/.config/fest/config.json)
+      --config string   config file (default: ~/.obey/fest/config.json)
       --debug           enable debug logging
       --no-color        disable colored output
       --verbose         enable verbose output

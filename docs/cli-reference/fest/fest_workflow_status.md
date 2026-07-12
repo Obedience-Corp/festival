@@ -18,6 +18,9 @@ Shows:
   - Remaining steps
   - Checkpoint status if applicable
 
+Use --json for a stable machine-readable snapshot (schema fest.workflow.status/v1)
+that consumers can read without parsing the human-readable output.
+
 ```
 fest workflow status [flags]
 ```
@@ -26,12 +29,13 @@ fest workflow status [flags]
 
 ```
   -h, --help   help for status
+      --json   output as JSON
 ```
 
 ### Options inherited from parent commands
 
 ```
-      --config string   config file (default: ~/.config/fest/config.json)
+      --config string   config file (default: ~/.obey/fest/config.json)
       --debug           enable debug logging
       --no-color        disable colored output
       --phase string    specify phase directory (e.g., 001_INGEST)

@@ -41,14 +41,14 @@ fest go link [path] [flags]
 ### Options
 
 ```
-      --force   overwrite an existing active festival link
+      --force   relink a project already linked to another festival
   -h, --help    help for link
 ```
 
 ### Options inherited from parent commands
 
 ```
-      --config string   config file (default: ~/.config/fest/config.json)
+      --config string   config file (default: ~/.obey/fest/config.json)
       --debug           enable debug logging
       --no-color        disable colored output
       --verbose         enable verbose output

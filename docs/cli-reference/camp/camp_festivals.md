@@ -39,6 +39,7 @@ camp festivals [flags]
       --all             Include completed/dungeon festivals, passed to fest list
       --all-campaigns   Include inactive/reference campaigns (default: active only)
   -h, --help            help for festivals
+  -i, --interactive     Open the interactive festivals browser
       --json            Output as JSON
       --org string      Only campaigns in this org
       --since string    Festivals created on or after this date, passed to fest list

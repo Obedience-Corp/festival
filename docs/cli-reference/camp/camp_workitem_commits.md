@@ -10,13 +10,18 @@ List commits referencing a workitem across linked repos
 
 ### Synopsis
 
-Search the campaign root and every linked project/repo/worktree/festival
-repo for commits whose campaign tag references this workitem's ref.
+List commits referencing this workitem, newest first.
 
-Default sort: most recent first across all repos. Use --json for structured
-output. Repos that are not git checkouts or that fail their git log invocation
-are reported under "errors" in JSON mode; table mode warns on stderr when
-repo queries fail.
+When the campaign event ledger already holds the workitem's commit evidence,
+the answer comes from a single merged ledger read (fast path). Otherwise it
+falls back to scanning the campaign root and every linked
+project/repo/worktree/festival repo for commits whose campaign tag references
+the workitem's ref (pre-ledger history).
+
+Use --json for structured output; the "source" field reports which path
+answered ("ledger" or "scan"). Repos that are not git checkouts or that fail
+their git log invocation are reported under "errors" in JSON mode; table mode
+warns on stderr when repo queries fail.
 
 ```
 camp workitem commits [selector] [flags]
@@ -30,6 +35,7 @@ camp workitem commits [selector] [flags]
       --limit int         maximum commits to return (default 100)
       --offset int        number of commits to skip (after sorting)
       --ref string        query by workitem ref directly (e.g. WI-abc123) — skips resolver
+      --source string     where to read commits from: auto (ledger when present, else scan), ledger, or scan (default "auto")
       --workitem string   alias for the positional <selector>
 ```
 

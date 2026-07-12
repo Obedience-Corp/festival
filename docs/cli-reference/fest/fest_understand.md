@@ -46,7 +46,7 @@ fest understand [flags]
 ### Options inherited from parent commands
 
 ```
-      --config string   config file (default: ~/.config/fest/config.json)
+      --config string   config file (default: ~/.obey/fest/config.json)
       --debug           enable debug logging
       --no-color        disable colored output
       --verbose         enable verbose output
@@ -55,14 +55,20 @@ fest understand [flags]
 ### SEE ALSO
 
 * [fest](../fest/)	 - Festival Methodology CLI - goal-oriented project management for AI agents
+* [fest understand chains](../fest_understand_chains/)	 - Chains: dependencies between festivals
 * [fest understand checklist](../fest_understand_checklist/)	 - Quick festival validation checklist
 * [fest understand context](../fest_understand_context/)	 - CONTEXT.md - session memory for AI agents (CREATE FIRST)
 * [fest understand extensions](../fest_understand_extensions/)	 - Show loaded extensions
 * [fest understand gates](../fest_understand_gates/)	 - Show quality gate configuration
+* [fest understand lifecycle](../fest_understand_lifecycle/)	 - Festival lifecycle: planning -> ready -> active -> dungeon
+* [fest understand loop](../fest_understand_loop/)	 - The fest next loop: festivals and standalone WORKFLOW.md as work loops
 * [fest understand methodology](../fest_understand_methodology/)	 - Core principles - START HERE for new agents
 * [fest understand nodeids](../fest_understand_nodeids/)	 - Node reference system for code traceability
+* [fest understand planning](../fest_understand_planning/)	 - The planning process: turning a goal into a structured plan
 * [fest understand plugins](../fest_understand_plugins/)	 - Show discovered plugins
 * [fest understand resources](../fest_understand_resources/)	 - What's in the .festival/ directory
+* [fest understand rituals](../fest_understand_rituals/)	 - Ritual festivals: reusable templates for recurring work
+* [fest understand roles](../fest_understand_roles/)	 - Human vs agent responsibilities and the planning/implementation boundary
 * [fest understand rules](../fest_understand_rules/)	 - MANDATORY structure rules for automation
 * [fest understand structure](../fest_understand_structure/)	 - 3-level hierarchy: Festival → Phase → Sequence → Task
 * [fest understand tasks](../fest_understand_tasks/)	 - When and how to create task files (CRITICAL)

@@ -30,8 +30,9 @@ camp workitem [flags]
 
 ```
       --attention-stage stringArray   Filter by attention stage (current, next, active, parked)
+      --category stringArray          Filter by workflow category (builtin: plan, research, pipeline, review, uncategorized; or any category defined under workflows in campaign.yaml)
       --group stringArray             Filter by workitem group
-      --group-by string               Group JSON/list sections by attention_stage, group, or type; --list defaults to group unless set (default "attention_stage")
+      --group-by string               Group JSON/list sections by attention_stage, group, type, or category; --list defaults to group unless set (default "attention_stage")
   -h, --help                          help for workitem
       --json                          Output as JSON
       --limit int                     Maximum number of items to return
@@ -63,6 +64,9 @@ camp workitem [flags]
 * [camp workitem links](../camp_workitem_links/)	 - List workitem links
 * [camp workitem priority](../camp_workitem_priority/)	 - Set or clear the manual priority of a workitem
 * [camp workitem promote](../camp_workitem_promote/)	 - Promote a workitem to a festival, doc, or dungeon status
+* [camp workitem repair](../camp_workitem_repair/)	 - Repair a workflow directory into a current-schema work item
 * [camp workitem resolve](../camp_workitem_resolve/)	 - Print the workitem the current context resolves to (read-only)
 * [camp workitem stage](../camp_workitem_stage/)	 - Set or clear the attention stage of a workitem
 * [camp workitem unlink](../camp_workitem_unlink/)	 - Remove one or more workitem links
+* [camp workitem validate](../camp_workitem_validate/)	 - Validate workflow work item directories and their .workitem markers
+* [camp workitem worktree](../camp_workitem_worktree/)	 - Create a project worktree from a workitem

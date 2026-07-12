@@ -10,7 +10,7 @@ What's in the .festival/ directory
 
 ### Synopsis
 
-List the templates, agents, and examples available in your .festival/ directory.
+List the templates, extensions, and examples available in your .festival/ directory.
 
 ```
 fest understand resources [flags]
@@ -25,7 +25,7 @@ fest understand resources [flags]
 ### Options inherited from parent commands
 
 ```
-      --config string   config file (default: ~/.config/fest/config.json)
+      --config string   config file (default: ~/.obey/fest/config.json)
       --debug           enable debug logging
       --no-color        disable colored output
       --verbose         enable verbose output
