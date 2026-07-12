@@ -17,7 +17,7 @@ The default gates are: testing_and_verify, code_review, review_results_iterate, 
 
 Gates can be customized at multiple levels:
   1. Built-in defaults (always available)
-  2. User config repo (~/.config/fest/active/user/policies/gates/)
+  2. User config repo (~/.obey/fest/active/user/policies/gates/)
   3. Project-local (.festival/policies/gates/)
   4. Phase override (.fest.gates.yml in phase directory)
 
@@ -35,7 +35,7 @@ fest understand gates [flags]
 ### Options inherited from parent commands
 
 ```
-      --config string   config file (default: ~/.config/fest/config.json)
+      --config string   config file (default: ~/.obey/fest/config.json)
       --debug           enable debug logging
       --no-color        disable colored output
       --verbose         enable verbose output

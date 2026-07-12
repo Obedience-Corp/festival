@@ -36,6 +36,10 @@ Examples:
   # Explicit project
   camp project worktree add feature --project my-api
 
+  # Link a design/explore workitem so camp p commit in the worktree tags WI-*
+  camp project worktree add fest-list-watch --project fest --workitem WI-2a7950
+  camp project worktree add settings-tui --project camp --workitem workflow/design/camp-settings-tui
+
 ```
 camp project worktree add <name> [flags]
 ```
@@ -48,6 +52,7 @@ camp project worktree add <name> [flags]
   -p, --project string       Project name (auto-detected from cwd if not specified)
   -s, --start-point string   Base branch/commit for new branch (default: current branch)
   -t, --track string         Remote branch to track (creates new local tracking branch)
+      --workitem string      workitem selector (ref, path, or id) to primary-link to this worktree for camp p commit tags
 ```
 
 ### Options inherited from parent commands

@@ -34,7 +34,7 @@ camp workitem commit [selector] [flags]
       --include stringArray         additional path to stage (repeatable; relative to repo root)
       --include-submodule-pointer   include dirty project submodule pointers in the plan
       --json                        emit the staging plan and commit result as JSON on stdout
-  -m, --message string              commit message (required unless --dry-run)
+  -m, --message stringArray         commit message (repeatable; multiple -m are joined git-style into subject + body; required unless --dry-run)
       --project string              force project-repo context by name (skips resolver)
       --staged                      commit whatever is already in the git index
       --workitem string             explicit workitem selector (overrides cwd-based resolution)

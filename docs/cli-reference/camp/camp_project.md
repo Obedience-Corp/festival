@@ -17,12 +17,17 @@ A project can be:
   - a machine-local linked workspace attached via symlink under projects/
 
 Use 'camp project add' for submodules and 'camp project link' / 'camp project unlink'
-for linked workspaces.
+for linked workspaces. Use 'camp project run' (or the 'cr -p' shell shorthand)
+to run a command inside a project from anywhere in the campaign.
 
 Examples:
   camp project list                    List all projects
   camp project add git@github.com:org/repo.git  Add a new project
   camp project link ~/code/my-project  Link an existing local workspace
+  camp project run -p fest -- just build  Run a command inside a project
+  camp project commit -p fest -m "fix"  Commit changes in a project submodule
+  camp project prune                   Delete merged branches in the cwd's project
+  camp project worktree add my-branch --project fest  Create a worktree for a project
   camp project remove api-service      Remove a project
 
 ```
@@ -52,7 +57,7 @@ camp project [flags]
 * [camp project prune](../camp_project_prune/)	 - Delete merged branches in a project
 * [camp project remote](../camp_project_remote/)	 - Manage remotes for a project
 * [camp project remove](../camp_project_remove/)	 - Remove a project from campaign
-* [camp project run](../camp_project_run/)	 - Run a command inside a project directory
+* [camp project run](../camp_project_run/)	 - Run a command inside a project directory, like cr but project-scoped
 * [camp project stage](../camp_project_stage/)	 - Stage changes in a project submodule
 * [camp project unlink](../camp_project_unlink/)	 - Unlink a linked project from a campaign
 * [camp project worktree](../camp_project_worktree/)	 - Manage worktrees for a project

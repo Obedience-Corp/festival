@@ -10,12 +10,12 @@ Manage festival indices
 
 ### Synopsis
 
-Generate and validate festival indices for Guild integration.
+Generate and validate festival indices.
 
 The index file (.festival/index.json) provides a machine-readable representation
 of the festival structure, including phases, sequences, and tasks.
 
-For workspace-wide indexing (Guild v3), use the 'tree' subcommand.
+For workspace-wide indexing, use the 'tree' subcommand.
 
 ### Options
 
@@ -26,7 +26,7 @@ For workspace-wide indexing (Guild v3), use the 'tree' subcommand.
 ### Options inherited from parent commands
 
 ```
-      --config string   config file (default: ~/.config/fest/config.json)
+      --config string   config file (default: ~/.obey/fest/config.json)
       --debug           enable debug logging
       --no-color        disable colored output
       --verbose         enable verbose output

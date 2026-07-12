@@ -64,4 +64,4 @@ camp gather feedback [flags]
 
 ### SEE ALSO
 
-* [camp gather](../camp_gather/)	 - Import external data into the intent system
+* [camp gather](../camp_gather/)	 - Gather related work into unified items

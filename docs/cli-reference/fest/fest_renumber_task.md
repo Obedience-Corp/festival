@@ -44,7 +44,7 @@ fest renumber task [flags]
 
 ```
       --backup          create backup before renumbering
-      --config string   config file (default: ~/.config/fest/config.json)
+      --config string   config file (default: ~/.obey/fest/config.json)
       --debug           enable debug logging
       --dry-run         preview changes without applying them (default true)
       --no-color        disable colored output

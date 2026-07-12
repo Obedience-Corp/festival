@@ -25,6 +25,7 @@ camp workflow create <type> [flags]
 ### Options
 
 ```
+      --category string   workflow category for filtering (default plan; must exist under workflows.categories in campaign.yaml)
       --dry-run           report planned writes without modifying the filesystem
   -h, --help              help for create
       --json              emit a structured JSON result

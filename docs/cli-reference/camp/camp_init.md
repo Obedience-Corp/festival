@@ -59,6 +59,7 @@ camp init [path] [flags]
       --no-git               Skip git repository initialization
       --no-register          Don't add to global registry
       --no-skills            Skip linking campaign skills into .claude/skills and .agents/skills
+      --org string           Assign the new campaign to this org (created if new; defaults to the fallback org)
       --repair               Add missing files to existing campaign
   -t, --type string          Campaign type (product, research, tools, personal) (default "product")
   -v, --verbose              Show skipped optional setup details

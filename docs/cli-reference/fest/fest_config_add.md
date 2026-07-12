@@ -12,7 +12,7 @@ Add a configuration repository
 
 Add a configuration repository from a git URL or local path.
 
-For git repos, the repository will be cloned to ~/.config/fest/config-repos/<name>.
+For git repos, the repository will be cloned to ~/.obey/fest/config-repos/<name>.
 For local paths, a symlink will be created instead.
 
 ```
@@ -36,7 +36,7 @@ fest config add <name> <source> [flags]
 ### Options inherited from parent commands
 
 ```
-      --config string   config file (default: ~/.config/fest/config.json)
+      --config string   config file (default: ~/.obey/fest/config.json)
       --debug           enable debug logging
       --no-color        disable colored output
       --verbose         enable verbose output

@@ -1,22 +1,22 @@
 ---
 title: "camp gather"
 linkTitle: "camp gather"
-description: "Import external data into the intent system"
+description: "Gather related work into unified items"
 ---
 
 ## camp gather
 
-Import external data into the intent system
+Gather related work into unified items
 
 ### Synopsis
 
-Gather external data sources into trackable intents.
-
-The gather command imports data from various sources into the intent system,
-creating structured intents with checkboxes for tracking progress.
+Gather related work into unified items.
 
 Available sources:
-  feedback    Gather feedback observations from festivals
+  feedback    Import feedback observations from festivals into intents
+  design      Combine selected design workitems into one gathered package
+
+For gathering intents by tag, hashtag, or similarity, see 'camp intent gather'.
 
 ```
 camp gather [flags]
@@ -37,4 +37,5 @@ camp gather [flags]
 ### SEE ALSO
 
 * [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces
+* [camp gather design](../camp_gather_design/)	 - Combine selected design workitems into one gathered package
 * [camp gather feedback](../camp_gather_feedback/)	 - Gather feedback observations from festivals into intents

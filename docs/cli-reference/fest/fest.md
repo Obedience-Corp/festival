@@ -40,7 +40,7 @@ Run 'fest understand' to learn the methodology before executing tasks.
 ### Options
 
 ```
-      --config string   config file (default: ~/.config/fest/config.json)
+      --config string   config file (default: ~/.obey/fest/config.json)
       --debug           enable debug logging
   -h, --help            help for fest
       --no-color        disable colored output
@@ -52,7 +52,6 @@ Run 'fest understand' to learn the methodology before executing tasks.
 * [fest apply](../fest_apply/)	 - Apply a local template to a destination file (copy or render)
 * [fest chain](../fest_chain/)	 - Manage festival chains (inter-festival dependencies)
 * [fest commit](../fest_commit/)	 - Create git commit with task reference
-* [fest commits](../fest_commits/)	 - Query commits by festival element
 * [fest completion](../fest_completion/)	 - Generate shell completion scripts
 * [fest config](../fest_config/)	 - Manage fest configuration repositories
 * [fest context](../fest_context/)	 - Get context for the current location or task
@@ -91,7 +90,6 @@ Run 'fest understand' to learn the methodology before executing tasks.
 * [fest system](../fest_system/)	 - Manage fest tool configuration and templates
 * [fest task](../fest_task/)	 - Manage task status (show, edit, complete, block, reset)
 * [fest templates](../fest_templates/)	 - Manage agent-created templates within a festival
-* [fest tui](../fest_tui/)	 - Interactive UI (Charm) for festival creation and editing
 * [fest types](../fest_types/)	 - Discover and explore template types
 * [fest understand](../fest_understand/)	 - Learn methodology FIRST - run before executing festival tasks
 * [fest unlink](../fest_unlink/)	 - Remove festival-project link (context-aware)

@@ -16,12 +16,20 @@ With no key, prints all settings including the effective theme. With a key,
 prints just that value.
 
 Keys:
-  global.theme           Color theme in ~/.obey/campaign/config.json
-  global.editor          Preferred editor
-  global.campaigns_dir   Where camp create places new campaigns
-  global.verbose         Verbose output
-  global.no_color        Disable colored output
-  local.theme_override   Campaign-local theme override (requires a campaign)
+  global.theme               Color theme in ~/.obey/campaign/config.json
+  global.editor              Preferred editor
+  global.campaigns_dir       Where camp create places new campaigns
+  global.verbose             Verbose output
+  global.no_color            Disable colored output
+  local.theme_override       Campaign-local theme override (requires a campaign)
+  local.campaign.name        Campaign name in .campaign/campaign.yaml
+  local.campaign.description Campaign description
+  local.campaign.mission     Campaign mission
+  local.campaign.type        Campaign type (product, research, tools, personal)
+  local.campaign.commit_hook Commit-message hook command
+
+The campaign.yaml list and tree fields (intents.tags, concepts) have no flat
+key and are edited only through the interactive 'camp settings' TUI.
 
 ```
 camp settings get [key] [flags]

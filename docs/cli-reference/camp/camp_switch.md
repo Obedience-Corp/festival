@@ -29,6 +29,15 @@ Use campaign@tab to navigate to a specific location in the target campaign:
   camp switch obey-campaign@p    # Switch and navigate to projects/
   camp switch obey/platform@f    # Switch inside org and navigate to festivals/
 
+Use machine:campaign to resolve a campaign on a machine registered in
+~/.obey/machines.yaml (via the csw shell wrapper, which hops there over ssh):
+  csw devbox:obey-campaign       # Resolve and hop to obey-campaign on devbox
+
+Remote resolution runs the far machine's own 'camp switch' through a login
+shell (sh -lc) so PATH entries a login profile exports (~/.profile, etc.) are
+picked up. If camp still can't be found there, set CAMP_REMOTE_CAMP_PATH to
+its exact path on that machine.
+
 ```
 camp switch [campaign] [flags]
 ```

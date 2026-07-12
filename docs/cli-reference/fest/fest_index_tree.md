@@ -13,7 +13,7 @@ Generate workspace-wide tree index
 Generate a tree index of all festivals in the workspace.
 
 The tree index groups festivals by status (planning, active, completed, dungeon)
-and provides a complete hierarchical view for Guild v3 integration.
+and provides a complete hierarchical view for external tool integration.
 
 ```
 fest index tree [flags]
@@ -30,7 +30,7 @@ fest index tree [flags]
 ### Options inherited from parent commands
 
 ```
-      --config string   config file (default: ~/.config/fest/config.json)
+      --config string   config file (default: ~/.obey/fest/config.json)
       --debug           enable debug logging
       --no-color        disable colored output
       --verbose         enable verbose output

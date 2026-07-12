@@ -40,7 +40,7 @@ fest remove sequence [sequence-number|sequence-name] [flags]
 
 ```
       --backup          create backup before removal
-      --config string   config file (default: ~/.config/fest/config.json)
+      --config string   config file (default: ~/.obey/fest/config.json)
       --debug           enable debug logging
       --dry-run         preview changes without applying them (default true)
       --force           skip confirmation prompts
