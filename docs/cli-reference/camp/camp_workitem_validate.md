@@ -1,12 +1,12 @@
 ---
 title: "camp workitem validate"
 linkTitle: "camp workitem validate"
-description: "Validate workflow work item directories and their .workitem markers"
+description: "Validate workitem directories"
 ---
 
 ## camp workitem validate
 
-Validate workflow work item directories and their .workitem markers
+Validate workitem directories
 
 ### Synopsis
 

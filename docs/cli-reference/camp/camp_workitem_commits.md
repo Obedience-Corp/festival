@@ -1,12 +1,12 @@
 ---
 title: "camp workitem commits"
 linkTitle: "camp workitem commits"
-description: "List commits referencing a workitem across linked repos"
+description: "List commits referencing a workitem"
 ---
 
 ## camp workitem commits
 
-List commits referencing a workitem across linked repos
+List commits referencing a workitem
 
 ### Synopsis
 

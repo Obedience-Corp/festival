@@ -1,12 +1,12 @@
 ---
 title: "camp workitem repair"
 linkTitle: "camp workitem repair"
-description: "Repair a workflow directory into a current-schema work item"
+description: "Repair a workflow directory into a workitem"
 ---
 
 ## camp workitem repair
 
-Repair a workflow directory into a current-schema work item
+Repair a workflow directory into a workitem
 
 ### Synopsis
 

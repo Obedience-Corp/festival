@@ -1,19 +1,19 @@
 ---
-title: "camp intent find"
-linkTitle: "camp intent find"
-description: "Search for intents by title or content"
+title: "camp idea find"
+linkTitle: "camp idea find"
+description: "Search for ideas by title or content"
 ---
 
-## camp intent find
+## camp idea find
 
-Search for intents by title or content
+Search for ideas by title or content
 
 ### Synopsis
 
-Search for intents across all statuses by title, content, or ID.
+Search for ideas across all statuses by title, content, or ID.
 
 The search is case-insensitive and matches partial strings.
-Without a query, returns all intents.
+Without a query, returns all ideas.
 
 OUTPUT FORMATS:
   table (default)   Human-readable table with columns
@@ -21,13 +21,13 @@ OUTPUT FORMATS:
   json              Full metadata in JSON format
 
 Examples:
-  camp intent find                   List all intents
-  camp intent find dark              Find intents containing "dark"
-  camp intent find "bug fix"         Find intents with "bug fix"
-  camp intent find -f simple auth    Get IDs of auth-related intents
+  camp idea find                   List all ideas
+  camp idea find dark              Find ideas containing "dark"
+  camp idea find "bug fix"         Find ideas with "bug fix"
+  camp idea find -f simple auth    Get IDs of auth-related ideas
 
 ```
-camp intent find [query] [flags]
+camp idea find [query] [flags]
 ```
 
 ### Options
@@ -47,4 +47,4 @@ camp intent find [query] [flags]
 
 ### SEE ALSO
 
-* [camp intent](../camp_intent/)	 - Manage campaign intents
+* [camp idea](../camp_idea/)	 - Manage campaign ideas

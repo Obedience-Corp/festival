@@ -1,12 +1,12 @@
 ---
 title: "camp workitem link"
 linkTitle: "camp workitem link"
-description: "Attach a workitem to a project, festival, worktree, or campaign path"
+description: "Create a workitem link"
 ---
 
 ## camp workitem link
 
-Attach a workitem to a project, festival, worktree, or campaign path
+Create a workitem link
 
 ### Synopsis
 

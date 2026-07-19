@@ -1,12 +1,12 @@
 ---
 title: "camp workitem adopt"
 linkTitle: "camp workitem adopt"
-description: "Attach .workitem metadata to an existing directory"
+description: "Adopt an existing directory as a workitem"
 ---
 
 ## camp workitem adopt
 
-Attach .workitem metadata to an existing directory
+Adopt an existing directory as a workitem
 
 ### Synopsis
 

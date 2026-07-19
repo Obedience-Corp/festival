@@ -1,12 +1,12 @@
 ---
 title: "camp workitem current"
 linkTitle: "camp workitem current"
-description: "Get, set, or clear the local current workitem"
+description: "Get, set, or clear the current workitem"
 ---
 
 ## camp workitem current
 
-Get, set, or clear the local current workitem
+Get, set, or clear the current workitem
 
 ### Synopsis
 

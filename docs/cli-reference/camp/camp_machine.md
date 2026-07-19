@@ -20,9 +20,19 @@ implicitly available as "local" and is never written to that file.
 can clear a stale one (the state a sleep or network flap can leave behind, which
 would otherwise hang the next hop until ControlPersist expires).
 
+Run without a subcommand in a terminal to manage the fleet interactively: add,
+discover, edit, and remove machines, and see each one's socket state. The
+subcommands stay the interface for scripts and agents, and remain what a
+non-terminal 'camp machine' prints help for.
+
+```
+camp machine [flags]
+```
+
 ### Examples
 
 ```
+  camp machine
   camp machine list
   camp machine add devbox --host devbox.tailnet.ts.net --auth tailscale-ssh
   camp machine add --discover

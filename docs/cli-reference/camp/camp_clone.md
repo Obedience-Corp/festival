@@ -66,6 +66,13 @@ EXAMPLES:
   # JSON output for scripting
   camp clone git@github.com:org/repo.git --json
 
+  # Seed from a peer machine in ~/.obey/machines.yaml: root repo and
+  # submodules clone from that machine's copy (LAN/tailnet), then origin is
+  # re-pointed to the URL above and the delta fetched. The result is an
+  # origin replica that arrived over the fast path; peer failures fall back
+  # to plain origin cloning.
+  camp clone git@github.com:org/repo.git --from studio-mac
+
 ```
 camp clone <url> [directory] [flags]
 ```
@@ -75,6 +82,7 @@ camp clone <url> [directory] [flags]
 ```
   -b, --branch string   Clone specific branch (default: repository default branch)
       --depth int       Shallow clone depth (0 = full history)
+      --from string     Seed git objects from this machine (id from ~/.obey/machines.yaml), then fetch the delta from origin
   -h, --help            help for clone
       --json            Output results as JSON for scripting
       --no-register     Skip auto-registration in global campaign registry

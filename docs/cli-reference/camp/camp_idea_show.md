@@ -1,16 +1,16 @@
 ---
-title: "camp intent show"
-linkTitle: "camp intent show"
-description: "Show detailed intent information"
+title: "camp idea show"
+linkTitle: "camp idea show"
+description: "Show detailed idea information"
 ---
 
-## camp intent show
+## camp idea show
 
-Show detailed intent information
+Show detailed idea information
 
 ### Synopsis
 
-Display detailed information about a specific intent.
+Display detailed information about a specific idea.
 
 Supports partial ID matching - you can use:
   - Full ID: 20260119-153412-add-retry-logic
@@ -23,13 +23,13 @@ OUTPUT FORMATS:
   yaml             Full metadata in YAML format
 
 Examples:
-  camp intent show 20260119-153412...    Show by full ID
-  camp intent show retry-logic           Show by partial match
-  camp intent show retry -f json         JSON output
-  camp intent show retry -f yaml         YAML output
+  camp idea show 20260119-153412...    Show by full ID
+  camp idea show retry-logic           Show by partial match
+  camp idea show retry -f json         JSON output
+  camp idea show retry -f yaml         YAML output
 
 ```
-camp intent show <id> [flags]
+camp idea show <id> [flags]
 ```
 
 ### Options
@@ -48,4 +48,4 @@ camp intent show <id> [flags]
 
 ### SEE ALSO
 
-* [camp intent](../camp_intent/)	 - Manage campaign intents
+* [camp idea](../camp_idea/)	 - Manage campaign ideas

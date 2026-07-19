@@ -1,12 +1,12 @@
 ---
 title: "camp workitem priority"
 linkTitle: "camp workitem priority"
-description: "Set or clear the manual priority of a workitem"
+description: "Set or clear the manual priority"
 ---
 
 ## camp workitem priority
 
-Set or clear the manual priority of a workitem
+Set or clear the manual priority
 
 ### Synopsis
 
