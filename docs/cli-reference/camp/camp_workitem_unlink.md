@@ -1,12 +1,12 @@
 ---
 title: "camp workitem unlink"
 linkTitle: "camp workitem unlink"
-description: "Remove one or more workitem links"
+description: "Remove workitem links"
 ---
 
 ## camp workitem unlink
 
-Remove one or more workitem links
+Remove workitem links
 
 ### Synopsis
 

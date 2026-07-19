@@ -1,12 +1,12 @@
 ---
 title: "camp workitem commit"
 linkTitle: "camp workitem commit"
-description: "Commit changes scoped to the resolved workitem"
+description: "Commit changes scoped to a workitem"
 ---
 
 ## camp workitem commit
 
-Commit changes scoped to the resolved workitem
+Commit changes scoped to a workitem
 
 ### Synopsis
 

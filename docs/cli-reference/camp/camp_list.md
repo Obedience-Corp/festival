@@ -17,8 +17,9 @@ with 'camp register'. The registry lives at ~/.obey/campaign/registry.json.
 
 In a terminal, 'camp list' (with no flags) opens an interactive browser where you
 can deactivate/reactivate campaigns (cycle lifecycle status), reassign their org,
-and copy paths. Piped, with --json/--count, or with any filter/sort flag it
-prints the table instead. Home paths display as '~'.
+and copy paths. Pass an org as a positional argument to open the browser filtered
+to that org. Piped, with --json/--count, or with any filter/sort flag it prints
+the table instead. Home paths display as '~'.
 
 Output formats:
   table   - Aligned columns with headers (default)
@@ -33,6 +34,7 @@ Sorting options:
 
 Examples:
   camp list                  List all campaigns
+  camp list obey             Browse campaigns in the obey org
   camp list --json           Output as JSON
   camp list --format json    Output as JSON
   camp list --sort name      Sort by name
@@ -47,7 +49,7 @@ picked up. If camp still can't be found on a machine, set
 CAMP_REMOTE_CAMP_PATH to its exact path there.
 
 ```
-camp list [flags]
+camp list [org] [flags]
 ```
 
 ### Options

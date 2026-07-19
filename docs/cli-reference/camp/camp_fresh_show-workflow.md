@@ -1,32 +1,29 @@
 ---
-title: "camp fresh all"
-linkTitle: "camp fresh all"
-description: "Run fresh across all project submodules"
+title: "camp fresh show-workflow"
+linkTitle: "camp fresh show-workflow"
+description: "Show the fresh cycle and configured follow-up steps"
 ---
 
-## camp fresh all
+## camp fresh show-workflow
 
-Run fresh across all project submodules
+Show the fresh cycle and configured follow-up steps
 
 ### Synopsis
 
-Run the fresh cycle (checkout default, pull, prune, optional branch)
-across every project submodule in the campaign.
+Show the ordered steps camp fresh will use, including disabled steps
+and the follow-up commands resolved for a project.
 
-Examples:
-  camp fresh all                     # Sync all projects
-  camp fresh all --branch develop    # Sync all and create develop branch
-  camp fresh all --dry-run           # Preview across all projects
-  camp fresh all --no-prune          # Sync without pruning
+With no project name, the global defaults are shown. Pass a project name to
+include its branch, pruning, and follow-up overrides.
 
 ```
-camp fresh all [flags]
+camp fresh show-workflow [project-name] [flags]
 ```
 
 ### Options
 
 ```
-  -h, --help   help for all
+  -h, --help   help for show-workflow
 ```
 
 ### Options inherited from parent commands

@@ -1,22 +1,34 @@
 ---
 title: "camp workitem create"
 linkTitle: "camp workitem create"
-description: "Create a new workitem with v1 minimum metadata"
+description: "Create workitem tracking metadata"
 ---
 
 ## camp workitem create
 
-Create a new workitem with v1 minimum metadata
+Create workitem tracking metadata
 
 ### Synopsis
 
-Create a new workitem directory with minimal v1 metadata.
+Create tracking metadata for a new workitem (directory + .workitem marker).
 
-The workitem is created under workflow/<type>/<slug>/ unless --dir supplies a
-different campaign-relative parent directory. A .workitem file is written with
-the id, type, title, ref, creation metadata, and optional quest link. Use --json
-for machine-readable output containing the new workitem identity and next-step
-location.
+This command does NOT create the substantive work scaffold (no design docs,
+explore notes, or festival structure). It only:
+
+  1. Creates workflow/<type>/<slug>/ (or --dir/<slug>/)
+  2. Writes a .workitem marker (id, type, title, ref, optional quest)
+
+Agents and humans must still add real content afterward. For explore/design
+types, the recommended structured-workflow scaffold is:
+
+  cd workflow/<type>/<slug> && fest create workflow <slug>
+
+For other types (feature, bug, chore, …), no festival scaffold is implied;
+populate campaign-governed content under the new directory as needed.
+
+Use "camp workitem adopt" to attach a marker to an existing directory.
+Use --json for machine-readable identity. next.command is set only for
+explore/design (recommended scaffold); otherwise it is empty/omitted.
 
 ```
 camp workitem create <slug> [flags]

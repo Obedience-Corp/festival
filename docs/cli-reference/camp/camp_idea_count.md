@@ -1,27 +1,27 @@
 ---
-title: "camp intent count"
-linkTitle: "camp intent count"
-description: "Count intents by status directory"
+title: "camp idea count"
+linkTitle: "camp idea count"
+description: "Count ideas by status directory"
 ---
 
-## camp intent count
+## camp idea count
 
-Count intents by status directory
+Count ideas by status directory
 
 ### Synopsis
 
-Display a count of intents grouped by status directory.
+Display a count of ideas grouped by status directory.
 
 OUTPUT FORMATS:
   table (default)   Styled summary with counts per status
   json              Machine-readable JSON output
 
 Examples:
-  camp intent count              Show counts per status
-  camp intent count -f json      JSON output for scripting
+  camp idea count              Show counts per status
+  camp idea count -f json      JSON output for scripting
 
 ```
-camp intent count [flags]
+camp idea count [flags]
 ```
 
 ### Options
@@ -40,4 +40,4 @@ camp intent count [flags]
 
 ### SEE ALSO
 
-* [camp intent](../camp_intent/)	 - Manage campaign intents
+* [camp idea](../camp_idea/)	 - Manage campaign ideas

@@ -50,4 +50,5 @@ camp dungeon [flags]
 * [camp dungeon add](../camp_dungeon_add/)	 - Initialize dungeon structure
 * [camp dungeon crawl](../camp_dungeon_crawl/)	 - Interactive dungeon review
 * [camp dungeon list](../camp_dungeon_list/)	 - List dungeon items
+* [camp dungeon migrate](../camp_dungeon_migrate/)	 - Convert every campaign dungeon to the hidden .dungeon spelling
 * [camp dungeon move](../camp_dungeon_move/)	 - Move dungeon items between statuses

@@ -21,8 +21,7 @@ Creates the standard campaign directories:
   docs/                   - Human-authored documentation
   dungeon/                - Archived and deprioritized work
   workflow/               - Workflow management
-  workflow/code_reviews/  - Code review notes and feedback
-  workflow/pipelines/     - CI/CD pipeline definitions
+  workflow/reviews/       - Review notes, feedback, and assessments
   workflow/design/        - Design documents
 
 Also creates:

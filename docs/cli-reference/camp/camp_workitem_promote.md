@@ -1,12 +1,12 @@
 ---
 title: "camp workitem promote"
 linkTitle: "camp workitem promote"
-description: "Promote a workitem to a festival, doc, or dungeon status"
+description: "Promote a workitem to a festival, doc, or dungeon"
 ---
 
 ## camp workitem promote
 
-Promote a workitem to a festival, doc, or dungeon status
+Promote a workitem to a festival, doc, or dungeon
 
 ### Synopsis
 

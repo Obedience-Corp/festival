@@ -1,32 +1,32 @@
 ---
-title: "camp intent crawl"
-linkTitle: "camp intent crawl"
-description: "Interactive intent triage"
+title: "camp idea crawl"
+linkTitle: "camp idea crawl"
+description: "Interactive idea triage"
 ---
 
-## camp intent crawl
+## camp idea crawl
 
-Interactive intent triage
+Interactive idea triage
 
 ### Synopsis
 
-Walk live intents one at a time and decide their fate.
+Walk live ideas one at a time and decide their fate.
 
 Default scope is the working set: inbox, ready, and active. Each candidate is
 shown with a compact preview. For each one you can keep, move to another
 status, skip, or quit. Moves to dungeon statuses require a reason.
 
-Existing dungeon intents are not crawl candidates. Use 'camp intent move' to
+Existing dungeon ideas are not crawl candidates. Use 'camp idea move' to
 restore them explicitly.
 
 Examples:
-  camp intent crawl
-  camp intent crawl --status inbox --limit 25
-  camp intent crawl --status ready --status active --sort priority
-  camp intent crawl --no-commit
+  camp idea crawl
+  camp idea crawl --status inbox --limit 25
+  camp idea crawl --status ready --status active --sort priority
+  camp idea crawl --no-commit
 
 ```
-camp intent crawl [flags]
+camp idea crawl [flags]
 ```
 
 ### Options
@@ -47,4 +47,4 @@ camp intent crawl [flags]
 
 ### SEE ALSO
 
-* [camp intent](../camp_intent/)	 - Manage campaign intents
+* [camp idea](../camp_idea/)	 - Manage campaign ideas

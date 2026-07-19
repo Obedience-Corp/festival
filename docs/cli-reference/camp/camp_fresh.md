@@ -20,7 +20,10 @@ single project name. Use --list to cycle a specific set of projects in one
 run, or 'camp fresh all' to cycle every project submodule in the campaign.
 
 Without configuration, syncs to the default branch and prunes.
-Configure .campaign/settings/fresh.yaml to set a default working branch.
+Configure .campaign/settings/fresh.yaml to set a default working branch, or
+follow-up command workflows (install, build, bootstrap, ...) to run once the
+cycle succeeds. Manage those with 'camp fresh configure'. Inspect the resolved
+sequence with 'camp fresh show-workflow [project-name]'.
 
 Examples:
   camp fresh                            # Sync current project (checkout default, pull, prune)
@@ -28,7 +31,8 @@ Examples:
   camp fresh camp -b feat/new-thing     # Sync camp project, create feature branch
   camp fresh --list camp,fest,festival  # Sync a specific set of projects
   camp fresh --no-prune                 # Sync without pruning
-  camp fresh --dry-run                  # Preview what would happen
+  camp fresh --no-follow-up             # Sync without running configured follow-ups
+  camp fresh --dry-run                  # Preview what would happen (follow-ups listed, not run)
 
 ```
 camp fresh [project-name] [flags]
@@ -42,6 +46,7 @@ camp fresh [project-name] [flags]
   -h, --help             help for fresh
       --list strings     Comma-separated set of projects to cycle in one run
       --no-branch        Skip branch creation even if configured
+      --no-follow-up     Skip configured follow-up command workflows
       --no-prune         Skip pruning merged branches
       --no-push          Skip pushing the new branch upstream
   -p, --project string   Project name (auto-detected from cwd)
@@ -57,3 +62,5 @@ camp fresh [project-name] [flags]
 
 * [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces
 * [camp fresh all](../camp_fresh_all/)	 - Run fresh across all project submodules
+* [camp fresh configure](../camp_fresh_configure/)	 - Configure the camp fresh workflow
+* [camp fresh show-workflow](../camp_fresh_show-workflow/)	 - Show the fresh cycle and configured follow-up steps

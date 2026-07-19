@@ -1,12 +1,12 @@
 ---
 title: "camp workitem doctor"
 linkTitle: "camp workitem doctor"
-description: "Report workitem link-registry health issues"
+description: "Report link-registry health issues"
 ---
 
 ## camp workitem doctor
 
-Report workitem link-registry health issues
+Report link-registry health issues
 
 ### Synopsis
 

@@ -1,31 +1,31 @@
 ---
-title: "camp intent note"
-linkTitle: "camp intent note"
+title: "camp idea note"
+linkTitle: "camp idea note"
 description: "Capture a quick note"
 ---
 
-## camp intent note
+## camp idea note
 
 Capture a quick note
 
 ### Synopsis
 
-Capture a freeform note. Notes are a separate category from intents: they
+Capture a freeform note. Notes are a separate category from ideas: they
 are stored in .campaign/intents/notes/ and do not flow through the
 inbox → ready → active lifecycle. A note carries no type or concept; tags
 organize them.
 
 Fast capture skips the TUI. Interactive capture uses the same title/body/tag
-flow as intent add, but skips the type wheel and concept picker.
+flow as idea add, but skips the type wheel and concept picker.
 
 Examples:
-  camp intent note "check the daemon socket path"   Capture a note immediately
-  camp intent note "follow up" --body "details..."  Note with a longer body
-  echo "body" | camp intent note "idea" --body-file -
-  camp intent note                                  Note TUI (title + body)
+  camp idea note "check the daemon socket path"   Capture a note immediately
+  camp idea note "follow up" --body "details..."  Note with a longer body
+  echo "body" | camp idea note "idea" --body-file -
+  camp idea note                                  Note TUI (title + body)
 
 ```
-camp intent note [text] [flags]
+camp idea note [text] [flags]
 ```
 
 ### Options
@@ -47,4 +47,4 @@ camp intent note [text] [flags]
 
 ### SEE ALSO
 
-* [camp intent](../camp_intent/)	 - Manage campaign intents
+* [camp idea](../camp_idea/)	 - Manage campaign ideas

@@ -1,12 +1,12 @@
 ---
 title: "camp workitem resolve"
 linkTitle: "camp workitem resolve"
-description: "Print the workitem the current context resolves to (read-only)"
+description: "Print the workitem for the current context"
 ---
 
 ## camp workitem resolve
 
-Print the workitem the current context resolves to (read-only)
+Print the workitem for the current context
 
 ### Synopsis
 
