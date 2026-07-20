@@ -16,7 +16,7 @@ To use AI to solve hard problems you need three things: **context**, **direction
 
 <p align="center"><em>Describe the work in a sentence. Your agent scaffolds the design and plans the whole festival: phases, sequences, and tasks. Then the <code>fest next</code> loop executes it.</em></p>
 
-<p align="center"><strong>Battle-tested across 140+ completed festivals</strong> spanning Go, Rust, Python, and web projects.</p>
+<p align="center"><strong>Battle-tested daily:</strong> Obedience Corp plans and ships its own products with Festival.</p>
 
 ## Install
 
