@@ -10,18 +10,13 @@ To use AI to solve hard problems you need three things: **context**, **direction
 
 > [Get started](https://docs.fest.build/getting-started/quickstart) (takes ~5 minutes).
 
-```mermaid
-graph TD
-    HP["<b>Hard, multi-faceted problem</b>"]
+<p align="center">
+  <img src="docs/images/demos/tui-delegate.gif" alt="An agent TUI planning a full festival from one sentence of direction, ending in fest show" width="700">
+</p>
 
-    HP --> C["<b>Context</b><br/><br/>a campaign workspace with<br/>all projects, docs, and research"]
-    HP --> D["<b>Direction</b><br/><br/>a structured plan that AI agents<br/>can execute, pause, and resume"]
-    HP --> V["<b>Verification</b><br/><br/>all work captured in reviewable<br/>files you can trace and audit"]
+<p align="center"><em>Describe the work in a sentence. Your agent scaffolds the design and plans the whole festival: phases, sequences, and tasks. Then the <code>fest next</code> loop executes it.</em></p>
 
-    C --> O["<b>Fewer tokens · less time · better outcomes</b>"]
-    D --> O
-    V --> O
-```
+<p align="center"><strong>Battle-tested daily:</strong> Obedience Corp plans and ships its own products with Festival.</p>
 
 ## Install
 
@@ -133,13 +128,6 @@ After installing, see the [quick start guide](https://docs.fest.build/getting-st
   </tr>
 </table>
 
-<p align="center"><strong>Delegate the planning to any agent, Grok Build below</strong></p>
-<p align="center"><em>Describe the work in a sentence and your agent scaffolds the design and plans the whole festival across phases, sequences, and tasks. No <code>fest</code> commands to memorize.</em></p>
-
-<p align="center">
-  <img src="docs/images/demos/tui-delegate.gif" alt="The Grok Build agent TUI: one sentence delegates a design workitem and a festival planned across eight phases, ending in fest show" width="700">
-</p>
-
 <p align="center"><strong>A 4-day festival, planned and built across three AI tools</strong></p>
 <p align="center"><em>Planned in Claude Code (Fathom), promoted to active, then the <code>fest next</code> loop ran in grok-build, stopped 2 days in, and finished in Codex.</em></p>
 
@@ -180,6 +168,19 @@ Work items are the campaign-level work queue. `camp workitem` surfaces intents, 
 Festival is a **planning and context layer**, not a runtime orchestrator. It doesn't spawn agents or manage their processes. It gives them the structure, context, and goals they need to work autonomously. Runtime orchestrators tell agents what to do next. Festival tells agents *why* they're doing it, what success looks like, and where they are in a larger mission.
 
 The context model is persistent and filesystem-based. Plans survive across sessions, days, and weeks, not just a single agent run. Festival is agent-agnostic: it works with Claude Code, Codex, Aider, OpenCode, or any CLI tool that can read files and run commands. Use an orchestrator to manage parallel agents, and Festival to give each agent the plan and context it needs.
+
+### How Festival Compares
+
+Most tools in this space are spec generators (spec-kit), task managers (Task Master), persona workflow packs (BMAD), or static instruction files (CLAUDE.md / AGENTS.md). Festival overlaps all of them but operates a level up: at the mission, not the feature.
+
+| | Scope | What persists between sessions |
+|---|---|---|
+| **Festival** | A mission: many features, many repos | The whole workspace: plans, context, decisions, and an audit trail in git |
+| **Spec-driven tools** | One feature spec at a time | The spec and its task list |
+| **Task managers** | One PRD broken into tasks | Task list state |
+| **Instruction files** | Static per-repo guidance | Instructions only, no execution state |
+
+The practical differences: festivals survive across sessions, days, and tools (plan in Claude Code, execute in Codex, finish somewhere else), every step lands in git as a traceable commit, and quality gates plus approval judges are part of the plan rather than bolted on afterward. If the work fits in one prompt or one feature spec, simpler tools are the right call. Festival is for when the work is bigger than a session.
 
 ### Festival Methodology
 
