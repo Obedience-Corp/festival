@@ -21,6 +21,11 @@ A primary worktree link is how design/explore workitems under workflow/ get
 into camp p commit tags: when you commit from that worktree, the resolver
 matches the link and stamps WI-<ref> on the subject.
 
+Note: role:related links to a project scope are no longer accepted; a workitem's
+related projects live in its own projects: field. Use "camp workitem
+create/adopt --project <path>" (or edit the .workitem/frontmatter) instead of
+"--role related --project".
+
 Examples:
   camp workitem link WI-2a7950 --worktree fest/fest-list-watch
   camp workitem link workflow/design/fest-list-watch --worktree projects/worktrees/fest/fest-list-watch

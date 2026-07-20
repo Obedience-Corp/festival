@@ -53,7 +53,7 @@ camp workitem [flags]
 ### SEE ALSO
 
 * [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces
-* [camp workitem adopt](../camp_workitem_adopt/)	 - Adopt an existing directory as a workitem
+* [camp workitem adopt](../camp_workitem_adopt/)	 - Adopt an existing directory or file as a workitem
 * [camp workitem commit](../camp_workitem_commit/)	 - Commit changes scoped to a workitem
 * [camp workitem commits](../camp_workitem_commits/)	 - List commits referencing a workitem
 * [camp workitem create](../camp_workitem_create/)	 - Create workitem tracking metadata

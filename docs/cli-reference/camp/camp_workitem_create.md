@@ -16,7 +16,8 @@ This command does NOT create the substantive work scaffold (no design docs,
 explore notes, or festival structure). It only:
 
   1. Creates workflow/<type>/<slug>/ (or --dir/<slug>/)
-  2. Writes a .workitem marker (id, type, title, ref, optional quest)
+  2. Writes a .workitem marker (id, type, title, ref, optional quest, optional
+     tags, optional related projects)
 
 Agents and humans must still add real content afterward. For explore/design
 types, the recommended structured-workflow scaffold is:
@@ -37,13 +38,16 @@ camp workitem create <slug> [flags]
 ### Options
 
 ```
-      --dir string     parent dir override (default: workflow/<type>)
-  -h, --help           help for create
-      --id string      override the generated id
-      --json           emit a structured JSON result
-      --quest string   quest ID to associate (requires dev-profile camp; forward-compatible flag)
-      --title string   human-readable title
-      --type string    workitem type (feature, bug, chore, or custom) (default "feature")
+      --dir string            parent dir override (default: workflow/<type>)
+      --file string           create a new markdown file with kind: workitem frontmatter instead of a directory workitem
+  -h, --help                  help for create
+      --id string             override the generated id
+      --json                  emit a structured JSON result
+      --project stringArray   add a related project path (repeatable, e.g. projects/camp)
+      --quest string          quest ID to associate (requires dev-profile camp; forward-compatible flag)
+      --tag stringArray       add a tag (repeatable, normalized to lowercase kebab-case)
+      --title string          human-readable title
+      --type string           workitem type (feature, bug, chore, or custom) (default "feature")
 ```
 
 ### Options inherited from parent commands
