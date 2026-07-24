@@ -49,3 +49,32 @@ fest shell-init fish | source
 ### camp shell functions
 
 - `cgo` - Navigate between campaign projects with fuzzy finding
+
+## Finding the installed binaries
+
+Shell integration defines `camp` and `fest` as **shell functions** so
+navigation commands can `cd` in your current shell. Because of that, plain
+`which camp` / `which fest` usually prints the function body, not a filesystem
+path.
+
+```bash
+# zsh — path of the external binary (skips shell functions)
+whence -p camp
+whence -p fest
+# or: which -p camp / which -p fest
+
+# bash
+type -P camp
+type -P fest
+
+# show the function plus every binary on PATH
+type -a camp
+type -a fest
+
+# resolve symlinks to the real install
+realpath "$(whence -p camp)"   # zsh
+realpath "$(type -P camp)"     # bash
+```
+
+To run a binary without the wrapper (scripts, debugging): `command camp version`
+or `command fest version`.
