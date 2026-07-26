@@ -25,6 +25,7 @@ QUICK REFERENCE:
   fest understand checklist      Validation checklist before starting
   fest understand rules          Naming conventions for automation
   fest understand workflow       Just-in-time reading + workflow/gates
+  fest understand hooks          Lifecycle hooks schema, bindings, human gates
 ```
 
 The understand command helps you grasp WHEN and WHY to use specific
@@ -60,6 +61,7 @@ fest understand [flags]
 * [fest understand context](../fest_understand_context/)	 - CONTEXT.md - session memory for AI agents (CREATE FIRST)
 * [fest understand extensions](../fest_understand_extensions/)	 - Show loaded extensions
 * [fest understand gates](../fest_understand_gates/)	 - Show quality gate configuration
+* [fest understand hooks](../fest_understand_hooks/)	 - Lifecycle hooks schema, bindings, and human gates
 * [fest understand lifecycle](../fest_understand_lifecycle/)	 - Festival lifecycle: planning -> ready -> active -> dungeon
 * [fest understand loop](../fest_understand_loop/)	 - The fest next loop: festivals and standalone WORKFLOW.md as work loops
 * [fest understand methodology](../fest_understand_methodology/)	 - Core principles - START HERE for new agents

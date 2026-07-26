@@ -1,21 +1,24 @@
 ---
 title: "camp machine diagnose"
 linkTitle: "camp machine diagnose"
-description: "Inspect (and optionally clear) ssh ControlMaster sockets"
+description: "Inspect machine auth, probe line, and ssh ControlMaster sockets"
 ---
 
 ## camp machine diagnose
 
-Inspect (and optionally clear) ssh ControlMaster sockets
+Inspect machine auth, probe line, and ssh ControlMaster sockets
 
 ### Synopsis
 
-Report the ssh ControlMaster multiplex socket state for each configured machine
-(or one machine if an id is given):
+Report how each configured machine is set up to hop (or one machine if an id
+is given):
 
-  none   no socket — the next hop opens a fresh master
-  live   socket present and the master answers 'ssh -O check'
-  stale  socket present but the master no longer answers
+  auth     OpenSSH (keys/agent) or Tailscale SSH (identity)
+  probe    copy-paste BatchMode ssh line to test outside camp
+  socket   ControlMaster multiplex state:
+             none   no socket — the next hop opens a fresh master
+             live   socket present and the master answers 'ssh -O check'
+             stale  socket present but the master no longer answers
 
 A stale socket is what a sleep or network flap can leave behind; until it is
 removed (or ControlPersist expires) the next 'camp switch machine:...' or

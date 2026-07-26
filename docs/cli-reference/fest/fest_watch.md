@@ -36,10 +36,11 @@ fest watch [festival-selector] [flags]
 ### Options
 
 ```
-      --collapsed   show collapsed tree with counters only
-      --goals       show goals for phases and sequences
-  -h, --help        help for watch
-      --summary     show aggregate summary instead of tree view
+      --collapsed       show collapsed tree with counters only
+      --goals           show goals for phases and sequences
+  -h, --help            help for watch
+      --show-feedback   show blocked-step feedback
+      --summary         show aggregate summary instead of tree view
 ```
 
 ### Options inherited from parent commands

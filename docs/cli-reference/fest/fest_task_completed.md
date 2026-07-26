@@ -1,12 +1,20 @@
 ---
 title: "fest task completed"
 linkTitle: "fest task completed"
-description: "Mark a task as complete (requires confirmation)"
+description: "Mark a task as complete"
 ---
 
 ## fest task completed
 
-Mark a task as complete (requires confirmation)
+Mark a task as complete
+
+### Synopsis
+
+Mark a task as complete.
+
+Quality gates are evaluated first and block completion on failure. By default a
+confirmation prompt is shown; pass --yes to skip it for non-interactive or agent
+use. --json emits a structured result and requires --yes.
 
 ```
 fest task completed [task] [flags]
@@ -16,7 +24,8 @@ fest task completed [task] [flags]
 
 ```
   -h, --help   help for completed
-      --json   output as JSON (blocks: interactive confirmation required)
+      --json   output as JSON (requires --yes)
+  -y, --yes    skip the interactive confirmation prompt
 ```
 
 ### Options inherited from parent commands

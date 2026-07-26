@@ -12,9 +12,11 @@ Manage task status (show, edit, complete, block, reset)
 
 Commands for managing individual task status within a festival.
 
-These commands provide a simpler interface for viewing, editing, marking
-tasks complete, blocked, or resetting them. Each mutation requires
-interactive confirmation to ensure agents verify their work before proceeding.
+This is the single home for task state mutations. Consequential changes
+(completed, blocked, reset) prompt for confirmation to ensure agents verify
+their work; pass --yes to skip the prompt for non-interactive or agent use, and
+--json to emit a structured result (--json requires --yes). Progress signals
+(update, unblock) are frictionless and never prompt.
 
 Task Resolution:
   When [task] is omitted, the command auto-detects the current task:
@@ -32,8 +34,12 @@ Examples:
   fest task show 01_design.md             # Show specific task
   fest task edit                          # Open current task in editor
   fest task completed                     # Mark current task complete (Y/n)
+  fest task completed --yes               # Mark complete, no prompt (agents)
+  fest task completed --yes --json        # Mark complete, structured output
   fest task blocked --reason "need API"   # Mark task blocked (Y/n)
   fest task reset                         # Reset task to pending (Y/n)
+  fest task update 50%                    # Set progress to 50%
+  fest task unblock                       # Clear a blocker, resume work
 ```
 
 ### Options
@@ -54,8 +60,10 @@ Examples:
 ### SEE ALSO
 
 * [fest](../fest/)	 - Festival Methodology CLI - goal-oriented project management for AI agents
-* [fest task blocked](../fest_task_blocked/)	 - Mark a task as blocked (requires confirmation)
-* [fest task completed](../fest_task_completed/)	 - Mark a task as complete (requires confirmation)
+* [fest task blocked](../fest_task_blocked/)	 - Mark a task as blocked
+* [fest task completed](../fest_task_completed/)	 - Mark a task as complete
 * [fest task edit](../fest_task_edit/)	 - Open the current task in your editor
-* [fest task reset](../fest_task_reset/)	 - Reset a task to pending (requires confirmation)
+* [fest task reset](../fest_task_reset/)	 - Reset a task to pending
 * [fest task show](../fest_task_show/)	 - Show task details and status
+* [fest task unblock](../fest_task_unblock/)	 - Clear a task's blocker and resume work
+* [fest task update](../fest_task_update/)	 - Update a task's progress percentage

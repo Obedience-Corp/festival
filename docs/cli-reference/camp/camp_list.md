@@ -17,9 +17,15 @@ with 'camp register'. The registry lives at ~/.obey/campaign/registry.json.
 
 In a terminal, 'camp list' (with no flags) opens an interactive browser where you
 can deactivate/reactivate campaigns (cycle lifecycle status), reassign their org,
-and copy paths. Pass an org as a positional argument to open the browser filtered
-to that org. Piped, with --json/--count, or with any filter/sort flag it prints
-the table instead. Home paths display as '~'.
+and copy paths. When machines are configured in ~/.obey/machines.yaml, press 'r'
+to load remote campaigns into the browser (not on open). Pass an org as a
+positional argument to open the browser filtered to that org. Piped, with
+--json/--count, or with any filter/sort flag it prints the table instead. Home
+paths display as '~'.
+
+Shell integration (recommended for go/hop from the browser):
+  eval "$(camp shell-init zsh)"   # or bash / fish
+  camp list                       # interactive browser; g hops remote rows
 
 Output formats:
   table   - Aligned columns with headers (default)
@@ -47,6 +53,9 @@ Examples:
 (sh -lc) so PATH entries a login profile exports (~/.profile, etc.) are
 picked up. If camp still can't be found on a machine, set
 CAMP_REMOTE_CAMP_PATH to its exact path there.
+
+For interactive hop to a remote campaign from the picker, use csw after
+shell-init (see 'camp switch --help').
 
 ```
 camp list [org] [flags]
