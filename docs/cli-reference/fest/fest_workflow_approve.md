@@ -20,12 +20,31 @@ After approval:
   - The workflow advances to the next step
 
 Auto approval:
-  Manual approval is the default. Use --auto only when an operator has explicitly
-  delegated this checkpoint decision to an external judge command.
+  Configuring hooks.definitions.approval_judge is the operator opt-in that
+  delegates blocking checkpoints away from human review. With that hook set,
+```bash
+  fest next auto-invokes the judge on blocking WORKFLOW.md / GATES.md steps.
 
-  Agents must not clear checkpoints themselves: --as agent is rejected. An
-  agent-actor decision is recorded only when the operator delegates via --auto
-  and the judge returns a verdict.
+  Use 'fest workflow judge' to re-run the judge explicitly after a rejection;
+  '--auto' remains a backwards-compatible alias. Agents must not clear checkpoints with --as agent;
+  agent-actor decisions are recorded only via the judge path.
+
+  Checkpoint classes:
+    artifact_review         — deliverables can be auto-judged when evidence is ready
+    operator_attestation    — human must approve; --auto is refused and plain
+                              manual approval requires an interactive TTY
+
+  Presentation-like steps require non-empty evidence (e.g. output_specs/PRESENTATION.md)
+  before the judge is invoked. Missing evidence blocks deterministically without a model call.
+
+  After a judge reject, re-submit with: fest workflow judge
+  Operator override: run --override-judge --summary "..." from a real terminal
+  and type APPROVE when prompted; records decision_actor=user_override.
+
+  When an approval judge is configured, non-interactive manual approve is
+  refused, including --override-judge and --judge-command, so agents cannot
+  mint decision_actor=user or user_override. Use a real terminal and type
+  APPROVE.
 
   The judge command receives JSON on stdin using schema fest.approval.judge/v1
   and must return JSON on stdout with decision "approve" or "reject" and a
@@ -33,12 +52,20 @@ Auto approval:
   decisions, and empty reasons fail closed and do not approve the checkpoint.
 
   The judge command is resolved as: --judge-command flag, else the
-  hooks.approval_judge.command hook in .festival/config.yaml. If neither is
+  hooks.definitions.approval_judge hook in .festival/config.yaml. If neither is
   set, --auto fails closed and leaves the checkpoint unchanged.
 
       hooks:
-        approval_judge:
-          command: ob judge
+        definitions:
+          approval_judge:
+            command: ob judge
+            timeout: 0
+
+  By default --auto launches the judge in the background and returns
+  immediately; the checkpoint stays blocked until the verdict lands, and
+  'fest show' renders the waiting-on-judge state while it runs. Use --wait
+  to block until the judge returns instead.
+```
 
 ```
 fest workflow approve [flags]
@@ -49,9 +76,11 @@ fest workflow approve [flags]
 ```
       --auto                     delegate this checkpoint decision to the configured approval judge command
   -h, --help                     help for approve
-      --judge-command string     approval judge command for --auto (overrides the .festival/config.yaml hooks.approval_judge.command hook)
+      --judge-command string     approval judge command for --auto (overrides the .festival/config.yaml hooks.definitions.approval_judge hook; requires an interactive TTY)
       --judge-timeout duration   maximum time to wait for the approval judge (0 waits until it returns)
-      --summary string           approval summary or rationale
+      --override-judge           operator override of a judge/readiness reject (requires --summary and an interactive TTY)
+      --summary string           approval summary or rationale (required with --override-judge)
+      --wait                     block until the judge returns instead of launching it in the background
 ```
 
 ### Options inherited from parent commands

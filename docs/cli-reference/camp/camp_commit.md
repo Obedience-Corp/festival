@@ -22,6 +22,10 @@ machines. Use --include-refs to stage them explicitly.
 Use --sub to commit in the submodule detected from your current directory.
 Use -p/--project to commit in a specific project (e.g., -p projects/camp).
 
+Commit tags use explicit --workitem or context from the current path. They do
+not inherit the per-machine current workitem selection, which can be stale;
+use 'camp workitem commit' when you want current.yaml scoping.
+
 Examples:
   camp commit -m "Add new feature"
   camp commit --amend -m "Fix typo"

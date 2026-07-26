@@ -15,10 +15,11 @@ Add a machine to ~/.obey/machines.yaml, or update it if the id already exists
 than duplicating it).
 
 With --discover, camp runs 'tailscale status --json' and lets you pick a
-tailnet device instead of specifying --host/--auth by hand; the chosen device
-is saved with auth_method=tailscale-ssh. Pass an id positionally with
---discover to select that device by its derived id non-interactively (skips
-the picker), or use --yes to take the first discovered device.
+tailnet device (network identity only). Default auth is OpenSSH keys/agent
+(ssh-agent); pass --auth tailscale-ssh for Tailscale identity login. --user and
+--identity are honored with --discover. Pass an id positionally with --discover
+to select that device by its derived id non-interactively (skips the picker),
+or use --yes to take the first discovered device.
 
 ```
 camp machine add [id] [flags]
@@ -27,9 +28,10 @@ camp machine add [id] [flags]
 ### Examples
 
 ```
-  camp machine add devbox --host devbox.tailnet.ts.net --auth tailscale-ssh
   camp machine add buildbox --host 10.0.0.12 --auth ssh-agent --user ci
+  camp machine add devbox --host devbox.tailnet.ts.net --auth tailscale-ssh
   camp machine add --discover
+  camp machine add --discover --auth tailscale-ssh --user lance
   camp machine add devbox --discover
   camp machine add --discover --yes
 ```

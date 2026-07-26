@@ -58,6 +58,7 @@ Examples:
   fest workflow advance             # Complete current step and move to next
   fest workflow skip --reason "already completed externally" # Operator override
   fest workflow approve             # Approve a blocking checkpoint
+  fest workflow judge               # Run or re-run the configured approval judge
   fest workflow reject              # Reject checkpoint with feedback
   fest workflow reset               # Reset workflow or gate to step 1
   fest workflow show                # Display the current step details
@@ -86,6 +87,7 @@ Examples:
 * [fest workflow approve](../fest_workflow_approve/)	 - Approve a blocking checkpoint
 * [fest workflow create](../fest_workflow_create/)	 - Scaffold a new standalone WORKFLOW.md (alias of 'fest create workflow')
 * [fest workflow init](../fest_workflow_init/)	 - Initialize standalone workflow runtime
+* [fest workflow judge](../fest_workflow_judge/)	 - Run the approval judge for the current checkpoint
 * [fest workflow reject](../fest_workflow_reject/)	 - Reject checkpoint with feedback
 * [fest workflow renumber](../fest_workflow_renumber/)	 - Renumber step headings in a WORKFLOW.md to a contiguous 1-indexed sequence
 * [fest workflow reset](../fest_workflow_reset/)	 - Reset workflow to step 1

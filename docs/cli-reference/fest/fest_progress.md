@@ -12,25 +12,25 @@ Track and display festival execution progress
 
 Track and display progress for festival execution.
 
-When run without flags, shows an overview of festival progress.
-Use flags to update task progress, report blockers, or mark tasks complete.
+When run without flags, shows an overview of festival progress. 'fest progress'
+is the display surface; task state mutations live under 'fest task'.
 
 PROGRESS OVERVIEW:
 ```bash
   fest progress              Show festival progress summary
   fest progress --json       Output progress in JSON format
+  fest progress --watch      Continuously refresh the display
 ```
 
-TASK UPDATES:
+DEPRECATED TASK MUTATIONS (use 'fest task' instead):
 ```bash
-  fest progress --task <id> --update 50%     Update task progress
-  fest progress --task <id> --complete       Mark task as complete
-  fest progress --task <id> --in-progress    Mark task as in progress
-  fest progress --task <id> --blocker "msg"  Report a blocker
-  fest progress --task <id> --clear          Clear blocker
-  fest progress --path <task_path> --complete
-  fest progress --phase <phase> --sequence <seq> --task <id> --complete
+  fest progress --task <id> --complete   -> fest task completed --yes
+  fest progress --task <id> --update 50% -> fest task update 50%
+  fest progress --task <id> --blocker "msg" -> fest task blocked --reason "msg" --yes
+  fest progress --task <id> --clear      -> fest task unblock
 ```
+
+These flags still work for one release and print a deprecation notice.
 
 Task IDs can be festival-relative paths (e.g. 002_FOUNDATION/01_project_scaffold/01_design.md)
 or absolute paths. Use --path or --phase/--sequence to disambiguate duplicates.
@@ -44,12 +44,9 @@ fest progress [flags]
 
 ```
   fest progress                          # Show overall progress
-  fest progress --task 01_setup.md --update 75%
-  fest progress --path 002_FOUNDATION/01_project_scaffold/01_design.md --complete
-  fest progress --phase 002_FOUNDATION --sequence 01_project_scaffold --task 01_design.md --complete
-  fest progress --festival festivals/active/guild-chat-GC0001 --task 01_setup.md --update 75%
-  fest progress --task 02_impl.md --blocker "Waiting on API spec"
-  fest progress --task 02_impl.md --clear
+  fest progress --json                   # Overall progress as JSON
+  fest progress --watch                  # Live-refreshing progress display
+  fest progress --task 01_setup.md       # Show a single task's progress
 ```
 
 ### Options
