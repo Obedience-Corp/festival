@@ -84,6 +84,7 @@ camp sync [submodule...] [flags]
       --git-only           With --from: move git objects only, skip artifact roots
   -h, --help               help for sync
       --json               Output results as JSON for scripting
+      --no-drain           Do not wait for camp's queued commits first
       --no-fetch           Skip fetching from remote (use local refs only)
   -p, --parallel int       Number of parallel git operations (git guards superproject ops with repo lockfiles that fail fast on contention; lower this if a slow disk surfaces transient lock errors) (default 4)
   -v, --verbose            Show detailed output for each submodule

@@ -65,7 +65,7 @@ camp workitem [flags]
 * [camp workitem links](../camp_workitem_links/)	 - List workitem links
 * [camp workitem list](../camp_workitem_list/)	 - List or browse filtered workitems
 * [camp workitem priority](../camp_workitem_priority/)	 - Set or clear the manual priority
-* [camp workitem promote](../camp_workitem_promote/)	 - Promote a workitem to a festival, doc, or dungeon
+* [camp workitem promote](../camp_workitem_promote/)	 - Promote a workitem: festival, doc, rail, dungeon
 * [camp workitem rename](../camp_workitem_rename/)	 - Rename a workitem and repair references
 * [camp workitem repair](../camp_workitem_repair/)	 - Repair a workflow directory into a workitem
 * [camp workitem resolve](../camp_workitem_resolve/)	 - Print the workitem for the current context

@@ -37,8 +37,10 @@ camp project commit [flags]
   -a, --all                   Stage all changes (default true)
       --amend                 Amend the previous commit
       --auto-write            Run configured commit message writer
+      --commit-large          Commit over-threshold files instead of keeping them out of git
   -h, --help                  help for commit
   -m, --message stringArray   Commit message (repeatable; multiple -m are joined git-style into subject + body; required unless --auto-write)
+      --no-drain              Do not wait for camp's queued commits first
       --no-sync               Do not sync submodule ref even if settings enable it
   -p, --project string        Project name (auto-detected from cwd if not specified)
       --sync                  Sync submodule ref at campaign root after commit (also enabled by commit.sync_project_refs setting)

@@ -23,6 +23,13 @@ Use with the shell-init wrappers for instant navigation (recommended):
   csw a1b2                       # Switch by ID prefix
   csw obey/platform              # Switch by org-scoped selector
   csw archdtop:lance-arch        # Hop to a remote campaign over ssh
+  csw -                          # Hop back to the machine/campaign this session came from
+
+'camp switch -' (csw -) is the hop-back gesture: it returns to the origin
+encoded in CAMP_HOP_ORIGIN by the outbound hop. It is registration-independent
+— the origin need not be in this machine's machines.yaml. Like other remote
+targets it refuses --print/--json. '-' is reserved and is no longer a fuzzy
+campaign query.
 
 The --print flag outputs just the path for shell integration (local only):
   cd "$(camp switch --print)"
@@ -53,6 +60,7 @@ camp switch [campaign] [flags]
   csw                                # Interactive picker (local + remotes)
   csw obey-campaign                  # Switch by name
   csw archdtop:lance-arch            # Hop to remote campaign
+  csw -                              # Hop back via CAMP_HOP_ORIGIN
   camp switch --org obey platform    # Switch by name within an org
   camp switch obey/platform          # Switch by scoped selector
   camp switch a1b2                   # Switch by ID prefix

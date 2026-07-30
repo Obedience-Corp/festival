@@ -44,9 +44,12 @@ camp commit [flags]
   -a, --all                   Stage all changes before committing (default true)
       --amend                 Amend the previous commit
       --auto-write            Run configured commit message writer
+      --commit-large          Commit over-threshold files instead of keeping them out of git
   -h, --help                  help for commit
       --include-refs          Include submodule ref changes when staging at campaign root
+      --json                  Emit a JSON result on stdout; human output goes to stderr
   -m, --message stringArray   Commit message (repeatable; multiple -m are joined git-style into subject + body; required unless --auto-write)
+      --no-drain              Do not wait for camp's queued commits first
       --no-edit               Amend without editing the commit message (requires --amend)
   -p, --project string        Operate on a specific project/submodule path
       --sub                   Operate on the submodule detected from current directory
