@@ -397,6 +397,10 @@ func collectState(repoRoot, channel, festSelector, campSelector string) (operato
 		return operator.BundleInput{}, fmt.Errorf("channel must be dev, rc, or stable (got %q)", channel)
 	}
 
+	if err := ensureSubmodulesReady(repoRoot); err != nil {
+		return operator.BundleInput{}, err
+	}
+
 	if dirty, err := worktreeDirty(repoRoot); err != nil {
 		return operator.BundleInput{}, err
 	} else if dirty {
