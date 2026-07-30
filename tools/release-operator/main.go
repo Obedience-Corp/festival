@@ -397,14 +397,17 @@ func collectState(repoRoot, channel, festSelector, campSelector string) (operato
 		return operator.BundleInput{}, fmt.Errorf("channel must be dev, rc, or stable (got %q)", channel)
 	}
 
-	if err := ensureSubmodulesReady(repoRoot); err != nil {
-		return operator.BundleInput{}, err
-	}
-
+	// Check the superproject's own worktree before ensureSubmodulesReady:
+	// auto-initializing a submodule is itself a mutation, and a dirty root
+	// should refuse before that mutation happens, not after.
 	if dirty, err := worktreeDirty(repoRoot); err != nil {
 		return operator.BundleInput{}, err
 	} else if dirty {
 		return operator.BundleInput{}, errors.New("festival repo has uncommitted changes")
+	}
+
+	if err := ensureSubmodulesReady(repoRoot); err != nil {
+		return operator.BundleInput{}, err
 	}
 
 	for _, sub := range submodules {

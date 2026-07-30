@@ -113,6 +113,18 @@ func (r *repoContext) justEnv(env map[string]string, args ...string) error {
 }
 
 func (r *repoContext) ensureAllWorktreesClean() error {
+	if err := r.ensureRootWorktreeClean(); err != nil {
+		return err
+	}
+	return r.ensureSubmoduleWorktreesClean()
+}
+
+// ensureRootWorktreeClean checks only the festival repo's own worktree. It
+// is split out from ensureSubmoduleWorktreesClean so callers can reject a
+// dirty superproject before ensureSubmodulesReady runs: initializing a
+// submodule is itself a mutation, and a command that is about to refuse for
+// a dirty tree should not perform that mutation first.
+func (r *repoContext) ensureRootWorktreeClean() error {
 	dirty, err := worktreeDirty(r.Root)
 	if err != nil {
 		return err
@@ -120,7 +132,14 @@ func (r *repoContext) ensureAllWorktreesClean() error {
 	if dirty {
 		return errors.New("festival repo has uncommitted changes")
 	}
+	return nil
+}
 
+// ensureSubmoduleWorktreesClean checks each submodule's own worktree. It
+// must only run after ensureSubmodulesReady, since checking dirty state on
+// an uninitialized submodule directory silently resolves against the
+// superproject instead of the submodule.
+func (r *repoContext) ensureSubmoduleWorktreesClean() error {
 	for _, sub := range submodules {
 		dirty, err := worktreeDirty(r.submodulePath(sub))
 		if err != nil {
@@ -130,7 +149,6 @@ func (r *repoContext) ensureAllWorktreesClean() error {
 			return fmt.Errorf("%s has uncommitted changes", sub)
 		}
 	}
-
 	return nil
 }
 
@@ -488,18 +506,27 @@ func ensureSubmodulesReady(root string) error {
 	return nil
 }
 
-// verifyCheckedOutTag confirms dir's HEAD is exactly the tag that was just
-// requested, rather than trusting the checkout succeeded silently against
-// the wrong repository or an unrelated commit.
+// verifyCheckedOutTag confirms dir's HEAD is exactly the commit the
+// requested tag points at, rather than trusting the checkout succeeded
+// silently against the wrong repository or an unrelated commit. HEAD is
+// allowed to carry other tags too: a release commit is routinely tagged
+// both vX.Y.Z-rc.N and, later, vX.Y.Z, and that is not itself a mismatch.
+// headMatchesTag compares the requested tag's own commit against HEAD
+// directly, so it is unaffected by any other tags also pointing at HEAD
+// (unlike exactTagAt, which returns only the single highest-sorting tag).
 func verifyCheckedOutTag(dir, name, tag string) error {
-	got, err := exactTagAt(dir)
+	match, err := headMatchesTag(dir, tag)
 	if err != nil {
 		return fmt.Errorf("verify %s checkout: %w", name, err)
 	}
-	if got != tag {
-		return fmt.Errorf("%s HEAD resolved to tag %q after checking out %q; refusing to trust a mismatched pin", name, valueOrNone(got), tag)
+	if match {
+		return nil
 	}
-	return nil
+	tags, tagsErr := exactTagsAt(dir)
+	if tagsErr != nil || len(tags) == 0 {
+		return fmt.Errorf("%s HEAD does not resolve to tag %q after checking it out; refusing to trust a mismatched pin", name, tag)
+	}
+	return fmt.Errorf("%s HEAD resolved to %s after checking out %q; refusing to trust a mismatched pin", name, strings.Join(tags, ", "), tag)
 }
 
 // gitRef captures a worktree's exact position: the branch it was on (empty
@@ -529,11 +556,20 @@ func captureGitRef(dir string) (gitRef, error) {
 // restore returns dir to exactly the branch/commit ref describes. When ref
 // was on a branch, restore lands back on that branch at that commit, never
 // on a detached HEAD; ref.branch is only empty when the worktree already
-// started detached.
+// started detached. The hard reset only runs when the branch has actually
+// moved off the captured commit, so restore does not rewind a branch tip
+// that nothing touched.
 func (ref gitRef) restore(dir string) error {
 	if ref.branch != "" {
 		if err := runCmd(dir, nil, "git", "checkout", ref.branch); err != nil {
 			return err
+		}
+		current, err := gitOutput(dir, "rev-parse", "HEAD")
+		if err != nil {
+			return err
+		}
+		if current == ref.commit {
+			return nil
 		}
 		return runCmd(dir, nil, "git", "reset", "--hard", ref.commit)
 	}
@@ -569,10 +605,16 @@ func (r *repoContext) pinFromLatest(modeName, festSelector, campSelector string)
 	if err != nil {
 		return err
 	}
+	// Check the superproject's own worktree before ensureSubmodulesReady:
+	// auto-initializing a submodule is itself a mutation, and a dirty root
+	// should refuse before that mutation happens, not after.
+	if err = r.ensureRootWorktreeClean(); err != nil {
+		return err
+	}
 	if err = ensureSubmodulesReady(r.Root); err != nil {
 		return err
 	}
-	if err = r.ensureAllWorktreesClean(); err != nil {
+	if err = r.ensureSubmoduleWorktreesClean(); err != nil {
 		return err
 	}
 
@@ -758,6 +800,12 @@ func runCheckBundledModules(ctx *repoContext) error {
 }
 
 func runPreflight(ctx *repoContext, mode releaseMode) error {
+	// Check the superproject's own worktree before ensureSubmodulesReady:
+	// auto-initializing a submodule is itself a mutation, and a dirty root
+	// should refuse before that mutation happens, not after.
+	if err := ctx.ensureRootWorktreeClean(); err != nil {
+		return err
+	}
 	if err := ensureSubmodulesReady(ctx.Root); err != nil {
 		return err
 	}
@@ -785,7 +833,7 @@ func runPreflight(ctx *repoContext, mode releaseMode) error {
 	}
 	fmt.Println()
 
-	if err := ctx.ensureAllWorktreesClean(); err != nil {
+	if err := ctx.ensureSubmoduleWorktreesClean(); err != nil {
 		return err
 	}
 	fmt.Println("Submodules: clean")
@@ -936,10 +984,13 @@ func runDraftBootstrap(ctx *repoContext, festivalVersion, festVersion, campVersi
 	if err != nil {
 		return err
 	}
+	if err := ctx.ensureRootWorktreeClean(); err != nil {
+		return err
+	}
 	if err := ensureSubmodulesReady(ctx.Root); err != nil {
 		return err
 	}
-	if err := ctx.ensureAllWorktreesClean(); err != nil {
+	if err := ctx.ensureSubmoduleWorktreesClean(); err != nil {
 		return err
 	}
 	if err := ctx.fetchReleaseRefs(); err != nil {
@@ -966,7 +1017,13 @@ func runDraftBootstrap(ctx *repoContext, festivalVersion, festVersion, campVersi
 	if err := ctx.checkoutSubmoduleTag("fest", festTag); err != nil {
 		return err
 	}
+	if err := verifyCheckedOutTag(ctx.submodulePath("fest"), "fest", festTag); err != nil {
+		return err
+	}
 	if err := ctx.checkoutSubmoduleTag("camp", campTag); err != nil {
+		return err
+	}
+	if err := verifyCheckedOutTag(ctx.submodulePath("camp"), "camp", campTag); err != nil {
 		return err
 	}
 	if err := ctx.runDocs(stable); err != nil {

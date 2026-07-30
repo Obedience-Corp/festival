@@ -228,33 +228,64 @@ func TestPinFromLatestInitializesUninitializedSubmodulesAndResolvesRealTags(t *t
 	}
 }
 
-// TestPinFromLatestRollsBackOnPostCheckoutMismatch forces a failure after
-// fest has already been pinned successfully: camp's resolved commit carries
-// both the requested rc tag and an unrelated, higher-sorting stable tag, so
-// verifyCheckedOutTag catches HEAD resolving to the wrong tag. pinFromLatest
-// must then restore fest to its starting commit and leave the superproject
-// on its starting branch, rather than leaving a half-applied pin behind.
-func TestPinFromLatestRollsBackOnPostCheckoutMismatch(t *testing.T) {
+// TestPinFromLatestSucceedsWhenPinnedCommitCarriesMultipleTags pins the bug
+// fix in place: a release commit is routinely tagged both vX.Y.Z-rc.N and,
+// later, vX.Y.Z. verifyCheckedOutTag must not treat the extra, higher-
+// sorting stable tag as a mismatch when the requested rc tag is present.
+func TestPinFromLatestSucceedsWhenPinnedCommitCarriesMultipleTags(t *testing.T) {
+	root, campOrigin, festOrigin := newSubmoduleFixture(t)
+	addOriginRelease(t, festOrigin, "v8.8.8-rc.1")
+	// v99.0.0 sorts ahead of v9.9.9-rc.1 under --sort=-v:refname; exactTagAt
+	// alone would have picked v99.0.0, which is exactly the false-positive
+	// verifyCheckedOutTag must no longer produce.
+	addOriginRelease(t, campOrigin, "v9.9.9-rc.1", "v99.0.0")
+
+	ctx := testRepoContext(t, root)
+	if err := ctx.pinFromLatest("rc", "latest", "latest"); err != nil {
+		t.Fatalf("pinFromLatest returned error for a multi-tagged pinned commit: %v", err)
+	}
+
+	campTag, err := exactTagAtForMode(filepath.Join(root, "camp"), "rc")
+	if err != nil {
+		t.Fatalf("exactTagAtForMode(camp, rc): %v", err)
+	}
+	if campTag != "v9.9.9-rc.1" {
+		t.Fatalf("camp pinned to %q, want v9.9.9-rc.1", campTag)
+	}
+}
+
+// TestPinFromLatestRollsBackWhenCampCheckoutFailsAfterFestSucceeds forces a
+// real, mid-flow failure after fest has already been resolved, checked out,
+// and verified successfully: camp's own index is locked, so its checkout
+// fails outright. pinFromLatest must then restore fest to its starting
+// commit/branch and leave the superproject on its starting branch, rather
+// than leaving a half-applied pin behind.
+func TestPinFromLatestRollsBackWhenCampCheckoutFailsAfterFestSucceeds(t *testing.T) {
 	root, campOrigin, festOrigin := newSubmoduleFixture(t)
 	festStart := gitRevParse(t, filepath.Join(root, "fest"), "HEAD")
 	festStartBranch := gitRevParse(t, filepath.Join(root, "fest"), "--abbrev-ref", "HEAD")
 	campStart := gitRevParse(t, filepath.Join(root, "camp"), "HEAD")
+	campStartBranch := gitRevParse(t, filepath.Join(root, "camp"), "--abbrev-ref", "HEAD")
 	rootHeadBefore := gitRevParse(t, root, "HEAD")
 
 	addOriginRelease(t, festOrigin, "v8.8.8-rc.1")
-	// v99.0.0 sorts ahead of v9.9.9-rc.1 under --sort=-v:refname, so
-	// exactTagAt (which does not filter by mode) disagrees with the rc
-	// resolution that picked v9.9.9-rc.1, exactly the "resolved commit
-	// doesn't match the requested tag" case the sanity check exists for.
-	addOriginRelease(t, campOrigin, "v9.9.9-rc.1", "v99.0.0")
+	addOriginRelease(t, campOrigin, "v9.9.9-rc.1")
+
+	// Lock camp's own index (its real git dir lives under
+	// root/.git/modules/camp, independent of fest's and root's own index),
+	// so `git checkout` inside camp fails after fest's own resolve/
+	// checkout/verify has already completed successfully.
+	campIndexLock := filepath.Join(root, ".git", "modules", "camp", "index.lock")
+	writeFile(t, campIndexLock, "")
 
 	ctx := testRepoContext(t, root)
 	err := ctx.pinFromLatest("rc", "latest", "latest")
 	if err == nil {
-		t.Fatal("expected pinFromLatest to fail on the ambiguous camp tag")
+		t.Fatal("expected pinFromLatest to fail while camp's index is locked")
 	}
-	if !strings.Contains(err.Error(), "camp") {
-		t.Fatalf("error does not mention camp: %v", err)
+
+	if rmErr := os.Remove(campIndexLock); rmErr != nil && !os.IsNotExist(rmErr) {
+		t.Fatalf("remove camp index.lock: %v", rmErr)
 	}
 
 	festHead := gitRevParse(t, filepath.Join(root, "fest"), "HEAD")
@@ -268,6 +299,9 @@ func TestPinFromLatestRollsBackOnPostCheckoutMismatch(t *testing.T) {
 	campHead := gitRevParse(t, filepath.Join(root, "camp"), "HEAD")
 	if campHead != campStart {
 		t.Fatalf("camp HEAD = %s after rollback, want unchanged starting commit %s", campHead, campStart)
+	}
+	if branch := gitRevParse(t, filepath.Join(root, "camp"), "--abbrev-ref", "HEAD"); branch != campStartBranch {
+		t.Fatalf("camp branch = %q after rollback, want unchanged starting branch %q", branch, campStartBranch)
 	}
 
 	if branch := gitRevParse(t, root, "--abbrev-ref", "HEAD"); branch != "main" {
@@ -283,6 +317,27 @@ func TestPinFromLatestRollsBackOnPostCheckoutMismatch(t *testing.T) {
 	}
 	if strings.TrimSpace(status) != "" {
 		t.Fatalf("festival repo is dirty after rollback: %q", status)
+	}
+}
+
+// TestPinFromLatestRejectsDirtyRootBeforeInitializingSubmodules pins the
+// clean-tree-check ordering: a dirty superproject must be rejected before
+// ensureSubmodulesReady runs, since auto-initializing a submodule is itself
+// a mutation and a command that is about to refuse for a dirty tree should
+// not perform that mutation first.
+func TestPinFromLatestRejectsDirtyRootBeforeInitializingSubmodules(t *testing.T) {
+	root, _, _ := newSubmoduleFixture(t)
+	deinitSubmodule(t, root, "camp")
+
+	writeFile(t, filepath.Join(root, "README.md"), "dirty\n")
+
+	ctx := testRepoContext(t, root)
+	if err := ctx.pinFromLatest("rc", "latest", "latest"); err == nil {
+		t.Fatal("expected pinFromLatest to fail on a dirty festival repo")
+	}
+
+	if submoduleIsIndependent(filepath.Join(root, "camp")) {
+		t.Fatal("camp was initialized even though the run should have refused on a dirty root first")
 	}
 }
 
@@ -322,5 +377,24 @@ func TestVerifyCheckedOutTag(t *testing.T) {
 
 	if err := verifyCheckedOutTag(repo, "test", "v9.9.9"); err == nil {
 		t.Fatal("expected verifyCheckedOutTag to fail for a tag HEAD does not carry")
+	}
+
+	// A release commit is routinely tagged both vX.Y.Z-rc.N and, later,
+	// vX.Y.Z. The requested (lower-sorting) tag being present must still
+	// pass, even though a higher-sorting tag also points at the same
+	// commit: exactTagAt alone would have picked v99.0.0 here and wrongly
+	// reported a mismatch.
+	runGit(t, repo, "tag", "v99.0.0")
+	if err := verifyCheckedOutTag(repo, "test", "v0.1.0"); err != nil {
+		t.Fatalf("verifyCheckedOutTag returned error for a requested tag present on a multi-tagged HEAD: %v", err)
+	}
+
+	// A genuinely different commit must still fail.
+	writeFile(t, filepath.Join(repo, "next.txt"), "next\n")
+	runGit(t, repo, "add", "next.txt")
+	runGit(t, repo, "commit", "-m", "next commit")
+	runGit(t, repo, "tag", "v0.2.0")
+	if err := verifyCheckedOutTag(repo, "test", "v0.1.0"); err == nil {
+		t.Fatal("expected verifyCheckedOutTag to fail when HEAD moved to a genuinely different commit")
 	}
 }
