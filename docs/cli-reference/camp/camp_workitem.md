@@ -58,6 +58,7 @@ camp workitem [flags]
 * [camp workitem commits](../camp_workitem_commits/)	 - List commits referencing a workitem
 * [camp workitem create](../camp_workitem_create/)	 - Create workitem tracking metadata
 * [camp workitem current](../camp_workitem_current/)	 - Get, set, or clear the current workitem
+* [camp workitem demote](../camp_workitem_demote/)	 - Move a rail resident back to its type root
 * [camp workitem doctor](../camp_workitem_doctor/)	 - Report link-registry health issues
 * [camp workitem group](../camp_workitem_group/)	 - Set or clear the group
 * [camp workitem id](../camp_workitem_id/)	 - Print the identifier of a workitem

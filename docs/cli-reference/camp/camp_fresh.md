@@ -26,6 +26,21 @@ follow-up command workflows (install, build, bootstrap, ...) to run once the
 cycle succeeds. Manage those with 'camp fresh configure'. Inspect the resolved
 sequence with 'camp fresh show-workflow [project-name]'.
 
+WORKITEM COMPLETION
+
+Two fresh.yaml settings decide what happens to workitems whose work looks done:
+
+  completed_runs     Tier 1, once per run, campaign-root scoped. "sweep"
+                     (default) promotes every workitem whose workflow run
+                     completed, "report" prints a read-only banner, "off" skips
+                     it. This is the same sweep 'camp workitem sweep' performs.
+  merged_workitems   Tier 2, per project. A workitem whose branch merged is
+                     inferred evidence, so it never auto-promotes: "prompt"
+                     asks on a TTY and reports otherwise, "report" prints the
+                     exact promote commands to run, "off" skips it.
+
+Both are configured in fresh.yaml, not by flags. See 'camp fresh configure'.
+
 Examples:
   camp fresh                            # Sync current project (checkout default, fetch, prune)
   camp fresh --branch develop           # Sync and create develop branch

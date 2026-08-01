@@ -23,7 +23,12 @@ TARGETS:
 
 The rail is forward-only: root -> ready -> active. A workitem already on a
 stage cannot move backward, and moving one out of a dungeon is a restore
-rather than a promote.
+rather than a promote. To leave the rail entirely, use 'camp workitem demote',
+which returns the workitem to its original workflow type root.
+
+A workitem on the rail keeps its original type: a design item promoted to
+active is still a design item, now living at festivals/active/<slug>, and
+'camp wi --type design' still finds it.
 
 ```
 camp workitem promote [id] --target <target> [flags]
