@@ -113,6 +113,18 @@ func (r *repoContext) justEnv(env map[string]string, args ...string) error {
 }
 
 func (r *repoContext) ensureAllWorktreesClean() error {
+	if err := r.ensureRootWorktreeClean(); err != nil {
+		return err
+	}
+	return r.ensureSubmoduleWorktreesClean()
+}
+
+// ensureRootWorktreeClean checks only the festival repo's own worktree. It
+// is split out from ensureSubmoduleWorktreesClean so callers can reject a
+// dirty superproject before ensureSubmodulesReady runs: initializing a
+// submodule is itself a mutation, and a command that is about to refuse for
+// a dirty tree should not perform that mutation first.
+func (r *repoContext) ensureRootWorktreeClean() error {
 	dirty, err := worktreeDirty(r.Root)
 	if err != nil {
 		return err
@@ -120,7 +132,14 @@ func (r *repoContext) ensureAllWorktreesClean() error {
 	if dirty {
 		return errors.New("festival repo has uncommitted changes")
 	}
+	return nil
+}
 
+// ensureSubmoduleWorktreesClean checks each submodule's own worktree. It
+// must only run after ensureSubmodulesReady, since checking dirty state on
+// an uninitialized submodule directory silently resolves against the
+// superproject instead of the submodule.
+func (r *repoContext) ensureSubmoduleWorktreesClean() error {
 	for _, sub := range submodules {
 		dirty, err := worktreeDirty(r.submodulePath(sub))
 		if err != nil {
@@ -130,7 +149,6 @@ func (r *repoContext) ensureAllWorktreesClean() error {
 			return fmt.Errorf("%s has uncommitted changes", sub)
 		}
 	}
-
 	return nil
 }
 
@@ -419,15 +437,210 @@ func (r *repoContext) checkoutSubmoduleTag(name, tag string) error {
 	return r.runGitSubmodule(name, "checkout", "--detach", tag)
 }
 
-func (r *repoContext) pinFromLatest(modeName, festSelector, campSelector string) error {
+// submoduleIsIndependent reports whether dir is itself a distinct git
+// worktree rather than an uninitialized submodule placeholder directory.
+// Git commands locate their repository by walking up from cwd through
+// parent directories until they find a .git entry. An uninitialized
+// submodule directory has none of its own, so every git command run
+// against it silently resolves against the superproject instead of
+// failing. That fallthrough is what let the pin flow resolve the
+// superproject's own ancient tags for camp/fest, and what turned a
+// submodule "checkout" into a checkout of the superproject itself.
+// Comparing the discovered toplevel against dir catches that fallthrough
+// directly, regardless of why the submodule ended up uninitialized.
+func submoduleIsIndependent(dir string) bool {
+	info, statErr := os.Stat(dir)
+	if statErr != nil || !info.IsDir() {
+		return false
+	}
+	out, err := gitOutput(dir, "rev-parse", "--show-toplevel")
+	if err != nil {
+		return false
+	}
+	want := cleanRealPath(dir)
+	got := cleanRealPath(strings.TrimSpace(out))
+	return want != "" && want == got
+}
+
+// cleanRealPath resolves path to an absolute, symlink-free form for
+// worktree-identity comparisons, falling back to the plain absolute path
+// when symlink resolution fails (e.g. the path does not exist yet).
+func cleanRealPath(path string) string {
+	abs, err := filepath.Abs(path)
+	if err != nil {
+		return ""
+	}
+	if real, err := filepath.EvalSymlinks(abs); err == nil {
+		return real
+	}
+	return abs
+}
+
+// ensureSubmodulesReady verifies every submodule under root is its own
+// independent git worktree before any release tooling reads or mutates it.
+// When a submodule is not initialized, it is initialized automatically
+// (git submodule update --init) and its tags are fetched; if it still is
+// not independent afterward, ensureSubmodulesReady refuses loudly before
+// any further mutation happens rather than let git silently fall through
+// to the superproject. See festival-release-operator-running-pin-20260729-233926.
+func ensureSubmodulesReady(root string) error {
+	for _, sub := range submodules {
+		path := filepath.Join(root, sub)
+		if submoduleIsIndependent(path) {
+			continue
+		}
+
+		fmt.Printf("%s submodule is not initialized; running 'git submodule update --init -- %s'\n", sub, sub)
+		if err := runCmd(root, nil, "git", "submodule", "update", "--init", "--", sub); err != nil {
+			return fmt.Errorf("initialize %s submodule: %w\nrun 'git submodule update --init -- %s' in %s and retry", sub, err, sub, root)
+		}
+		if !submoduleIsIndependent(path) {
+			return fmt.Errorf("%s did not become an independent git worktree after 'git submodule update --init'; refusing to continue rather than risk resolving refs against the superproject", sub)
+		}
+
+		if err := runCmd(path, nil, "git", "fetch", "--prune", "--prune-tags", "origin", "+refs/tags/*:refs/tags/*"); err != nil {
+			return fmt.Errorf("fetch tags for %s after initializing submodule: %w", sub, err)
+		}
+		fmt.Printf("%s submodule initialized and tags fetched\n", sub)
+	}
+	return nil
+}
+
+// verifyCheckedOutTag confirms dir's HEAD is exactly the commit the
+// requested tag points at, rather than trusting the checkout succeeded
+// silently against the wrong repository or an unrelated commit. HEAD is
+// allowed to carry other tags too: a release commit is routinely tagged
+// both vX.Y.Z-rc.N and, later, vX.Y.Z, and that is not itself a mismatch.
+// headMatchesTag compares the requested tag's own commit against HEAD
+// directly, so it is unaffected by any other tags also pointing at HEAD
+// (unlike exactTagAt, which returns only the single highest-sorting tag).
+func verifyCheckedOutTag(dir, name, tag string) error {
+	match, err := headMatchesTag(dir, tag)
+	if err != nil {
+		return fmt.Errorf("verify %s checkout: %w", name, err)
+	}
+	if match {
+		return nil
+	}
+	tags, tagsErr := exactTagsAt(dir)
+	if tagsErr != nil || len(tags) == 0 {
+		return fmt.Errorf("%s HEAD does not resolve to tag %q after checking it out; refusing to trust a mismatched pin", name, tag)
+	}
+	return fmt.Errorf("%s HEAD resolved to %s after checking out %q; refusing to trust a mismatched pin", name, strings.Join(tags, ", "), tag)
+}
+
+// gitRef captures a worktree's exact position: the branch it was on (empty
+// when HEAD was already detached) and the commit it pointed at.
+type gitRef struct {
+	branch string
+	commit string
+}
+
+// captureGitRef records dir's current branch/commit so it can be restored
+// later if a subsequent step fails.
+func captureGitRef(dir string) (gitRef, error) {
+	branch, err := gitOutput(dir, "rev-parse", "--abbrev-ref", "HEAD")
+	if err != nil {
+		return gitRef{}, fmt.Errorf("capture starting state of %s: %w", dir, err)
+	}
+	commit, err := gitOutput(dir, "rev-parse", "HEAD")
+	if err != nil {
+		return gitRef{}, fmt.Errorf("capture starting state of %s: %w", dir, err)
+	}
+	if branch == "HEAD" {
+		branch = ""
+	}
+	return gitRef{branch: branch, commit: commit}, nil
+}
+
+// restore returns dir to exactly the branch/commit ref describes. When ref
+// was on a branch, restore lands back on that branch at that commit, never
+// on a detached HEAD; ref.branch is only empty when the worktree already
+// started detached. The hard reset only runs when the branch has actually
+// moved off the captured commit, so restore does not rewind a branch tip
+// that nothing touched.
+func (ref gitRef) restore(dir string) error {
+	if ref.branch != "" {
+		if err := runCmd(dir, nil, "git", "checkout", ref.branch); err != nil {
+			return err
+		}
+		current, err := gitOutput(dir, "rev-parse", "HEAD")
+		if err != nil {
+			return err
+		}
+		if current == ref.commit {
+			return nil
+		}
+		return runCmd(dir, nil, "git", "reset", "--hard", ref.commit)
+	}
+	return runCmd(dir, nil, "git", "checkout", "--detach", ref.commit)
+}
+
+// rollbackPin restores the festival repo and both submodules to exactly
+// where they stood before pinFromLatest began mutating them. It runs
+// whenever pinFromLatest fails partway through, so a failed pin never
+// leaves a submodule, or the superproject, sitting on an unrelated commit.
+// Restoring camp and fest first means that if root and a submodule ref were
+// captured identically (the uninitialized-submodule fallthrough this guards
+// against), the submodule restore already lands root back on its starting
+// ref; the explicit root restore below is a second, independent guarantee
+// of the same outcome.
+func (r *repoContext) rollbackPin(root, fest, camp gitRef) {
+	if rerr := camp.restore(r.submodulePath("camp")); rerr != nil {
+		fmt.Fprintf(os.Stderr, "WARNING: failed to restore camp to its starting state: %v\n", rerr)
+	}
+	if rerr := fest.restore(r.submodulePath("fest")); rerr != nil {
+		fmt.Fprintf(os.Stderr, "WARNING: failed to restore fest to its starting state: %v\n", rerr)
+	}
+	if rerr := root.restore(r.Root); rerr != nil {
+		fmt.Fprintf(os.Stderr, "WARNING: failed to restore festival repo to its starting state: %v\n", rerr)
+	}
+	if _, rerr := r.git("reset", "--", "fest", "camp"); rerr != nil {
+		fmt.Fprintf(os.Stderr, "WARNING: failed to unstage submodule pointer changes during rollback: %v\n", rerr)
+	}
+}
+
+func (r *repoContext) pinFromLatest(modeName, festSelector, campSelector string) (err error) {
 	mode, err := modeConfig(modeName)
 	if err != nil {
 		return err
 	}
-	if err := r.ensureAllWorktreesClean(); err != nil {
+	// Check the superproject's own worktree before ensureSubmodulesReady:
+	// auto-initializing a submodule is itself a mutation, and a dirty root
+	// should refuse before that mutation happens, not after.
+	if err = r.ensureRootWorktreeClean(); err != nil {
 		return err
 	}
-	if err := r.fetchReleaseRefs(); err != nil {
+	if err = ensureSubmodulesReady(r.Root); err != nil {
+		return err
+	}
+	if err = r.ensureSubmoduleWorktreesClean(); err != nil {
+		return err
+	}
+
+	// Capture exactly where the festival repo and both submodules stand
+	// before anything below mutates them, so any failure can restore all
+	// three to their starting branch/commit instead of leaving something
+	// checked out on an unrelated release commit.
+	startRoot, err := captureGitRef(r.Root)
+	if err != nil {
+		return err
+	}
+	startFest, err := captureGitRef(r.submodulePath("fest"))
+	if err != nil {
+		return err
+	}
+	startCamp, err := captureGitRef(r.submodulePath("camp"))
+	if err != nil {
+		return err
+	}
+	defer func() {
+		if err != nil {
+			r.rollbackPin(startRoot, startFest, startCamp)
+		}
+	}()
+
+	if err = r.fetchReleaseRefs(); err != nil {
 		return err
 	}
 
@@ -452,16 +665,23 @@ func (r *repoContext) pinFromLatest(modeName, festSelector, campSelector string)
 		default:
 			fmt.Println("Create dev tags in fest/camp first, then rerun with mode=dev.")
 		}
-		return errors.New("missing component tags")
+		err = errors.New("missing component tags")
+		return err
 	}
 
-	if err := r.checkoutSubmoduleTag("fest", festTag); err != nil {
+	if err = r.checkoutSubmoduleTag("fest", festTag); err != nil {
 		return err
 	}
-	if err := r.checkoutSubmoduleTag("camp", campTag); err != nil {
+	if err = verifyCheckedOutTag(r.submodulePath("fest"), "fest", festTag); err != nil {
 		return err
 	}
-	if err := r.stageSubmoduleRefs(); err != nil {
+	if err = r.checkoutSubmoduleTag("camp", campTag); err != nil {
+		return err
+	}
+	if err = verifyCheckedOutTag(r.submodulePath("camp"), "camp", campTag); err != nil {
+		return err
+	}
+	if err = r.stageSubmoduleRefs(); err != nil {
 		return err
 	}
 
@@ -580,6 +800,16 @@ func runCheckBundledModules(ctx *repoContext) error {
 }
 
 func runPreflight(ctx *repoContext, mode releaseMode) error {
+	// Check the superproject's own worktree before ensureSubmodulesReady:
+	// auto-initializing a submodule is itself a mutation, and a dirty root
+	// should refuse before that mutation happens, not after.
+	if err := ctx.ensureRootWorktreeClean(); err != nil {
+		return err
+	}
+	if err := ensureSubmodulesReady(ctx.Root); err != nil {
+		return err
+	}
+
 	fmt.Println("=== Release Preflight ===")
 	fmt.Println()
 	fmt.Println("Submodule pins:")
@@ -603,7 +833,7 @@ func runPreflight(ctx *repoContext, mode releaseMode) error {
 	}
 	fmt.Println()
 
-	if err := ctx.ensureAllWorktreesClean(); err != nil {
+	if err := ctx.ensureSubmoduleWorktreesClean(); err != nil {
 		return err
 	}
 	fmt.Println("Submodules: clean")
@@ -754,7 +984,13 @@ func runDraftBootstrap(ctx *repoContext, festivalVersion, festVersion, campVersi
 	if err != nil {
 		return err
 	}
-	if err := ctx.ensureAllWorktreesClean(); err != nil {
+	if err := ctx.ensureRootWorktreeClean(); err != nil {
+		return err
+	}
+	if err := ensureSubmodulesReady(ctx.Root); err != nil {
+		return err
+	}
+	if err := ctx.ensureSubmoduleWorktreesClean(); err != nil {
 		return err
 	}
 	if err := ctx.fetchReleaseRefs(); err != nil {
@@ -781,7 +1017,13 @@ func runDraftBootstrap(ctx *repoContext, festivalVersion, festVersion, campVersi
 	if err := ctx.checkoutSubmoduleTag("fest", festTag); err != nil {
 		return err
 	}
+	if err := verifyCheckedOutTag(ctx.submodulePath("fest"), "fest", festTag); err != nil {
+		return err
+	}
 	if err := ctx.checkoutSubmoduleTag("camp", campTag); err != nil {
+		return err
+	}
+	if err := verifyCheckedOutTag(ctx.submodulePath("camp"), "camp", campTag); err != nil {
 		return err
 	}
 	if err := ctx.runDocs(stable); err != nil {
