@@ -31,7 +31,10 @@ camp:
     #!/usr/bin/env bash
     set -euo pipefail
     case "{{cli_profile}}" in
-        stable) cd camp && just build quick-stable ;;
+        # VERSION stamps the pinned tag into the binary; camp's own recipe
+        # defaults it to "dev", which would make a correctly pinned bundle
+        # binary report the wrong version.
+        stable) cd camp && VERSION="$(git describe --tags --always)" just build quick-stable ;;
         dev) cd camp && just build quick-dev ;;
         *)
             echo "ERROR: CLI_PROFILE must be 'stable' or 'dev' (got: {{cli_profile}})"

@@ -29,8 +29,7 @@ with only festival-scoped files staged (not git add -A).
 
 Use --no-root to skip the campaign root commit.
 
-Reference format: [OBEY-FE-{id}]
-  - OBEY: Obey workflow tool prefix
+Reference format: [FE-{id}]
   - FE: Festival component identifier
   - {id}: Task ref (FEST-xxxxxx) or festival ID (e.g., CS0001)
 
@@ -43,14 +42,14 @@ Detection priority:
 Examples:
 ```bash
   fest commit -m "Implement feature"
-  # In linked project → [OBEY-FE-CS0001] Implement feature
-  # In festival task  → [OBEY-FE-FEST-a3b2c1] Implement feature
+  # In linked project → [FE-CS0001] Implement feature
+  # In festival task  → [FE-FEST-a3b2c1] Implement feature
 
   fest commit --task FEST-b4c5d6 -m "Related work"
-  # → [OBEY-FE-FEST-b4c5d6] Related work
+  # → [FE-FEST-b4c5d6] Related work
 
   fest commit --festival OA0001 -m "Work from unlinked dir"
-  # → [OBEY-FE-OA0001] Work from unlinked dir
+  # → [FE-OA0001] Work from unlinked dir
 
   fest commit --no-tag -m "No reference"
   # → No reference
@@ -70,6 +69,7 @@ fest commit [flags]
 
 ```
       --auto-write        run configured commit message writer
+      --commit-large      commit over-threshold files instead of keeping them out of git
       --festival string   festival name or ID (overrides auto-detection)
   -h, --help              help for commit
       --json              output result as JSON

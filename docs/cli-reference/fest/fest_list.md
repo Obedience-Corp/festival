@@ -20,8 +20,8 @@ dungeon, dungeon/completed, dungeon/archived, dungeon/someday
 By default, shows active, ready, planning, and ritual festivals.
 Use 'fest list all' (or --all) to include completed and dungeon festivals.
 
-Use --watch to continuously refresh the multi-festival status board in place
-(similar to fest watch, but without cycling between festivals). Ctrl+C to quit.
+Use --watch to refresh the multi-festival status board when festival progress
+or lifecycle status changes (similar to fest watch, but without cycling). Ctrl+C to quit.
 
 ```
 fest list [status] [flags]
@@ -55,7 +55,7 @@ fest list [status] [flags]
       --sort string             sort by: date|status|progress|name|created|updated
       --status string           filter by status: active|planning|completed|dungeon
       --until string            show festivals created on or before this date (YYYY-MM-DD or RFC3339)
-  -w, --watch                   continuously refresh the list in place until Ctrl+C
+  -w, --watch                   refresh the list when festival progress or lifecycle status changes
 ```
 
 ### Options inherited from parent commands

@@ -10,7 +10,7 @@ Run fresh across all project submodules
 
 ### Synopsis
 
-Run the fresh cycle (checkout default, pull, prune, optional branch)
+Run the fresh cycle (fetch and safely sync default, prune, optional branch)
 across every project submodule in the campaign.
 
 Examples:
@@ -26,7 +26,8 @@ camp fresh all [flags]
 ### Options
 
 ```
-  -h, --help   help for all
+  -h, --help       help for all
+      --no-drain   Do not wait for camp's queued commits first
 ```
 
 ### Options inherited from parent commands

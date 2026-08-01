@@ -58,6 +58,7 @@ camp workitem [flags]
 * [camp workitem commits](../camp_workitem_commits/)	 - List commits referencing a workitem
 * [camp workitem create](../camp_workitem_create/)	 - Create workitem tracking metadata
 * [camp workitem current](../camp_workitem_current/)	 - Get, set, or clear the current workitem
+* [camp workitem demote](../camp_workitem_demote/)	 - Move a rail resident back to its type root
 * [camp workitem doctor](../camp_workitem_doctor/)	 - Report link-registry health issues
 * [camp workitem group](../camp_workitem_group/)	 - Set or clear the group
 * [camp workitem id](../camp_workitem_id/)	 - Print the identifier of a workitem
@@ -65,7 +66,7 @@ camp workitem [flags]
 * [camp workitem links](../camp_workitem_links/)	 - List workitem links
 * [camp workitem list](../camp_workitem_list/)	 - List or browse filtered workitems
 * [camp workitem priority](../camp_workitem_priority/)	 - Set or clear the manual priority
-* [camp workitem promote](../camp_workitem_promote/)	 - Promote a workitem to a festival, doc, or dungeon
+* [camp workitem promote](../camp_workitem_promote/)	 - Promote a workitem: festival, doc, rail, dungeon
 * [camp workitem rename](../camp_workitem_rename/)	 - Rename a workitem and repair references
 * [camp workitem repair](../camp_workitem_repair/)	 - Repair a workflow directory into a workitem
 * [camp workitem resolve](../camp_workitem_resolve/)	 - Print the workitem for the current context

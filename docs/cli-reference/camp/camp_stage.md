@@ -39,6 +39,7 @@ camp stage [flags]
 ```
   -h, --help             help for stage
       --include-refs     Include submodule ref changes when staging at campaign root
+      --no-drain         Do not wait for camp's queued commits first
   -p, --project string   Operate on a specific project/submodule path
       --sub              Operate on the submodule detected from current directory
 ```

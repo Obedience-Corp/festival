@@ -23,7 +23,9 @@ camp artifacts add <path> [flags]
 ### Options
 
 ```
+      --dry-run         Report what declaring this root would cover; write nothing
   -h, --help            help for add
+      --no-gitignore    Declare the root without adding its .gitignore rule
       --policy string   Sync policy: always (every peer sync) or on-demand (--artifacts-only) (default "always")
 ```
 

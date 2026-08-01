@@ -17,7 +17,7 @@ per-project overrides.
 Run without a subcommand to open the interactive setup for humans, which
 groups the fresh sequence by what you can change about each step:
 
-  Sync        checkout, pull, and safety checks; always runs
+  Sync        checkout, fetch, and safe default-branch realignment; always runs
   Settings    branch, push_upstream, prune, and prune_remote
   Follow-ups  your own commands, run after a successful cycle
 

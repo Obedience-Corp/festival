@@ -20,7 +20,7 @@ Examples:
   fest types festival show standard           # Show standard type details
   fest types festival show implementation     # Show implementation type
   fest types festival show standard --phases  # Show only phases
-  fest types festival show quick --json       # JSON output
+  fest types festival show research --json    # JSON output
 ```
 
 ```

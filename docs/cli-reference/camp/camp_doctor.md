@@ -20,6 +20,7 @@ CHECKS PERFORMED:
   working     Working directory cleanliness
   commits     Parent-submodule commit alignment
   lock        Stale git index.lock files
+  jobs        Failed, stuck, or lost deferred commits
 
 EXIT CODES:
   0  All checks passed (no warnings or errors)
@@ -50,10 +51,11 @@ camp doctor [flags]
 ### Options
 
 ```
-  -c, --check strings     Run specific check(s) only (orphan, url, integrity, head, working, commits, lock)
+  -c, --check strings     Run specific check(s) only (orphan, url, integrity, head, working, commits, lock, artifacts, jobs, bigfiles)
   -f, --fix               Attempt automatic fixes for detected issues
   -h, --help              help for doctor
       --json              Output results as JSON
+      --no-drain          Do not wait for camp's queued commits first
       --submodules-only   Only check submodule health
   -v, --verbose           Show detailed information for each check
 ```

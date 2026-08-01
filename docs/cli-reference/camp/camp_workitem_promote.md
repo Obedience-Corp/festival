@@ -1,12 +1,12 @@
 ---
 title: "camp workitem promote"
 linkTitle: "camp workitem promote"
-description: "Promote a workitem to a festival, doc, or dungeon"
+description: "Promote a workitem: festival, doc, rail, dungeon"
 ---
 
 ## camp workitem promote
 
-Promote a workitem to a festival, doc, or dungeon
+Promote a workitem: festival, doc, rail, dungeon
 
 ### Synopsis
 
@@ -15,9 +15,20 @@ Promote the workitem identified by [id], by cwd, or by the current pointer.
 TARGETS:
   festival    Create a festival from the workitem and shelve the source
   doc         Copy the workitem doc into docs/ and shelve the source
+  ready       Move the workitem onto the festival rail at festivals/ready
+  active      Move the workitem onto the festival rail at festivals/active
   completed   Move the workitem to its local dungeon/completed
   archived    Move the workitem to its local dungeon/archived
   someday     Move the workitem to its local dungeon/someday
+
+The rail is forward-only: root -> ready -> active. A workitem already on a
+stage cannot move backward, and moving one out of a dungeon is a restore
+rather than a promote. To leave the rail entirely, use 'camp workitem demote',
+which returns the workitem to its original workflow type root.
+
+A workitem on the rail keeps its original type: a design item promoted to
+active is still a design item, now living at festivals/active/<slug>, and
+'camp wi --type design' still finds it.
 
 ```
 camp workitem promote [id] --target <target> [flags]
@@ -34,7 +45,7 @@ camp workitem promote [id] --target <target> [flags]
       --json            Output result as a single JSON object
       --keep            On festival/doc, do not move the source workitem to the dungeon
       --no-commit       Skip the auto-commit
-      --target string   Promotion target: festival, doc, completed, archived, someday
+      --target string   Promotion target: festival, doc, ready, active, completed, archived, someday
 ```
 
 ### Options inherited from parent commands
