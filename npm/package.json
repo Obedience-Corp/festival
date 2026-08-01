@@ -10,7 +10,7 @@
   "bugs": {
     "url": "https://github.com/Obedience-Corp/festival/issues"
   },
-  "license": "FSL-1.1-ALv2",
+  "license": "Apache-2.0",
   "bin": {
     "camp": "bin/camp",
     "fest": "bin/fest"

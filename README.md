@@ -474,6 +474,6 @@ Repository entry points:
 
 ## License
 
-[Functional Source License 1.1 (FSL-1.1-ALv2)](LICENSE)
+[Apache License 2.0](LICENSE)
 
 Built by [Obedience Corp](https://obediencecorp.com). AI that does what you want, the way you want it done.

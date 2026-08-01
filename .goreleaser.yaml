@@ -76,6 +76,7 @@ archives:
     files:
       - README.md
       - LICENSE
+      - NOTICE
       - install.sh
       - completions/*
       - shell/*
@@ -93,7 +94,7 @@ nfpms:
     description: |-
       Festival Methodology CLI suite.
       AI-native project planning with fest and camp.
-    license: "FSL-1.1-ALv2"
+    license: "Apache-2.0"
     formats:
       - deb
       - rpm
@@ -105,6 +106,8 @@ nfpms:
     contents:
       - src: ./LICENSE
         dst: /usr/share/licenses/festival/LICENSE
+      - src: ./NOTICE
+        dst: /usr/share/licenses/festival/NOTICE
       - src: ./README.md
         dst: /usr/share/doc/festival/README.md
       - src: ./completions/fest.bash
@@ -134,7 +137,7 @@ aurs:
     description: "Festival Methodology CLI suite (fest + camp) - AI-native project planning"
     maintainers:
       - "Obedience Corp <contact@obediencecorp.com>"
-    license: "FSL-1.1-ALv2"
+    license: "Apache-2.0"
     private_key: "{{ .Env.AUR_SSH_KEY }}"
     git_url: "ssh://aur@aur.archlinux.org/festival-bin.git"
     skip_upload: auto
@@ -148,6 +151,7 @@ aurs:
       install -Dm755 "./fest" "${pkgdir}/usr/bin/fest"
       install -Dm755 "./camp" "${pkgdir}/usr/bin/camp"
       install -Dm644 "./LICENSE" "${pkgdir}/usr/share/licenses/festival/LICENSE"
+      install -Dm644 "./NOTICE" "${pkgdir}/usr/share/licenses/festival/NOTICE"
       install -Dm644 "./completions/fest.bash" "${pkgdir}/usr/share/bash-completion/completions/fest"
       install -Dm644 "./completions/_fest" "${pkgdir}/usr/share/zsh/site-functions/_fest"
       install -Dm644 "./completions/fest.fish" "${pkgdir}/usr/share/fish/vendor_completions.d/fest.fish"
@@ -170,7 +174,7 @@ aurs:
 #       token: "{{ .Env.SCOOP_GITHUB_TOKEN }}"
 #     homepage: "https://fest.build"
 #     description: "Festival Methodology CLI suite (fest + camp) - AI-native project planning"
-#     license: "FSL-1.1-ALv2"
+#     license: "Apache-2.0"
 
 checksum:
   name_template: 'checksums.txt'
@@ -198,7 +202,7 @@ homebrew_casks:
       - festival-suite
     homepage: "https://github.com/Obedience-Corp/festival"
     description: "Festival Methodology CLI suite (fest + camp)"
-    license: "FSL-1.1-ALv2"
+    license: "Apache-2.0"
     skip_upload: auto
     directory: Casks
 
