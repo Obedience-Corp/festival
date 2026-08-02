@@ -7,7 +7,7 @@
   "description": "Festival Methodology CLI suite. camp and fest are co-tested and shipped as one versioned product; both binaries report the festival release version.",
   "homepage": "https://fest.build",
   "licenses": [
-    "FSL-1.1-ALv2"
+    "Apache-2.0"
   ],
   "aliases": [
     "festival",

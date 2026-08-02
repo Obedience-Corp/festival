@@ -119,6 +119,6 @@ Festival 把这些东西放进一个可审查、可提交、可恢复的工作�
 
 ## License
 
-[Functional Source License 1.1 (FSL-1.1-ALv2)](LICENSE)
+[Apache License 2.0](LICENSE)
 
 Built by [Obedience Corp](https://obediencecorp.com). AI that does what you want, the way you want it done.
