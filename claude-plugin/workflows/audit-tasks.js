@@ -4,13 +4,13 @@ export const meta = {
   whenToUse:
     'Run on a planned festival before executing it. fest validate scores structure, not substance, so a festival of one-line tasks validates at 100. This reads the actual task documents.',
   phases: [
-    { title: 'Survey', detail: 'read the ready set from fest deps --ready' },
+    { title: 'Survey', detail: 'enumerate every task from fest deps --all' },
     { title: 'Audit', detail: 'one agent per ready task' },
     { title: 'Verify', detail: 'refute each finding before it is reported' },
   ],
 }
 
-const READY_SCHEMA = {
+const TASKS_SCHEMA = {
   type: 'object',
   required: ['tasks'],
   properties: {
@@ -61,21 +61,29 @@ const VERDICT_SCHEMA = {
 
 phase('Survey')
 
-const ready = await agent(
-  `Run \`fest deps --ready --all --json\` from the festival directory and return its tasks array.
-Each entry has a "name" and an absolute "path". Return them unchanged.
+// Every task document, not just the execution front. Task quality is a property
+// of the document, so it is worth auditing before the festival runs, not one
+// phase at a time while it runs. `fest deps --ready` answers a different
+// question and would narrow this to the earliest open phase.
+const survey = await agent(
+  `Run \`fest deps --all --json\` from the festival directory.
+
+Its "tasks" field is an OBJECT keyed by task id, not an array. Convert it: take
+the object's values and return them as a "tasks" array, each entry keeping only
+"name" and the absolute "path". Return every task.
+
 If the command reports it is not inside a festival, return an empty tasks array.`,
-  { label: 'ready-set', schema: READY_SCHEMA },
+  { label: 'survey', schema: TASKS_SCHEMA },
 )
 
-const tasks = ready?.tasks ?? []
+const tasks = survey?.tasks ?? []
 
 if (tasks.length === 0) {
-  log('No unblocked tasks. Nothing to audit.')
+  log('No task documents found. Nothing to audit.')
   return { audited: 0, findings: [] }
 }
 
-log(`Auditing ${tasks.length} unblocked task${tasks.length === 1 ? '' : 's'}.`)
+log(`Auditing ${tasks.length} task document${tasks.length === 1 ? '' : 's'}.`)
 
 // Pipeline, not a barrier: a task's findings go straight to verification while
 // other tasks are still being read.
