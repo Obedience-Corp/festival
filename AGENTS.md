@@ -9,17 +9,20 @@ and tasks, with quality gates between them.
 ## What ships
 
 - The `fest` and `camp` CLIs, which the session-start hook installs and keeps current.
-- 9 skills describing the workflows:
+- 12 skills describing the workflows:
 
 - `camp-navigation`: Navigate campaign workspaces with `cgo` and `camp go`. Use when you need to move between projects/festivals/workflow directories, switch context quickly, or resolve script-safe paths with `camp go --print`.
 - `camp-projects`: Manage campaign submodule projects. Use when committing inside `projects/*`, deciding status/pull/push scope (root vs submodule vs all), or creating/removing project worktrees.
-- `campaign-commit`: Choose the correct commit command in a campaign workspace. Use when you are about to commit and need to select `camp p commit`, `fest commit`, root `git commit`, or intentional root pointer sync via `camp refs-sync`.
+- `camp-workitems`: Find, filter, choose, create, or adopt campaign work items with `camp workitem`, `camp wi`, or `camp workitems`. Use when a user wants current active work across intents, designs, explore notes, festivals, or tracked workflow directories; when agents need safe `camp workitem --json` output; or when creating/adopting tracked workflow folders.
+- `campaign-commit`: Choose the correct commit command in a campaign workspace. Use when you are about to commit and need to select `camp commit`, `camp p commit`, `fest commit`, or intentional root pointer sync via `camp refs-sync`.
 - `campaign-structure`: Orient within campaign directory structure. Use when deciding where work belongs (intents vs festivals vs design vs docs vs dungeon), especially when a task is not yet planned or folder ownership is unclear.
 - `campaign-workflows`: Manage campaign intents, dungeons, and flow transitions with `camp`. Use when capturing ideas, promoting intents to festivals, archiving work, or moving workflow items between statuses.
+- `cross-campaign`: Discover and reference other campaigns, projects, and files across campaign boundaries. Use when the user mentions another campaign by name, references work done "in another project/campaign", or needs to find/copy/compare code across campaigns.
 - `fest-execution`: Execute active festival tasks. Use when finding the next task, marking tasks completed/blocked/reset, committing with festival traceability, advancing workflow steps, and validating sequence progress.
 - `fest-methodology`: Use when the user mentions festivals, the fest CLI, phases, sequences, or tasks, or when working inside a `festivals/` directory. Provides the core Festival methodology model so Claude understands the planning system.
 - `fest-planning`: Plan and scaffold festivals. Use when creating festival/phase/sequence/task structure, enforcing naming rules, linking festivals to projects, and promoting lifecycle states.
 - `fest-standalone-workflows`: Create and run lightweight standalone `WORKFLOW.md` loops with `fest create workflow`, `fest next`, and `fest workflow advance`. Use when a user wants step-by-step workflow guidance inside any ordinary directory, explore/design work item, project folder, or thin-start workflow.
+- `festival-intake`: Route work that is too large for a single chat into a structured plan. Use when the user describes a multi-step build, a migration, a rewrite, an audit, a refactor across many files, or a research question with several threads. Use when a goal would otherwise need step-by-step supervision across more than one session. Also use when the user says "plan this", "where do I start", "help me build X", "this is a big one", or hands over a spec, a ticket, or a document and asks what to do with it.
 
 ## Learn more
 

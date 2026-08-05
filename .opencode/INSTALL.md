@@ -21,7 +21,7 @@ load (failures are swallowed so opencode still starts).
 
 ## Skills
 
-The 9 Festival skills ship under `.opencode/skills/` and are picked up by
+The 12 Festival skills ship under `.opencode/skills/` and are picked up by
 opencode's native skill auto-discovery. No manual registration is required.
 
 ## Manual fallback

@@ -70,6 +70,9 @@ known_reference() {
         camp:init|camp:intent|camp:project|camp:go|camp:status|camp:shell-init|camp:p|camp:refs-sync|camp:pull|camp:push|camp:dungeon|camp:flow)
             return 0
             ;;
+        camp:workitem|camp:list|camp:switch|camp:transfer)
+            return 0
+            ;;
     esac
 
     return 1
@@ -101,7 +104,7 @@ for subcmd in next validate commit status list show create task workflow link pr
 done
 
 # camp commands referenced in plugin
-for subcmd in init intent project go status shell-init p refs-sync pull push dungeon flow; do
+for subcmd in init intent project go status shell-init p refs-sync pull push dungeon flow workitem list switch transfer; do
     check_command camp "$subcmd"
 done
 
