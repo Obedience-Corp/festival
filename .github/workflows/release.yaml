@@ -7,11 +7,11 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Festival version to publish to npm, without leading v (example: 0.2.4)'
+        description: 'Festival version without leading v (example: 0.2.14)'
         required: true
         type: string
       release_mode:
-        description: 'npm dist-tag channel'
+        description: 'Release channel / npm dist-tag'
         required: true
         default: stable
         type: choice
@@ -19,6 +19,14 @@ on:
           - stable
           - rc
           - dev
+      action:
+        description: 'Manual recovery action for an already-tagged release'
+        required: true
+        default: npm-only
+        type: choice
+        options:
+          - npm-only
+          - post-publish
 
 permissions:
   contents: write
@@ -131,7 +139,12 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      # AUR (and occasionally other publishers) can fail after the GitHub release
+      # is already live. Soft-fail GoReleaser in that case so npm/marketplace and
+      # release-notes rewrite still run; hard-fail only if no release was created.
       - name: Run GoReleaser
+        id: goreleaser
+        continue-on-error: true
         uses: goreleaser/goreleaser-action@v6
         with:
           version: '~> v2'
@@ -147,6 +160,19 @@ jobs:
           MACOS_NOTARY_KEY: ${{ secrets.MACOS_NOTARY_KEY }}
           MACOS_NOTARY_KEY_ID: ${{ secrets.MACOS_NOTARY_KEY_ID }}
           MACOS_NOTARY_ISSUER_ID: ${{ secrets.MACOS_NOTARY_ISSUER_ID }}
+
+      - name: Require published GitHub release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if gh release view "${GITHUB_REF_NAME}" --repo Obedience-Corp/festival --json tagName --jq .tagName >/dev/null 2>&1; then
+            if [ "${{ steps.goreleaser.outcome }}" = "failure" ]; then
+              echo "::warning::GoReleaser reported failure, but ${GITHUB_REF_NAME} is published. Continuing post-publish steps (likely AUR/homebrew side failure)."
+            fi
+            exit 0
+          fi
+          echo "::error::GoReleaser failed before publishing GitHub release ${GITHUB_REF_NAME}"
+          exit 1
 
       - name: Rewrite GitHub release body from bundled component notes
         run: |
@@ -168,6 +194,20 @@ jobs:
           RELEASE_MODE: ${{ steps.release_channel.outputs.mode }}
         run: scripts/publish_npm_package.sh
 
+      - name: Ensure checksums for marketplace entry
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p dist
+          if [ ! -f dist/checksums.txt ]; then
+            echo "dist/checksums.txt missing after GoReleaser; downloading from the published release"
+            gh release download "${GITHUB_REF_NAME}" \
+              --repo Obedience-Corp/festival \
+              --pattern checksums.txt \
+              --dir dist
+          fi
+          test -f dist/checksums.txt
+
       - name: Generate marketplace entry
         run: |
           go -C tools/release-operator run . emit-marketplace-entry \
@@ -185,7 +225,7 @@ jobs:
         run: scripts/publish_marketplace_entry.sh
 
   npm-publish:
-    if: github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'workflow_dispatch' && inputs.action == 'npm-only'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout workflow scripts
@@ -210,3 +250,88 @@ jobs:
           NPM_PACKAGE_VERSION: ${{ inputs.version }}
           RELEASE_MODE: ${{ inputs.release_mode }}
         run: scripts/publish_npm_package.sh
+
+  # Recover post-GoReleaser publishers for an already-created tag/release when
+  # a side publisher (commonly AUR maintenance) aborted the main release job.
+  post-publish:
+    if: github.event_name == 'workflow_dispatch' && inputs.action == 'post-publish'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout release tag
+        uses: actions/checkout@v4
+        with:
+          ref: v${{ inputs.version }}
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.25'
+          cache-dependency-path: |
+            fest/go.sum
+            camp/go.sum
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Require published GitHub release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release view "v${{ inputs.version }}" --repo Obedience-Corp/festival --json tagName --jq .tagName
+
+      - name: Generate bundled release notes
+        run: |
+          cd tools/release-notes
+          go run . \
+            --repo-root ../.. \
+            --tag "v${{ inputs.version }}" \
+            --output "${RUNNER_TEMP}/festival-release-notes.md"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Rewrite GitHub release body from bundled component notes
+        run: |
+          gh release edit "v${{ inputs.version }}" \
+            --repo Obedience-Corp/festival \
+            --notes-file "${RUNNER_TEMP}/festival-release-notes.md"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish npm package
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_PACKAGE_VERSION: ${{ inputs.version }}
+          RELEASE_MODE: ${{ inputs.release_mode }}
+        run: scripts/publish_npm_package.sh
+
+      - name: Download checksums from release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p dist
+          gh release download "v${{ inputs.version }}" \
+            --repo Obedience-Corp/festival \
+            --pattern checksums.txt \
+            --dir dist
+          test -f dist/checksums.txt
+
+      - name: Generate marketplace entry
+        run: |
+          go -C tools/release-operator run . emit-marketplace-entry \
+            --repo-root ../.. \
+            --tag "v${{ inputs.version }}" \
+            --channel "${{ inputs.release_mode }}" \
+            --checksums dist/checksums.txt \
+            --output dist/marketplace/obey-package.json
+
+      - name: Publish marketplace entry
+        env:
+          MARKETPLACE_PUBLISH_TOKEN: ${{ secrets.MARKETPLACE_PUBLISH_TOKEN }}
+          FESTIVAL_TAG: v${{ inputs.version }}
+          RELEASE_CHANNEL: ${{ inputs.release_mode }}
+        run: scripts/publish_marketplace_entry.sh
