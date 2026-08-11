@@ -86,6 +86,7 @@ camp sync [submodule...] [flags]
       --json               Output results as JSON for scripting
       --no-drain           Do not wait for camp's queued commits first
       --no-fetch           Skip fetching from remote (use local refs only)
+      --no-probe-cache     Re-probe the rsync engine on both machines instead of using the cached 24h verdict
   -p, --parallel int       Number of parallel git operations (git guards superproject ops with repo lockfiles that fail fast on contention; lower this if a slow disk surfaces transient lock errors) (default 4)
   -v, --verbose            Show detailed output for each submodule
       --verify-artifacts   Check artifact roots against last-transfer snapshots (no transfer)

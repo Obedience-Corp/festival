@@ -49,9 +49,9 @@ Examples:
   camp list --count          Print only the total number of campaigns
   camp list --remote         Also list campaigns on machines in ~/.obey/machines.yaml
 
---remote runs each machine's own 'camp list --json' through a login shell
-(sh -lc) so PATH entries a login profile exports (~/.profile, etc.) are
-picked up. If camp still can't be found on a machine, set
+--remote runs each machine's own 'camp list --json' through that account's
+configured login shell ($SHELL -lc) so its login-profile PATH is picked up. If
+camp still can't be found on a machine, set
 CAMP_REMOTE_CAMP_PATH to its exact path there.
 
 For interactive hop to a remote campaign from the picker, use csw after

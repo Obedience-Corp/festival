@@ -49,3 +49,4 @@ machine-local derived state under .campaign/cache (gitignored).
 * [camp artifacts list](../camp_artifacts_list/)	 - List declared artifact roots
 * [camp artifacts manifest](../camp_artifacts_manifest/)	 - Print a declared root's manifest as JSON
 * [camp artifacts remove](../camp_artifacts_remove/)	 - Remove an artifact root declaration
+* [camp artifacts resolve](../camp_artifacts_resolve/)	 - Resolve an artifact conflict kept by no-clobber protection

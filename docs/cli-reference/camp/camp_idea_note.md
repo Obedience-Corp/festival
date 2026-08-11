@@ -34,6 +34,8 @@ camp idea note [text] [flags]
       --author string      Override the default author attribution
       --body string        Set note body as a literal string
       --body-file string   Read note body from file (- for stdin, 10 MiB cap)
+      --create-folder      Create --folder path if missing
+      --folder string      Note folder under notes/ (must exist unless --create-folder)
   -h, --help               help for note
       --no-commit          Don't create a git commit
   -t, --tag stringArray    Add a tag (repeatable)
