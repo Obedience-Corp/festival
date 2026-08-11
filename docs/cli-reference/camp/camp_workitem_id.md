@@ -10,19 +10,22 @@ Print the identifier of a workitem
 
 ### Synopsis
 
-Print the stable identifier of a workitem.
+Print the durable single-segment identifier of a workitem.
 
 With no argument, the workitem is detected from the current context using the
 same tiered resolution as `camp workitem resolve` (explicit selector, cwd
 ancestor, linked scope, festival, current-workitem pointer). With an argument,
 the workitem is resolved through the shared selector family: workitem ref,
-stable id, key, campaign-relative path, directory slug, or festival id. A
-filesystem path (absolute or relative to the current directory) is accepted and
-translated to the campaign-relative form the selector expects.
+stable id, key, campaign-relative path, directory slug, festival id, or intent
+frontmatter id. A filesystem path (absolute or relative to the current directory)
+is accepted and translated to the campaign-relative form the selector expects.
 
-The bare stable id is written to stdout for shell scripting; it is the id sibling
-of `camp workitem --print`, which prints a path. Use --key for the
-path-derived key instead, or --json for a structured object.
+Stdout is the bare durable id for shell scripting — stable .workitem id when
+present, otherwise a source-declared id (festival fest.yaml id or intent
+frontmatter id), otherwise the path-derived key. It is the id sibling of
+`camp workitem --print`, which prints a path. Use --key for the
+path-derived key instead, or --json for a structured object (id_kind is
+stable / festival / intent / key).
 
 Examples:
   camp workitem id                       # id of the workitem for the cwd

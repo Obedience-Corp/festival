@@ -17,7 +17,7 @@ or use --project to specify a project by name.
 
 Commit tags use explicit --workitem or context from the current path. They do
 not inherit the per-machine current workitem selection, which can be stale;
-use 'camp workitem commit' when you want current.yaml scoping.
+use --workitem or a primary workitem link for WI- tag scoping.
 
 Examples:
   # From within a project directory
@@ -38,6 +38,7 @@ camp project commit [flags]
       --amend                 Amend the previous commit
       --auto-write            Run configured commit message writer
       --commit-large          Commit over-threshold files instead of keeping them out of git
+      --commit-nested         Commit undeclared nested git repositories as gitlinks instead of keeping them out of git
   -h, --help                  help for commit
   -m, --message stringArray   Commit message (repeatable; multiple -m are joined git-style into subject + body; required unless --auto-write)
       --no-drain              Do not wait for camp's queued commits first

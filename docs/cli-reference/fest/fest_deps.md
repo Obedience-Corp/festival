@@ -22,7 +22,14 @@ Examples:
   fest deps --all              # Show all deps in festival
   fest deps --json             # Output as JSON
   fest deps --critical-path    # Show critical path through the DAG
+  fest deps --ready            # Show every task that is unblocked right now
+  fest deps --ready --all --json   # The whole festival's ready set, for orchestrators
 ```
+
+The --ready set is the execution front: tasks whose hard dependencies are all
+complete and which are not themselves complete or blocked. Unlike 'fest next',
+which returns a single step, --ready returns every task that could be started
+now, so an orchestrator can fan them out concurrently.
 
 ```
 fest deps [task] [flags]
@@ -35,6 +42,7 @@ fest deps [task] [flags]
       --critical-path   show the critical path
   -h, --help            help for deps
       --json            output as JSON
+      --ready           show only tasks that are unblocked right now
 ```
 
 ### Options inherited from parent commands

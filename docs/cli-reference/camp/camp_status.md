@@ -36,7 +36,7 @@ camp status [flags] [-- <git-flags>]
 
 ```
   -h, --help             help for status
-      --no-drain         Do not wait for camp's queued commits first
+      --no-drain         Do not report camp's queued commits first
   -p, --project string   Status of a specific project path
   -s, --short            Give output in short format
       --show-refs        Show campaign root submodule ref changes
