@@ -17,8 +17,66 @@ permissions:
   contents: write
 
 jobs:
+  submit-fest:
+    name: Validate and submit Fest dependencies
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out pinned components
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          submodules: recursive
+
+      - name: Set up Go
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: fest/go.mod
+          cache-dependency-path: fest/go.sum
+
+      - name: Verify repaired dependency graph
+        env:
+          GOWORK: "off"
+        run: |
+          modules="$RUNNER_TEMP/fest-modules.txt"
+          go -C fest list -m all | tee "$modules"
+
+          require_module_at_least() {
+            module="$1"
+            minimum="$2"
+            actual="$(awk -v module="$module" '$1 == module { print $2 }' "$modules")"
+
+            if [[ -z "$actual" ]]; then
+              echo "Required module $module is missing from the Fest graph." >&2
+              exit 1
+            fi
+
+            earliest="$(printf '%s\n%s\n' "$minimum" "$actual" | sort -V | head -n 1)"
+            if [[ "$earliest" != "$minimum" ]]; then
+              echo "$module must be at least $minimum; resolved $actual." >&2
+              exit 1
+            fi
+          }
+
+          require_module_at_least 'golang.org/x/crypto' 'v0.54.0'
+          require_module_at_least 'go.opentelemetry.io/otel' 'v1.43.0'
+          require_module_at_least 'go.opentelemetry.io/otel/sdk' 'v1.43.0'
+
+          if grep -Eq '^github\.com/docker/docker( |$)' "$modules"; then
+            echo 'Legacy github.com/docker/docker module remains in the Fest graph.' >&2
+            exit 1
+          fi
+
+      - name: Submit dependency snapshot
+        # Node 24 revision of GitHub's action; pinned until its next release.
+        uses: actions/go-dependency-submission@58a892e48687d602add5889d7aa09e32efeb19a7
+        env:
+          GOWORK: "off"
+        with:
+          go-mod-path: fest/go.mod
+
   submit-camp:
     name: Submit Camp dependencies
+    needs: submit-fest
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -40,27 +98,3 @@ jobs:
           GOWORK: "off"
         with:
           go-mod-path: camp/go.mod
-
-  submit-fest:
-    name: Submit Fest dependencies
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - name: Check out pinned components
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          submodules: recursive
-
-      - name: Set up Go
-        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
-        with:
-          go-version-file: fest/go.mod
-          cache-dependency-path: fest/go.sum
-
-      - name: Submit dependency snapshot
-        # Node 24 revision of GitHub's action; pinned until its next release.
-        uses: actions/go-dependency-submission@58a892e48687d602add5889d7aa09e32efeb19a7
-        env:
-          GOWORK: "off"
-        with:
-          go-mod-path: fest/go.mod
