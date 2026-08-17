@@ -24,7 +24,7 @@ Use Festival if you already have an agent you like, and you want the plan, the c
 |---|---|---|
 | Where the work record lives | Hosted workspace on their infrastructure | Files in a campaign directory on your machine, versioned with git |
 | Coding agent | Their CLI and desktop app | Whatever you already run: Claude Code, Codex, Cursor, Aider, OpenCode |
-| Model access | Routed through their workspace; their product pages describe metered credits rather than your own API keys | Not in the loop. Festival never calls a model and never sees a token |
+| Model access | Routed through their workspace; their product pages describe metered credits rather than your own API keys | Not in the loop. Festival does not call a model or meter usage. If you wire an approval judge or a commit-message writer, it runs the tool you configure, with your own keys |
 | Unit of continuity | Workspace memory and their published playbook and receipt surfaces | Phases, sequences, tasks, intents, and git history |
 | Verification | Their review flow, ending in a receipt against a stated number | Task completion criteria, `fest validate`, quality gates at the end of an implementation sequence, and `fest commit` traceability |
 | Cost of entry | Sign up, then a quote or a subscription | `npm install -g @obedience-corp/festival`. No account |
