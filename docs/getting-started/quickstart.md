@@ -31,7 +31,7 @@ Each task carries completion criteria, `fest validate` checks the plan against t
 
 **Why not a hosted agent workspace?**
 
-A hosted workspace keeps your continuity in someone else's account and usually replaces the coding agent you already run. Festival sits beside the harness you already pay for and keeps the record on your disk. See [Festival vs YAGNI]({{< ref "/compare/festival-vs-yagni" >}}) for a specific comparison.
+A hosted workspace keeps your continuity in someone else's account and usually replaces the coding agent you already run. Festival sits beside the harness you already pay for and keeps the record on your disk.
 
 {{< terminal-demo src="/images/demos/proof-loop.gif" title="fest next" alt="One sentence of intent scaffolds a festival, an agent runs the next task, the session is interrupted, fest next resumes it, then fest validate and fest commit close it out" max="700" >}}
 
