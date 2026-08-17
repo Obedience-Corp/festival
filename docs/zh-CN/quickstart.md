@@ -5,6 +5,8 @@ weight: 61
 
 # 中文快速开始
 
+**你的文件。任何代理。**
+
 Festival 是面向长期 AI 编程工作的 local-first 工作流层。它让 Claude Code、Codex、Cursor 和其他代理可以通过文件系统共享工作队列、计划、上下文、决策和下一步行动。
 
 ## 1. 安装 Claude Code 插件
