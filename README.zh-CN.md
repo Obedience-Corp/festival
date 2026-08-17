@@ -37,6 +37,11 @@ Festival 有两个核心层次：
 
 不需要。`camp` 和 `fest` 是两个本地二进制文件。它们写下的一切都是你工作区里的文件，不会经过 Obedience Corp 的服务。模型和代理仍然由你自己选择。
 
+<p align="center">
+  <img src="docs/images/demos/proof-loop.gif" alt="One sentence of intent scaffolds a festival, an agent runs the next task, the session is interrupted, fest next resumes it, then fest validate and fest commit close it out" width="700">
+</p>
+<p align="center"><em>一句话说明意图，festival 随即生成结构。代理执行下一个 task，会话中断后 <code>fest next</code> 接着往下走，最后 <code>fest validate</code> 和 <code>fest commit</code> 收尾。</em></p>
+
 ## 先从 Claude Code 开始
 
 安装 Festival 插件：

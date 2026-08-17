@@ -44,15 +44,10 @@ Each task carries completion criteria, `fest validate` checks the plan against t
 
 No. `camp` and `fest` are two local binaries. Everything they write is a file in your workspace, and nothing is routed through Obedience Corp. Bring your own models and your own agent. See [how Festival compares](https://docs.fest.build/compare/) to hosted agent workspaces.
 
-<!--
-  PROOF LOOP RECORDING SLOT (pending, tracked by WI-4fa2f9).
-  When the tape lands at docs/images/demos/proof-loop.gif, replace this comment with:
-
-  <p align="center">
-    <img src="docs/images/demos/proof-loop.gif" alt="One sentence of intent scaffolds a festival, an agent runs the next task, the session is interrupted, fest next resumes it, then fest validate and fest commit close it out" width="700">
-  </p>
-  <p align="center"><em>One sentence of intent. A scaffolded festival. The agent runs the next task, the session is interrupted, and <code>fest next</code> picks it back up. Validate, commit, done.</em></p>
--->
+<p align="center">
+  <img src="docs/images/demos/proof-loop.gif" alt="One sentence of intent scaffolds a festival, an agent runs the next task, the session is interrupted, fest next resumes it, then fest validate and fest commit close it out" width="700">
+</p>
+<p align="center"><em>One sentence of intent. A scaffolded festival. The agent runs the next task, the session is interrupted, and <code>fest next</code> picks it back up. Validate, commit, done.</em></p>
 
 ## Install
 

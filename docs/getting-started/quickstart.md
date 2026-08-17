@@ -33,16 +33,9 @@ Each task carries completion criteria, `fest validate` checks the plan against t
 
 A hosted workspace keeps your continuity in someone else's account and usually replaces the coding agent you already run. Festival sits beside the harness you already pay for and keeps the record on your disk. See [Festival vs YAGNI]({{< ref "/compare/festival-vs-yagni" >}}) for a specific comparison.
 
-<!--
-  PROOF LOOP RECORDING SLOT (pending, tracked by WI-4fa2f9).
-  When the tape lands at /images/demos/proof-loop.gif, replace this comment with:
+{{< terminal-demo src="/images/demos/proof-loop.gif" title="fest next" alt="One sentence of intent scaffolds a festival, an agent runs the next task, the session is interrupted, fest next resumes it, then fest validate and fest commit close it out" max="700" >}}
 
-  {{</* terminal-demo src="/images/demos/proof-loop.gif" title="fest next" alt="One sentence of intent scaffolds a festival, an agent runs the next task, the session is interrupted, fest next resumes it, then fest validate and fest commit close it out" max="700" */>}}
-
-  Caption: One sentence of intent. A scaffolded festival. The agent runs the next
-  task, the session is interrupted, and `fest next` picks it back up. Validate,
-  commit, done.
--->
+*One sentence of intent. A scaffolded festival. The agent runs the next task, the session is interrupted, and `fest next` picks it back up. Validate, commit, done.*
 
 ## Prerequisites
 
