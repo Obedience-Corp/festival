@@ -135,6 +135,10 @@ menu:
       parent: compare
       url: /compare/festival-vs-issue-trackers/
       weight: 39
+    - name: Festival vs YAGNI
+      parent: compare
+      url: /compare/festival-vs-yagni/
+      weight: 40
 
     - name: Tutorials
       identifier: tutorials

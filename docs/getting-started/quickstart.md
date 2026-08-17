@@ -5,7 +5,44 @@ weight: 12
 
 # Quick Start
 
+**Your files. Any agent.**
+
+Festival is the planning and verification layer for long-running agent work. The campaign is files you own. The harness is whatever you already run. The next session starts from `fest next`, not from a vendor brief.
+
 Create your first campaign and festival in under 5 minutes.
+
+## Common Questions
+
+**Is this a coding agent?**
+
+No. Keep Claude Code, Codex, Grok, or whatever you use. Festival is the work system those agents read and write.
+
+**Where does the memory live?**
+
+In your campaign: phases, sequences, tasks, intents, and git history, as plain files on your disk. You can copy it, diff it, and leave with it.
+
+**What happens when a session ends?**
+
+The next actionable task is still on disk. `fest next` is the resume, in the same agent or a different one.
+
+**How do you know the work is done?**
+
+Each task carries completion criteria, `fest validate` checks the plan against the methodology, quality gates run at the end of an implementation sequence, and `fest commit` ties the change back to the task it came from. That trail is the proof of work.
+
+**Why not a hosted agent workspace?**
+
+A hosted workspace keeps your continuity in someone else's account and usually replaces the coding agent you already run. Festival sits beside the harness you already pay for and keeps the record on your disk. See [Festival vs YAGNI]({{< ref "/compare/festival-vs-yagni" >}}) for a specific comparison.
+
+<!--
+  PROOF LOOP RECORDING SLOT (pending, tracked by WI-4fa2f9).
+  When the tape lands at /images/demos/proof-loop.gif, replace this comment with:
+
+  {{</* terminal-demo src="/images/demos/proof-loop.gif" title="fest next" alt="One sentence of intent scaffolds a festival, an agent runs the next task, the session is interrupted, fest next resumes it, then fest validate and fest commit close it out" max="700" */>}}
+
+  Caption: One sentence of intent. A scaffolded festival. The agent runs the next
+  task, the session is interrupted, and `fest next` picks it back up. Validate,
+  commit, done.
+-->
 
 ## Prerequisites
 

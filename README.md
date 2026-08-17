@@ -4,9 +4,13 @@
 
 <p align="center"><a href="https://github.com/Obedience-Corp/festival/stargazers"><img src="https://img.shields.io/github/stars/Obedience-Corp/festival?style=social" alt="Star Festival on GitHub"></a></p>
 
+<p align="center"><strong>Your files. Any agent.</strong></p>
+
 **A standardized workspace and workflow for solving difficult, multi-faceted problems with AI.**
 
 To use AI to solve hard problems you need three things: **context**, **direction**, and **verification**. Festival provides a structured layer for each, resulting in dramatically fewer tokens and less time spent getting to the outcome you want.
+
+Festival is the planning and verification layer for long-running agent work. The campaign is files you own. The harness is whatever you already run. The next session starts from `fest next` instead of from a re-explained prompt.
 
 > [Get started](https://docs.fest.build/getting-started/quickstart) (takes ~5 minutes).
 
@@ -17,6 +21,38 @@ To use AI to solve hard problems you need three things: **context**, **direction
 <p align="center"><em>Describe the work in a sentence. Your agent scaffolds the design and plans the whole festival: phases, sequences, and tasks. Then the <code>fest next</code> loop executes it.</em></p>
 
 <p align="center"><strong>Battle-tested daily:</strong> Obedience Corp plans and ships its own products with Festival.</p>
+
+## Common Questions
+
+**Is this a coding agent?**
+
+No. Keep Claude Code, Codex, Grok, or whatever you already run. Festival is the work system those agents read and write.
+
+**Where does the memory live?**
+
+In your campaign: phases, sequences, tasks, intents, and git history, as plain files in directories you own. You can copy it, diff it, and leave with it.
+
+**What happens when a session ends?**
+
+The next actionable task is still on disk. `fest next` is the resume, in the same harness or a different one.
+
+**How do you know the work is done?**
+
+Each task carries completion criteria, `fest validate` checks the plan against the methodology, quality gates run at the end of a sequence, and `fest commit` ties the change back to the task it came from. That trail is the proof of work.
+
+**Do I need an account or a hosted service?**
+
+No. `camp` and `fest` are two local binaries. Everything they write is a file in your workspace, and nothing is routed through Obedience Corp. Bring your own models and your own agent. See [how Festival compares](https://docs.fest.build/compare/) to hosted agent workspaces.
+
+<!--
+  PROOF LOOP RECORDING SLOT (pending, tracked by WI-4fa2f9).
+  When the tape lands at docs/images/demos/proof-loop.gif, replace this comment with:
+
+  <p align="center">
+    <img src="docs/images/demos/proof-loop.gif" alt="One sentence of intent scaffolds a festival, an agent runs the next task, the session is interrupted, fest next resumes it, then fest validate and fest commit close it out" width="700">
+  </p>
+  <p align="center"><em>One sentence of intent. A scaffolded festival. The agent runs the next task, the session is interrupted, and <code>fest next</code> picks it back up. Validate, commit, done.</em></p>
+-->
 
 ## Install
 
