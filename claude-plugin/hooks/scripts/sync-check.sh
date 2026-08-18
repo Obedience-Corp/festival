@@ -35,9 +35,43 @@ resolve_cli() {
 FEST_BIN="${FEST_BIN:-$(resolve_cli fest || true)}"
 CAMP_BIN="${CAMP_BIN:-$(resolve_cli camp || true)}"
 
+# Both CLIs answer 'help <unknown>' with the parent's help and exit 0, so an
+# exit status from 'help' proves nothing. Look the command up in the table its
+# parent prints instead.
+command_exists() {
+    local cli="$1"
+    local path="$2"
+    local leaf="${path##* }"
+    local parent="${path% *}"
+
+    [[ "$parent" == "$path" ]] && parent=""
+
+    # Read the table into a variable first. Piping straight into 'grep -q' races:
+    # grep exits on the first match, the CLI takes SIGPIPE, and pipefail turns
+    # that into a failed lookup for commands that do exist.
+    local table=""
+    # shellcheck disable=SC2086 # $parent is a deliberate word split
+    table="$("$cli" help $parent 2>&1 || true)"
+
+    if grep -qE "^[[:space:]]+${leaf}([[:space:]]|$)" <<<"$table"; then
+        return 0
+    fi
+
+    # Cobra aliases (camp p, camp intent, camp wi) resolve but are not listed in
+    # the root table. At the top level an unknown command exits non-zero here, so
+    # this is a safe fallback; deeper down it is not, because a parent absorbs an
+    # unknown subcommand as a positional argument and still exits 0.
+    if [[ -z "$parent" ]]; then
+        "$cli" "$leaf" --help >/dev/null 2>&1
+        return
+    fi
+
+    return 1
+}
+
 check_command() {
     local cmd="$1"
-    local subcmd="$2"
+    local path="$2"
     local cli=""
 
     case "$cmd" in
@@ -56,18 +90,18 @@ check_command() {
         return
     fi
 
-    if ! "$cli" help "$subcmd" >/dev/null 2>&1; then
-        echo "WARNING: '$cmd $subcmd' not found in CLI — plugin may reference a removed command" >&2
+    if ! command_exists "$cli" "$path"; then
+        echo "WARNING: '$cmd $path' not found in CLI; plugin may reference a removed command" >&2
         ERRORS=$((ERRORS + 1))
     fi
 }
 
 known_reference() {
     case "$1:$2" in
-        fest:next|fest:validate|fest:commit|fest:status|fest:list|fest:show|fest:create|fest:task|fest:workflow|fest:link|fest:promote|fest:understand|fest:deps|fest:progress|fest:shell-init|fest:completion|fest:types|fest:links|fest:unlink|fest:scaffold)
+        fest:next|fest:validate|fest:commit|fest:status|fest:list|fest:show|fest:create|fest:task|fest:workflow|fest:link|fest:promote|fest:understand|fest:deps|fest:progress|fest:shell-init|fest:completion|fest:types|fest:links|fest:unlink|fest:scaffold|fest:hooks)
             return 0
             ;;
-        camp:init|camp:intent|camp:project|camp:go|camp:status|camp:shell-init|camp:p|camp:refs-sync|camp:pull|camp:push|camp:dungeon|camp:flow)
+        camp:init|camp:intent|camp:project|camp:go|camp:status|camp:shell-init|camp:p|camp:refs-sync|camp:pull|camp:push|camp:dungeon|camp:workflow|camp:jobs)
             return 0
             ;;
         camp:workitem|camp:list|camp:switch|camp:transfer)
@@ -99,13 +133,13 @@ check_markdown_references() {
 echo "Checking plugin commands against installed CLI..."
 
 # fest commands referenced in plugin
-for subcmd in next validate commit status list show create task workflow link promote understand deps progress shell-init completion types links unlink scaffold; do
-    check_command fest "$subcmd"
+for path in next validate commit status list show create task workflow link promote understand deps progress shell-init completion types links unlink scaffold hooks "hooks list" "task completed" "task blocked" "task reset" "create festival"; do
+    check_command fest "$path"
 done
 
 # camp commands referenced in plugin
-for subcmd in init intent project go status shell-init p refs-sync pull push dungeon flow workitem list switch transfer; do
-    check_command camp "$subcmd"
+for path in init intent project go status shell-init p refs-sync pull push dungeon workflow jobs workitem list switch transfer "project rename" "project worktree" "workflow sync" "jobs drop"; do
+    check_command camp "$path"
 done
 
 check_markdown_references

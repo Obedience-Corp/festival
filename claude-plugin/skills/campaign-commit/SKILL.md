@@ -13,6 +13,40 @@ description: Choose the correct commit command in a campaign workspace. Use when
 - Campaign root, scoped to specific paths: `git add <paths>` then `camp commit --all=false -m "msg"` (commits only what is staged)
 - Intentional root pointer sync: `camp refs-sync [submodule...]`
 
+## Festival Commits Cover the Linked Project
+
+When a festival or sequence has a linked project, `fest commit` makes up to two
+commits even when you run it from inside the festival:
+
+- a project commit staging the project's changes, skipped when the project is
+  clean
+- a campaign root commit staging only festival-scoped files, the campaign's
+  `.campaign/fest/` state, and the submodule pointer
+
+So during festival execution do not run `camp p commit` first and `fest commit`
+after. One `fest commit` covers both sides. Use `--no-root` to skip the campaign
+root commit.
+
+A festival with no linked project makes the single campaign root commit only.
+
+## Deferred Commit Queue
+
+Camp defers its own bookkeeping commits so they do not hold the terminal. The
+queue is machine-local and disposable; git is the record.
+
+```bash
+camp jobs                       # what is queued, running, or failed
+camp jobs --json                # same, for agents
+camp jobs retry all             # requeue everything that failed
+camp jobs drop <id>             # give up on a failed job, keeping its content
+camp jobs drop --running <id>   # a stalled job, and the worker holding it
+camp jobs drain                 # wait for every lane, then exit
+```
+
+Dropping a job never discards work: the content stays uncommitted in the working
+tree for the next ordinary commit. If `camp jobs` reports a job as `stalled`, a
+commit message writer stopped answering; `--running` is what ends that wait.
+
 ## Rules
 
 - Never run raw `git commit` anywhere in a campaign workspace; staging with `git add` is fine.

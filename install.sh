@@ -418,6 +418,10 @@ print_shell_setup_hint() {
     echo ""
     echo "  # fish (~/.config/fish/config.fish)"
     echo "  source \"${helper_dir}/festival.fish\""
+    echo ""
+    echo "  # dash, busybox ash, other POSIX sh (~/.profile)"
+    echo "  eval \"\$(camp shell-init sh)\""
+    echo "  eval \"\$(fest shell-init sh)\""
 }
 
 main() {

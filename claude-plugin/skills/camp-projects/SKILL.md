@@ -31,6 +31,22 @@ camp push --sub
 
 Use `all` commands only when broad workspace churn is intended.
 
+## Rename a Project
+
+```bash
+camp project rename <current> <new>
+camp project rename <current> <new> --dry-run --json
+camp project rename <current> <new> --remote-url git@github.com:org/new-name.git
+```
+
+Renames submodules, linked workspace symlinks, and campaign-owned directories,
+migrating the campaign references in one transaction. Dirty checkouts and linked
+worktrees are preserved; destination collisions and unmanaged directories are
+rejected before anything is written.
+
+Camp never guesses that the upstream repository was renamed too. Pass
+`--remote-url` to move origin as part of the same transaction.
+
 ## Worktrees
 
 ```bash
@@ -44,3 +60,5 @@ camp project worktree remove <name>
 - Assuming submodule commits should auto-update campaign-root pointers.
 - Running `camp pull`/`camp push` expecting submodule scope without `--sub`.
 - Passing worktree path to remove; command expects worktree name.
+- Renaming a project directory by hand instead of `camp project rename`, which
+  leaves the campaign references pointing at the old name.

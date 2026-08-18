@@ -316,6 +316,10 @@ eval "$(camp shell-init zsh)"   # gives you: cgo, cr, csw, cint
 eval "$(fest shell-init zsh)"   # gives you: fgo, fls
 ```
 
+Replace `zsh` with `bash` or `sh`, or pipe the `fish` output to `source`. Use
+`sh` for dash, busybox ash, and any other Bourne shell that is neither bash nor
+zsh; the helpers work there, only tab completion is unavailable.
+
 ### Finding the installed binaries
 
 Shell integration defines `camp` and `fest` as **shell functions** so navigation

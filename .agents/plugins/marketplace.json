@@ -10,7 +10,7 @@
     {
       "name": "festival",
       "description": "Festival Methodology: goal-oriented project management for human-AI development workflows. Provides fest and camp CLI integration, automatic installation, and methodology guidance.",
-      "version": "1.2.0",
+      "version": "1.3.0",
       "source": {
         "source": "local",
         "path": "./plugins/festival"

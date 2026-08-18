@@ -129,6 +129,18 @@ camp project remove old-service                  # Remove a submodule project
 `unlink` removes only the symlink and the campaign marker. The external workspace and
 its git history are never touched. Use `remove` for submodule projects.
 
+To rename a project:
+
+```bash
+camp project rename api-old api                  # Rename a managed project
+camp project rename api-old api --dry-run        # Print the plan without writing
+```
+
+`rename` handles submodules, linked workspaces, and campaign-owned directories,
+migrating the campaign's references to the project in one transaction. Dirty
+checkouts and linked worktrees are preserved. Camp never assumes the upstream
+repository was renamed too, so pass `--remote-url` when origin should move with it.
+
 ### Attaching Other Directories
 
 Not every directory a campaign should own is a project. A notes folder, a scratch

@@ -56,6 +56,39 @@ fest workflow advance
 fest workflow skip --reason "..."
 ```
 
+## Lifecycle Hooks
+
+Task state changes can fire configured hooks. Inspect the effective set before
+assuming a transition is inert:
+
+```bash
+fest hooks list
+```
+
+Verbs: `task_start`, `task_complete`, `sequence_complete`, `phase_complete`,
+`gate_approve`.
+
+- `task_start` fires on the **first** transition into work, whichever surface
+  causes it: `fest status set in_progress --task <id>`, a direct completion, or
+  the first `fest task update <percent>` above zero. Resuming or re-marking in
+  progress never re-fires it; `fest task reset` clears the recorded start.
+- `task_complete` fires on **every** completion surface, not just
+  `fest task completed`.
+
+Task document frontmatter binds names only. Bare `pre`/`post` bind around the
+terminal verb; the nested `start:` stage binds around `task_start` and is
+honored on task documents only.
+
+```yaml
+hooks:
+  pre: [lint]
+  post: [approval_judge]
+  start:
+    pre: [anchor]
+```
+
+A `fail: closed` pre-hook blocks the transition and leaves the task untouched.
+
 ## Validation
 
 ```bash
@@ -69,3 +102,5 @@ fest validate <festival-path>
 - Confusing `fest workflow` commands with task-status commands.
 - Continuing work from a new project path without rerunning `fest link`.
 - Skipping `fest next` and manually selecting tasks out of dependency order.
+- Putting a `start:` hook stage on a goal document: `task_start` never fires
+  there and `fest validate` warns about it.
