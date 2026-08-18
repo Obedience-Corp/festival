@@ -15,6 +15,15 @@ is given):
 
   auth     OpenSSH (keys/agent) or Tailscale SSH (identity)
   probe    copy-paste BatchMode ssh line to test outside camp
+  resolve  whether the host becomes an address at all, checked before any ssh
+           is attempted. A MagicDNS name that will not resolve reports
+           tailscale's own health text as the reason. When the local tailnet
+           peer table still knows the machine's address, camp dials that
+           address instead (pinning the host key to the configured name) and
+           the line shows which address a hop will actually use; otherwise
+           the remote camp version probe is skipped instead of blaming a
+           machine that was never addressable. Set CAMP_NO_PEER_FALLBACK=1
+           to disable the fallback and fail exactly as ssh would
   socket   ControlMaster multiplex state:
              none   no socket — the next hop opens a fresh master
              live   socket present and the master answers 'ssh -O check'

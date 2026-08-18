@@ -17,7 +17,8 @@ With an argument, looks up the campaign by name or ID prefix.
 Use --org or org/campaign to resolve inside one organization.
 
 Use with the shell-init wrappers for instant navigation (recommended):
-  eval "$(camp shell-init zsh)"   # or bash / fish — once per shell
+  eval "$(camp shell-init zsh)"   # or bash / sh, once per shell
+  camp shell-init fish | source   # fish
   csw                            # Interactive picker (local + remote machines)
   csw my-campaign                # Switch by name
   csw a1b2                       # Switch by ID prefix
@@ -46,8 +47,10 @@ shell wrapper (or --shell-connect under shell-init) to hop.
 
 Remote resolution runs the far machine's own 'camp switch' through that
 account's configured login shell ($SHELL -lc) so its login-profile PATH is
-picked up. If camp still can't be found there, set CAMP_REMOTE_CAMP_PATH to its
-exact path on that machine.
+picked up; when that PATH has no camp, the far side falls back to camp's usual
+install locations (~/.local/bin, $GOBIN, $GOPATH/bin, ~/go/bin, Homebrew) before
+giving up. If camp lives somewhere else, set CAMP_REMOTE_CAMP_PATH to its exact
+path on that machine. 'camp machine diagnose' shows which binary a hop would run.
 
 ```
 camp switch [campaign] [flags]

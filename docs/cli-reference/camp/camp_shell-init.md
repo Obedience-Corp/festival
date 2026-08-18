@@ -16,6 +16,14 @@ Add to your shell config:
   zsh:  eval "$(camp shell-init zsh)"
   bash: eval "$(camp shell-init bash)"
   fish: camp shell-init fish | source
+  sh:   eval "$(camp shell-init sh)"
+
+Use 'sh' for dash, busybox ash, and any other Bourne-family shell that is
+neither bash nor zsh, including the /bin/sh on minimal and embedded systems.
+The bash script uses bash arrays and programmable completion, so it does not
+parse under those shells. The sh script provides the wrapper, cgo, and the
+shorthand functions; it installs no tab completion, because POSIX sh has no
+completion mechanism to install into.
 
 This provides:
   - A camp shell function that wraps the camp binary
@@ -55,6 +63,9 @@ camp shell-init <shell> [flags]
 
   # Add to ~/.config/fish/config.fish
   camp shell-init fish | source
+
+  # Add to ~/.profile (dash, busybox ash, other POSIX shells)
+  eval "$(camp shell-init sh)"
 ```
 
 ### Options
