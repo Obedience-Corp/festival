@@ -24,8 +24,12 @@ positional argument to open the browser filtered to that org. Piped, with
 paths display as '~'.
 
 Shell integration (recommended for go/hop from the browser):
-  eval "$(camp shell-init zsh)"   # or bash / fish
+  eval "$(camp shell-init zsh)"   # or bash / sh
+  camp shell-init fish | source   # fish
   camp list                       # interactive browser; g hops remote rows
+
+Use the shell you actually run. "sh" covers dash, busybox ash, and any other
+Bourne shell that is not bash or zsh; the bash script will not parse there.
 
 Output formats:
   table   - Aligned columns with headers (default)
@@ -50,9 +54,11 @@ Examples:
   camp list --remote         Also list campaigns on machines in ~/.obey/machines.yaml
 
 --remote runs each machine's own 'camp list --json' through that account's
-configured login shell ($SHELL -lc) so its login-profile PATH is picked up. If
-camp still can't be found on a machine, set
-CAMP_REMOTE_CAMP_PATH to its exact path there.
+configured login shell ($SHELL -lc) so its login-profile PATH is picked up; when
+that PATH has no camp, the far side falls back to camp's usual install
+locations (~/.local/bin, $GOBIN, $GOPATH/bin, ~/go/bin, Homebrew) before giving
+up. If camp lives somewhere else on a machine, set CAMP_REMOTE_CAMP_PATH to its
+exact path there. 'camp machine diagnose' shows which binary a hop would run.
 
 For interactive hop to a remote campaign from the picker, use csw after
 shell-init (see 'camp switch --help').

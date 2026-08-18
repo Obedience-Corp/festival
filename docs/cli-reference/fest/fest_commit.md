@@ -19,13 +19,15 @@ The fest commit command wraps git commit and automatically:
   1. Stages changes and prepends the festival reference to the commit message
   2. Creates a campaign root commit for festival-scoped files (task docs, progress, state)
 
-When run from a linked project directory, two commits are created:
-  - Project commit: stages all project changes
+When a festival or sequence has a linked project, up to two commits are created
+even when this command is run from inside the festival:
+  - Project commit: stages all project changes (skipped when the project is clean)
   - Campaign root commit: stages only festival directory, .campaign/fest/,
     festivals/.festival/.state/, and the submodule pointer
 
-When run from a festival directory, one commit is created at the campaign root
-with only festival-scoped files staged (not git add -A).
+The sequence's fest_working_dir is preferred over the festival navigation link
+and legacy fest.yaml project_path. A festival with no linked project creates one
+campaign-root commit containing only festival-scoped files (not git add -A).
 
 Use --no-root to skip the campaign root commit.
 
@@ -36,14 +38,14 @@ Reference format: [FE-{id}]
 Detection priority:
   1. Explicit --task flag value
   2. Task fest_ref from current directory (if inside festival task)
-  3. Festival ID from fest.yaml metadata
-  4. Explicit --festival flag (name or ID)
+  3. Explicit --festival flag (path, name, or ID)
+  4. Festival ID from fest.yaml metadata
 
 Examples:
 ```bash
   fest commit -m "Implement feature"
-  # In linked project → [FE-CS0001] Implement feature
-  # In festival task  → [FE-FEST-a3b2c1] Implement feature
+  # In linked project or sequence → [FE-CS0001] Implement feature
+  # In festival task              → [FE-FEST-a3b2c1] Implement feature
 
   fest commit --task FEST-b4c5d6 -m "Related work"
   # → [FE-FEST-b4c5d6] Related work
@@ -70,7 +72,7 @@ fest commit [flags]
 ```
       --auto-write        run configured commit message writer
       --commit-large      commit over-threshold files instead of keeping them out of git
-      --festival string   festival name or ID (overrides auto-detection)
+      --festival string   festival path, name, or ID (overrides auto-detection)
   -h, --help              help for commit
       --json              output result as JSON
   -m, --message string    commit message (required unless --auto-write)

@@ -26,9 +26,16 @@ SETUP (one-time):
 
   # For fish, add to ~/.config/fish/config.fish:
   fest shell-init fish | source
+
+  # For dash, busybox ash, or any other POSIX sh, add to ~/.profile:
+  eval "$(fest shell-init sh)"
 ```
 
 After setup, reload your shell or run: source ~/.zshrc
+
+fgo, fls, and fest work identically in every supported shell. Only tab
+completion differs: POSIX sh has no programmable completion to hook, so
+'fest shell-init sh' installs the helpers without it.
 
 USAGE - fgo (navigation):
   fgo              Smart navigation (linked project ↔ festival, or festivals root)
