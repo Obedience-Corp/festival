@@ -17,4 +17,11 @@ If no message argument provided, ask the user for one. Then:
 fest commit -m "<message>"
 ```
 
-If not currently inside a festival context, fall back to suggesting `camp p commit` for project submodule work or standard `git commit` for campaign root changes.
+When the festival or its sequence has a linked project, this one command covers
+both sides: it makes a project commit for the project's changes (skipped when the
+project is clean) and a campaign root commit for the festival-scoped files. Do not
+run `camp p commit` first and `fest commit` after.
+
+If not currently inside a festival context, fall back to suggesting `camp p commit`
+for project submodule work or `camp commit` for campaign root changes. Raw
+`git commit` is forbidden inside a campaign workspace.

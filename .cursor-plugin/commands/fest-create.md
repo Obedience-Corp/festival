@@ -41,6 +41,11 @@ fest create sequence
 fest create task
 ```
 
+## Preview First
+
+`fest create festival --dry-run` prints the file tree it would create and writes
+nothing. Use it to confirm the shape before committing to a name and type.
+
 ## Post-Creation
 
 After creation, run `fest validate` to verify the structure is correct. Remind the user to fill any `REPLACE` markers in generated files.

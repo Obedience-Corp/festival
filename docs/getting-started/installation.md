@@ -195,5 +195,10 @@ eval "$(camp shell-init zsh)"
 eval "$(fest shell-init zsh)"
 ```
 
+Replace `zsh` with `bash` or `sh` for those shells, or pipe the `fish` output to
+`source`. Use `sh` for dash, busybox ash, and any other Bourne shell that is
+neither bash nor zsh; it has no packaged helper file and installs no tab
+completion.
+
 See [Shell Setup]({{< ref "/getting-started/shell-setup" >}}) for details.
 Then continue with the [Quick Start]({{< ref "/getting-started/quickstart" >}}) to follow the validated beginner path through first `fest next`.

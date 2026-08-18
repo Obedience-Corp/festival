@@ -23,7 +23,8 @@ source "$(brew --prefix)/share/festival/shell/festival.zsh"
 source /usr/share/festival/shell/festival.zsh
 ```
 
-For bash, use `festival.bash`. For fish, use `festival.fish`.
+For bash, use `festival.bash`. For fish, use `festival.fish`. There is no
+packaged helper file for POSIX sh; use the dynamic fallback below.
 
 If you do not have an installed helper file, use the dynamic fallback:
 
@@ -38,6 +39,20 @@ For bash, replace `zsh` with `bash`. For fish, use:
 camp shell-init fish | source
 fest shell-init fish | source
 ```
+
+For dash, busybox ash, or any other Bourne shell that is neither bash nor zsh,
+use `sh` and add it to `~/.profile`:
+
+```sh
+eval "$(camp shell-init sh)"
+eval "$(fest shell-init sh)"
+```
+
+The `sh` scripts install the `camp` and `fest` wrappers and the `cgo`, `fgo`,
+and `fls` helpers, so navigation works the same everywhere. Only tab completion
+differs: POSIX sh has no programmable completion to hook, so nothing is
+installed for it. The bash script uses bash arrays and programmable completion,
+so it will not parse under those shells.
 
 ## Shell Functions
 
