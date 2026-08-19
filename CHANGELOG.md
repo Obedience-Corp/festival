@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Added
 
 - Hermes Agent: generated skills tap (`skills/`), survey and matrix row. `packaging/targets/hermes.target.mjs` emits the 12 skills in Hermes tap layout (`skills/<name>/SKILL.md`) with `version`, `author`, `license` and `metadata.hermes.{tags,category}` merged into each skill's frontmatter and the body left byte-identical, plus a generated `skills/README.md` and a root `skills.sh.json`. Users run `hermes skills tap add Obedience-Corp/festival`; the same tree also serves `npx skills add Obedience-Corp/festival`. Documented in `packaging/survey/hermes.md` with a Hermes column in `packaging/survey/MATRIX.md`.
+- Per-agent setup docs (`docs/getting-started/agents/`). A new section index states that Festival works with any agent that can run shell commands and read files and gives the `npx skills add Obedience-Corp/festival` line that reaches the agents behind skills.sh. Its first page, `docs/getting-started/agents/hermes.md`, is a Hermes Agent setup guide covering the install order (binaries first, then `camp init`, then the tap), the exact `hermes skills tap add` and `hermes skills install` lines, why exact lines are needed (a tap contributes nothing to `hermes skills browse` or `hermes skills search`), the `AGENTS.md` rule, driving with `hermes chat` rather than `hermes -z`, the `fest next` loop with a real transcript, the optional commit-guard shell hook, the sandbox backend caveat, and Hermes Desktop.
 - Claude Code plugin marketplace manifest (`.claude-plugin/marketplace.json` at the repo root, `source: "./claude-plugin"`) so the plugin is installable through the Claude Code marketplace flow, plus a version-consistency check and a `just plugin bump <version>` recipe that keeps `plugin.json` and `marketplace.json` aligned.
 - `claude-plugin/README.md` documenting the bundle layout, install paths, the local dev gate, and the skill-authoring conventions.
 - Component frontmatter validation and in-bundle hook-reference resolution in `scripts/test_claude_plugin.sh` (every skill, command, and agent must have well-formed frontmatter; every `${CLAUDE_PLUGIN_ROOT}` reference in `hooks/hooks.json` must resolve).
@@ -25,6 +26,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- The homepage tools grid now states "Any agent that can run shell commands and read files." beneath the list, and the Hermes entry links to its setup page. The entry had been a bare name with nothing behind it.
 - `just test all` now includes the `plugin` gate, so plugin bundle breakage surfaces on every local default test run, not only in the release workflow.
 - Audited all 8 plugin skill descriptions for trigger accuracy and removed the `fest-methodology` "auto-activates" claim.
 - Updated bundled CLI release pins to `camp` v0.2.10 and `fest` v0.4.4.
