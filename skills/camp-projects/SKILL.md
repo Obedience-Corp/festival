@@ -3,7 +3,7 @@ name: camp-projects
 description: Manage campaign submodule projects. Use when committing inside `projects/*`, deciding status/pull/push scope (root vs submodule vs all), or creating/removing project worktrees.
 version: "1.3.0"
 author: Obedience Corp
-license: MIT
+license: Apache-2.0
 metadata:
   hermes:
     tags:

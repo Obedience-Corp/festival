@@ -3,7 +3,7 @@ name: fest-standalone-workflows
 description: Create and run lightweight standalone `WORKFLOW.md` loops with `fest create workflow`, `fest next`, and `fest workflow advance`. Use when a user wants step-by-step workflow guidance inside any ordinary directory, explore/design work item, project folder, or thin-start workflow.
 version: "1.3.0"
 author: Obedience Corp
-license: MIT
+license: Apache-2.0
 metadata:
   hermes:
     tags:

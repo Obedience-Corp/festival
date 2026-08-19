@@ -3,7 +3,7 @@ name: fest-methodology
 description: Use when the user mentions festivals, the fest CLI, phases, sequences, or tasks, or when working inside a `festivals/` directory. Provides the core Festival methodology model so Claude understands the planning system.
 version: "1.3.0"
 author: Obedience Corp
-license: MIT
+license: Apache-2.0
 metadata:
   hermes:
     tags:

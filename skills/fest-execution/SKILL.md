@@ -3,7 +3,7 @@ name: fest-execution
 description: Execute active festival tasks. Use when finding the next task, marking tasks completed/blocked/reset, committing with festival traceability, advancing workflow steps, and validating sequence progress.
 version: "1.3.0"
 author: Obedience Corp
-license: MIT
+license: Apache-2.0
 metadata:
   hermes:
     tags:

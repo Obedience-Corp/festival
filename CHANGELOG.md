@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Fixed
+
+- Plugin manifests (Claude, Codex, Cursor) and every generated Hermes tap skill declared `MIT`; the repo and everything in it is Apache 2.0 (ADR-0002). All now say `Apache-2.0`.
+
 ### Added
 
 - Hermes Agent: generated skills tap (`skills/`), survey and matrix row. `packaging/targets/hermes.target.mjs` emits the 12 skills in Hermes tap layout (`skills/<name>/SKILL.md`) with `version`, `author`, `license` and `metadata.hermes.{tags,category}` merged into each skill's frontmatter and the body left byte-identical, plus a generated `skills/README.md` and a root `skills.sh.json`. Users run `hermes skills tap add Obedience-Corp/festival`; the same tree also serves `npx skills add Obedience-Corp/festival`. Documented in `packaging/survey/hermes.md` with a Hermes column in `packaging/survey/MATRIX.md`.
