@@ -210,6 +210,38 @@ if (refs.size === 0) throw new Error("hooks.json: no CLAUDE_PLUGIN_ROOT referenc
 ' "$1"
 }
 
+# Claude Code and Codex both wrap the event map in a top-level "hooks" object. A bare
+# event map installs fine and then fails at load with
+# "Hook load failed: hooks: Invalid input: expected record, received undefined",
+# which no other check catches because the file is still valid JSON.
+hooks_shape_check() {
+    node -e '
+const fs = require("fs");
+const path = require("path");
+const EVENTS = new Set([
+  "PreToolUse", "PostToolUse", "Notification", "UserPromptSubmit", "Stop",
+  "SubagentStop", "PreCompact", "SessionStart", "SessionEnd",
+]);
+
+for (const file of process.argv.slice(1)) {
+  const doc = JSON.parse(fs.readFileSync(file, "utf8"));
+  const stray = Object.keys(doc).filter((key) => EVENTS.has(key));
+  if (stray.length > 0) {
+    throw new Error(`${file}: hook events must live under the top-level "hooks" object, found at top level: ${stray.join(", ")}`);
+  }
+  if (!doc.hooks || typeof doc.hooks !== "object" || Array.isArray(doc.hooks)) {
+    throw new Error(`${file}: missing the top-level "hooks" object`);
+  }
+  const events = Object.keys(doc.hooks);
+  if (events.length === 0) throw new Error(`${file}: "hooks" object is empty`);
+  for (const event of events) {
+    if (!EVENTS.has(event)) continue;
+    if (!Array.isArray(doc.hooks[event])) throw new Error(`${file}: hooks.${event} must be an array`);
+  }
+}
+' "$@"
+}
+
 generated_targets_check() {
     local tmp drift=0
     tmp="$(mktemp -d "${TMPDIR:-/tmp}/festival-generated.XXXXXX")"
@@ -601,6 +633,7 @@ plugin_version_check
 manifest_consistency_check "$repo_root" "$plugin_dir/.claude-plugin/plugin.json" "$repo_root/.claude-plugin/marketplace.json" "$(node "$repo_root/packaging/generate.mjs" --manifests)"
 frontmatter_check "$plugin_dir"
 hook_reference_check "$plugin_dir"
+hooks_shape_check "$plugin_dir/hooks/hooks.json" "$repo_root/plugins/festival/hooks/hooks.json" "$repo_root/hooks/hooks.json"
 generated_targets_check
 codex_target_check "$plugin_dir/.claude-plugin/plugin.json"
 cursor_target_check "$plugin_dir/.claude-plugin/plugin.json"

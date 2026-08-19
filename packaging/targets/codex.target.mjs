@@ -49,13 +49,18 @@ function codexHooks(ctx) {
   // Claude source (e.g. the PreToolUse commit guard) are Claude-Code-specific:
   // they depend on Claude's tool-call payload schema and exit-code semantics,
   // which Codex does not share, so we do not fake them here.
-  const source = ctx.sourceHooks.SessionStart
-    ? { SessionStart: ctx.sourceHooks.SessionStart }
-    : {};
+  // Both Claude Code and Codex nest the event map under a top-level "hooks" key;
+  // a bare event map fails to load.
+  const events = ctx.sourceHooks.hooks ?? {};
+  const source = events.SessionStart ? { SessionStart: events.SessionStart } : {};
   const swapped = JSON.parse(
     JSON.stringify(source).replaceAll("${CLAUDE_PLUGIN_ROOT}", "${PLUGIN_ROOT}"),
   );
-  return { _generated: ctx.banner, ...swapped };
+  return {
+    _generated: ctx.banner,
+    description: ctx.sourceHooks.description ?? ctx.manifest.description,
+    hooks: swapped,
+  };
 }
 
 function codexMarketplace(ctx) {
