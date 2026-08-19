@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Hermes Agent: generated skills tap (`skills/`), survey and matrix row. `packaging/targets/hermes.target.mjs` emits the 12 skills in Hermes tap layout (`skills/<name>/SKILL.md`) with `version`, `author`, `license` and `metadata.hermes.{tags,category}` merged into each skill's frontmatter and the body left byte-identical, plus a generated `skills/README.md` and a root `skills.sh.json`. Users run `hermes skills tap add Obedience-Corp/festival`; the same tree also serves `npx skills add Obedience-Corp/festival`. Documented in `packaging/survey/hermes.md` with a Hermes column in `packaging/survey/MATRIX.md`.
 - Claude Code plugin marketplace manifest (`.claude-plugin/marketplace.json` at the repo root, `source: "./claude-plugin"`) so the plugin is installable through the Claude Code marketplace flow, plus a version-consistency check and a `just plugin bump <version>` recipe that keeps `plugin.json` and `marketplace.json` aligned.
 - `claude-plugin/README.md` documenting the bundle layout, install paths, the local dev gate, and the skill-authoring conventions.
 - Component frontmatter validation and in-bundle hook-reference resolution in `scripts/test_claude_plugin.sh` (every skill, command, and agent must have well-formed frontmatter; every `${CLAUDE_PLUGIN_ROOT}` reference in `hooks/hooks.json` must resolve).
