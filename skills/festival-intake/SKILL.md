@@ -3,7 +3,7 @@ name: festival-intake
 description: Route work that is too large for a single chat into a structured plan. Use when the user describes a multi-step build, a migration, a rewrite, an audit, a refactor across many files, or a research question with several threads. Use when a goal would otherwise need step-by-step supervision across more than one session. Also use when the user says "plan this", "where do I start", "help me build X", "this is a big one", or hands over a spec, a ticket, or a document and asks what to do with it.
 version: "1.3.0"
 author: Obedience Corp
-license: MIT
+license: Apache-2.0
 metadata:
   hermes:
     tags:

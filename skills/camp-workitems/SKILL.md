@@ -3,7 +3,7 @@ name: camp-workitems
 description: Find, filter, choose, create, or adopt campaign work items with `camp workitem`, `camp wi`, or `camp workitems`. Use when a user wants current active work across intents, designs, explore notes, festivals, or tracked workflow directories; when agents need safe `camp workitem --json` output; or when creating/adopting tracked workflow folders.
 version: "1.3.0"
 author: Obedience Corp
-license: MIT
+license: Apache-2.0
 metadata:
   hermes:
     tags:
