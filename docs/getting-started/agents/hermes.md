@@ -131,7 +131,14 @@ That last part is the important one. Phase gates are checkpoints for a human. Th
 
 ## 8. Optional: block raw git commits
 
-Campaigns have their own commit verbs (`camp commit`, `camp p commit`, `fest commit`) so that work stays traceable. If you want Hermes to be stopped rather than corrected when it reaches for `git commit`, wire the commit guard in as a shell hook.
+Campaigns have their own commit verbs (`camp commit`, `camp p commit`, `fest commit`) so that work stays traceable. If you want Hermes to be stopped rather than corrected when it reaches for `git commit`, wire the commit guard in as a shell hook. The script is the same one the Festival plugin ships for other agents; download it from the repo and make it executable:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Obedience-Corp/festival/main/claude-plugin/hooks/scripts/commit-guard.sh -o ~/.hermes/commit-guard.sh
+chmod +x ~/.hermes/commit-guard.sh
+```
+
+It only enforces inside a campaign (it checks the command's working directory with `camp`), so it is safe to leave on for unrelated work.
 
 Add to your Hermes profile's `config.yaml`:
 
@@ -139,7 +146,7 @@ Add to your Hermes profile's `config.yaml`:
 hooks:
   pre_tool_call:
     - matcher: "terminal"
-      command: "/path/to/commit-guard.sh"
+      command: "~/.hermes/commit-guard.sh"
       timeout: 15
       fail_closed: true
 hooks_auto_accept: true
