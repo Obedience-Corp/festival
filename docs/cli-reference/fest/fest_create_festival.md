@@ -17,7 +17,7 @@ fest create festival [flags]
 ```
       --agent                 Strict mode: process markers, auto-validate, rollback on blocking errors, JSON output
       --dest string           Destination under festivals/: planning or ritual (use 'fest promote' to advance to active) (default "planning")
-      --dry-run               Preview the festival file tree without writing anything
+      --dry-run               Preview the festival file tree and its template markers without writing anything
       --goal string           Festival goal
   -h, --help                  help for festival
       --json                  Emit JSON output
