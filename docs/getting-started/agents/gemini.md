@@ -68,7 +68,7 @@ The install reads the extension manifest at the repository root, which is why th
 
 ## 4. What the extension ships
 
-- **`gemini-extension.json`**, which names the extension `festival` at version 1.3.0 and points `contextFileName` at `GEMINI.md`.
+- **`gemini-extension.json`**, which names the extension `festival` at version 1.3.1 and points `contextFileName` at `GEMINI.md`.
 - **`GEMINI.md`**, which describes Festival and `@`-imports each of the **12 skills** directly.
 - **`hooks/hooks.json`** at the repository root, carrying the `SessionStart` hook described in section 6.
 

@@ -1,7 +1,7 @@
 ---
 name: fest-planning
 description: Plan and scaffold festivals. Use when creating festival/phase/sequence/task structure, enforcing naming rules, linking festivals to projects, and promoting lifecycle states.
-version: "1.3.0"
+version: "1.3.1"
 author: Obedience Corp
 license: Apache-2.0
 metadata:

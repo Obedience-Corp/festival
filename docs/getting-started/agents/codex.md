@@ -72,7 +72,7 @@ Marketplace `festival`
 .../marketplaces/festival/.agents/plugins/marketplace.json
 
 PLUGIN             STATUS              VERSION  PATH
-festival@festival  installed, enabled  1.3.0    .../marketplaces/festival/plugins/festival
+festival@festival  installed, enabled  1.3.1    .../marketplaces/festival/plugins/festival
 ```
 
 Festival self-hosts its marketplace inside the repository, at `.agents/plugins/marketplace.json`, which is what the `Obedience-Corp/festival` shorthand resolves. Per the Codex plugin survey verified 2026-06-16, OpenAI's curated directory had no self-serve publishing at that time, so self-hosting is the available channel rather than a preference.
@@ -129,6 +129,6 @@ Phase gates are checkpoints for a human. The agent submits a gate and stops. You
 
 ## What was verified
 
-The shell install flow was run against Codex CLI 0.147.0 on 2026-08-19 with an isolated `CODEX_HOME`, using both the `Obedience-Corp/festival` shorthand and a local repository path. Both produced `installed, enabled` at plugin version 1.3.0, and the `codex plugin list` excerpt in section 3 is from that run. Component counts were taken from the plugin tree on the same date.
+The shell install flow was run against Codex CLI 0.147.0 on 2026-08-19 with an isolated `CODEX_HOME`, using both the `Obedience-Corp/festival` shorthand and a local repository path. Both produced `installed, enabled` at plugin version 1.3.1, and the `codex plugin list` excerpt in section 3 is from that run. Component counts were taken from the plugin tree on the same date.
 
 The in-session slash-command spelling is documented by the plugin bundle and was not exercised from a script. The session-start hook's corrected manifest parses and the plugin loads enabled; the hook was not observed firing on Codex, because an isolated `CODEX_HOME` carries no credentials and the run stopped at authentication. The same hook was observed firing on Claude Code (see that page's verification note). The commands and agents gap in section 5 comes from the Festival plugin survey, verified 2026-06-16.

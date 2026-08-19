@@ -110,12 +110,12 @@ $ claude plugin list
 Installed plugins:
 
   ❯ festival@festival
-    Version: 1.3.0
+    Version: 1.3.1
     Scope: user
     Status: ✔ enabled
 ```
 
-`claude plugin details festival@festival` lists them as `Hooks (2)  SessionStart, PreToolUse`, marked harness-only, so neither costs you model context.
+`claude plugin details festival@festival` lists them as `Hooks (2)  SessionStart, PreToolUse`, marked harness-only, so neither costs you model context. The hook fix ships in plugin 1.3.1.
 
 Earlier bundles shipped a hook manifest that Claude Code rejected: the plugin installed, then reported `Status: failed to load` with `Hook load failed: hooks: Invalid input: expected record, received undefined`, and both hooks were silently lost while skills, commands, and agents kept working. If you see that on an older install, update the plugin (`claude plugin update festival@festival`); the fix is in the bundle, not in your configuration.
 
@@ -159,4 +159,4 @@ Phase gates are checkpoints for a human. The agent submits a gate and stops. You
 
 ## What was verified
 
-The shell install flow was exercised against Claude Code 2.1.235 on 2026-08-19, in an isolated configuration directory, from a local marketplace path pointing at the branch that carries the hook fix (the `Obedience-Corp/festival` shorthand serves it once that release is out). `claude plugin list` reported `enabled`, `claude plugin details` reported both hooks, and a session's debug log showed `Registered 2 hooks from 1 plugins` followed by `Hook SessionStart:startup (SessionStart) success` with the installer's own output. The older failure quoted in section 5 was reproduced side by side from a fixture carrying the previous manifest shape. Component counts were taken from the plugin tree on the same date. The in-session slash-command form is documented by the plugin bundle and was not exercised from a script.
+The shell install flow was exercised against Claude Code 2.1.235 on 2026-08-19, at plugin version 1.3.1, in an isolated configuration directory, from a local marketplace path pointing at the branch that carries the hook fix (the `Obedience-Corp/festival` shorthand serves it once that release is out). `claude plugin list` reported `enabled`, `claude plugin details` reported both hooks, and a session's debug log showed `Registered 2 hooks from 1 plugins` followed by `Hook SessionStart:startup (SessionStart) success` with the installer's own output. The older failure quoted in section 5 was reproduced side by side from a fixture carrying the previous manifest shape. Component counts were taken from the plugin tree on the same date. The in-session slash-command form is documented by the plugin bundle and was not exercised from a script.
