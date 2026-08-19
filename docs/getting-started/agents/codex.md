@@ -107,6 +107,8 @@ The plugin's `SessionStart` hook runs `ensure-festival.sh` from the plugin root 
 
 That is why there is no manual step after `codex plugin add`.
 
+Codex nests hook events under a top-level `hooks` object, the same shape Claude Code wants. Bundles before this release put the events at the top level; the generated Codex manifest now carries the wrapper.
+
 ## 8. The loop
 
 Give the agent the loop once and it repeats it:
@@ -129,4 +131,4 @@ Phase gates are checkpoints for a human. The agent submits a gate and stops. You
 
 The shell install flow was run against Codex CLI 0.147.0 on 2026-08-19 with an isolated `CODEX_HOME`, using both the `Obedience-Corp/festival` shorthand and a local repository path. Both produced `installed, enabled` at plugin version 1.3.0, and the `codex plugin list` excerpt in section 3 is from that run. Component counts were taken from the plugin tree on the same date.
 
-The in-session slash-command spelling is documented by the plugin bundle and was not exercised from a script. The session-start hook's manifest parses and the plugin loads enabled; the hook was not observed firing, which would need a real interactive session. The commands and agents gap in section 5 comes from the Festival plugin survey, verified 2026-06-16.
+The in-session slash-command spelling is documented by the plugin bundle and was not exercised from a script. The session-start hook's corrected manifest parses and the plugin loads enabled; the hook was not observed firing on Codex, because an isolated `CODEX_HOME` carries no credentials and the run stopped at authentication. The same hook was observed firing on Claude Code (see that page's verification note). The commands and agents gap in section 5 comes from the Festival plugin survey, verified 2026-06-16.

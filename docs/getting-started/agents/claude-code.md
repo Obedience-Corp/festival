@@ -33,7 +33,7 @@ camp --version
 
 If either one is missing or resolves somewhere you did not expect, `festival doctor` reports the installer's view of your PATH, sources, and receipts. Full install options are on the [installation page](../installation/).
 
-Do not skip this step. The plugin ships a session-start hook that installs the binaries for you, but see [section 5](#5-the-install-hook): on current Claude Code builds that hook does not run.
+The plugin's session-start hook installs both binaries for you ([section 5](#5-the-install-hook)), so this step is belt and braces. Do it anyway: your shell has `fest` and `camp` before the first session starts, and you can confirm where they resolve from rather than finding out mid-loop.
 
 ## 2. Open a campaign
 
@@ -93,7 +93,7 @@ Counted from the bundle, not from a README:
 - **12 skills**, one `SKILL.md` each, covering campaign navigation, campaign structure, commit discipline, festival planning, festival execution, standalone workflows, and work intake.
 - **11 slash commands**, which are shortcuts to the CLI verbs you would otherwise type: `/fest-next`, `/fest-commit`, `/festival-plan`, and eight more.
 - **2 agents**: `fest-executor` and `fest-planner`.
-- **2 hooks**: a `SessionStart` installer and a `PreToolUse` commit guard. Read sections 5 and 6 before relying on either.
+- **2 hooks**: a `SessionStart` installer and a `PreToolUse` commit guard, described in sections 5 and 6.
 
 Claude Code is one of two harnesses that carries every one of these surfaces. Other agents get a subset: Codex takes the skills and the hook but not the commands or agents, and Gemini takes the skills as context imports. The [section index](../) covers the differences.
 
@@ -103,9 +103,7 @@ One thing to know when you inspect the plugin yourself: `claude plugin details f
 
 The plugin's `SessionStart` hook runs `ensure-festival.sh`, which downloads `fest` and `camp` if they are missing, checksum-verifies the archive, installs them, and checks for updates once a day. It is idempotent, so it does nothing when the binaries are already current.
 
-That is what the hook is for. On Claude Code 2.1.235 it does not run, and neither does the commit guard in the next section.
-
-The plugin installs successfully and then reports a load failure:
+Both hooks load, and the plugin reports itself enabled:
 
 ```text
 $ claude plugin list
@@ -114,17 +112,16 @@ Installed plugins:
   ❯ festival@festival
     Version: 1.3.0
     Scope: user
-    Status: ✘ failed to load
-    Error: Hook load failed: hooks: Invalid input: expected record, received undefined
+    Status: ✔ enabled
 ```
 
-Skills, commands, and agents are unaffected and load normally. Only the two hooks are lost, which is why section 1 tells you to install the binaries yourself. Do that and everything on this page works.
+`claude plugin details festival@festival` lists them as `Hooks (2)  SessionStart, PreToolUse`, marked harness-only, so neither costs you model context.
 
-This is a defect in the bundle's hook manifest against current Claude Code, it is tracked, and it will be fixed in a release. Until then, treat the binaries as a manual install and the commit guard as unavailable.
+Earlier bundles shipped a hook manifest that Claude Code rejected: the plugin installed, then reported `Status: failed to load` with `Hook load failed: hooks: Invalid input: expected record, received undefined`, and both hooks were silently lost while skills, commands, and agents kept working. If you see that on an older install, update the plugin (`claude plugin update festival@festival`); the fix is in the bundle, not in your configuration.
 
 ## 6. The commit guard
 
-When the hooks do load, a `PreToolUse` hook on `Bash` blocks a raw `git commit` inside a campaign. Campaigns have their own commit verbs, and they exist so that work stays traceable: `camp commit` at the campaign root, `camp p commit` inside `projects/*`, and `fest commit` during a festival.
+A `PreToolUse` hook on `Bash` blocks a raw `git commit` inside a campaign. Campaigns have their own commit verbs, and they exist so that work stays traceable: `camp commit` at the campaign root, `camp p commit` inside `projects/*`, and `fest commit` during a festival.
 
 Because a plugin hook fires in every session, the guard self-scopes. It blocks a command only when all three of these hold:
 
@@ -162,4 +159,4 @@ Phase gates are checkpoints for a human. The agent submits a gate and stops. You
 
 ## What was verified
 
-The shell install flow was exercised against Claude Code 2.1.235 on 2026-08-19, in an isolated configuration directory, and the hook load failure in section 5 was reproduced and diagnosed there. Component counts were taken from the plugin tree on the same date. The in-session slash-command form is documented by the plugin bundle and was not exercised from a script.
+The shell install flow was exercised against Claude Code 2.1.235 on 2026-08-19, in an isolated configuration directory, from a local marketplace path pointing at the branch that carries the hook fix (the `Obedience-Corp/festival` shorthand serves it once that release is out). `claude plugin list` reported `enabled`, `claude plugin details` reported both hooks, and a session's debug log showed `Registered 2 hooks from 1 plugins` followed by `Hook SessionStart:startup (SessionStart) success` with the installer's own output. The older failure quoted in section 5 was reproduced side by side from a fixture carrying the previous manifest shape. Component counts were taken from the plugin tree on the same date. The in-session slash-command form is documented by the plugin bundle and was not exercised from a script.
