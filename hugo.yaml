@@ -43,18 +43,42 @@ menu:
       parent: getting-started
       url: /getting-started/agents/
       weight: 14
+    - name: Claude Code
+      parent: getting-started
+      url: /getting-started/agents/claude-code/
+      weight: 15
+    - name: Codex
+      parent: getting-started
+      url: /getting-started/agents/codex/
+      weight: 16
+    - name: Cursor
+      parent: getting-started
+      url: /getting-started/agents/cursor/
+      weight: 17
+    - name: Gemini CLI
+      parent: getting-started
+      url: /getting-started/agents/gemini/
+      weight: 18
     - name: Hermes Agent
       parent: getting-started
       url: /getting-started/agents/hermes/
-      weight: 15
+      weight: 19
+    - name: opencode
+      parent: getting-started
+      url: /getting-started/agents/opencode/
+      weight: 20
+    - name: Other agents
+      parent: getting-started
+      url: /getting-started/agents/other-agents/
+      weight: 21
     - name: Videos
       parent: getting-started
       url: /videos/
-      weight: 16
+      weight: 22
     - name: Examples
       parent: getting-started
       url: /examples/
-      weight: 17
+      weight: 23
 
     - name: Methodology
       identifier: methodology

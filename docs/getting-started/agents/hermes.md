@@ -1,6 +1,6 @@
 ---
 title: "Hermes Agent"
-weight: 15
+weight: 19
 ---
 
 # Hermes Agent

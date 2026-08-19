@@ -1,7 +1,7 @@
 ---
 name: cross-campaign
 description: Discover and reference other campaigns, projects, and files across campaign boundaries. Use when the user mentions another campaign by name, references work done "in another project/campaign", or needs to find/copy/compare code across campaigns.
-version: "1.3.0"
+version: "1.3.1"
 author: Obedience Corp
 license: Apache-2.0
 metadata:

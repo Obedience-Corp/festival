@@ -1,7 +1,7 @@
 ---
 name: campaign-commit
 description: Choose the correct commit command in a campaign workspace. Use when you are about to commit and need to select `camp commit`, `camp p commit`, `fest commit`, or intentional root pointer sync via `camp refs-sync`.
-version: "1.3.0"
+version: "1.3.1"
 author: Obedience Corp
 license: Apache-2.0
 metadata:
