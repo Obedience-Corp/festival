@@ -32,7 +32,7 @@ completion.
 
 **Repository:** <https://github.com/Festival-Examples/example-camp-hardening-festival>
 
-<img src="/images/fest-show.gif" alt="fest show on the finished camp-hardening CH0001 festival: four phases at 100 percent, then the task tree with every sequence and quality gate checked off" width="720">
+<img src="/images/fest-show.gif" alt="Animated fest watch tree for the camp-hardening CH0001 festival" width="480">
 
 A complete, worked example festival that hardens the `camp` CLI with safer
 destructive commands, more consistent JSON output contracts, and stronger git-backed

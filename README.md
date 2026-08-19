@@ -173,7 +173,7 @@ After installing, see the [quick start guide](https://docs.fest.build/getting-st
 <p align="center"><em>Planned in Claude Code (Fathom), promoted to active, then the <code>fest next</code> loop ran in grok-build, stopped 2 days in, and finished in Codex.</em></p>
 
 <p align="center">
-  <img src="docs/images/fest-show.gif" alt="fest show on the finished camp-hardening CH0001 festival: four phases at 100 percent, then the task tree with every sequence and quality gate checked off" width="700">
+  <img src="docs/images/fest-show.gif" alt="Animated fest watch tree for the camp-hardening CH0001 festival" width="400">
 </p>
 
 <p align="center"><em><a href="https://github.com/Festival-Examples/example-camp-hardening-festival">See the festival behind this demo &rarr;</a></em></p>
