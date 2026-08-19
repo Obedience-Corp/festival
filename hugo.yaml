@@ -39,14 +39,22 @@ menu:
       parent: getting-started
       url: /getting-started/shell-setup/
       weight: 13
+    - name: Set up with your agent
+      parent: getting-started
+      url: /getting-started/agents/
+      weight: 14
+    - name: Hermes Agent
+      parent: getting-started
+      url: /getting-started/agents/hermes/
+      weight: 15
     - name: Videos
       parent: getting-started
       url: /videos/
-      weight: 14
+      weight: 16
     - name: Examples
       parent: getting-started
       url: /examples/
-      weight: 15
+      weight: 17
 
     - name: Methodology
       identifier: methodology
