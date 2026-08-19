@@ -98,7 +98,7 @@ fest validate <festival-path>
 
 ## Common Mistakes
 
-- Using `fest task complete` / `fest task block` (wrong verb forms — use `completed` / `blocked`).
+- Using `fest task complete` / `fest task block` (wrong verb forms: use `completed` / `blocked`).
 - Confusing `fest workflow` commands with task-status commands.
 - Continuing work from a new project path without rerunning `fest link`.
 - Skipping `fest next` and manually selecting tasks out of dependency order.

@@ -9,7 +9,7 @@ See `survey/MATRIX.md` for the verified per-harness facts these decisions rest o
 
 `claude-plugin/` is canonical:
 - `claude-plugin/.claude-plugin/plugin.json`: name, version, description, author, repository, keywords.
-- `claude-plugin/skills/<name>/SKILL.md`: the 9 skills (portable nearly as-is across harnesses).
+- `claude-plugin/skills/<name>/SKILL.md`: the 12 skills (portable nearly as-is across harnesses).
 - `claude-plugin/commands/*.md`, `claude-plugin/agents/*.md`: carried where a harness supports them.
 - `claude-plugin/hooks/scripts/ensure-festival.sh`: the CLI install/update logic, reused by every
   harness's session-start hook.
