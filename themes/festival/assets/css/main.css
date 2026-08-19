@@ -1170,11 +1170,11 @@ summary {
 
 .home-hero__visual .terminal-demo {
   width: 100%;
-  max-width: 360px;
+  max-width: 520px;
 }
 
 .home-hero__visual-caption {
-  max-width: 360px;
+  max-width: 520px;
   margin: 1rem auto 0;
   font-size: 0.82rem;
   line-height: 1.5;
