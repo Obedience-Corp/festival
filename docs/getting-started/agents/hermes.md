@@ -88,10 +88,10 @@ hermes chat
 Or with a single instruction, from anywhere:
 
 ```bash
-hermes chat -q "Run fest next and do the task it gives you" --in /path/to/my-campaign
+hermes --in /path/to/my-campaign chat -q "Run fest next and do the task it gives you"
 ```
 
-`hermes chat` honors both your working directory and `--in`. Do not use `hermes -z` for campaign work: its terminal tool runs in your home directory and ignores both the working directory and `--in`, so a festival command issued that way runs in the wrong place.
+`--in` is a global option, so it goes before the `chat` subcommand. `hermes chat` honors both your working directory and `--in`. Do not use `hermes -z` for campaign work: its terminal tool runs in your home directory and ignores both the working directory and `--in`, so a festival command issued that way runs in the wrong place.
 
 ## 7. The loop
 
