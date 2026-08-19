@@ -19,6 +19,12 @@ That reaches the agents behind [skills.sh](https://skills.sh/Obedience-Corp/fest
 
 Some agents have their own skill channels and their own conventions. These guides cover the setup path end to end for each one.
 
+- [Claude Code](claude-code/): install the plugin from the marketplace and get the skills, slash commands, and agents, plus what to know about the two hooks on current builds.
+- [Codex](codex/): install the plugin from the self-hosted marketplace and get the skills plus the session install hook.
+- [Cursor](cursor/): the plugin carries skills, commands, agents, and a blocking install hook.
+- [Gemini CLI](gemini/): install the extension from GitHub in one command.
 - [Hermes Agent](hermes/): install the binaries, add the Festival skills tap, and run the loop from a campaign root.
+- [opencode](opencode/): drop the plugin into your opencode config and let native skill discovery do the rest.
+- [Other agents](other-agents/): Grok Build, Aider, Crush, OpenClaw, and anything you built yourself. Binaries, a campaign, and the loop.
 
-More guides will follow. If your agent is not listed, install the binaries from the [installation page](../installation/), run `camp init`, and start your agent from the campaign root. The [quickstart](../quickstart/) is agent agnostic.
+Every agent in the list above has a guide. If yours is not on it, [Other agents](other-agents/) is the page for you: install the binaries from the [installation page](../installation/), run `camp init`, and start your agent from the campaign root. The [quickstart](../quickstart/) is agent agnostic.
