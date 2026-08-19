@@ -14,7 +14,7 @@ fest next → read task → do work → fest task completed → fest commit → 
 
 ## Workflow
 
-1. **Get next task**: `fest next` — always use this, never pick tasks manually
+1. **Get next task**: `fest next` (always use this, never pick tasks manually)
 2. **Read the task**: Open and understand the task file's instructions and acceptance criteria
 3. **Do the work**: Execute what the task describes
 4. **Mark complete**: `fest task completed`
@@ -49,7 +49,7 @@ fgo                             # Toggle between festival and project
 
 ## Rules
 
-- Always use `fest next` for task selection — it respects dependency order
+- Always use `fest next` for task selection (it respects dependency order)
 - Use `fest task completed` (not `complete`) and `fest task blocked` (not `block`)
 - Don't confuse `fest task` (task state) with `fest workflow` (phase-level)
 - Always `fest commit` instead of raw `git commit` during festival work

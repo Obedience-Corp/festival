@@ -1,6 +1,6 @@
 ---
 name: fest-show
-description: Show festival progression — in-progress tasks, roadmap, and dependency view
+description: Show festival progression (in-progress tasks, roadmap, and dependency view)
 arguments:
   - name: view
     description: "View mode: inprogress, roadmap, or deps (default: inprogress)"

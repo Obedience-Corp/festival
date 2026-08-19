@@ -16,11 +16,11 @@ camp init {{name}}
 ```
 
 This creates:
-- `projects/` — git submodule project directory
-- `festivals/` — festival methodology workspace
-- `workflow/` — intents, design docs, code reviews
-- `docs/` — human-authored documentation
-- `.campaign/` — workspace configuration
+- `projects/`: git submodule project directory
+- `festivals/`: festival methodology workspace
+- `workflow/`: intents, design docs, code reviews
+- `docs/`: human-authored documentation
+- `.campaign/`: workspace configuration
 
 After init, remind the user to set up shell integration:
 
