@@ -344,6 +344,69 @@ if (skills.length === 0) throw new Error(".opencode/skills/ resolves but contain
 ' "$repo_root"
 }
 
+hermes_target_check() {
+    node -e '
+const fs = require("fs");
+const path = require("path");
+const repoRoot = process.argv[1];
+const plugin = JSON.parse(fs.readFileSync(process.argv[2], "utf8"));
+const pluginSkills = path.join(repoRoot, "claude-plugin", "skills");
+const tap = path.join(repoRoot, "skills");
+
+function split(file) {
+  const lines = fs.readFileSync(file, "utf8").split("\n");
+  if (lines[0].trim() !== "---") throw new Error(`${file}: missing YAML frontmatter`);
+  const close = lines.findIndex((line, index) => index > 0 && line.trim() === "---");
+  if (close === -1) throw new Error(`${file}: unterminated YAML frontmatter`);
+  return { front: lines.slice(1, close), body: lines.slice(close + 1).join("\n") };
+}
+
+const sources = fs.readdirSync(pluginSkills).filter((d) => fs.existsSync(path.join(pluginSkills, d, "SKILL.md"))).sort();
+if (sources.length === 0) throw new Error("claude-plugin/skills contains no SKILL.md");
+
+for (const name of sources) {
+  const skillFile = path.join(tap, name, "SKILL.md");
+  if (!fs.existsSync(skillFile)) throw new Error(`hermes tap missing skills/${name}/SKILL.md`);
+  const src = split(path.join(pluginSkills, name, "SKILL.md"));
+  const gen = split(skillFile);
+  if (src.body !== gen.body) throw new Error(`skills/${name}/SKILL.md body differs from the source skill`);
+  for (const line of src.front) {
+    if (/^(name|description):/.test(line) && !gen.front.includes(line)) {
+      throw new Error(`skills/${name}/SKILL.md changed a source frontmatter line: ${line.slice(0, 40)}`);
+    }
+  }
+  const front = gen.front.join("\n");
+  if (!gen.front.includes(`version: ${JSON.stringify(plugin.version)}`)) {
+    throw new Error(`skills/${name}/SKILL.md version does not match plugin.json ${plugin.version}`);
+  }
+  for (const required of [/^author: \S/m, /^license: \S/m, /^metadata:$/m, /^ {2}hermes:$/m, /^ {4}tags:$/m, /^ {6}- \S/m, /^ {4}category: (camp|festival)$/m]) {
+    if (!required.test(front)) throw new Error(`skills/${name}/SKILL.md frontmatter missing ${required}`);
+  }
+}
+
+const cfg = JSON.parse(fs.readFileSync(path.join(repoRoot, "skills.sh.json"), "utf8"));
+const allowed = new Set(["$schema", "schema", "notGrouped", "groupings"]);
+for (const key of Object.keys(cfg)) {
+  if (!allowed.has(key)) throw new Error(`skills.sh.json has a key the published schema forbids: ${key}`);
+}
+if (!Array.isArray(cfg.groupings) || cfg.groupings.length === 0) throw new Error("skills.sh.json requires a non-empty groupings array");
+const listed = [];
+for (const group of cfg.groupings) {
+  if (!group.title || !Array.isArray(group.skills) || group.skills.length === 0) {
+    throw new Error("skills.sh.json grouping requires a title and a non-empty skills array");
+  }
+  listed.push(...group.skills);
+}
+for (const name of listed) {
+  if (!sources.includes(name)) throw new Error(`skills.sh.json lists an unknown skill: ${name}`);
+  if (listed.filter((s) => s === name).length > 1) throw new Error(`skills.sh.json lists a skill twice: ${name}`);
+}
+for (const name of sources) {
+  if (!listed.includes(name)) throw new Error(`skills.sh.json omits skill: ${name}`);
+}
+' "$repo_root" "$1"
+}
+
 gemini_target_check() {
     node -e '
 const fs = require("fs");
@@ -543,6 +606,7 @@ codex_target_check "$plugin_dir/.claude-plugin/plugin.json"
 cursor_target_check "$plugin_dir/.claude-plugin/plugin.json"
 opencode_target_check
 gemini_target_check "$plugin_dir/.claude-plugin/plugin.json"
+hermes_target_check "$plugin_dir/.claude-plugin/plugin.json"
 bash -n "$plugin_dir/hooks/scripts/ensure-festival.sh" "$plugin_dir/hooks/scripts/sync-check.sh" \
     "$plugin_dir/hooks/scripts/commit-guard.sh" "$plugin_dir/hooks/scripts/commit-guard.test.sh"
 bash "$plugin_dir/hooks/scripts/commit-guard.test.sh"

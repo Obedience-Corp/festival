@@ -1,0 +1,29 @@
+{
+  "$schema": "https://skills.sh/schemas/skills.sh.schema.json",
+  "groupings": [
+    {
+      "title": "Campaign workspace (camp)",
+      "description": "Navigate, commit, and organize a campaign workspace with the camp CLI.",
+      "skills": [
+        "camp-navigation",
+        "camp-projects",
+        "camp-workitems",
+        "campaign-commit",
+        "campaign-structure",
+        "campaign-workflows",
+        "cross-campaign"
+      ]
+    },
+    {
+      "title": "Festival planning and execution (fest)",
+      "description": "Plan and execute festivals (phases, sequences, tasks) with the fest CLI.",
+      "skills": [
+        "fest-execution",
+        "fest-methodology",
+        "fest-planning",
+        "fest-standalone-workflows",
+        "festival-intake"
+      ]
+    }
+  ]
+}
