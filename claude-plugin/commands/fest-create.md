@@ -17,7 +17,7 @@ Ask the user for:
 
 1. **What to create**: festival, phase, sequence, or task (use the `type` argument if provided, default to festival)
 2. **Name**: A descriptive kebab-case name
-3. For festivals: **Type** — standard, implementation, research, or ritual
+3. For festivals, **Type**: standard, implementation, research, or ritual
    - `standard`: Full planning + implementation (recommended for most work)
    - `implementation`: Execution-only (use when requirements already exist)
    - `research`: Investigation and exploration

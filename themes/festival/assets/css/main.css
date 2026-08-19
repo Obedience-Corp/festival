@@ -1582,6 +1582,24 @@ summary {
   font-family: var(--font-heading);
 }
 
+.home-tools__grid a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.home-tools__grid a:hover {
+  text-decoration: underline;
+  text-decoration-color: currentColor;
+  text-underline-offset: 3px;
+}
+
+.home-tools__note {
+  margin: 1rem 0 0;
+  color: var(--festival-400);
+  text-align: center;
+  font-size: 0.9rem;
+}
+
 /* Search trigger button */
 .search-trigger {
   display: flex;

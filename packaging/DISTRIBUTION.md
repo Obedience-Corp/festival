@@ -40,9 +40,26 @@ in-repo surface where it does not). No fork-PR sync exists; the Superpowers
 - **Surface**: the repo root itself (`gemini-extension.json` + `GEMINI.md`, generated, drift-covered).
 - Source: `packaging/survey/gemini.md`.
 
+## Hermes Agent
+
+- **Channel**: GitHub skills tap. A tap is any repo laid out as `skills/<name>/SKILL.md`, so the
+  generated root `skills/` tree IS the distribution artifact; there is no manifest, no server, and
+  no review queue. `skills.sh.json` (also generated) only controls how skills.sh groups the repo
+  page.
+- **Install**: `hermes skills tap add Obedience-Corp/festival` then
+  `hermes skills install Obedience-Corp/festival/skills/<name>`, or a single-skill install without
+  subscribing to the tap. Skills land in `~/.hermes/skills/` and need no trust step.
+- **Also reaches non-Hermes agents**: the same tree is what skills.sh reads, so
+  `npx skills add Obedience-Corp/festival` installs the identical 12 skills elsewhere.
+- **Note**: a tap ships instructions, not binaries. Hermes has no hook an installed skill can use,
+  so users install `fest` and `camp` themselves (`install.sh`, Homebrew, npm). Optional later: a
+  `/.well-known/skills/index.json` on fest.build for `hermes skills search --source well-known`.
+- **Surface**: root `skills/` + `skills.sh.json` (generated, drift-covered).
+- Source: `packaging/survey/hermes.md`.
+
 ## Summary
 
 Only Codex needs a generated distribution artifact (`marketplace.json`). Cursor is a manual web
-submission, and opencode and Gemini install straight from the git repo, so for those three the
-distribution surface is the in-repo generated target plus its INSTALL notes. The acceptance sweep
+submission, and opencode, Gemini, and Hermes install straight from the git repo, so for those four
+the distribution surface is the in-repo generated target plus its INSTALL notes. The acceptance sweep
 (sequence 08) proves each path with a `--dry-run` or no-push check and captures the output.

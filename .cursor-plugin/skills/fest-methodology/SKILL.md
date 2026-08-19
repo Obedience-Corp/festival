@@ -10,9 +10,9 @@ Festival Methodology is a goal-oriented project management system for human-AI d
 ## Core Concepts
 
 - **Festivals**: Top-level project containers with a specific goal
-- **Phases**: Major stages (planning, implementation, review) — prefixed `NNN_` (e.g., `001_PLAN/`)
-- **Sequences**: Ordered groups of related tasks within a phase — prefixed `NN_` (e.g., `01_setup/`)
-- **Tasks**: Atomic work units as markdown files — prefixed `NN_` (e.g., `01_create_schema.md`)
+- **Phases**: Major stages (planning, implementation, review), prefixed `NNN_` (e.g., `001_PLAN/`)
+- **Sequences**: Ordered groups of related tasks within a phase, prefixed `NN_` (e.g., `01_setup/`)
+- **Tasks**: Atomic work units as markdown files, prefixed `NN_` (e.g., `01_create_schema.md`)
 
 ## Hierarchy
 
@@ -45,4 +45,4 @@ fest status                    # View progress
 
 If you're working in a directory containing `festivals/`, or the user references festival methodology concepts, use `fest` commands rather than manual file manipulation. The CLI handles naming, validation, and traceability automatically.
 
-Always run `fest next` to determine what to work on rather than manually picking tasks — it respects dependency order.
+Always run `fest next` to determine what to work on rather than manually picking tasks (it respects dependency order).

@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Distribution dry-run: confirm every target's distribution surface is present and the install
 # command is ready, WITHOUT performing any live external push. Per packaging/DISTRIBUTION.md (D006):
-# Codex ships a self-hosted marketplace.json; Cursor is a manual web submission; opencode and Gemini
-# install straight from the git repo. Nothing here pushes anywhere.
+# Codex ships a self-hosted marketplace.json; Cursor is a manual web submission; opencode, Gemini,
+# and Hermes install straight from the git repo. Nothing here pushes anywhere.
 
 set -euo pipefail
 
@@ -48,6 +48,11 @@ echo ""
 echo "Gemini -> gemini extensions install (GitHub shorthand)"
 require "install: gemini extensions install Obedience-Corp/festival" \
     gemini-extension.json GEMINI.md
+
+echo ""
+echo "Hermes -> GitHub skills tap (also read by skills.sh)"
+require "install: hermes skills tap add Obedience-Corp/festival && hermes skills install Obedience-Corp/festival/skills/<name>" \
+    skills/README.md skills.sh.json
 
 echo ""
 if [ "$fail" -ne 0 ]; then

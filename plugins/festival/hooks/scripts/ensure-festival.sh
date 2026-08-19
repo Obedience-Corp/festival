@@ -222,7 +222,7 @@ if ! check_installed; then
     exit 0
 fi
 
-# Already installed — check for updates (rate-limited to once/day)
+# Already installed, check for updates (rate-limited to once/day)
 if ! should_check_update; then
     exit 0
 fi
