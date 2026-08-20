@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # Festival Methodology CLI Installer
-# Installs fest and camp binaries
+# Installs fest, camp, and festival binaries
 
 REPO="Obedience-Corp/festival"
 INSTALL_DIR="${INSTALL_DIR:-$HOME/.local/bin}"
@@ -334,6 +334,9 @@ install_completion_assets() {
     cp "${tmp_dir}/completions/camp.bash" "$completions_dir/camp.bash"
     cp "${tmp_dir}/completions/_camp" "$completions_dir/_camp"
     cp "${tmp_dir}/completions/camp.fish" "$completions_dir/camp.fish"
+    cp "${tmp_dir}/completions/festival.bash" "$completions_dir/festival.bash"
+    cp "${tmp_dir}/completions/_festival" "$completions_dir/_festival"
+    cp "${tmp_dir}/completions/festival.fish" "$completions_dir/festival.fish"
     success "Installed completion files to ${completions_dir}"
 }
 
@@ -529,7 +532,7 @@ main() {
     # Install binaries
     mkdir -p "$INSTALL_DIR"
 
-    for binary in fest camp; do
+    for binary in fest camp festival; do
         if [ -f "${tmp_dir}/${binary}" ]; then
             cp "${tmp_dir}/${binary}" "${INSTALL_DIR}/${binary}"
             chmod +x "${INSTALL_DIR}/${binary}"
@@ -538,7 +541,7 @@ main() {
         fi
     done
 
-    success "Installed fest and camp to ${INSTALL_DIR}"
+    success "Installed fest, camp, and festival to ${INSTALL_DIR}"
 
     helper_dir="$(shell_helper_dir)"
     completions_dir="$(completion_asset_dir)"
@@ -551,6 +554,9 @@ main() {
     fi
     if command -v camp &>/dev/null; then
         success "camp $(camp --version 2>/dev/null || echo 'installed')"
+    fi
+    if command -v festival &>/dev/null; then
+        success "festival $(festival version 2>/dev/null || echo 'installed')"
     fi
 
     echo ""

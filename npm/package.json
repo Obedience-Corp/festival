@@ -1,7 +1,7 @@
 {
   "name": "@obedience-corp/festival",
   "version": "0.0.0",
-  "description": "Festival Methodology CLI suite: fest and camp",
+  "description": "Festival Methodology CLI suite: fest, camp, and the festival installer/launcher",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Obedience-Corp/festival.git"
@@ -13,7 +13,8 @@
   "license": "Apache-2.0",
   "bin": {
     "camp": "bin/camp",
-    "fest": "bin/fest"
+    "fest": "bin/fest",
+    "festival": "bin/festival"
   },
   "scripts": {
     "postinstall": "node install.js"

@@ -7,7 +7,7 @@ const path = require("path");
 const { spawnSync } = require("child_process");
 
 const REPO = "Obedience-Corp/festival";
-const BINARIES = ["fest", "camp"];
+const BINARIES = ["fest", "camp", "festival"];
 const ASSET_DIRECTORIES = ["completions", "shell"];
 const REQUIRED_ASSET_FILES = [
   ["completions", "fest.bash"],
@@ -16,6 +16,9 @@ const REQUIRED_ASSET_FILES = [
   ["completions", "camp.bash"],
   ["completions", "_camp"],
   ["completions", "camp.fish"],
+  ["completions", "festival.bash"],
+  ["completions", "_festival"],
+  ["completions", "festival.fish"],
   ["shell", "festival.bash"],
   ["shell", "festival.zsh"],
   ["shell", "festival.fish"],
