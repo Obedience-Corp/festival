@@ -44,6 +44,16 @@ func componentDirs() []string {
 	return dirs
 }
 
+// justRecipeParamName converts a component directory into the parameter
+// name .justfiles/release.just's draft-bootstrap recipe uses for it, for
+// example "festival-installer" -> "festival_installer_version". just
+// parameter names cannot contain hyphens, so the recipe uses underscores;
+// this keeps printed usage hints in sync with the recipe signature without
+// hardcoding a fixed argument count.
+func justRecipeParamName(dir string) string {
+	return strings.ReplaceAll(dir, "-", "_") + "_version"
+}
+
 // joinAnd renders items as an English list: "a", "a and b", or
 // "a, b, and c". Used for release commit messages so a fourth component
 // reads naturally without a special case.
@@ -728,7 +738,11 @@ func (r *repoContext) pinFromLatest(modeName string, selectors map[string]string
 		switch mode.Name {
 		case "stable":
 			fmt.Println("For a first release, run:")
-			fmt.Println("  just release draft-bootstrap <festival_version> <fest_version> <camp_version>")
+			fmt.Print("  just release draft-bootstrap <festival_version>")
+			for _, c := range components {
+				fmt.Printf(" <%s>", justRecipeParamName(c.Dir))
+			}
+			fmt.Println()
 		case "rc":
 			fmt.Println("Create rc tags in fest/camp/festival-installer first, then rerun with mode=rc.")
 		default:

@@ -17,7 +17,7 @@ default:
 
 # Generate docs for all CLIs
 [no-cd]
-all: fest camp
+all: fest camp festival-installer
     @echo "All CLI docs generated in {{docs_root}}/"
 
 # Generate fest CLI docs
@@ -68,6 +68,27 @@ camp:
     ./camp/bin/camp gendocs --output {{docs_root}}/camp --format markdown
     python3 {{normalize_script}} {{docs_root}}/camp
     echo "camp docs generated"
+
+# Generate festival hub CLI docs
+[no-cd]
+festival-installer:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    if [ -n "{{cli_release_channel}}" ]; then
+        bash scripts/check_release_channel_tags.sh "{{cli_release_channel}}"
+    fi
+    case "{{cli_profile}}" in
+        stable) (cd festival-installer && {{submodule_go_env}} just build) ;;
+        dev) (cd festival-installer && {{submodule_go_env}} just build) ;;
+        *)
+            echo "ERROR: CLI_PROFILE must be 'stable' or 'dev' (got: {{cli_profile}})"
+            exit 1
+            ;;
+    esac
+    mkdir -p {{docs_root}}/festival
+    ./festival-installer/bin/festival gendocs --output {{docs_root}}/festival --format markdown
+    python3 {{normalize_script}} {{docs_root}}/festival
+    echo "festival-installer docs generated"
 
 # Serve docs locally with live reload
 [no-cd]

@@ -46,8 +46,8 @@ preflight mode="stable":
 
 # Preview the next bundled release without mutating submodule refs, docs, or tags.
 [no-cd]
-plan mode="stable" fest="latest" camp="latest":
-    go -C tools/release-operator run . plan --repo-root ../.. --mode "{{mode}}" --fest-tag "{{fest}}" --camp-tag "{{camp}}"
+plan mode="stable" fest="latest" camp="latest" festival_installer="latest":
+    go -C tools/release-operator run . plan --repo-root ../.. --mode "{{mode}}" --fest-tag "{{fest}}" --camp-tag "{{camp}}" --festival-installer-tag "{{festival_installer}}"
 
 # One-command bundled release from already-created camp/fest tags.
 # Selectors:
@@ -55,22 +55,22 @@ plan mode="stable" fest="latest" camp="latest":
 # - keep: keep the currently pinned exact tag for that submodule
 # - vX.Y.Z: pin a specific release tag
 [no-cd]
-[confirm("This will create a dev festival release using the selected fest/camp tags. Run 'just release plan mode=dev fest=... camp=...' first if you want to see the exact tags. Continue?")]
-dev fest="latest" camp="latest":
+[confirm("This will create a dev festival release using the selected fest/camp/festival-installer tags. Run 'just release plan mode=dev fest=... camp=... festival_installer=...' first if you want to see the exact tags. Continue?")]
+dev fest="latest" camp="latest" festival_installer="latest":
     just test release-operator
-    go -C tools/release-operator run . bundle --repo-root ../.. --fest-tag "{{fest}}" --camp-tag "{{camp}}" dev
+    go -C tools/release-operator run . bundle --repo-root ../.. --fest-tag "{{fest}}" --camp-tag "{{camp}}" --festival-installer-tag "{{festival_installer}}" dev
 
 [no-cd]
-[confirm("This will create an RC festival release using the selected fest/camp tags. Run 'just release plan mode=rc fest=... camp=...' first if you want to see the exact tags. Continue?")]
-rc fest="latest" camp="latest":
+[confirm("This will create an RC festival release using the selected fest/camp/festival-installer tags. Run 'just release plan mode=rc fest=... camp=... festival_installer=...' first if you want to see the exact tags. Continue?")]
+rc fest="latest" camp="latest" festival_installer="latest":
     just test release-operator
-    go -C tools/release-operator run . bundle --repo-root ../.. --fest-tag "{{fest}}" --camp-tag "{{camp}}" rc
+    go -C tools/release-operator run . bundle --repo-root ../.. --fest-tag "{{fest}}" --camp-tag "{{camp}}" --festival-installer-tag "{{festival_installer}}" rc
 
 [no-cd]
-[confirm("This will create a stable festival release on main using the selected fest/camp tags (the pin commit ships through an auto-merged PR because main is PR-only). Run 'just release plan mode=stable fest=... camp=...' first if you want to see the exact tags. Continue?")]
-stable fest="latest" camp="latest":
+[confirm("This will create a stable festival release on main using the selected fest/camp/festival-installer tags (the pin commit ships through an auto-merged PR because main is PR-only). Run 'just release plan mode=stable fest=... camp=... festival_installer=...' first if you want to see the exact tags. Continue?")]
+stable fest="latest" camp="latest" festival_installer="latest":
     just test release-operator
-    go -C tools/release-operator run . bundle --repo-root ../.. --fest-tag "{{fest}}" --camp-tag "{{camp}}" stable
+    go -C tools/release-operator run . bundle --repo-root ../.. --fest-tag "{{fest}}" --camp-tag "{{camp}}" --festival-installer-tag "{{festival_installer}}" stable
 
 # Run GoReleaser dry run (no publish)
 [no-cd]
@@ -96,9 +96,9 @@ npm-publish-dry-run version="latest" mode="stable":
 # - create/push festival stable tag
 [private]
 [no-cd]
-[confirm("This will create and push fest/camp tags, then create and push a STABLE festival release tag. Continue?")]
-draft-bootstrap version fest_version camp_version:
-    go -C tools/release-operator run . draft-bootstrap --repo-root ../.. --version "{{version}}" --fest-version "{{fest_version}}" --camp-version "{{camp_version}}"
+[confirm("This will create and push fest/camp/festival-installer tags, then create and push a STABLE festival release tag. Continue?")]
+draft-bootstrap version fest_version camp_version festival_installer_version:
+    go -C tools/release-operator run . draft-bootstrap --repo-root ../.. --version "{{version}}" --fest-version "{{fest_version}}" --camp-version "{{camp_version}}" --festival-installer-version "{{festival_installer_version}}"
 
 # Unified release automation from latest submodule tags:
 # - mode=stable: latest stable tags (vX.Y.Z)

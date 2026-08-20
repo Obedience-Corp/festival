@@ -9,6 +9,7 @@ on:
       - .gitmodules
       - camp
       - fest
+      - festival-installer
   workflow_dispatch:
 
 # A user-submitted snapshot takes precedence over GitHub's stale automatic
@@ -98,3 +99,28 @@ jobs:
           GOWORK: "off"
         with:
           go-mod-path: camp/go.mod
+
+  submit-festival-installer:
+    name: Submit Festival Installer dependencies
+    needs: submit-camp
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out pinned components
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          submodules: recursive
+
+      - name: Set up Go
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: festival-installer/go.mod
+          cache-dependency-path: festival-installer/go.sum
+
+      - name: Submit dependency snapshot
+        # Node 24 revision of GitHub's action; pinned until its next release.
+        uses: actions/go-dependency-submission@58a892e48687d602add5889d7aa09e32efeb19a7
+        env:
+          GOWORK: "off"
+        with:
+          go-mod-path: festival-installer/go.mod

@@ -7,7 +7,7 @@ default:
 
 # Test all projects
 [no-cd]
-all: fest camp release-operator release-notes plugin
+all: fest camp festival-installer release-operator release-notes plugin
     @echo "All tests passed"
 
 # Check mirrored camp/fest doc copies against their source repos
@@ -45,6 +45,11 @@ fest:
 [no-cd]
 camp:
     cd camp && just test all
+
+# Test the festival hub
+[no-cd]
+festival-installer:
+    cd festival-installer && just test
 
 # Test the release operator logic used by just release dev|rc|stable
 [no-cd]
