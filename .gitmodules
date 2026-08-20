@@ -4,3 +4,6 @@
 [submodule "camp"]
 	path = camp
 	url = git@github.com:Obedience-Corp/camp.git
+[submodule "festival-installer"]
+	path = festival-installer
+	url = git@github.com:Obedience-Corp/festival-installer.git

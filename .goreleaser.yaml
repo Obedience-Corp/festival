@@ -58,9 +58,25 @@ builds:
       - -X github.com/Obedience-Corp/camp/internal/version.Commit={{.Commit}}
       - -X github.com/Obedience-Corp/camp/internal/version.BuildDate={{.Date}}
 
+  - id: festival
+    dir: festival-installer
+    main: ./cmd/festival
+    binary: festival
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w
+      - -X main.version={{.Version}}
+
 archives:
   - id: festival-suite
-    ids: [fest, camp]
+    ids: [fest, camp, festival]
     name_template: >-
       festival-
       {{- .Version }}-
@@ -294,3 +310,6 @@ universal_binaries:
   - replace: true
     id: camp
     name_template: "camp"
+  - replace: true
+    id: festival
+    name_template: "festival"

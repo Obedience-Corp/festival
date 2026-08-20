@@ -38,6 +38,7 @@ check_repo() {
 
 check_repo fest
 check_repo camp
+check_repo festival-installer
 
 if [[ "$failures" -gt 0 ]]; then
     echo "release pin check failed for ${mode} channel" >&2
