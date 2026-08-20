@@ -186,6 +186,64 @@ find_matching_archive_url() {
     return 1
 }
 
+find_asset_url_by_name() {
+    local release_metadata="$1"
+    local name="$2"
+    local url base
+
+    while IFS= read -r url; do
+        base="${url##*/}"
+        if [ "$base" = "$name" ]; then
+            printf '%s\n' "$url"
+            return 0
+        fi
+    done <<< "$(extract_asset_urls "$release_metadata")"
+
+    return 1
+}
+
+sha256_tool() {
+    if command_exists sha256sum; then
+        echo "sha256sum"
+    elif command_exists shasum; then
+        echo "shasum -a 256"
+    else
+        return 1
+    fi
+}
+
+verify_archive_checksum() {
+    local version="$1"
+    local release_metadata="$2"
+    local archive_name="$3"
+    local archive_path="$4"
+    local checksums_url checksums_file sha_tool expected actual
+
+    sha_tool="$(sha256_tool)" || \
+        error "Neither sha256sum nor shasum is available to verify the downloaded archive. Install one and re-run this installer."
+
+    checksums_url="$(find_asset_url_by_name "$release_metadata" "checksums.txt")" || \
+        error "checksums.txt was not found in the release assets for ${version}. Refusing to install an unverified archive."
+
+    checksums_file="$(dirname "$archive_path")/checksums.txt"
+    info "Verifying checksum..."
+    if ! curl -fsSL "$checksums_url" -o "$checksums_file"; then
+        error "Failed to download checksums.txt for ${version}. Refusing to install an unverified archive."
+    fi
+
+    expected="$(awk -v name="$archive_name" '$2 == name { print $1; exit }' "$checksums_file")"
+    if [ -z "$expected" ]; then
+        error "No checksum entry for ${archive_name} in checksums.txt. Refusing to install an unverified or malformed archive."
+    fi
+
+    actual="$($sha_tool "$archive_path" | awk '{print $1}')"
+    if [ "$expected" != "$actual" ]; then
+        error "Checksum mismatch for ${archive_name}.\n  expected: ${expected}\n  actual:   ${actual}\nRefusing to install a corrupted or tampered archive."
+    fi
+
+    success "Checksum verified for ${archive_name}"
+}
+
 install_hint() {
     local dep="$1"
 
@@ -462,6 +520,8 @@ main() {
     if ! curl -fsSL "$download_url" -o "${tmp_dir}/archive.tar.gz"; then
         error "Download failed. Check that ${version} exists at https://github.com/${REPO}/releases"
     fi
+
+    verify_archive_checksum "$version" "$release_metadata" "$archive_name" "${tmp_dir}/archive.tar.gz"
 
     info "Extracting..."
     tar -xzf "${tmp_dir}/archive.tar.gz" -C "$tmp_dir"
