@@ -184,16 +184,22 @@ func run(args []string) error {
 }
 
 func runEmitMarketplaceEntry(repoRoot, tag, channel, checksumsPath, outputPath, publishedAt string) error {
-	festTag, err := exactTagAt(filepath.Join(repoRoot, "fest"))
-	if err != nil {
-		return fmt.Errorf("resolve fest tag: %w", err)
+	tagsByBinary := make(map[string]string, len(components))
+	parts := make([]string, len(components))
+	unpinned := false
+	for i, c := range components {
+		t, err := exactTagAt(filepath.Join(repoRoot, c.Dir))
+		if err != nil {
+			return fmt.Errorf("resolve %s tag: %w", c.Dir, err)
+		}
+		tagsByBinary[c.BinaryName] = t
+		parts[i] = fmt.Sprintf("%s=%q", c.Dir, t)
+		if t == "" {
+			unpinned = true
+		}
 	}
-	campTag, err := exactTagAt(filepath.Join(repoRoot, "camp"))
-	if err != nil {
-		return fmt.Errorf("resolve camp tag: %w", err)
-	}
-	if festTag == "" || campTag == "" {
-		return fmt.Errorf("fest/camp submodules are not pinned to exact tags (fest=%q camp=%q)", festTag, campTag)
+	if unpinned {
+		return fmt.Errorf("%s submodules are not pinned to exact tags (%s)", joinAnd(componentDirs()), strings.Join(parts, " "))
 	}
 
 	checksumsAbs := checksumsPath
@@ -205,12 +211,21 @@ func runEmitMarketplaceEntry(repoRoot, tag, channel, checksumsPath, outputPath, 
 		return err
 	}
 
+	// Manifest order is camp, fest, then the hub last (sequence 02 already
+	// places the hub last at install time regardless of manifest order;
+	// this keeps the manifest reading the way installs run). It does not
+	// follow the components slice's own declaration order.
+	compVersions := []operator.ComponentVersion{
+		{Name: "camp", Version: strings.TrimPrefix(tagsByBinary["camp"], "v")},
+		{Name: "fest", Version: strings.TrimPrefix(tagsByBinary["fest"], "v")},
+		{Name: "festival", Version: strings.TrimPrefix(tagsByBinary["festival"], "v")},
+	}
+
 	out, err := operator.BuildMarketplaceEntry(operator.MarketplaceEntryInput{
 		FestivalVersion: strings.TrimPrefix(tag, "v"),
 		Channel:         channel,
 		PublishedAt:     publishedAt,
-		CampVersion:     strings.TrimPrefix(campTag, "v"),
-		FestVersion:     strings.TrimPrefix(festTag, "v"),
+		Components:      compVersions,
 		Artifacts:       arts,
 	})
 	if err != nil {
@@ -260,6 +275,10 @@ func suiteArtifactsFromChecksums(path, tag string) ([]operator.ArtifactInput, er
 			}
 		}
 	}
+	// 3 here is the platform archive count (macOS-all, linux-x86_64,
+	// linux-arm64), not the binary count. Each archive bundles every suite
+	// binary (camp, fest, and now festival), so this check does not grow
+	// when a fourth binary joins the suite.
 	if len(arts) != 3 {
 		return nil, fmt.Errorf("expected 3 suite artifacts in %s, found %d", path, len(arts))
 	}

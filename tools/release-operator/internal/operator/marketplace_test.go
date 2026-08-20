@@ -11,8 +11,11 @@ func TestBuildMarketplaceEntry_Golden(t *testing.T) {
 		FestivalVersion: "0.2.10",
 		Channel:         "stable",
 		PublishedAt:     "2026-06-23T00:50:22Z",
-		CampVersion:     "0.2.11",
-		FestVersion:     "0.4.5",
+		Components: []ComponentVersion{
+			{Name: "camp", Version: "0.2.11"},
+			{Name: "fest", Version: "0.4.5"},
+			{Name: "festival", Version: "0.1.0"},
+		},
 		Artifacts: []ArtifactInput{
 			{OS: "linux", Arch: "arm64", Filename: "festival-0.2.10-linux-arm64.tar.gz",
 				URL:    "https://github.com/Obedience-Corp/festival/releases/download/v0.2.10/festival-0.2.10-linux-arm64.tar.gz",
@@ -52,7 +55,11 @@ func TestBuildMarketplaceEntry_Golden(t *testing.T) {
 func TestBuildMarketplaceEntry_DeterministicAcrossRuns(t *testing.T) {
 	in := MarketplaceEntryInput{
 		FestivalVersion: "0.2.10", Channel: "stable", PublishedAt: "2026-06-23T00:50:22Z",
-		CampVersion: "0.2.11", FestVersion: "0.4.5",
+		Components: []ComponentVersion{
+			{Name: "camp", Version: "0.2.11"},
+			{Name: "fest", Version: "0.4.5"},
+			{Name: "festival", Version: "0.1.0"},
+		},
 		Artifacts: []ArtifactInput{{OS: "darwin", Arch: "all", Filename: "x", URL: "u", SHA256: "s"}},
 	}
 	a, err := BuildMarketplaceEntry(in)
@@ -73,7 +80,23 @@ func TestBuildMarketplaceEntry_RejectsMissingInput(t *testing.T) {
 		t.Fatal("expected error for missing version/components")
 	}
 	if _, err := BuildMarketplaceEntry(MarketplaceEntryInput{
-		FestivalVersion: "0.2.10", Channel: "stable", CampVersion: "0.2.11", FestVersion: "0.4.5",
+		FestivalVersion: "0.2.10", Channel: "stable",
+	}); err == nil {
+		t.Fatal("expected error for missing components")
+	}
+	if _, err := BuildMarketplaceEntry(MarketplaceEntryInput{
+		FestivalVersion: "0.2.10", Channel: "stable",
+		Components: []ComponentVersion{{Name: "camp", Version: "0.2.11"}, {Name: "fest", Version: ""}},
+	}); err == nil {
+		t.Fatal("expected error for incomplete component version")
+	}
+	if _, err := BuildMarketplaceEntry(MarketplaceEntryInput{
+		FestivalVersion: "0.2.10", Channel: "stable",
+		Components: []ComponentVersion{
+			{Name: "camp", Version: "0.2.11"},
+			{Name: "fest", Version: "0.4.5"},
+			{Name: "festival", Version: "0.1.0"},
+		},
 	}); err == nil {
 		t.Fatal("expected error for missing artifacts")
 	}

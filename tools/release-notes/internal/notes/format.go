@@ -15,24 +15,30 @@ type ReleaseInfo struct {
 type ReleaseNotesInput struct {
 	FestivalTag string
 	Festival    ReleaseInfo
-	Fest        ReleaseInfo
-	Camp        ReleaseInfo
+	// Components are the bundled CLI binaries with their own repos and
+	// release pages: fest, camp, and the festival hub itself. Order here is
+	// the order they appear in the body.
+	Components []ReleaseInfo
 }
 
 func Render(in ReleaseNotesInput) (string, error) {
 	if in.FestivalTag == "" {
 		return "", fmt.Errorf("festival tag is required")
 	}
-	if in.Fest.Tag == "" || in.Fest.URL == "" {
-		return "", fmt.Errorf("fest release info is incomplete")
+	if len(in.Components) == 0 {
+		return "", fmt.Errorf("at least one component release is required")
 	}
-	if in.Camp.Tag == "" || in.Camp.URL == "" {
-		return "", fmt.Errorf("camp release info is incomplete")
+	for _, c := range in.Components {
+		if c.Tag == "" || c.URL == "" {
+			name := c.Repo
+			if name == "" {
+				name = "component"
+			}
+			return "", fmt.Errorf("%s release info is incomplete", name)
+		}
 	}
 
 	festivalBody := normalizeGeneratedNotes(in.Festival.Body)
-	festBody := normalizeBody(in.Fest.Body, in.Fest.Repo, in.Fest.Tag)
-	campBody := normalizeBody(in.Camp.Body, in.Camp.Repo, in.Camp.Tag)
 
 	var b strings.Builder
 	writeLine := func(s string) {
@@ -45,8 +51,9 @@ func Render(in ReleaseNotesInput) (string, error) {
 	writeLine("Festival Methodology CLI suite release.")
 	writeLine("")
 	writeLine("This release installs:")
-	writeLine(fmt.Sprintf("- `fest` %s ([release](%s))", in.Fest.Tag, in.Fest.URL))
-	writeLine(fmt.Sprintf("- `camp` %s ([release](%s))", in.Camp.Tag, in.Camp.URL))
+	for _, c := range in.Components {
+		writeLine(fmt.Sprintf("- `%s` %s ([release](%s))", c.Repo, c.Tag, c.URL))
+	}
 	writeLine("")
 	writeLine("This release also includes Festival distribution, packaging, documentation, and plugin changes.")
 	writeLine("")
@@ -56,17 +63,15 @@ func Render(in ReleaseNotesInput) (string, error) {
 	writeLine("")
 	writeLine("The component release notes below describe the bundled CLI changes.")
 	writeLine("")
-	writeLine("## fest " + in.Fest.Tag)
-	writeLine("")
-	writeLine(festBody)
-	writeLine("")
-	writeLine("## camp " + in.Camp.Tag)
-	writeLine("")
-	writeLine(campBody)
-	writeLine("")
+	for _, c := range in.Components {
+		writeLine("## " + c.Repo + " " + c.Tag)
+		writeLine("")
+		writeLine(normalizeBody(c.Body, c.Repo, c.Tag))
+		writeLine("")
+	}
 	writeLine("## Festival Packaging Notes")
 	writeLine("")
-	writeLine("`festival` is the distribution and documentation hub for the bundled `fest` and `camp` CLIs.")
+	writeLine("This release bundles the `camp` and `fest` CLIs together with `festival`, the installer and launcher for the suite.")
 	writeLine("")
 	writeLine("## Installation")
 	writeLine("")

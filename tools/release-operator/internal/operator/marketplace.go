@@ -10,9 +10,16 @@ type MarketplaceEntryInput struct {
 	FestivalVersion string
 	Channel         string
 	PublishedAt     string
-	CampVersion     string
-	FestVersion     string
+	Components      []ComponentVersion
 	Artifacts       []ArtifactInput
+}
+
+// ComponentVersion is one bundled binary's manifest identity: its name as
+// shipped (matching provides_binaries and install.entries) and the version
+// of the submodule it was built from.
+type ComponentVersion struct {
+	Name    string
+	Version string
 }
 
 type ArtifactInput struct {
@@ -83,11 +90,28 @@ type installEntry struct {
 }
 
 func BuildMarketplaceEntry(in MarketplaceEntryInput) ([]byte, error) {
-	if in.FestivalVersion == "" || in.Channel == "" || in.CampVersion == "" || in.FestVersion == "" {
+	if in.FestivalVersion == "" || in.Channel == "" {
 		return nil, fmt.Errorf("missing required marketplace entry input")
+	}
+	if len(in.Components) == 0 {
+		return nil, fmt.Errorf("no components for %s", in.FestivalVersion)
+	}
+	for _, c := range in.Components {
+		if c.Name == "" || c.Version == "" {
+			return nil, fmt.Errorf("incomplete component version for %q", c.Name)
+		}
 	}
 	if len(in.Artifacts) == 0 {
 		return nil, fmt.Errorf("no artifacts for %s", in.FestivalVersion)
+	}
+
+	binaries := make([]string, len(in.Components))
+	componentVersions := make(map[string]string, len(in.Components))
+	installEntries := make([]installEntry, len(in.Components))
+	for i, c := range in.Components {
+		binaries[i] = c.Name
+		componentVersions[c.Name] = c.Version
+		installEntries[i] = installEntry{Kind: "binary", Source: c.Name, ExecutableName: c.Name}
 	}
 
 	sorted := append([]ArtifactInput(nil), in.Artifacts...)
@@ -112,7 +136,7 @@ func BuildMarketplaceEntry(in MarketplaceEntryInput) ([]byte, error) {
 			Filename: a.Filename,
 			URL:      a.URL,
 			SHA256:   a.SHA256,
-			Binaries: []string{"camp", "fest"},
+			Binaries: binaries,
 		})
 		osSet[a.OS] = struct{}{}
 		if a.Arch != "all" {
@@ -123,18 +147,27 @@ func BuildMarketplaceEntry(in MarketplaceEntryInput) ([]byte, error) {
 	archSet["arm64"] = struct{}{}
 
 	m := productManifest{
-		SchemaVersion:    1,
-		ID:               "obedience-corp/festival",
-		Class:            "product",
-		DisplayName:      "Festival Suite",
-		Summary:          "The camp + fest CLI suite, released and versioned together.",
-		Description:      "Festival Methodology CLI suite. camp and fest are co-tested and shipped as one versioned product; both binaries report the festival release version.",
-		Homepage:         "https://fest.build",
-		Licenses:         []string{"Apache-2.0"},
+		SchemaVersion: 1,
+		ID:            "obedience-corp/festival",
+		Class:         "product",
+		DisplayName:   "Festival Suite",
+		Summary:       "The camp, fest, and festival CLI suite, released and versioned together.",
+		Description:   "Festival Methodology CLI suite. camp, fest, and festival are co-tested and shipped as one versioned product; all three binaries report the festival release version.",
+		Homepage:      "https://fest.build",
+		Licenses:      []string{"Apache-2.0"},
+		// "festival" is both the product alias (it matches the distribution
+		// ID) and, as of this release, one of the provided binaries. These
+		// are separate namespaces in the resolver, so `festival install
+		// festival` still resolves correctly: the first "festival" selects
+		// this product, the second selects its festival binary. Leave the
+		// alias in place; do not "fix" the apparent duplication.
 		Aliases:          []string{"festival", "camp", "fest"},
 		Tags:             []string{"festival", "planning", "cli"},
 		SupportedScopes:  []string{"user"},
-		ProvidesBinaries: []string{"camp", "fest"},
+		ProvidesBinaries: binaries,
+		// No festival-cli host runtime: nothing extends the hub as a plugin
+		// host yet, and inventing a runtime with no consumer is speculative.
+		// Add one when a real extension mechanism needs it.
 		HostRuntimes: []hostRuntime{
 			{Runtime: "camp-cli", DisplayName: "Camp CLI plugins", Features: []string{}},
 			{Runtime: "fest-cli", DisplayName: "Fest CLI plugins", Features: []string{}},
@@ -144,17 +177,14 @@ func BuildMarketplaceEntry(in MarketplaceEntryInput) ([]byte, error) {
 			Version:     in.FestivalVersion,
 			Channel:     in.Channel,
 			PublishedAt: in.PublishedAt,
-			Components:  map[string]string{"camp": in.CampVersion, "fest": in.FestVersion},
+			Components:  componentVersions,
 			Compatibility: compatibility{
 				OS:   sortedKeys(osSet),
 				Arch: sortedKeys(archSet),
 			},
 			Dependencies: []any{},
 			Artifacts:    arts,
-			Install: installBlock{Entries: []installEntry{
-				{Kind: "binary", Source: "camp", ExecutableName: "camp"},
-				{Kind: "binary", Source: "fest", ExecutableName: "fest"},
-			}},
+			Install:      installBlock{Entries: installEntries},
 		}},
 	}
 

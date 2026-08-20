@@ -22,12 +22,16 @@ type Component struct {
 	Repo string
 	// FlagName is the CLI selector name, for example "fest" in --fest-tag.
 	FlagName string
+	// BinaryName is the shipped executable name. It matches Dir for every
+	// component except the hub, whose submodule directory is
+	// festival-installer but whose built binary is named festival.
+	BinaryName string
 }
 
 var components = []Component{
-	{Dir: "fest", Repo: "Obedience-Corp/fest", FlagName: "fest"},
-	{Dir: "camp", Repo: "Obedience-Corp/camp", FlagName: "camp"},
-	{Dir: "festival-installer", Repo: "Obedience-Corp/festival-installer", FlagName: "festival-installer"},
+	{Dir: "fest", Repo: "Obedience-Corp/fest", FlagName: "fest", BinaryName: "fest"},
+	{Dir: "camp", Repo: "Obedience-Corp/camp", FlagName: "camp", BinaryName: "camp"},
+	{Dir: "festival-installer", Repo: "Obedience-Corp/festival-installer", FlagName: "festival-installer", BinaryName: "festival"},
 }
 
 // componentDirs returns every component's Dir, in declaration order, for
