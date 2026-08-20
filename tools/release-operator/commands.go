@@ -770,34 +770,6 @@ func (r *repoContext) pinFromLatest(modeName string, selectors map[string]string
 	return nil
 }
 
-// publishSecret is a repository secret a stable release needs. Both the
-// preflight check and the status report read this one list so status cannot
-// claim every publisher is ready while preflight later fails on a secret
-// status never displayed.
-type publishSecret struct {
-	Name    string
-	Label   string
-	Failure string
-}
-
-var publishSecrets = []publishSecret{
-	{
-		Name:    "HOMEBREW_TAP_GITHUB_TOKEN",
-		Label:   "Homebrew stable publish",
-		Failure: "Stable release would fail when publishing the Homebrew cask.",
-	},
-	{
-		Name:    "AUR_SSH_KEY",
-		Label:   "AUR stable publish",
-		Failure: "Stable release would fail when publishing the festival-bin AUR package.",
-	},
-	{
-		Name:    "MARKETPLACE_PUBLISH_TOKEN",
-		Label:   "Marketplace stable publish",
-		Failure: "Stable release would fail when publishing the marketplace entry (.github/workflows/release.yaml).",
-	},
-}
-
 // stablePublishSecrets lists the GitHub repo secrets a stable release
 // needs, in report order. require-stable-publish-credentials and status
 // both read from this single list, so a newly required secret cannot drift
