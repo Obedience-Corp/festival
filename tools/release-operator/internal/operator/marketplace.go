@@ -123,16 +123,16 @@ func BuildMarketplaceEntry(in MarketplaceEntryInput) ([]byte, error) {
 	archSet["arm64"] = struct{}{}
 
 	m := productManifest{
-		SchemaVersion: 1,
-		ID:            "obedience-corp/festival",
-		Class:         "product",
-		DisplayName:   "Festival Suite",
-		Summary:       "The camp + fest CLI suite, released and versioned together.",
-		Description:   "Festival Methodology CLI suite. camp and fest are co-tested and shipped as one versioned product; both binaries report the festival release version.",
-		Homepage:      "https://fest.build",
-		Licenses:      []string{"Apache-2.0"},
-		Aliases:       []string{"festival", "camp", "fest"},
-		Tags:          []string{"festival", "planning", "cli"},
+		SchemaVersion:    1,
+		ID:               "obedience-corp/festival",
+		Class:            "product",
+		DisplayName:      "Festival Suite",
+		Summary:          "The camp + fest CLI suite, released and versioned together.",
+		Description:      "Festival Methodology CLI suite. camp and fest are co-tested and shipped as one versioned product; both binaries report the festival release version.",
+		Homepage:         "https://fest.build",
+		Licenses:         []string{"Apache-2.0"},
+		Aliases:          []string{"festival", "camp", "fest"},
+		Tags:             []string{"festival", "planning", "cli"},
 		SupportedScopes:  []string{"user"},
 		ProvidesBinaries: []string{"camp", "fest"},
 		HostRuntimes: []hostRuntime{

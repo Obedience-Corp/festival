@@ -57,10 +57,8 @@ type ParsedPrerelease struct {
 type BundleInput struct {
 	Channel                         string
 	CurrentBranch                   string
-	FestTag                         string
-	CampTag                         string
-	CurrentPinnedFestTag            string
-	CurrentPinnedCampTag            string
+	SelectedTags                    map[string]string // keyed by component dir
+	CurrentPinned                   map[string]string // keyed by component dir
 	LatestFestivalDev               string
 	LatestFestivalPromotableRC      string
 	LatestFestivalStable            string
@@ -68,6 +66,19 @@ type BundleInput struct {
 	CurrentCommitTaggedLatestDev    bool
 	CurrentCommitTaggedLatestStable bool
 	CurrentCommitTaggedVersionRC    bool
+}
+
+// sameTags reports whether a and b agree on every key present in either map.
+func sameTags(a, b map[string]string) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for k, v := range a {
+		if b[k] != v {
+			return false
+		}
+	}
+	return true
 }
 
 type BundlePlan struct {
@@ -81,8 +92,10 @@ type BundlePlan struct {
 }
 
 func DeriveBundlePlan(in BundleInput) (BundlePlan, error) {
-	if in.FestTag == "" || in.CampTag == "" {
-		return BundlePlan{}, fmt.Errorf("missing component tags for %s release", in.Channel)
+	for dir, tag := range in.SelectedTags {
+		if tag == "" {
+			return BundlePlan{}, fmt.Errorf("missing %s tag for %s release", dir, in.Channel)
+		}
 	}
 
 	switch in.Channel {
@@ -180,9 +193,7 @@ func planStable(in BundleInput) (BundlePlan, error) {
 	if err != nil {
 		return BundlePlan{}, err
 	}
-	if in.CurrentCommitTaggedLatestStable &&
-		in.FestTag == in.CurrentPinnedFestTag &&
-		in.CampTag == in.CurrentPinnedCampTag {
+	if in.CurrentCommitTaggedLatestStable && sameTags(in.SelectedTags, in.CurrentPinned) {
 		return BundlePlan{}, fmt.Errorf("latest festival stable release already bundles the selected component tags on the current commit")
 	}
 

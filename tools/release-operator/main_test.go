@@ -19,16 +19,19 @@ func TestParseBundleArgsAcceptsRepoRootBeforeChannel(t *testing.T) {
 	if got, want := opts.Channel, "dev"; got != want {
 		t.Fatalf("channel = %q, want %q", got, want)
 	}
-	if got, want := opts.FestSelector, "keep"; got != want {
+	if got, want := opts.Selectors["fest"], "keep"; got != want {
 		t.Fatalf("fest selector = %q, want %q", got, want)
 	}
-	if got, want := opts.CampSelector, "latest"; got != want {
+	if got, want := opts.Selectors["camp"], "latest"; got != want {
 		t.Fatalf("camp selector = %q, want %q", got, want)
+	}
+	if got, want := opts.Selectors["festival-installer"], "latest"; got != want {
+		t.Fatalf("festival-installer selector = %q, want %q", got, want)
 	}
 }
 
 func TestParseBundleArgsNormalizesKeyValueSelectors(t *testing.T) {
-	opts, err := parseBundleArgs([]string{"--fest-tag", "fest=latest", "--camp-tag", "camp=keep", "stable"})
+	opts, err := parseBundleArgs([]string{"--fest-tag", "fest=latest", "--camp-tag", "camp=keep", "--festival-installer-tag", "festival-installer=v0.1.0", "stable"})
 	if err != nil {
 		t.Fatalf("parseBundleArgs returned error: %v", err)
 	}
@@ -36,16 +39,19 @@ func TestParseBundleArgsNormalizesKeyValueSelectors(t *testing.T) {
 	if got, want := opts.Channel, "stable"; got != want {
 		t.Fatalf("channel = %q, want %q", got, want)
 	}
-	if got, want := opts.FestSelector, "latest"; got != want {
+	if got, want := opts.Selectors["fest"], "latest"; got != want {
 		t.Fatalf("fest selector = %q, want %q", got, want)
 	}
-	if got, want := opts.CampSelector, "keep"; got != want {
+	if got, want := opts.Selectors["camp"], "keep"; got != want {
 		t.Fatalf("camp selector = %q, want %q", got, want)
+	}
+	if got, want := opts.Selectors["festival-installer"], "v0.1.0"; got != want {
+		t.Fatalf("festival-installer selector = %q, want %q", got, want)
 	}
 }
 
 func TestParsePlanArgsAcceptsSelectors(t *testing.T) {
-	opts, err := parsePlanArgs([]string{"--mode", "stable", "--fest-tag", "v0.2.4", "--camp-tag", "keep"})
+	opts, err := parsePlanArgs([]string{"--mode", "stable", "--fest-tag", "v0.2.4", "--camp-tag", "keep", "--festival-installer-tag", "keep"})
 	if err != nil {
 		t.Fatalf("parsePlanArgs returned error: %v", err)
 	}
@@ -53,11 +59,14 @@ func TestParsePlanArgsAcceptsSelectors(t *testing.T) {
 	if got, want := opts.Channel, "stable"; got != want {
 		t.Fatalf("channel = %q, want %q", got, want)
 	}
-	if got, want := opts.FestSelector, "v0.2.4"; got != want {
+	if got, want := opts.Selectors["fest"], "v0.2.4"; got != want {
 		t.Fatalf("fest selector = %q, want %q", got, want)
 	}
-	if got, want := opts.CampSelector, "keep"; got != want {
+	if got, want := opts.Selectors["camp"], "keep"; got != want {
 		t.Fatalf("camp selector = %q, want %q", got, want)
+	}
+	if got, want := opts.Selectors["festival-installer"], "keep"; got != want {
+		t.Fatalf("festival-installer selector = %q, want %q", got, want)
 	}
 }
 
@@ -70,10 +79,10 @@ func TestParsePlanArgsNormalizesKeyValueInputs(t *testing.T) {
 	if got, want := opts.Channel, "stable"; got != want {
 		t.Fatalf("channel = %q, want %q", got, want)
 	}
-	if got, want := opts.FestSelector, "latest"; got != want {
+	if got, want := opts.Selectors["fest"], "latest"; got != want {
 		t.Fatalf("fest selector = %q, want %q", got, want)
 	}
-	if got, want := opts.CampSelector, "keep"; got != want {
+	if got, want := opts.Selectors["camp"], "keep"; got != want {
 		t.Fatalf("camp selector = %q, want %q", got, want)
 	}
 }

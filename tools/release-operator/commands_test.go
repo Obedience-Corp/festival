@@ -38,13 +38,22 @@ func TestShipsViaPullRequest(t *testing.T) {
 	}
 }
 
+// tagMap builds a component-keyed tag map for fest and camp, the two
+// components these tests care about; festival-installer is intentionally
+// absent, since a missing key on both sides of a current/selected pair
+// compares equal (unchanged), matching that component's real starting
+// state before it had a submodule pin at all.
+func tagMap(fest, camp string) map[string]string {
+	return map[string]string{"fest": fest, "camp": camp}
+}
+
 func TestShipPinnedArtifactsNoDiffIsNoop(t *testing.T) {
 	repo := initTestRepo(t)
 	addBareOrigin(t, repo)
 	ctx := testRepoContext(t, repo)
 
 	before := gitRevParse(t, repo, "HEAD")
-	if err := ctx.shipPinnedArtifacts("v0.2.0", "v0.4.8", "v0.2.17", "v0.4.8", "v0.2.17"); err != nil {
+	if err := ctx.shipPinnedArtifacts("v0.2.0", tagMap("v0.4.8", "v0.2.17"), tagMap("v0.4.8", "v0.2.17")); err != nil {
 		t.Fatalf("shipPinnedArtifacts returned error: %v", err)
 	}
 	if after := gitRevParse(t, repo, "HEAD"); after != before {
@@ -108,7 +117,7 @@ func TestShipPinnedArtifactsShipsViaPullRequestOnMain(t *testing.T) {
 
 	stagePinnedDocChange(t, repo, "stable pin\n")
 
-	if err := ctx.shipPinnedArtifacts("v0.2.12", "v0.4.8", "v0.2.17", "v0.4.9", "v0.2.17"); err != nil {
+	if err := ctx.shipPinnedArtifacts("v0.2.12", tagMap("v0.4.8", "v0.2.17"), tagMap("v0.4.9", "v0.2.17")); err != nil {
 		t.Fatalf("shipPinnedArtifacts returned error: %v", err)
 	}
 
@@ -138,7 +147,7 @@ func TestShipViaPullRequestSkipsCreateWhenPROpen(t *testing.T) {
 
 	stagePinnedDocChange(t, repo, "resumed pin\n")
 
-	if err := ctx.shipPinnedArtifacts("v0.2.12", "v0.4.8", "v0.2.17", "v0.4.9", "v0.2.17"); err != nil {
+	if err := ctx.shipPinnedArtifacts("v0.2.12", tagMap("v0.4.8", "v0.2.17"), tagMap("v0.4.9", "v0.2.17")); err != nil {
 		t.Fatalf("shipPinnedArtifacts returned error: %v", err)
 	}
 	if gh.created != 0 {
@@ -158,7 +167,7 @@ func TestShipViaPullRequestPropagatesOpenPRQueryError(t *testing.T) {
 
 	stagePinnedDocChange(t, repo, "pin\n")
 
-	err := ctx.shipPinnedArtifacts("v0.2.12", "v0.4.8", "v0.2.17", "v0.4.9", "v0.2.17")
+	err := ctx.shipPinnedArtifacts("v0.2.12", tagMap("v0.4.8", "v0.2.17"), tagMap("v0.4.9", "v0.2.17"))
 	if err == nil {
 		t.Fatal("expected a transient open-PR query error to propagate, got nil")
 	}
@@ -179,7 +188,7 @@ func TestShipViaPullRequestFailsFastWhenCannotMerge(t *testing.T) {
 
 	stagePinnedDocChange(t, repo, "pin\n")
 
-	err := ctx.shipPinnedArtifacts("v0.2.12", "v0.4.8", "v0.2.17", "v0.4.9", "v0.2.17")
+	err := ctx.shipPinnedArtifacts("v0.2.12", tagMap("v0.4.8", "v0.2.17"), tagMap("v0.4.9", "v0.2.17"))
 	if err == nil {
 		t.Fatal("expected an error when the account cannot merge")
 	}
@@ -199,7 +208,7 @@ func TestShipViaPullRequestFailsWhenUnauthenticated(t *testing.T) {
 
 	stagePinnedDocChange(t, repo, "pin\n")
 
-	if err := ctx.shipPinnedArtifacts("v0.2.12", "v0.4.8", "v0.2.17", "v0.4.9", "v0.2.17"); err == nil {
+	if err := ctx.shipPinnedArtifacts("v0.2.12", tagMap("v0.4.8", "v0.2.17"), tagMap("v0.4.9", "v0.2.17")); err == nil {
 		t.Fatal("expected an error when gh is not authenticated")
 	}
 }
@@ -212,7 +221,7 @@ func TestShipPinnedArtifactsDirectPushOffMain(t *testing.T) {
 	runGit(t, repo, "switch", "-c", "develop")
 	stagePinnedDocChange(t, repo, "dev pin\n")
 
-	if err := ctx.shipPinnedArtifacts("v0.2.0-dev.1", "v0.4.8", "v0.2.17", "v0.4.9-dev.1", "v0.2.17"); err != nil {
+	if err := ctx.shipPinnedArtifacts("v0.2.0-dev.1", tagMap("v0.4.8", "v0.2.17"), tagMap("v0.4.9-dev.1", "v0.2.17")); err != nil {
 		t.Fatalf("shipPinnedArtifacts returned error: %v", err)
 	}
 
