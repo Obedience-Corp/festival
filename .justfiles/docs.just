@@ -78,13 +78,13 @@ festival-installer:
         bash scripts/check_release_channel_tags.sh "{{cli_release_channel}}"
     fi
     case "{{cli_profile}}" in
-        stable) (cd festival-installer && {{submodule_go_env}} just build) ;;
-        dev) (cd festival-installer && {{submodule_go_env}} just build) ;;
+        stable | dev) ;;
         *)
             echo "ERROR: CLI_PROFILE must be 'stable' or 'dev' (got: {{cli_profile}})"
             exit 1
             ;;
     esac
+    (cd festival-installer && {{submodule_go_env}} just build)
     mkdir -p {{docs_root}}/festival
     ./festival-installer/bin/festival gendocs --output {{docs_root}}/festival --format markdown
     python3 {{normalize_script}} {{docs_root}}/festival

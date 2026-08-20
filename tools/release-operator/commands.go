@@ -770,6 +770,61 @@ func (r *repoContext) pinFromLatest(modeName string, selectors map[string]string
 	return nil
 }
 
+// publishSecret is a repository secret a stable release needs. Both the
+// preflight check and the status report read this one list so status cannot
+// claim every publisher is ready while preflight later fails on a secret
+// status never displayed.
+type publishSecret struct {
+	Name    string
+	Label   string
+	Failure string
+}
+
+var publishSecrets = []publishSecret{
+	{
+		Name:    "HOMEBREW_TAP_GITHUB_TOKEN",
+		Label:   "Homebrew stable publish",
+		Failure: "Stable release would fail when publishing the Homebrew cask.",
+	},
+	{
+		Name:    "AUR_SSH_KEY",
+		Label:   "AUR stable publish",
+		Failure: "Stable release would fail when publishing the festival-bin AUR package.",
+	},
+	{
+		Name:    "MARKETPLACE_PUBLISH_TOKEN",
+		Label:   "Marketplace stable publish",
+		Failure: "Stable release would fail when publishing the marketplace entry (.github/workflows/release.yaml).",
+	},
+}
+
+// stablePublishSecrets lists the GitHub repo secrets a stable release
+// needs, in report order. require-stable-publish-credentials and status
+// both read from this single list, so a newly required secret cannot drift
+// between the two checks the way MARKETPLACE_PUBLISH_TOKEN once did (it was
+// checked by the former but silently absent from the latter's report).
+var stablePublishSecrets = []struct {
+	Name        string
+	Label       string
+	FailureNote string
+}{
+	{
+		Name:        "HOMEBREW_TAP_GITHUB_TOKEN",
+		Label:       "Homebrew",
+		FailureNote: "Stable release would fail when publishing the Homebrew cask.",
+	},
+	{
+		Name:        "AUR_SSH_KEY",
+		Label:       "AUR",
+		FailureNote: "Stable release would fail when publishing the festival-bin AUR package.",
+	},
+	{
+		Name:        "MARKETPLACE_PUBLISH_TOKEN",
+		Label:       "Marketplace",
+		FailureNote: "Stable release would fail when publishing the marketplace entry (.github/workflows/release.yaml).",
+	},
+}
+
 func runRequireStablePublishCredentials(ctx *repoContext) error {
 	if _, err := exec.LookPath("gh"); err != nil {
 		return errors.New("gh is required to verify stable publishing readiness")
@@ -784,19 +839,12 @@ func runRequireStablePublishCredentials(ctx *repoContext) error {
 	}
 
 	missing := false
-	for _, name := range []string{"HOMEBREW_TAP_GITHUB_TOKEN", "AUR_SSH_KEY", "MARKETPLACE_PUBLISH_TOKEN"} {
-		if !contains(secretNames, name) {
-			fmt.Printf("ERROR: %s is not configured for Obedience-Corp/festival.\n", name)
-			switch name {
-			case "HOMEBREW_TAP_GITHUB_TOKEN":
-				fmt.Println("Stable release would fail when publishing the Homebrew cask.")
-			case "AUR_SSH_KEY":
-				fmt.Println("Stable release would fail when publishing the festival-bin AUR package.")
-			case "MARKETPLACE_PUBLISH_TOKEN":
-				fmt.Println("Stable release would fail when publishing the marketplace entry (.github/workflows/release.yaml).")
-			}
+	for _, s := range stablePublishSecrets {
+		if !contains(secretNames, s.Name) {
+			fmt.Printf("ERROR: %s is not configured for Obedience-Corp/festival.\n", s.Name)
+			fmt.Println(s.FailureNote)
 			fmt.Println("Add it with:")
-			fmt.Printf("  gh secret set %s --repo Obedience-Corp/festival\n", name)
+			fmt.Printf("  gh secret set %s --repo Obedience-Corp/festival\n", s.Name)
 			missing = true
 		}
 	}
@@ -845,8 +893,9 @@ func runStatus(ctx *repoContext) error {
 
 	fmt.Println()
 	if !ghAuthenticated() {
-		fmt.Println("Homebrew stable publish: unknown (gh not authenticated)")
-		fmt.Println("AUR stable publish: unknown (gh not authenticated)")
+		for _, s := range stablePublishSecrets {
+			fmt.Printf("%s stable publish: unknown (gh not authenticated)\n", s.Label)
+		}
 		return nil
 	}
 
@@ -854,15 +903,12 @@ func runStatus(ctx *repoContext) error {
 	if err != nil {
 		return err
 	}
-	if contains(secrets, "HOMEBREW_TAP_GITHUB_TOKEN") {
-		fmt.Println("Homebrew stable publish: configured")
-	} else {
-		fmt.Println("Homebrew stable publish: missing HOMEBREW_TAP_GITHUB_TOKEN")
-	}
-	if contains(secrets, "AUR_SSH_KEY") {
-		fmt.Println("AUR stable publish: configured")
-	} else {
-		fmt.Println("AUR stable publish: missing AUR_SSH_KEY")
+	for _, s := range stablePublishSecrets {
+		if contains(secrets, s.Name) {
+			fmt.Printf("%s stable publish: configured\n", s.Label)
+		} else {
+			fmt.Printf("%s stable publish: missing %s\n", s.Label, s.Name)
+		}
 	}
 
 	return nil
