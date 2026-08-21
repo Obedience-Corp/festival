@@ -80,7 +80,7 @@ dry-run:
     # .goreleaser.yaml reads FEST_/CAMP_VERSION and _COMMIT from the environment
     # to stamp each bundled tool with its own version instead of the festival
     # tag, and errors when one is unset.
-    tool_env="$(bash scripts/tool-versions.sh)"
+    tool_env="$(bash {{justfile_directory()}}/scripts/tool-versions.sh)"
     set -a
     eval "$tool_env"
     set +a
@@ -171,7 +171,7 @@ publish:
     set -euo pipefail
     # Same tool-version stamping the release workflow does. Keep these two in
     # sync: a manual publish without this env ships mis-stamped binaries.
-    tool_env="$(bash scripts/tool-versions.sh)"
+    tool_env="$(bash {{justfile_directory()}}/scripts/tool-versions.sh)"
     set -a
     eval "$tool_env"
     set +a

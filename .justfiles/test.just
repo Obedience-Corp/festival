@@ -50,10 +50,15 @@ bundled-module-resolution:
 docs-profile:
     bash scripts/test_cli_docs_profile.sh
 
-# Verify bundled camp/fest submodules are pinned to exact tags for the selected release channel
+# Verify bundled camp/fest submodules are pinned to exact tags for the selected
+# release channel, and that those pins can carry the bundle version. This is the
+# recipe .github/workflows/release.yaml runs before GoReleaser, so --require-bundle
+# here is what makes a release impossible until camp and fest are re-pinned to
+# builds that have internal/version.Bundle. Doc regeneration calls the same script
+# without the flag, because refreshing docs is not a release.
 [no-cd]
 release-pins mode="stable":
-    bash scripts/check_release_channel_tags.sh "{{mode}}"
+    bash {{justfile_directory()}}/scripts/check_release_channel_tags.sh --require-bundle "{{mode}}"
 
 # Run the no-network beginner path smoke against repo-local camp and fest binaries
 [no-cd]

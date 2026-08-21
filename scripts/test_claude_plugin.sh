@@ -623,33 +623,59 @@ EOF_JSON
     fi
 }
 
-# Write a fest/camp stub whose `version` output is the given lines, so the
-# update check can be driven against a specific version banner.
+# Write a fest/camp stub whose `version` output is the given lines. The lines go
+# in a sibling data file so a test can rewrite them (for example with CRLF
+# endings) without regenerating the script.
 write_version_stub() {
     local path="$1"
+    local data="$path.version"
     shift
 
-    {
-        echo '#!/usr/bin/env bash'
-        echo 'case "${1:-}" in'
-        echo '  version|--version)'
-        for line in "$@"; do
-            printf "    echo %s\n" "'$line'"
-        done
-        echo '    ;;'
-        echo '  *) echo "stub" ;;'
-        echo 'esac'
-    } > "$path"
+    : > "$data"
+    for line in "$@"; do
+        printf '%s\n' "$line" >> "$data"
+    done
+
+    cat > "$path" <<EOF_STUB
+#!/usr/bin/env bash
+case "\${1:-}" in
+  version|--version) cat "$data" ;;
+  *) echo "stub" ;;
+esac
+EOF_STUB
     chmod +x "$path"
 }
 
-run_update_check() {
-    local workdir="$1" fixture="$2" fakebin="$3"
-    shift 3
+# Rewrite a stub's version output with CRLF line endings, as a binary built for
+# or piped through Windows tooling would produce.
+crlf_version_stub() {
+    local data="$1.version"
+
+    awk '{ printf "%s\r\n", $0 }' "$data" > "$data.crlf"
+    mv "$data.crlf" "$data"
+}
+
+# A `fest` that fails, as a truncated download or an incompatible binary would.
+write_failing_stub() {
+    local path="$1"
+
+    cat > "$path" <<'EOF_STUB'
+#!/usr/bin/env bash
+echo "fest: cannot execute" >&2
+exit 1
+EOF_STUB
+    chmod +x "$path"
+}
+
+prepare_update_workdir() {
+    local workdir="$1"
 
     mkdir -p "$workdir/home" "$workdir/bin"
-    write_version_stub "$workdir/bin/fest" "$@"
     write_version_stub "$workdir/bin/camp" "camp v0.0.0"
+}
+
+invoke_update_hook() {
+    local workdir="$1" fixture="$2" fakebin="$3"
 
     if ! FESTIVAL_PLUGIN_TEST_FIXTURE_DIR="$fixture" \
         FESTIVAL_CHECK_FILE="$workdir/last-update-check" \
@@ -662,6 +688,15 @@ run_update_check() {
     fi
 }
 
+run_update_check() {
+    local workdir="$1" fixture="$2" fakebin="$3"
+    shift 3
+
+    prepare_update_workdir "$workdir"
+    write_version_stub "$workdir/bin/fest" "$@"
+    invoke_update_hook "$workdir" "$fixture" "$fakebin"
+}
+
 assert_log_contains() {
     local log="$1" needle="$2"
 
@@ -672,9 +707,19 @@ assert_log_contains() {
     fi
 }
 
+assert_no_update_notice() {
+    local log="$1" reason="$2"
+
+    if grep -qF "Festival update available" "$log"; then
+        echo "unexpected update notice: $reason" >&2
+        cat "$log" >&2
+        return 1
+    fi
+}
+
 # The update check compares against the latest festival suite tag, so it has to
-# read the suite version out of `fest version`, not the fest release. Bundled
-# binaries print the two on different lines.
+# read the suite version out of `fest version`, not the fest release, and it has
+# to stay quiet when there is no suite version to compare.
 update_version_source_check() {
     local tmp fixture fakebin
 
@@ -703,24 +748,49 @@ EOF_JSON
     # Bundle line present: the suite version wins over the fest release printed
     # on the first line, which is the value the old first-semver read picked up.
     run_update_check "$tmp/bundle" "$fixture" "$fakebin" \
-        "fest v0.6.2" "commit: 62ebfca" "bundle: festival v0.2.17"
+        "fest v0.6.3" "bundle: festival v0.2.17" "commit: 62ebfca" "profile: stable"
     assert_log_contains "$tmp/bundle/log" "Festival update available: v0.2.17 -> v9.9.9"
 
-    # No bundle line: binaries built before the suite carried one stamped the
-    # festival version into fest's own version field, so the first semver on
-    # screen is still the suite version for them.
+    # No bundle and no profile line: a bundle published before either existed,
+    # which stamped the suite version into fest's own version field.
     run_update_check "$tmp/legacy" "$fixture" "$fakebin" \
         "fest v0.2.17" "commit: 98b9950e"
     assert_log_contains "$tmp/legacy/log" "Festival update available: v0.2.17 -> v9.9.9"
 
-    # Suite already current: no update notice, from either source.
+    # Suite already current: no update notice.
     run_update_check "$tmp/current" "$fixture" "$fakebin" \
-        "fest v0.6.2" "bundle: festival v9.9.9"
-    if grep -qF "Festival update available" "$tmp/current/log"; then
-        echo "unexpected update notice when the bundle matches the latest tag" >&2
-        cat "$tmp/current/log" >&2
-        return 1
-    fi
+        "fest v0.6.3" "bundle: festival v9.9.9" "profile: stable"
+    assert_no_update_notice "$tmp/current/log" "the bundle matches the latest tag"
+
+    # Bundle-capable fest with no bundle line: built by go install or just build,
+    # not from a suite release. There is no suite version to compare, so the
+    # fest release must not be mistaken for one and nagged about forever.
+    run_update_check "$tmp/noninstalled" "$fixture" "$fakebin" \
+        "fest v0.6.3" "commit: 62ebfca" "profile: stable"
+    assert_no_update_notice "$tmp/noninstalled/log" "fest was not built from a suite release"
+
+    # `fest version` fails: nothing to compare, so stay quiet rather than guess.
+    prepare_update_workdir "$tmp/broken"
+    write_failing_stub "$tmp/broken/bin/fest"
+    invoke_update_hook "$tmp/broken" "$fixture" "$fakebin"
+    assert_no_update_notice "$tmp/broken/log" "fest version exited non-zero"
+
+    # CRLF output: the carriage return must not ride along into the comparison.
+    prepare_update_workdir "$tmp/crlf"
+    write_version_stub "$tmp/crlf/bin/fest" \
+        "fest v0.6.3" "bundle: festival v0.2.17" "profile: stable"
+    crlf_version_stub "$tmp/crlf/bin/fest"
+    invoke_update_hook "$tmp/crlf" "$fixture" "$fakebin"
+    assert_log_contains "$tmp/crlf/log" "Festival update available: v0.2.17 -> v9.9.9"
+
+    # Same, where the bundle already matches: a trailing carriage return used to
+    # make an up-to-date suite report an update to the version it already had.
+    prepare_update_workdir "$tmp/crlf-current"
+    write_version_stub "$tmp/crlf-current/bin/fest" \
+        "fest v0.6.3" "bundle: festival v9.9.9" "profile: stable"
+    crlf_version_stub "$tmp/crlf-current/bin/fest"
+    invoke_update_hook "$tmp/crlf-current" "$fixture" "$fakebin"
+    assert_no_update_notice "$tmp/crlf-current/log" "a CRLF bundle line matching the latest tag"
 }
 
 require_command node

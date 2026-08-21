@@ -227,14 +227,34 @@ if ! should_check_update; then
     exit 0
 fi
 
-# The update check compares against the latest festival suite tag, so read the
-# suite version, not the fest release. Bundled binaries print it on a `bundle:`
-# line. Binaries built before that line existed stamped the suite version into
-# fest's own version field, so the first semver stays the right fallback there.
-CURRENT_VERSION=$(fest version 2>/dev/null | awk '/^bundle:/ {print $NF}' | head -1 || echo "")
+# This compares against the latest festival suite tag, so it needs the suite
+# version, not the fest release. `fest version` distinguishes three cases:
+#
+#   bundle: line   a suite build; that line carries the version to compare
+#   profile: line  a bundle-capable fest that was not built from a suite release
+#                  (go install, just build). There is no suite version to
+#                  compare, so say nothing rather than nag about an update the
+#                  user did not install and cannot apply.
+#   neither        a bundle published before the bundle line existed, which
+#                  stamped the suite version into fest's own version field, so
+#                  the first semver on screen is the suite version.
+#
+# Every version is read through the semver grep so a CRLF line ending or stray
+# whitespace cannot ride along into the string comparison below.
+FEST_VERSION_OUTPUT="$(fest version 2>/dev/null)" || FEST_VERSION_OUTPUT=""
+
+CURRENT_VERSION=$(printf '%s\n' "$FEST_VERSION_OUTPUT" | grep '^bundle:' |
+    grep -oE 'v?[0-9]+\.[0-9]+\.[0-9]+' | head -1 || echo "")
+
 if [ -z "$CURRENT_VERSION" ]; then
-    CURRENT_VERSION=$(fest version 2>/dev/null | grep -oE 'v?[0-9]+\.[0-9]+\.[0-9]+' | head -1 || echo "")
+    if printf '%s\n' "$FEST_VERSION_OUTPUT" | grep -q '^profile:'; then
+        record_check
+        exit 0
+    fi
+    CURRENT_VERSION=$(printf '%s\n' "$FEST_VERSION_OUTPUT" |
+        grep -oE 'v?[0-9]+\.[0-9]+\.[0-9]+' | head -1 || echo "")
 fi
+
 if [ -z "$CURRENT_VERSION" ]; then
     record_check
     exit 0

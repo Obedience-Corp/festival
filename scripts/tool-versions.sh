@@ -15,26 +15,24 @@ set -euo pipefail
 
 repo_root="$(cd "$(dirname "$0")/.." && pwd)"
 
+# shellcheck source=scripts/lib/submodules.sh
+. "$repo_root/scripts/lib/submodules.sh"
+
 fail() {
     echo "tool-versions: $*" >&2
     exit 1
 }
 
-require_submodule() {
-    local dir="$1"
-
-    [ -d "$repo_root/$dir" ] || fail "submodule directory is missing: $dir"
-    git -C "$repo_root/$dir" rev-parse --verify HEAD >/dev/null 2>&1 ||
-        fail "submodule is not checked out: $dir (run: git submodule update --init --recursive)"
-}
-
 # Exact tag when HEAD is tagged, otherwise the nearest tag plus commit, and a
-# bare short hash when the submodule has no tags at all.
+# bare short hash when the submodule has no tags at all. --dirty appends a
+# marker when the checkout has uncommitted changes, so a locally modified
+# submodule cannot stamp a clean release tag into a binary. It takes no
+# commit-ish argument, hence no explicit HEAD here.
 tool_version() {
     local dir="$1"
 
-    git -C "$repo_root/$dir" describe --tags --exact-match HEAD 2>/dev/null ||
-        git -C "$repo_root/$dir" describe --tags --always
+    git -C "$repo_root/$dir" describe --tags --exact-match --dirty 2>/dev/null ||
+        git -C "$repo_root/$dir" describe --tags --always --dirty
 }
 
 tool_commit() {
@@ -55,7 +53,7 @@ emit() {
 }
 
 for tool in fest camp; do
-    require_submodule "$tool"
+    require_initialized_submodule "$repo_root" "$tool" || exit 1
 done
 
 emit FEST_VERSION "$(tool_version fest)"
