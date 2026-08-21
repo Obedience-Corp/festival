@@ -42,6 +42,10 @@ _festival_register_zsh_cli_completions() {
       autoload -Uz _fest
       compdef _fest fest
     fi
+    if [[ -f "$completion_dir/_festival" ]]; then
+      autoload -Uz _festival
+      compdef _festival festival
+    fi
   fi
 }
 

@@ -15,6 +15,7 @@ fi
 if type complete >/dev/null 2>&1; then
   [ -f "${_festival_completion_dir}/camp.bash" ] && source "${_festival_completion_dir}/camp.bash"
   [ -f "${_festival_completion_dir}/fest.bash" ] && source "${_festival_completion_dir}/fest.bash"
+  [ -f "${_festival_completion_dir}/festival.bash" ] && source "${_festival_completion_dir}/festival.bash"
 fi
 
 unset _festival_shell_dir _festival_completion_dir
