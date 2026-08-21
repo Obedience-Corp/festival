@@ -1,10 +1,13 @@
 package main
 
 import (
+	"encoding/json"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 	"testing"
+	"time"
 )
 
 func TestParseBundleArgsAcceptsRepoRootBeforeChannel(t *testing.T) {
@@ -279,6 +282,80 @@ func TestExactTagAt(t *testing.T) {
 					t.Fatalf("exactTagAtForMode(%q) = %q, want %q", tt.mode, got, tt.want)
 				}
 			})
+		}
+	})
+}
+
+// TestRunEmitMarketplaceEntry_PublishedAt exercises runEmitMarketplaceEntry,
+// the exact function the emit-marketplace-entry command's --published-at
+// flag drives, the way release.yaml calls it (real repo-root tag resolution,
+// real checksums file, a real timestamp), rather than a hand-built manifest.
+// This is the known defect found 2026-08-21: v0.2.17 published with
+// published_at="" because the workflow never passed --published-at.
+func TestRunEmitMarketplaceEntry_PublishedAt(t *testing.T) {
+	repoRoot := t.TempDir()
+	tags := map[string]string{"fest": "v0.6.2", "camp": "v0.5.0", "festival-installer": "v0.1.0"}
+	for _, c := range components {
+		dir := filepath.Join(repoRoot, c.Dir)
+		if err := os.MkdirAll(dir, 0o755); err != nil {
+			t.Fatalf("mkdir %s: %v", dir, err)
+		}
+		runGit(t, dir, "init", "-b", "main")
+		runGit(t, dir, "config", "user.name", "Test User")
+		runGit(t, dir, "config", "user.email", "test@example.com")
+		writeFile(t, filepath.Join(dir, "README.md"), c.Dir+"\n")
+		runGit(t, dir, "add", "README.md")
+		runGit(t, dir, "commit", "-m", "initial commit")
+		runGit(t, dir, "tag", tags[c.Dir])
+	}
+
+	checksumsPath := filepath.Join(repoRoot, "checksums.txt")
+	writeFile(t, checksumsPath, strings.Join([]string{
+		"1111111111111111111111111111111111111111111111111111111111111111  festival-9.9.9-macOS-all.tar.gz",
+		"2222222222222222222222222222222222222222222222222222222222222222  festival-9.9.9-linux-x86_64.tar.gz",
+		"3333333333333333333333333333333333333333333333333333333333333333  festival-9.9.9-linux-arm64.tar.gz",
+		"",
+	}, "\n"))
+
+	t.Run("a real published-at value reaches the emitted manifest and satisfies the hub schema's date-time format", func(t *testing.T) {
+		outputPath := filepath.Join(t.TempDir(), "obey-package.json")
+		if err := runEmitMarketplaceEntry(repoRoot, "v9.9.9", "stable", checksumsPath, outputPath, "2026-08-20T01:51:38Z"); err != nil {
+			t.Fatalf("runEmitMarketplaceEntry: %v", err)
+		}
+		raw, err := os.ReadFile(outputPath)
+		if err != nil {
+			t.Fatalf("read emitted manifest: %v", err)
+		}
+		var doc struct {
+			Releases []struct {
+				PublishedAt string `json:"published_at"`
+			} `json:"releases"`
+		}
+		if err := json.Unmarshal(raw, &doc); err != nil {
+			t.Fatalf("decode emitted manifest: %v", err)
+		}
+		if len(doc.Releases) != 1 {
+			t.Fatalf("got %d releases, want 1", len(doc.Releases))
+		}
+		// This is the exact constraint the hub's manifest.schema.json places
+		// on published_at ("format": "date-time"), and the exact field that
+		// shipped empty in v0.2.17. time.RFC3339 is Go's date-time format.
+		if _, err := time.Parse(time.RFC3339, doc.Releases[0].PublishedAt); err != nil {
+			t.Fatalf("emitted published_at %q does not satisfy the hub schema's date-time format: %v", doc.Releases[0].PublishedAt, err)
+		}
+	})
+
+	t.Run("an empty published-at is refused before a manifest is ever written", func(t *testing.T) {
+		outputPath := filepath.Join(t.TempDir(), "obey-package.json")
+		err := runEmitMarketplaceEntry(repoRoot, "v9.9.9", "stable", checksumsPath, outputPath, "")
+		if err == nil {
+			t.Fatal("expected an error for empty --published-at, got nil")
+		}
+		if !strings.Contains(err.Error(), "published_at") {
+			t.Fatalf("error %q does not name published_at", err.Error())
+		}
+		if _, statErr := os.Stat(outputPath); statErr == nil {
+			t.Fatal("a manifest was written despite the refusal")
 		}
 	})
 }

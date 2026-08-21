@@ -7,7 +7,7 @@ default:
 
 # Test all projects
 [no-cd]
-all: fest camp festival-installer release-operator release-notes plugin no-em-dash
+all: fest camp festival-installer release-operator release-notes plugin marketplace-publish no-em-dash
     @echo "All tests passed"
 
 # Fail if an em dash (U+2014) appears in tracked or untracked files this repo
@@ -59,6 +59,11 @@ release-pins mode="stable":
 [no-cd]
 beginner-path-smoke:
     bash scripts/smoke_beginner_path.sh
+
+# Verify the marketplace publish path opens a pull request and never writes to main
+[no-cd]
+marketplace-publish:
+    bash scripts/test_marketplace_publish.sh
 
 # Test fest
 [no-cd]

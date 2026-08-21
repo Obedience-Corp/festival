@@ -1,0 +1,37 @@
+{
+  "aliases": ["festival", "camp", "fest"],
+  "class": "product",
+  "description": "Fixture entry for the festival suite, seeded at an older release than the test publishes.",
+  "display_name": "Festival Suite",
+  "homepage": "https://fest.build",
+  "host_runtimes": [
+    {"display_name": "Camp CLI plugins", "features": [], "runtime": "camp-cli"},
+    {"display_name": "Fest CLI plugins", "features": [], "runtime": "fest-cli"}
+  ],
+  "id": "obedience-corp/festival",
+  "licenses": ["Apache-2.0"],
+  "provides_binaries": ["camp", "fest"],
+  "releases": [
+    {
+      "artifacts": [
+        {"arch": "all", "binaries": ["camp", "fest"], "filename": "festival-0.2.16-macOS-all.tar.gz", "kind": "suite-archive", "os": "darwin", "sha256": "0000000000000000000000000000000000000000000000000000000000000000", "url": "https://example.invalid/festival-0.2.16-macOS-all.tar.gz"}
+      ],
+      "channel": "stable",
+      "compatibility": {"arch": ["amd64", "arm64"], "os": ["darwin", "linux"]},
+      "components": {"camp": "0.4.9", "fest": "0.6.1"},
+      "dependencies": [],
+      "install": {
+        "entries": [
+          {"executable_name": "camp", "kind": "binary", "source": "camp"},
+          {"executable_name": "fest", "kind": "binary", "source": "fest"}
+        ]
+      },
+      "published_at": "2026-07-01T00:00:00Z",
+      "version": "0.2.16"
+    }
+  ],
+  "schema_version": 1,
+  "summary": "Fixture entry, not the real marketplace.",
+  "supported_scopes": ["user"],
+  "tags": ["festival", "planning", "cli"]
+}
