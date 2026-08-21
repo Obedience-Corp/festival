@@ -9,20 +9,21 @@ const { spawnSync } = require("child_process");
 const REPO = "Obedience-Corp/festival";
 const BINARIES = ["fest", "camp", "festival"];
 const ASSET_DIRECTORIES = ["completions", "shell"];
-const REQUIRED_ASSET_FILES = [
-  ["completions", "fest.bash"],
-  ["completions", "_fest"],
-  ["completions", "fest.fish"],
-  ["completions", "camp.bash"],
-  ["completions", "_camp"],
-  ["completions", "camp.fish"],
-  ["completions", "festival.bash"],
-  ["completions", "_festival"],
-  ["completions", "festival.fish"],
+const SHELL_HELPER_FILES = [
   ["shell", "festival.bash"],
   ["shell", "festival.zsh"],
   ["shell", "festival.fish"],
 ];
+
+function completionAssetFiles(binaries = BINARIES) {
+  return binaries.flatMap((name) => [
+    ["completions", `${name}.bash`],
+    ["completions", `_${name}`],
+    ["completions", `${name}.fish`],
+  ]);
+}
+
+const REQUIRED_ASSET_FILES = [...completionAssetFiles(BINARIES), ...SHELL_HELPER_FILES];
 const DOWNLOAD_ATTEMPTS = 3;
 const DOWNLOAD_TIMEOUT_MS = 60_000;
 const RETRY_BASE_DELAY_MS = 750;
@@ -295,8 +296,11 @@ if (require.main === module) {
 }
 
 module.exports = {
+  BINARIES,
+  REQUIRED_ASSET_FILES,
   archiveName,
   binaryPath,
+  completionAssetFiles,
   install,
   targetForCurrentPlatform,
 };

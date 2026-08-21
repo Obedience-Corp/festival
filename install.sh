@@ -364,6 +364,9 @@ install_completion_assets() {
 
     mkdir -p "$completions_dir"
     read -r -a binary_list <<< "$binaries"
+    # Names match scripts/completion-assets.sh: ${cli}.bash, _${cli}, ${cli}.fish.
+    # Curl-installed copies of this script cannot source the repo file, so keep
+    # the convention inline and derive the list from binaries actually present.
     for binary in "${binary_list[@]}"; do
         for name in "${binary}.bash" "_${binary}" "${binary}.fish"; do
             if ! cp "${tmp_dir}/completions/${name}" "${completions_dir}/${name}"; then

@@ -13,9 +13,10 @@ if command -v fest >/dev/null 2>&1; then
 fi
 
 if type complete >/dev/null 2>&1; then
-  [ -f "${_festival_completion_dir}/camp.bash" ] && source "${_festival_completion_dir}/camp.bash"
-  [ -f "${_festival_completion_dir}/fest.bash" ] && source "${_festival_completion_dir}/fest.bash"
-  [ -f "${_festival_completion_dir}/festival.bash" ] && source "${_festival_completion_dir}/festival.bash"
+  for _festival_completion_file in "${_festival_completion_dir}"/*.bash; do
+    [ -f "${_festival_completion_file}" ] && source "${_festival_completion_file}"
+  done
+  unset _festival_completion_file
 fi
 
 unset _festival_shell_dir _festival_completion_dir
