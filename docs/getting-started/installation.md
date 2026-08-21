@@ -14,10 +14,10 @@ signed package metadata against a compiled-in key and refuses unsigned
 content by default.
 
 ```bash
-festival install   # install camp and fest
-festival update     # keep camp, fest, and festival in sync
-festival browse      # see what is available
-festival doctor       # check the install
+festival install festival  # install the suite (camp, fest, and festival)
+festival update            # keep camp, fest, and festival in sync
+festival browse            # see what is available
+festival doctor            # check the install
 ```
 
 ## Requirements

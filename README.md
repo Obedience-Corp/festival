@@ -57,10 +57,10 @@ package metadata against a compiled-in key and refuses unsigned content by
 default.
 
 ```bash
-festival install   # install camp and fest
-festival update     # keep camp, fest, and festival in sync
-festival browse      # see what is available
-festival doctor       # check the install
+festival install festival  # install the suite (camp, fest, and festival)
+festival update            # keep camp, fest, and festival in sync
+festival browse            # see what is available
+festival doctor            # check the install
 ```
 
 **npm / pnpm / bun:**
@@ -455,12 +455,12 @@ fest understand                  # Teach an AI agent the full methodology
 ### festival: suite installer and updater
 
 ```bash
-festival install                 # install camp and fest
-festival update                  # keep camp, fest, and festival in sync
-festival browse                  # see what is available across marketplaces
-festival doctor                  # report PATH, sources, and receipts
-festival which camp              # resolve the real binary path for a suite tool
-festival version                 # print the festival manager version
+festival install festival  # install the suite (camp, fest, and festival)
+festival update            # keep camp, fest, and festival in sync
+festival browse            # see what is available across marketplaces
+festival doctor            # report PATH, sources, and receipts
+festival which camp        # resolve the real binary path for a suite tool
+festival version           # print the festival manager version
 ```
 
 `festival` is not part of the day-to-day agentic loop; `fest` and `camp` are. It exists to get those two installed correctly and keep them current.
