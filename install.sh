@@ -321,6 +321,8 @@ completion_asset_dir() {
 install_completion_assets() {
     local tmp_dir="$1"
     local completions_dir="$2"
+    local failed=0
+    local name
 
     if [ ! -d "${tmp_dir}/completions" ]; then
         warning "Completion files were not found in the release archive"
@@ -328,21 +330,26 @@ install_completion_assets() {
     fi
 
     mkdir -p "$completions_dir"
-    cp "${tmp_dir}/completions/fest.bash" "$completions_dir/fest.bash"
-    cp "${tmp_dir}/completions/_fest" "$completions_dir/_fest"
-    cp "${tmp_dir}/completions/fest.fish" "$completions_dir/fest.fish"
-    cp "${tmp_dir}/completions/camp.bash" "$completions_dir/camp.bash"
-    cp "${tmp_dir}/completions/_camp" "$completions_dir/_camp"
-    cp "${tmp_dir}/completions/camp.fish" "$completions_dir/camp.fish"
-    cp "${tmp_dir}/completions/festival.bash" "$completions_dir/festival.bash"
-    cp "${tmp_dir}/completions/_festival" "$completions_dir/_festival"
-    cp "${tmp_dir}/completions/festival.fish" "$completions_dir/festival.fish"
+    for name in fest.bash _fest fest.fish camp.bash _camp camp.fish \
+        festival.bash _festival festival.fish; do
+        if ! cp "${tmp_dir}/completions/${name}" "${completions_dir}/${name}"; then
+            failed=1
+        fi
+    done
+
+    if [ "$failed" -ne 0 ]; then
+        warning "Some completion files failed to copy to ${completions_dir}"
+        return 1
+    fi
+
     success "Installed completion files to ${completions_dir}"
 }
 
 install_shell_helpers() {
     local tmp_dir="$1"
     local helper_dir="$2"
+    local failed=0
+    local name
 
     if [ ! -d "${tmp_dir}/shell" ]; then
         warning "Shell helper files were not found in the release archive"
@@ -350,9 +357,17 @@ install_shell_helpers() {
     fi
 
     mkdir -p "$helper_dir"
-    cp "${tmp_dir}/shell/festival.bash" "$helper_dir/festival.bash"
-    cp "${tmp_dir}/shell/festival.zsh" "$helper_dir/festival.zsh"
-    cp "${tmp_dir}/shell/festival.fish" "$helper_dir/festival.fish"
+    for name in festival.bash festival.zsh festival.fish; do
+        if ! cp "${tmp_dir}/shell/${name}" "${helper_dir}/${name}"; then
+            failed=1
+        fi
+    done
+
+    if [ "$failed" -ne 0 ]; then
+        warning "Some shell helper files failed to copy to ${helper_dir}"
+        return 1
+    fi
+
     success "Installed shell helper files to ${helper_dir}"
 }
 
@@ -536,6 +551,8 @@ main() {
         if [ -f "${tmp_dir}/${binary}" ]; then
             cp "${tmp_dir}/${binary}" "${INSTALL_DIR}/${binary}"
             chmod +x "${INSTALL_DIR}/${binary}"
+        elif [ "$binary" = "festival" ]; then
+            error "Binary 'festival' not found in archive. The requested release (${version}) predates the festival hub. Set VERSION=latest, or pick a release that ships all three binaries."
         else
             error "Binary '${binary}' not found in archive"
         fi
