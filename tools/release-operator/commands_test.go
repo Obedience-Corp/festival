@@ -8,6 +8,35 @@ import (
 	"testing"
 )
 
+func TestJustReleaseCommandIsPositional(t *testing.T) {
+	got := justReleaseCommand("stable", map[string]string{
+		"fest":               "keep",
+		"camp":               "keep",
+		"festival-installer": "keep",
+	})
+	want := "just release stable keep keep keep"
+	if got != want {
+		t.Fatalf("justReleaseCommand = %q, want %q", got, want)
+	}
+	if strings.Contains(got, "=") {
+		t.Fatalf("justReleaseCommand = %q, named just args are positional", got)
+	}
+	if strings.Contains(got, "festival-installer") {
+		t.Fatalf("justReleaseCommand = %q, just param is festival_installer and values are positional", got)
+	}
+}
+
+func TestSelectorArgsStringFollowsComponentOrder(t *testing.T) {
+	got := selectorArgsString(map[string]string{
+		"fest":               "latest",
+		"camp":               "keep",
+		"festival-installer": "v0.1.0",
+	})
+	if want := "latest keep v0.1.0"; got != want {
+		t.Fatalf("selectorArgsString = %q, want %q", got, want)
+	}
+}
+
 func TestShipBranchName(t *testing.T) {
 	got := shipBranchName("v0.2.12")
 	if want := "release-pin/v0.2.12"; got != want {
