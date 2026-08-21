@@ -15,8 +15,9 @@ festival marketplace refresh [name] [flags]
 ### Options
 
 ```
-  -h, --help   help for refresh
-      --json   emit JSON output
+      --allow-unverified   allow refreshing a marketplace with unsigned metadata without prompting
+  -h, --help               help for refresh
+      --json               emit JSON output
 ```
 
 ### SEE ALSO

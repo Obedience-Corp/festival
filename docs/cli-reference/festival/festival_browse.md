@@ -15,10 +15,11 @@ festival browse [flags]
 ### Options
 
 ```
-  -h, --help             help for browse
-      --json             emit JSON output
-      --kind string      filter by package class (plugin|tool|product|bundle)
-      --product string   filter by host product (fest|camp|obey)
+      --allow-unverified   allow browsing a marketplace with unsigned metadata without prompting
+  -h, --help               help for browse
+      --json               emit JSON output
+      --kind string        filter by package class (plugin|tool|product|bundle)
+      --product string     filter by host product (fest|camp|obey)
 ```
 
 ### SEE ALSO

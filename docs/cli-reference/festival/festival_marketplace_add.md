@@ -15,8 +15,9 @@ festival marketplace add <git-url> [flags]
 ### Options
 
 ```
-  -h, --help          help for add
-      --name string   override the derived source name
+      --allow-unverified   allow adding a marketplace with unsigned metadata without prompting
+  -h, --help               help for add
+      --name string        override the derived source name
 ```
 
 ### SEE ALSO
