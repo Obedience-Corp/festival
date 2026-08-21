@@ -190,6 +190,17 @@ After installing, see the [quick start guide](https://docs.fest.build/getting-st
 
 <p align="center"><em><a href="https://github.com/Festival-Examples/example-camp-hardening-festival">See the festival behind this demo &rarr;</a></em></p>
 
+## Run them in parallel
+
+A festival is an autonomous loop, not a session you have to sit in. Point an agent at `fest next` and it keeps going: next task, do the work, commit, repeat. The plan and progress live on disk, so you can start several at once (different agents, different tools, different worktrees) and leave them running in the background.
+
+<p align="center">
+  <img src="docs/images/parallel-festivals.png" alt="Four live fest show panes watching independent festivals run in parallel, including a 1,184-task intent backlog" width="100%">
+</p>
+<p align="center"><em>Four festivals, four agent sessions, one terminal grid. The rightmost pane is a 1,184-task festival still running on its own. Each pane is a live <code>fest show</code> of an independent loop.</em></p>
+
+How to run that pattern: **[Loops & Orchestration](https://docs.fest.build/guides/loops-and-orchestration/)**.
+
 ## The Problem
 
 If you work on more than a few things at once, staying organized becomes a job of its own.

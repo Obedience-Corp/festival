@@ -208,8 +208,32 @@ Each work item carries its own links and traceability, so an agent can run sever
 in parallel, in separate worktrees, without losing track of which change belongs to
 which project. The shared substrate is what makes this coherent: one queue across
 the whole portfolio, resumable as a unit, with every change traceable back to its
-project and its plan. Festivals can also run fully in parallel, one agent session
-each. See [Work Pipeline]({{< ref "/guides/work-pipeline" >}}).
+project and its plan.
+
+## Parallel festivals
+
+A festival is a self-contained loop. Once an agent is pointed at `fest next` in
+the festival's linked project or worktree, it does not need you in the session:
+read the next task, do the work, `fest commit`, repeat. The plan, progress, and
+context live on disk, so the loop survives a closed laptop, a context-window
+reset, and a tool switch.
+
+That is why festivals run in the background, in parallel. Start one agent on one
+festival, start another on a second, and leave them going. Use separate worktrees
+when two festivals touch the same project. Watch each loop with `fest show`.
+Scale is not the limiter: one of the festivals below is 1,184 tasks.
+
+<figure>
+  <img src="/images/parallel-festivals.png" alt="Four live fest show panes watching independent festivals run in parallel, including a 1,184-task intent backlog">
+  <figcaption>Four festivals, four agent sessions. The rightmost pane is a 1,184-task festival. Each pane is a live <code>fest show</code> of an independent loop.</figcaption>
+</figure>
+
+This is different from parallel *tasks* inside a sequence (same numeric prefix).
+That is one festival's internal scheduling. Parallel *festivals* are independent
+missions, each with its own agent session.
+
+See [Work Pipeline]({{< ref "/guides/work-pipeline" >}}) for keeping enough
+planned work queued that the loops do not idle.
 
 ## Feeding the substrate from outside
 

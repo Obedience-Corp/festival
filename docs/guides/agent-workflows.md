@@ -42,6 +42,8 @@ Watch the work advance in real time with `fest watch` -- the progress bar and ta
 
 {{< terminal-demo src="/images/demos/tui-fest-watch.gif" title="fest watch" alt="fest watch showing a festival's progress bar and task icons updating live as work completes" max="640" >}}
 
+That is one festival. The same loop runs independently per festival, so you can leave several going in the background (different agents, different tools, different worktrees) and watch them with `fest show`. See [Loops & Orchestration]({{< ref "/guides/loops-and-orchestration" >}}).
+
 ---
 
 ## fest as a Guidance System
