@@ -500,8 +500,41 @@ write_stub_binary() {
     cat > "$path" <<EOF_STUB
 #!/usr/bin/env bash
 case "\${1:-}" in
-  version|--version) echo "${name} v9.8.7" ;;
+  version)
+    case "\${2:-}" in
+      --short|-s) echo "v9.8.7" ;;
+      *) echo "${name} v9.8.7" ;;
+    esac
+    ;;
+  --version) echo "${name} v9.8.7" ;;
   *) echo "${name} stub" ;;
+esac
+EOF_STUB
+    chmod +x "$path"
+}
+
+write_fest_version_stub() {
+    local path="$1"
+    local short="$2"
+    local first_line="$3"
+
+    cat > "$path" <<EOF_STUB
+#!/usr/bin/env bash
+case "\${1:-}" in
+  version)
+    case "\${2:-}" in
+      --short|-s) echo "${short}" ;;
+      *)
+        echo "${first_line}"
+        echo "commit: testdead"
+        echo "built: 2026-08-19T00:00:00Z"
+        echo "go: go1.26.4"
+        echo "platform: testhost"
+        ;;
+    esac
+    ;;
+  --version) echo "fest version ${short}" ;;
+  *) echo "fest stub" ;;
 esac
 EOF_STUB
     chmod +x "$path"
@@ -601,9 +634,24 @@ EOF_JSON
 
     write_fake_curl "$fakebin/curl"
 
+    run_ensure() {
+        local log="$1"
+        rm -f "$tmp/last-update-check"
+        if ! FESTIVAL_PLUGIN_TEST_FIXTURE_DIR="$fixture" \
+            HOME="$home" \
+            INSTALL_DIR="$install_dir" \
+            FESTIVAL_CHECK_FILE="$tmp/last-update-check" \
+            PATH="$install_dir:$fakebin:/usr/bin:/bin:/usr/sbin:/sbin" \
+            bash "$plugin_dir/hooks/scripts/ensure-festival.sh" >"$log" 2>&1; then
+            cat "$log" >&2
+            return 1
+        fi
+    }
+
     if ! FESTIVAL_PLUGIN_TEST_FIXTURE_DIR="$fixture" \
         HOME="$home" \
         INSTALL_DIR="$install_dir" \
+        FESTIVAL_CHECK_FILE="$tmp/last-update-check" \
         PATH="$fakebin:/usr/bin:/bin:/usr/sbin:/sbin" \
         bash "$plugin_dir/hooks/scripts/ensure-festival.sh" >"$tmp/install.log" 2>&1; then
         cat "$tmp/install.log" >&2
@@ -613,12 +661,45 @@ EOF_JSON
     test -x "$install_dir/fest"
     test -x "$install_dir/camp"
 
-    if ! FESTIVAL_PLUGIN_TEST_FIXTURE_DIR="$fixture" \
-        HOME="$home" \
-        INSTALL_DIR="$install_dir" \
-        PATH="$install_dir:$fakebin:/usr/bin:/bin:/usr/sbin:/sbin" \
-        bash "$plugin_dir/hooks/scripts/ensure-festival.sh" >"$tmp/update-check.log" 2>&1; then
+    # Matching release: no nag. Clear the check file so this actually runs
+    # the update-compare path (install records a check and would otherwise skip).
+    run_ensure "$tmp/update-check.log" || return 1
+    if grep -q "Festival update available" "$tmp/update-check.log"; then
+        echo "matching version must not nag an update" >&2
         cat "$tmp/update-check.log" >&2
+        return 1
+    fi
+
+    # Dev build whose full `fest version` includes go1.26.4: skip, never nag 1.26.4.
+    write_fest_version_stub "$install_dir/fest" "dev" "fest dev"
+    run_ensure "$tmp/dev-check.log" || return 1
+    if grep -q "Festival update available" "$tmp/dev-check.log"; then
+        echo "dev build must not nag an update" >&2
+        cat "$tmp/dev-check.log" >&2
+        return 1
+    fi
+    if ! grep -q "not a release" "$tmp/dev-check.log"; then
+        echo "dev build should skip with a clear message" >&2
+        cat "$tmp/dev-check.log" >&2
+        return 1
+    fi
+    if grep -q "1.26.4" "$tmp/dev-check.log"; then
+        echo "must not surface the Go toolchain version as the festival version" >&2
+        cat "$tmp/dev-check.log" >&2
+        return 1
+    fi
+
+    # Older release plus the same Go line: nag the festival version, not 1.26.4.
+    write_fest_version_stub "$install_dir/fest" "v0.1.0" "fest v0.1.0"
+    run_ensure "$tmp/stale-check.log" || return 1
+    if ! grep -q "Festival update available: v0.1.0 -> v9.8.7" "$tmp/stale-check.log"; then
+        echo "stale release must nag the festival versions" >&2
+        cat "$tmp/stale-check.log" >&2
+        return 1
+    fi
+    if grep -q "1.26.4" "$tmp/stale-check.log"; then
+        echo "must not report the Go toolchain version as the local festival version" >&2
+        cat "$tmp/stale-check.log" >&2
         return 1
     fi
 }
@@ -640,9 +721,11 @@ cursor_target_check "$plugin_dir/.claude-plugin/plugin.json"
 opencode_target_check
 gemini_target_check "$plugin_dir/.claude-plugin/plugin.json"
 hermes_target_check "$plugin_dir/.claude-plugin/plugin.json"
-bash -n "$plugin_dir/hooks/scripts/ensure-festival.sh" "$plugin_dir/hooks/scripts/sync-check.sh" \
+bash -n "$plugin_dir/hooks/scripts/ensure-festival.sh" "$plugin_dir/hooks/scripts/ensure-festival.test.sh" \
+    "$plugin_dir/hooks/scripts/sync-check.sh" \
     "$plugin_dir/hooks/scripts/commit-guard.sh" "$plugin_dir/hooks/scripts/commit-guard.test.sh"
 bash "$plugin_dir/hooks/scripts/commit-guard.test.sh"
+bash "$plugin_dir/hooks/scripts/ensure-festival.test.sh"
 
 if [ -x "$repo_root/fest/bin/fest" ] && [ -x "$repo_root/camp/bin/camp" ]; then
     FEST_BIN="$repo_root/fest/bin/fest" CAMP_BIN="$repo_root/camp/bin/camp" \
