@@ -19,7 +19,7 @@ Examples:
   camp skills unlink --tool claude       Remove projected entries in .claude/skills/
   camp skills unlink --tool agents       Remove projected entries in .agents/skills/
   camp skills unlink --path custom/dir   Remove projected entries in custom/dir
-  camp skills unlink --tool claude -n    Dry run — show what would happen
+  camp skills unlink --tool claude -n    Dry run: show what would happen
 
 ```
 camp skills unlink [flags]

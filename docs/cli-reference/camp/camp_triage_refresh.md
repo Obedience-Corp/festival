@@ -12,8 +12,8 @@ Re-check the active run against the world
 
 Re-check every row against a fresh discovery pass and its evidence anchors.
 
-Verdicts expire. A row judged an hour ago rested on facts — a file's contents, a
-workitem's stage, a festival's status — and refresh is what notices when one of
+Verdicts expire. A row judged an hour ago rested on facts (a file's contents, a
+workitem's stage, a festival's status), and refresh is what notices when one of
 them moved. Each row comes back in one of five classes:
 
   fresh    identity resolves and every anchor still matches; the verdict stands
@@ -22,7 +22,7 @@ them moved. Each row comes back in one of five classes:
   changed  an anchor observes a different value; the verdict goes stale and the
            row returns to the judgment queue
   gone     the item is no longer discoverable outside dungeons; the verdict goes
-           stale and the row is flagged — someone likely finished it elsewhere
+           stale and the row is flagged: someone likely finished it elsewhere
   new      discovered but absent from the snapshot; appended and queued
 
 Every row prints the reason for its class, naming the anchor or the location
@@ -32,7 +32,7 @@ Anchors that need the network are recorded unchecked rather than assumed
 current, and the summary counts them separately: not knowing is reported as not
 knowing.
 
-Refresh only records. It retires verdicts, re-keys rows, and appends new ones —
+Refresh only records. It retires verdicts, re-keys rows, and appends new ones;
 it never moves a workitem. That is camp triage apply, which refuses any row this
 command did not return fresh or moved.
 

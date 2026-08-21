@@ -25,7 +25,7 @@ is given):
            machine that was never addressable. Set CAMP_NO_PEER_FALLBACK=1
            to disable the fallback and fail exactly as ssh would
   socket   ControlMaster multiplex state:
-             none   no socket — the next hop opens a fresh master
+             none   no socket: the next hop opens a fresh master
              live   socket present and the master answers 'ssh -O check'
              stale  socket present but the master no longer answers
 

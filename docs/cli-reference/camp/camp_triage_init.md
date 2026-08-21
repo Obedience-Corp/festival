@@ -13,7 +13,7 @@ Scaffold .campaign/triage with the profile and guide
 Write .campaign/triage/ if it is not there yet.
 
 The profile ships with every key written out and commented, not as an empty
-file inheriting invisible defaults — you should be able to read what triage
+file inheriting invisible defaults: you should be able to read what triage
 will do before you run it, and change it by deleting a line.
 
 Nothing is ever overwritten. A file you have edited is reported as diverged

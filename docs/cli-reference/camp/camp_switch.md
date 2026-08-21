@@ -27,8 +27,8 @@ Use with the shell-init wrappers for instant navigation (recommended):
   csw -                          # Hop back to the machine/campaign this session came from
 
 'camp switch -' (csw -) is the hop-back gesture: it returns to the origin
-encoded in CAMP_HOP_ORIGIN by the outbound hop. It is registration-independent
-— the origin need not be in this machine's machines.yaml. Like other remote
+encoded in CAMP_HOP_ORIGIN by the outbound hop. It is registration-independent:
+the origin need not be in this machine's machines.yaml. Like other remote
 targets it refuses --print/--json. '-' is reserved and is no longer a fuzzy
 campaign query.
 
@@ -42,7 +42,7 @@ Use campaign@tab to navigate to a specific location in the target campaign:
 Use machine:campaign to resolve a campaign on a machine registered in
 ~/.obey/machines.yaml. The interactive picker also lists remote campaigns when
 machines are configured (locals open instantly; remotes append as they load).
-Bare 'command camp switch machine:…' resolves without hopping — use the csw
+Bare 'command camp switch machine:…' resolves without hopping: use the csw
 shell wrapper (or --shell-connect under shell-init) to hop.
 
 Remote resolution runs the far machine's own 'camp switch' through that

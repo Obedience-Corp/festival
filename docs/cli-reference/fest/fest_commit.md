@@ -33,7 +33,14 @@ Use --no-root to skip the campaign root commit.
 
 Reference format: [FE-{id}]
   - FE: Festival component identifier
-  - {id}: Task ref (FEST-xxxxxx) or festival ID (e.g., CS0001)
+  - {id}: Task ref (FEST-123456) or festival ID (e.g., CS0001)
+
+Optional position segments: [FE-{id}-PH-{phase}-SQ-{sequence}]
+  PH- and SQ- are additive: they record the phase and sequence the commit
+  belongs to, and appear only when that position is unambiguous. The current
+  directory decides it; otherwise the single in-progress sequence does.
+  Parallel sequences leave both segments off, and SQ- is never emitted
+  without PH-.
 
 Detection priority:
   1. Explicit --task flag value
@@ -45,13 +52,16 @@ Examples:
 ```bash
   fest commit -m "Implement feature"
   # In linked project or sequence → [FE-CS0001] Implement feature
-  # In festival task              → [FE-FEST-a3b2c1] Implement feature
+  # In festival task              → [FE-FEST-123456] Implement feature
 
-  fest commit --task FEST-b4c5d6 -m "Related work"
-  # → [FE-FEST-b4c5d6] Related work
+  fest commit --task FEST-234567 -m "Related work"
+  # → [FE-FEST-234567] Related work
 
   fest commit --festival OA0001 -m "Work from unlinked dir"
   # → [FE-OA0001] Work from unlinked dir
+
+  fest commit -m "Update scaffold"
+  # Inside 001_IMPLEMENT/02_camp_pilot → [FE-CC0008-PH-001-SQ-02] Update scaffold
 
   fest commit --no-tag -m "No reference"
   # → No reference
@@ -72,6 +82,7 @@ fest commit [flags]
 ```
       --auto-write        run configured commit message writer
       --commit-large      commit over-threshold files instead of keeping them out of git
+      --commit-nested     commit undeclared nested git repositories as gitlinks instead of keeping them out of git
       --festival string   festival path, name, or ID (overrides auto-detection)
   -h, --help              help for commit
       --json              output result as JSON
@@ -79,7 +90,7 @@ fest commit [flags]
       --no-root           skip campaign root commit (project commit only)
       --no-tag            don't prepend task reference
       --stage             auto-stage all changes before commit (default true)
-      --task string       task reference ID to use (e.g., FEST-a3b2c1)
+      --task string       task reference ID to use (e.g., FEST-123456)
 ```
 
 ### Options inherited from parent commands
