@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"os"
 	"os/exec"
@@ -87,6 +88,26 @@ func TestParsePlanArgsNormalizesKeyValueInputs(t *testing.T) {
 	}
 	if got, want := opts.Selectors["camp"], "keep"; got != want {
 		t.Fatalf("camp selector = %q, want %q", got, want)
+	}
+}
+
+func TestPrintHelpUsesPositionalJustArgs(t *testing.T) {
+	var buf bytes.Buffer
+	printHelp(&buf)
+	got := buf.String()
+	if !strings.Contains(got, "just release stable <fest> <camp> <festival_installer>") {
+		t.Fatalf("printHelp missing positional stable recipe:\n%s", got)
+	}
+	if !strings.Contains(got, "just release plan <mode> <fest> <camp> <festival_installer>") {
+		t.Fatalf("printHelp missing positional plan recipe:\n%s", got)
+	}
+	if !strings.Contains(got, "just release stable keep keep keep") {
+		t.Fatalf("printHelp missing copy-paste example:\n%s", got)
+	}
+	for _, named := range []string{"fest=", "camp=", "mode=", "festival-installer="} {
+		if strings.Contains(got, named) {
+			t.Fatalf("printHelp still has named just arg %q:\n%s", named, got)
+		}
 	}
 }
 

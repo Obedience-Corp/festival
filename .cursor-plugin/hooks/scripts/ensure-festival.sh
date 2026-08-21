@@ -184,94 +184,153 @@ download_and_install() {
     done
 }
 
-# --- Main ---
+# parse_local_fest_version SHORT_OUTPUT FULL_OUTPUT
+#
+# Prefer `fest version --short` (a single token: "dev", "v0.2.16", ...). If that
+# is empty (old binary, flag unknown), take field 2 of the first `fest version`
+# line ("fest v0.2.16" / "fest dev"). Do not scan the whole block for X.Y.Z:
+# the Go runtime line is `go: go1.26.4` and a greedy grep treats 1.26.4 as the
+# installed festival version.
+parse_local_fest_version() {
+    local short="${1-}"
+    local full="${2-}"
+    local token
+    token="$(printf '%s\n' "$short" | awk 'NR==1 {print $1; exit}')"
+    if [ -n "$token" ]; then
+        printf '%s' "$token"
+        return 0
+    fi
+    printf '%s\n' "$full" | awk 'NR==1 {print $2; exit}'
+}
 
-require_command curl
-require_command tar
-require_command grep
-require_command sed
-require_command awk
-require_command find
-require_command install
-require_checksum_command
-detect_platform
+# is_release_version TOKEN: 0 when TOKEN is a festival release semver
+# (optional leading v, X.Y.Z, optional -rc.N / dotted suffix). Rejects "dev",
+# empty, and *-dev.* snapshot builds.
+is_release_version() {
+    local v="${1-}"
+    case "$v" in
+        ""|dev|unknown) return 1 ;;
+        *-dev|*-dev.*) return 1 ;;
+    esac
+    printf '%s' "$v" | grep -Eq '^v?[0-9]+\.[0-9]+\.[0-9]+([.-][A-Za-z0-9.]+)?$'
+}
 
-if ! check_installed; then
-    # Fresh install
-    info "Festival CLI not found. Installing fest and camp..."
+# parse_bundle_version FULL_OUTPUT
+#
+# The festival suite version from `fest version`'s `bundle:` line, empty when
+# there is none. The line reads "bundle: festival vX.Y.Z", so the version is the
+# last field rather than field 2, and it is read through the semver grep so a
+# CRLF line ending or stray whitespace cannot ride along into the comparison.
+parse_bundle_version() {
+    printf '%s\n' "${1-}" | grep '^bundle:' |
+        grep -oE 'v?[0-9]+\.[0-9]+\.[0-9]+' | head -1 || true
+}
 
-    RELEASE_JSON=$(fetch_release) || {
-        info "Could not fetch release info. Install manually: curl -fsSL https://raw.githubusercontent.com/${REPO}/main/install.sh | bash"
-        exit 1
-    }
+# has_build_profile FULL_OUTPUT: 0 when `fest version` printed a `profile:`
+# line, which every bundle-capable fest does, bundled or not.
+has_build_profile() {
+    printf '%s\n' "${1-}" | grep -q '^profile:'
+}
 
-    ARCHIVE_URL=$(find_archive_url "$RELEASE_JSON")
-    if [ -z "$ARCHIVE_URL" ]; then
-        info "No compatible archive found for ${OS}/${ARCH}. Install manually: curl -fsSL https://raw.githubusercontent.com/${REPO}/main/install.sh | bash"
-        exit 1
+# read_local_fest_version FULL_OUTPUT: fest's own release token, from an
+# already-captured `fest version` block plus a fresh `fest version --short`.
+read_local_fest_version() {
+    local full="${1-}"
+    local short
+    short="$(fest version --short 2>/dev/null || true)"
+    parse_local_fest_version "$short" "$full"
+}
+
+main() {
+    require_command curl
+    require_command tar
+    require_command grep
+    require_command sed
+    require_command awk
+    require_command find
+    require_command install
+    require_checksum_command
+    detect_platform
+
+    if ! check_installed; then
+        info "Festival CLI not found. Installing fest and camp..."
+
+        RELEASE_JSON=$(fetch_release) || {
+            info "Could not fetch release info. Install manually: curl -fsSL https://raw.githubusercontent.com/${REPO}/main/install.sh | bash"
+            exit 1
+        }
+
+        ARCHIVE_URL=$(find_archive_url "$RELEASE_JSON")
+        if [ -z "$ARCHIVE_URL" ]; then
+            info "No compatible archive found for ${OS}/${ARCH}. Install manually: curl -fsSL https://raw.githubusercontent.com/${REPO}/main/install.sh | bash"
+            exit 1
+        fi
+
+        download_and_install "$ARCHIVE_URL"
+        record_check
+
+        if command -v fest >/dev/null 2>&1; then
+            info "Festival installed successfully: $(fest version 2>/dev/null || echo 'fest ready')"
+        else
+            info "Installed to ${INSTALL_DIR}. You may need to add it to your PATH: export PATH=\"${INSTALL_DIR}:\$PATH\""
+        fi
+        exit 0
     fi
 
-    download_and_install "$ARCHIVE_URL"
-    record_check
-
-    if command -v fest >/dev/null 2>&1; then
-        info "Festival installed successfully: $(fest version 2>/dev/null || echo 'fest ready')"
-    else
-        info "Installed to ${INSTALL_DIR}. You may need to add it to your PATH: export PATH=\"${INSTALL_DIR}:\$PATH\""
+    # Already installed: check for updates (rate-limited to once/day)
+    if ! should_check_update; then
+        exit 0
     fi
-    exit 0
-fi
 
-# Already installed, check for updates (rate-limited to once/day)
-if ! should_check_update; then
-    exit 0
-fi
+    # This compares against the latest festival suite tag, so it needs the suite
+    # version, not fest's own release. `fest version` distinguishes three cases:
+    #
+    #   bundle: line   a suite build; that line carries the version to compare
+    #   profile: line  a bundle-capable fest that was not built from a suite
+    #                  release (go install, just build)
+    #   neither        a bundle published before either line existed, which
+    #                  stamped the suite version into fest's own version field
+    FEST_VERSION_OUTPUT="$(fest version 2>/dev/null)" || FEST_VERSION_OUTPUT=""
+    CURRENT_VERSION="$(parse_bundle_version "$FEST_VERSION_OUTPUT")"
 
-# This compares against the latest festival suite tag, so it needs the suite
-# version, not the fest release. `fest version` distinguishes three cases:
-#
-#   bundle: line   a suite build; that line carries the version to compare
-#   profile: line  a bundle-capable fest that was not built from a suite release
-#                  (go install, just build). There is no suite version to
-#                  compare, so say nothing rather than nag about an update the
-#                  user did not install and cannot apply.
-#   neither        a bundle published before the bundle line existed, which
-#                  stamped the suite version into fest's own version field, so
-#                  the first semver on screen is the suite version.
-#
-# Every version is read through the semver grep so a CRLF line ending or stray
-# whitespace cannot ride along into the string comparison below.
-FEST_VERSION_OUTPUT="$(fest version 2>/dev/null)" || FEST_VERSION_OUTPUT=""
-
-CURRENT_VERSION=$(printf '%s\n' "$FEST_VERSION_OUTPUT" | grep '^bundle:' |
-    grep -oE 'v?[0-9]+\.[0-9]+\.[0-9]+' | head -1 || echo "")
-
-if [ -z "$CURRENT_VERSION" ]; then
-    if printf '%s\n' "$FEST_VERSION_OUTPUT" | grep -q '^profile:'; then
+    if [ -z "$CURRENT_VERSION" ] && has_build_profile "$FEST_VERSION_OUTPUT"; then
+        # A bundle-capable fest with no bundle line was never part of a suite
+        # release, so there is no suite version to compare the tag against.
+        # Saying anything here nags forever about an update the user did not
+        # install and cannot apply, so record the check and stay quiet.
         record_check
         exit 0
     fi
-    CURRENT_VERSION=$(printf '%s\n' "$FEST_VERSION_OUTPUT" |
-        grep -oE 'v?[0-9]+\.[0-9]+\.[0-9]+' | head -1 || echo "")
-fi
 
-if [ -z "$CURRENT_VERSION" ]; then
-    record_check
-    exit 0
-fi
+    if [ -z "$CURRENT_VERSION" ]; then
+        CURRENT_VERSION="$(read_local_fest_version "$FEST_VERSION_OUTPUT")"
+    fi
 
-RELEASE_JSON=$(fetch_release 2>/dev/null) || {
+    if ! is_release_version "$CURRENT_VERSION"; then
+        if [ -n "$CURRENT_VERSION" ]; then
+            info "Festival update check skipped: local fest version '${CURRENT_VERSION}' is not a release"
+        fi
+        record_check
+        exit 0
+    fi
+
+    RELEASE_JSON=$(fetch_release 2>/dev/null) || {
+        record_check
+        exit 0
+    }
+
+    LATEST_TAG=$(extract_tag "$RELEASE_JSON")
+    CURRENT_CLEAN="${CURRENT_VERSION#v}"
+    LATEST_CLEAN="${LATEST_TAG#v}"
+
     record_check
-    exit 0
+
+    if [ "$CURRENT_CLEAN" != "$LATEST_CLEAN" ]; then
+        info "Festival update available: ${CURRENT_VERSION} -> ${LATEST_TAG}. Run: curl -fsSL https://raw.githubusercontent.com/${REPO}/main/install.sh | bash"
+    fi
 }
 
-LATEST_TAG=$(extract_tag "$RELEASE_JSON")
-# Normalize: strip leading v for comparison
-CURRENT_CLEAN="${CURRENT_VERSION#v}"
-LATEST_CLEAN="${LATEST_TAG#v}"
-
-record_check
-
-if [ "$CURRENT_CLEAN" != "$LATEST_CLEAN" ]; then
-    info "Festival update available: ${CURRENT_VERSION} -> ${LATEST_TAG}. Run: curl -fsSL https://raw.githubusercontent.com/${REPO}/main/install.sh | bash"
+# Run main only when executed, not when sourced by the test harness.
+if [ "${BASH_SOURCE[0]:-$0}" = "$0" ]; then
+    main "$@"
 fi

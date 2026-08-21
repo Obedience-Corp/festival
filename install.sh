@@ -40,6 +40,7 @@ Environment:
 
 Shell setup:
   --setup-shell              Add a guarded source block to the detected shell rc file
+                             and a PATH line to ~/.zprofile (zsh) or ~/.profile (bash)
   --no-shell                 Install binaries and helper files only
 EOF
 }
@@ -364,6 +365,9 @@ install_completion_assets() {
 
     mkdir -p "$completions_dir"
     read -r -a binary_list <<< "$binaries"
+    # Names match scripts/completion-assets.sh: ${cli}.bash, _${cli}, ${cli}.fish.
+    # Curl-installed copies of this script cannot source the repo file, so keep
+    # the convention inline and derive the list from binaries actually present.
     for binary in "${binary_list[@]}"; do
         for name in "${binary}.bash" "_${binary}" "${binary}.fish"; do
             if ! cp "${tmp_dir}/completions/${name}" "${completions_dir}/${name}"; then
@@ -419,6 +423,37 @@ shell_rc_file() {
     esac
 }
 
+# Login-shell files that non-interactive ssh/cron/launchd sessions source.
+# zsh: always ~/.zprofile (honors ZDOTDIR).
+# bash: always ~/.profile. If ~/.bash_profile already exists, bash login
+# shells read it instead of ~/.profile, so PATH is written there too. Never
+# create ~/.bash_profile: that would shadow ~/.bashrc on systems that do not
+# source it from .bash_profile.
+# fish: config.fish already covers login sessions; no extra file.
+shell_login_profiles() {
+    case "$1" in
+        zsh)
+            echo "${ZDOTDIR:-$HOME}/.zprofile"
+            ;;
+        bash)
+            echo "$HOME/.profile"
+            if [ -f "$HOME/.bash_profile" ]; then
+                echo "$HOME/.bash_profile"
+            fi
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+}
+
+posix_path_block() {
+    echo "case \":\$PATH:\" in"
+    echo "  *\":${INSTALL_DIR}:\"*) ;;"
+    echo "  *) export PATH=\"${INSTALL_DIR}:\$PATH\" ;;"
+    echo "esac"
+}
+
 should_setup_shell() {
     local rc_file="$1"
     local reply
@@ -471,17 +506,11 @@ append_shell_block() {
         echo "# Added by the Festival installer. Remove this block to disable cgo/fgo helpers."
         case "$shell_name" in
             bash)
-                echo "case \":\$PATH:\" in"
-                echo "  *\":${INSTALL_DIR}:\"*) ;;"
-                echo "  *) export PATH=\"${INSTALL_DIR}:\$PATH\" ;;"
-                echo "esac"
+                posix_path_block
                 echo "source \"${helper_dir}/festival.bash\""
                 ;;
             zsh)
-                echo "case \":\$PATH:\" in"
-                echo "  *\":${INSTALL_DIR}:\"*) ;;"
-                echo "  *) export PATH=\"${INSTALL_DIR}:\$PATH\" ;;"
-                echo "esac"
+                posix_path_block
                 echo "source \"${helper_dir}/festival.zsh\""
                 ;;
             fish)
@@ -497,6 +526,39 @@ append_shell_block() {
     success "Added shell helpers to ${rc_file}"
 }
 
+append_path_block() {
+    local profile_file="$1"
+
+    mkdir -p "$(dirname "$profile_file")"
+    touch "$profile_file"
+
+    if grep -Fq ">>> festival path >>>" "$profile_file"; then
+        success "PATH already configured in ${profile_file}"
+        return 0
+    fi
+
+    {
+        echo ""
+        echo "# >>> festival path >>>"
+        echo "# Added by the Festival installer so login shells see camp and fest."
+        posix_path_block
+        echo "# <<< festival path <<<"
+    } >> "$profile_file"
+
+    success "Added PATH to ${profile_file}"
+}
+
+configure_login_path() {
+    local shell_name="$1"
+    local profiles profile
+
+    profiles="$(shell_login_profiles "$shell_name")" || return 0
+    while IFS= read -r profile; do
+        [ -n "$profile" ] || continue
+        append_path_block "$profile"
+    done <<< "$profiles"
+}
+
 configure_shell_startup() {
     local helper_dir="$1"
     local shell_name rc_file
@@ -509,6 +571,7 @@ configure_shell_startup() {
 
     if should_setup_shell "$rc_file"; then
         append_shell_block "$shell_name" "$rc_file" "$helper_dir"
+        configure_login_path "$shell_name"
         return 0
     fi
 
@@ -533,6 +596,10 @@ print_shell_setup_hint() {
     echo "  # dash, busybox ash, other POSIX sh (~/.profile)"
     echo "  eval \"\$(camp shell-init sh)\""
     echo "  eval \"\$(fest shell-init sh)\""
+    echo ""
+    echo "  # login shells (ssh, cron, launchd): also add PATH to ~/.zprofile (zsh)"
+    echo "  # or ~/.profile (bash). install.sh --setup-shell writes this automatically."
+    echo "  case \":\$PATH:\" in *\":${INSTALL_DIR}:\"*) ;; *) export PATH=\"${INSTALL_DIR}:\$PATH\" ;; esac"
 }
 
 main() {

@@ -66,6 +66,9 @@ type BundleInput struct {
 	CurrentCommitTaggedLatestDev    bool
 	CurrentCommitTaggedLatestStable bool
 	CurrentCommitTaggedVersionRC    bool
+	// ReadOnly skips the stable-on-main guard so `just release plan` can
+	// preview a patch bump from a worktree. Mutating bundle still requires main.
+	ReadOnly bool
 }
 
 // sameTags reports whether a and b agree on every key present in either map.
@@ -182,7 +185,7 @@ func planRC(in BundleInput) (BundlePlan, error) {
 }
 
 func planStable(in BundleInput) (BundlePlan, error) {
-	if in.CurrentBranch != "main" {
+	if !in.ReadOnly && in.CurrentBranch != "main" {
 		return BundlePlan{}, fmt.Errorf("stable releases must be created from the main branch")
 	}
 	if in.LatestFestivalStable == "" {

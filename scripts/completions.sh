@@ -1,31 +1,39 @@
 #!/usr/bin/env bash
 # Generate shell completions for the bundled CLIs.
 # Called by goreleaser before.hooks.
+# CLI list: scripts/completion-clis.txt (one row per CLI).
 set -euo pipefail
+
+root="$(cd "$(dirname "$0")/.." && pwd)"
+cd "$root"
+
+# shellcheck source=completion-assets.sh
+source "$root/scripts/completion-assets.sh"
 
 mkdir -p completions
 
+tmp_names=()
 cleanup() {
-    rm -f completions/.fest-tmp completions/.camp-tmp completions/.festival-tmp
+    local name
+    for name in "${tmp_names[@]+"${tmp_names[@]}"}"; do
+        rm -f "completions/.${name}-tmp"
+    done
 }
 trap cleanup EXIT
 
 echo "Building temporary binaries for completion generation..."
-(cd fest && go build -o ../completions/.fest-tmp ./cmd/fest)
-(cd camp && go build -o ../completions/.camp-tmp ./cmd/camp)
-(cd festival-installer && go build -o ../completions/.festival-tmp ./cmd/festival)
+while read -r name src_dir main_pkg; do
+    tmp_names+=("$name")
+    (cd "$src_dir" && go build -o "../completions/.${name}-tmp" "$main_pkg")
+done < <(completion_asset_rows)
 
 echo "Generating completions..."
-./completions/.fest-tmp completion bash > completions/fest.bash
-./completions/.fest-tmp completion zsh  > completions/_fest
-./completions/.fest-tmp completion fish > completions/fest.fish
-
-./completions/.camp-tmp completion bash > completions/camp.bash
-./completions/.camp-tmp completion zsh  > completions/_camp
-./completions/.camp-tmp completion fish > completions/camp.fish
-
-./completions/.festival-tmp completion bash > completions/festival.bash
-./completions/.festival-tmp completion zsh  > completions/_festival
-./completions/.festival-tmp completion fish > completions/festival.fish
+: > completions/manifest.txt
+while read -r name _; do
+    ./completions/."${name}"-tmp completion bash > "completions/${name}.bash"
+    ./completions/."${name}"-tmp completion zsh > "completions/_${name}"
+    ./completions/."${name}"-tmp completion fish > "completions/${name}.fish"
+    completion_src_names_for "$name" >> completions/manifest.txt
+done < <(completion_asset_rows)
 
 echo "Completions generated in completions/"

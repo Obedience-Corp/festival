@@ -116,7 +116,7 @@ curl -fsSL https://raw.githubusercontent.com/Obedience-Corp/festival/main/instal
 This downloads pre-built binaries to `~/.local/bin`.
 The installer checks for `git` and stops early if it is missing. If `scc` is not installed, the installer continues and warns that `camp leverage` features will be unavailable until you add it.
 It also installs completion files and shell-helper source files under `~/.local/share/festival/`.
-When run from an interactive terminal, it asks whether to add the helper source line to your detected shell config; the default answer is yes.
+When run from an interactive terminal, it asks whether to add the helper source line to your detected shell config; the default answer is yes. Saying yes also writes a guarded PATH line to `~/.zprofile` (zsh) or `~/.profile` (bash) so login shells see `camp` and `fest`.
 [Review the script source](https://github.com/Obedience-Corp/festival/blob/main/install.sh) before running.
 {{< /note >}}
 

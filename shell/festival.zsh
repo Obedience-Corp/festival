@@ -34,18 +34,14 @@ _festival_register_zsh_cli_completions() {
   completion_dir="${shell_dir:h}/completions"
 
   if (( $+functions[compdef] )) && [[ -d "$completion_dir" ]]; then
-    if [[ -f "$completion_dir/_camp" ]]; then
-      autoload -Uz _camp
-      compdef _camp camp
-    fi
-    if [[ -f "$completion_dir/_fest" ]]; then
-      autoload -Uz _fest
-      compdef _fest fest
-    fi
-    if [[ -f "$completion_dir/_festival" ]]; then
-      autoload -Uz _festival
-      compdef _festival festival
-    fi
+    local file name cmd
+    for file in "$completion_dir"/_*(N); do
+      [[ -f "$file" ]] || continue
+      name="${file:t}"
+      cmd="${name#_}"
+      autoload -Uz "$name"
+      compdef "$name" "$cmd"
+    done
   fi
 }
 

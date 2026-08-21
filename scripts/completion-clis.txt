@@ -1,0 +1,7 @@
+# Source of truth for packaged CLI completions.
+# One row per CLI: <name> <source_dir> <main_package>
+# Adding a completion is adding one row, then:
+#   scripts/completion-assets.sh apply-goreleaser
+fest fest ./cmd/fest
+camp camp ./cmd/camp
+festival festival-installer ./cmd/festival

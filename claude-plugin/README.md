@@ -22,6 +22,7 @@ claude-plugin/
   hooks/
     hooks.json                  SessionStart + PreToolUse hook wiring
     scripts/ensure-festival.sh  installs and updates fest and camp
+    scripts/ensure-festival.test.sh  unit tests for local-version parsing (run by the gate)
     scripts/commit-guard.sh     blocks raw `git commit` inside a campaign
     scripts/commit-guard.test.sh  unit tests for the guard (run by the gate)
     scripts/sync-check.sh       checks plugin command refs against the CLIs
