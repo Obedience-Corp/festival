@@ -55,19 +55,19 @@ plan mode="stable" fest="latest" camp="latest" festival_installer="latest":
 # - keep: keep the currently pinned exact tag for that submodule
 # - vX.Y.Z: pin a specific release tag
 [no-cd]
-[confirm("This will create a dev festival release using the selected fest/camp/festival-installer tags. Run 'just release plan mode=dev fest=... camp=... festival_installer=...' first if you want to see the exact tags. Continue?")]
+[confirm("This will create a dev festival release using the selected fest/camp/festival-installer tags. Run 'just release plan dev <fest> <camp> <festival_installer>' first if you want to see the exact tags (positional selectors: latest, keep, or vX.Y.Z). Continue?")]
 dev fest="latest" camp="latest" festival_installer="latest":
     just test release-operator
     go -C tools/release-operator run . bundle --repo-root ../.. --fest-tag "{{fest}}" --camp-tag "{{camp}}" --festival-installer-tag "{{festival_installer}}" dev
 
 [no-cd]
-[confirm("This will create an RC festival release using the selected fest/camp/festival-installer tags. Run 'just release plan mode=rc fest=... camp=... festival_installer=...' first if you want to see the exact tags. Continue?")]
+[confirm("This will create an RC festival release using the selected fest/camp/festival-installer tags. Run 'just release plan rc <fest> <camp> <festival_installer>' first if you want to see the exact tags (positional selectors: latest, keep, or vX.Y.Z). Continue?")]
 rc fest="latest" camp="latest" festival_installer="latest":
     just test release-operator
     go -C tools/release-operator run . bundle --repo-root ../.. --fest-tag "{{fest}}" --camp-tag "{{camp}}" --festival-installer-tag "{{festival_installer}}" rc
 
 [no-cd]
-[confirm("This will create a stable festival release on main using the selected fest/camp/festival-installer tags (the pin commit ships through an auto-merged PR because main is PR-only). Run 'just release plan mode=stable fest=... camp=... festival_installer=...' first if you want to see the exact tags. Continue?")]
+[confirm("This will create a stable festival release on main using the selected fest/camp/festival-installer tags (the pin commit ships through an auto-merged PR because main is PR-only). Run 'just release plan stable <fest> <camp> <festival_installer>' first if you want to see the exact tags (positional selectors: latest, keep, or vX.Y.Z). Continue?")]
 stable fest="latest" camp="latest" festival_installer="latest":
     just test release-operator
     go -C tools/release-operator run . bundle --repo-root ../.. --fest-tag "{{fest}}" --camp-tag "{{camp}}" --festival-installer-tag "{{festival_installer}}" stable
