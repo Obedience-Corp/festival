@@ -1000,8 +1000,8 @@ func runPreflight(ctx *repoContext, mode releaseMode) error {
 	}
 	fmt.Println()
 	fmt.Println("Preflight complete.")
-	fmt.Println("  One-command: just release stable fest=latest camp=keep")
-	fmt.Println("  Planner:     just release plan mode=stable fest=latest camp=keep")
+	fmt.Println("  One-command: just release stable keep keep keep")
+	fmt.Println("  Planner:     just release plan stable keep keep keep")
 	fmt.Println("  Manual:      just release draft <version> | draft-rc <version> <n> | draft-dev <version> <n>")
 	return nil
 }
@@ -1159,14 +1159,20 @@ func runDraftBootstrap(ctx *repoContext, festivalVersion string, versions map[st
 	return nil
 }
 
-// selectorArgsString renders selectors as a "just release" command-line
-// hint, one flag=value token per component, in declaration order.
+// selectorArgsString renders selectors as positional just arguments in
+// component declaration order (fest, camp, festival-installer). just recipe
+// parameters are positional, and the third parameter is festival_installer,
+// not festival-installer.
 func selectorArgsString(selectors map[string]string) string {
 	parts := make([]string, 0, len(components))
 	for _, c := range components {
-		parts = append(parts, fmt.Sprintf("%s=%s", c.FlagName, selectors[c.Dir]))
+		parts = append(parts, selectors[c.Dir])
 	}
 	return strings.Join(parts, " ")
+}
+
+func justReleaseCommand(channel string, selectors map[string]string) string {
+	return "just release " + channel + " " + selectorArgsString(selectors)
 }
 
 func runPlanWithRoot(opts planOptions) error {
@@ -1179,6 +1185,7 @@ func runPlanWithRoot(opts planOptions) error {
 	if err != nil {
 		return err
 	}
+	state.ReadOnly = true
 
 	plan, err := operator.DeriveBundlePlan(state)
 	if err != nil {
@@ -1201,7 +1208,7 @@ func runPlanWithRoot(opts planOptions) error {
 	fmt.Printf("  commit message: %s\n", releaseCommitMessage(state.CurrentPinned, state.SelectedTags))
 	fmt.Println()
 	fmt.Println(plan.Description)
-	fmt.Printf("Command: just release %s %s\n", opts.Channel, selectorArgsString(opts.Selectors))
+	fmt.Printf("Command: %s\n", justReleaseCommand(opts.Channel, opts.Selectors))
 	fmt.Println()
 	return nil
 }
