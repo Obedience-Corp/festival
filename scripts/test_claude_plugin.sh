@@ -623,6 +623,106 @@ EOF_JSON
     fi
 }
 
+# Write a fest/camp stub whose `version` output is the given lines, so the
+# update check can be driven against a specific version banner.
+write_version_stub() {
+    local path="$1"
+    shift
+
+    {
+        echo '#!/usr/bin/env bash'
+        echo 'case "${1:-}" in'
+        echo '  version|--version)'
+        for line in "$@"; do
+            printf "    echo %s\n" "'$line'"
+        done
+        echo '    ;;'
+        echo '  *) echo "stub" ;;'
+        echo 'esac'
+    } > "$path"
+    chmod +x "$path"
+}
+
+run_update_check() {
+    local workdir="$1" fixture="$2" fakebin="$3"
+    shift 3
+
+    mkdir -p "$workdir/home" "$workdir/bin"
+    write_version_stub "$workdir/bin/fest" "$@"
+    write_version_stub "$workdir/bin/camp" "camp v0.0.0"
+
+    if ! FESTIVAL_PLUGIN_TEST_FIXTURE_DIR="$fixture" \
+        FESTIVAL_CHECK_FILE="$workdir/last-update-check" \
+        HOME="$workdir/home" \
+        INSTALL_DIR="$workdir/bin" \
+        PATH="$workdir/bin:$fakebin:/usr/bin:/bin:/usr/sbin:/sbin" \
+        bash "$plugin_dir/hooks/scripts/ensure-festival.sh" >"$workdir/log" 2>&1; then
+        cat "$workdir/log" >&2
+        return 1
+    fi
+}
+
+assert_log_contains() {
+    local log="$1" needle="$2"
+
+    if ! grep -qF "$needle" "$log"; then
+        echo "expected in ensure-festival.sh output: $needle" >&2
+        cat "$log" >&2
+        return 1
+    fi
+}
+
+# The update check compares against the latest festival suite tag, so it has to
+# read the suite version out of `fest version`, not the fest release. Bundled
+# binaries print the two on different lines.
+update_version_source_check() {
+    local tmp fixture fakebin
+
+    case "$(uname -s | tr '[:upper:]' '[:lower:]')" in
+        darwin|linux) ;;
+        *)
+            echo "Skipping update version source check on unsupported host platform"
+            return 0
+            ;;
+    esac
+
+    tmp="$(mktemp -d "${TMPDIR:-/tmp}/festival-plugin-version.XXXXXX")"
+    trap 'rm -rf "$tmp"' RETURN
+    fixture="$tmp/fixture"
+    fakebin="$tmp/fakebin"
+    mkdir -p "$fixture" "$fakebin"
+
+    cat > "$fixture/release.json" <<'EOF_JSON'
+{
+  "tag_name": "v9.9.9",
+  "assets": []
+}
+EOF_JSON
+    write_fake_curl "$fakebin/curl"
+
+    # Bundle line present: the suite version wins over the fest release printed
+    # on the first line, which is the value the old first-semver read picked up.
+    run_update_check "$tmp/bundle" "$fixture" "$fakebin" \
+        "fest v0.6.2" "commit: 62ebfca" "bundle: festival v0.2.17"
+    assert_log_contains "$tmp/bundle/log" "Festival update available: v0.2.17 -> v9.9.9"
+
+    # No bundle line: binaries built before the suite carried one stamped the
+    # festival version into fest's own version field, so the first semver on
+    # screen is still the suite version for them.
+    run_update_check "$tmp/legacy" "$fixture" "$fakebin" \
+        "fest v0.2.17" "commit: 98b9950e"
+    assert_log_contains "$tmp/legacy/log" "Festival update available: v0.2.17 -> v9.9.9"
+
+    # Suite already current: no update notice, from either source.
+    run_update_check "$tmp/current" "$fixture" "$fakebin" \
+        "fest v0.6.2" "bundle: festival v9.9.9"
+    if grep -qF "Festival update available" "$tmp/current/log"; then
+        echo "unexpected update notice when the bundle matches the latest tag" >&2
+        cat "$tmp/current/log" >&2
+        return 1
+    fi
+}
+
 require_command node
 require_command tar
 require_command bash
@@ -652,5 +752,6 @@ else
 fi
 
 smoke_install_hook
+update_version_source_check
 
 echo "Claude plugin smoke passed"

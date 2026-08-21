@@ -227,7 +227,14 @@ if ! should_check_update; then
     exit 0
 fi
 
-CURRENT_VERSION=$(fest version 2>/dev/null | grep -oE 'v?[0-9]+\.[0-9]+\.[0-9]+' | head -1 || echo "")
+# The update check compares against the latest festival suite tag, so read the
+# suite version, not the fest release. Bundled binaries print it on a `bundle:`
+# line. Binaries built before that line existed stamped the suite version into
+# fest's own version field, so the first semver stays the right fallback there.
+CURRENT_VERSION=$(fest version 2>/dev/null | awk '/^bundle:/ {print $NF}' | head -1 || echo "")
+if [ -z "$CURRENT_VERSION" ]; then
+    CURRENT_VERSION=$(fest version 2>/dev/null | grep -oE 'v?[0-9]+\.[0-9]+\.[0-9]+' | head -1 || echo "")
+fi
 if [ -z "$CURRENT_VERSION" ]; then
     record_check
     exit 0
