@@ -46,8 +46,7 @@ func run(args []string) error {
 		fs := commandFlags("pin")
 		repoRoot := fs.String("repo-root", ".", "festival repo root")
 		modeName := fs.String("mode", "stable", "release mode: stable, rc, or dev (a mode=... prefix is also accepted)")
-		festTag := fs.String("fest-tag", "latest", "fest tag selector: latest, keep, or an explicit tag (a fest=... prefix is also accepted)")
-		campTag := fs.String("camp-tag", "latest", "camp tag selector: latest, keep, or an explicit tag (a camp=... prefix is also accepted)")
+		readSelectors := componentTagFlags(fs)
 		if err := fs.Parse(args[1:]); err != nil {
 			return err
 		}
@@ -57,8 +56,7 @@ func run(args []string) error {
 		}
 		return ctx.pinFromLatest(
 			normalizeOptionalAssignment(*modeName, "mode"),
-			normalizeOptionalAssignment(*festTag, "fest"),
-			normalizeOptionalAssignment(*campTag, "camp"),
+			readSelectors(),
 		)
 	case "status":
 		ctx, err := repoContextFromArgs("status", args[1:])
@@ -100,8 +98,7 @@ func run(args []string) error {
 		version := fs.String("version", "", "festival release version without leading v")
 		modeName := fs.String("mode", "stable", "release mode: stable, rc, or dev (a mode=... prefix is also accepted)")
 		iteration := fs.Int("n", 1, "prerelease iteration for rc/dev flows")
-		festTag := fs.String("fest-tag", "latest", "fest tag selector: latest, keep, or an explicit tag (a fest=... prefix is also accepted)")
-		campTag := fs.String("camp-tag", "latest", "camp tag selector: latest, keep, or an explicit tag (a camp=... prefix is also accepted)")
+		readSelectors := componentTagFlags(fs)
 		if err := fs.Parse(args[1:]); err != nil {
 			return err
 		}
@@ -109,8 +106,7 @@ func run(args []string) error {
 			return errors.New("missing required --version")
 		}
 		modeValue := normalizeOptionalAssignment(*modeName, "mode")
-		festValue := normalizeOptionalAssignment(*festTag, "fest")
-		campValue := normalizeOptionalAssignment(*campTag, "camp")
+		selectors := readSelectors()
 		mode, err := modeConfig(modeValue)
 		if err != nil {
 			return err
@@ -119,28 +115,33 @@ func run(args []string) error {
 		if err != nil {
 			return err
 		}
-		state, err := collectState(ctx.Root, mode.Name, festValue, campValue)
+		state, err := collectState(ctx.Root, mode.Name, selectors)
 		if err != nil {
 			return err
 		}
-		return runDraftFromLatest(ctx, *version, mode, *iteration, festValue, campValue, state.CurrentPinnedFestTag, state.CurrentPinnedCampTag)
+		return runDraftFromLatest(ctx, *version, mode, *iteration, selectors, state.CurrentPinned)
 	case "draft-bootstrap":
 		fs := commandFlags("draft-bootstrap")
 		repoRoot := fs.String("repo-root", ".", "festival repo root")
 		version := fs.String("version", "", "festival release version without leading v")
-		festVersion := fs.String("fest-version", "", "fest release version without leading v")
-		campVersion := fs.String("camp-version", "", "camp release version without leading v")
+		readVersions := componentVersionFlags(fs)
 		if err := fs.Parse(args[1:]); err != nil {
 			return err
 		}
-		if *version == "" || *festVersion == "" || *campVersion == "" {
-			return errors.New("draft-bootstrap requires --version, --fest-version, and --camp-version")
+		versions := readVersions()
+		if *version == "" {
+			return errors.New("draft-bootstrap requires --version and a --<component>-version for every component")
+		}
+		for _, c := range components {
+			if versions[c.Dir] == "" {
+				return fmt.Errorf("draft-bootstrap requires --%s-version", c.FlagName)
+			}
 		}
 		ctx, err := newRepoContext(*repoRoot)
 		if err != nil {
 			return err
 		}
-		return runDraftBootstrap(ctx, *version, *festVersion, *campVersion)
+		return runDraftBootstrap(ctx, *version, versions)
 	case "draft":
 		return runDraftCommand(args[1:], "stable")
 	case "draft-rc":
@@ -183,16 +184,22 @@ func run(args []string) error {
 }
 
 func runEmitMarketplaceEntry(repoRoot, tag, channel, checksumsPath, outputPath, publishedAt string) error {
-	festTag, err := exactTagAt(filepath.Join(repoRoot, "fest"))
-	if err != nil {
-		return fmt.Errorf("resolve fest tag: %w", err)
+	tagsByBinary := make(map[string]string, len(components))
+	parts := make([]string, len(components))
+	unpinned := false
+	for i, c := range components {
+		t, err := exactTagAt(filepath.Join(repoRoot, c.Dir))
+		if err != nil {
+			return fmt.Errorf("resolve %s tag: %w", c.Dir, err)
+		}
+		tagsByBinary[c.BinaryName] = t
+		parts[i] = fmt.Sprintf("%s=%q", c.Dir, t)
+		if t == "" {
+			unpinned = true
+		}
 	}
-	campTag, err := exactTagAt(filepath.Join(repoRoot, "camp"))
-	if err != nil {
-		return fmt.Errorf("resolve camp tag: %w", err)
-	}
-	if festTag == "" || campTag == "" {
-		return fmt.Errorf("fest/camp submodules are not pinned to exact tags (fest=%q camp=%q)", festTag, campTag)
+	if unpinned {
+		return fmt.Errorf("%s submodules are not pinned to exact tags (%s)", joinAnd(componentDirs()), strings.Join(parts, " "))
 	}
 
 	checksumsAbs := checksumsPath
@@ -204,12 +211,21 @@ func runEmitMarketplaceEntry(repoRoot, tag, channel, checksumsPath, outputPath, 
 		return err
 	}
 
+	// Manifest order is camp, fest, then the hub last (sequence 02 already
+	// places the hub last at install time regardless of manifest order;
+	// this keeps the manifest reading the way installs run). It does not
+	// follow the components slice's own declaration order.
+	compVersions := []operator.ComponentVersion{
+		{Name: "camp", Version: strings.TrimPrefix(tagsByBinary["camp"], "v")},
+		{Name: "fest", Version: strings.TrimPrefix(tagsByBinary["fest"], "v")},
+		{Name: "festival", Version: strings.TrimPrefix(tagsByBinary["festival"], "v")},
+	}
+
 	out, err := operator.BuildMarketplaceEntry(operator.MarketplaceEntryInput{
 		FestivalVersion: strings.TrimPrefix(tag, "v"),
 		Channel:         channel,
 		PublishedAt:     publishedAt,
-		CampVersion:     strings.TrimPrefix(campTag, "v"),
-		FestVersion:     strings.TrimPrefix(festTag, "v"),
+		Components:      compVersions,
 		Artifacts:       arts,
 	})
 	if err != nil {
@@ -259,6 +275,10 @@ func suiteArtifactsFromChecksums(path, tag string) ([]operator.ArtifactInput, er
 			}
 		}
 	}
+	// 3 here is the platform archive count (macOS-all, linux-x86_64,
+	// linux-arm64), not the binary count. Each archive bundles every suite
+	// binary (camp, fest, and now festival), so this check does not grow
+	// when a fourth binary joins the suite.
 	if len(arts) != 3 {
 		return nil, fmt.Errorf("expected 3 suite artifacts in %s, found %d", path, len(arts))
 	}
@@ -303,35 +323,49 @@ func normalizeOptionalAssignment(value, key string) string {
 }
 
 type bundleOptions struct {
-	RepoRoot     string
-	Channel      string
-	FestSelector string
-	CampSelector string
+	RepoRoot  string
+	Channel   string
+	Selectors map[string]string // keyed by Component.Dir
 }
 
 type planOptions struct {
-	RepoRoot     string
-	Channel      string
-	FestSelector string
-	CampSelector string
+	RepoRoot  string
+	Channel   string
+	Selectors map[string]string // keyed by Component.Dir
+}
+
+// componentTagFlags registers a "--<flagname>-tag" selector flag for every
+// component and returns a func that reads the parsed values back into a
+// map keyed by Component.Dir, normalizing any "name=value" prefix form.
+func componentTagFlags(fs *flag.FlagSet) func() map[string]string {
+	values := make(map[string]*string, len(components))
+	for _, c := range components {
+		values[c.Dir] = fs.String(c.FlagName+"-tag", "latest",
+			c.Dir+" tag selector: latest, keep, or an explicit tag (a "+c.FlagName+"=... prefix is also accepted)")
+	}
+	return func() map[string]string {
+		selectors := make(map[string]string, len(components))
+		for _, c := range components {
+			selectors[c.Dir] = normalizeOptionalAssignment(*values[c.Dir], c.FlagName)
+		}
+		return selectors
+	}
 }
 
 func parseBundleArgs(args []string) (bundleOptions, error) {
 	fs := commandFlags("bundle")
 	repoRootFlag := fs.String("repo-root", ".", "festival repo root")
-	festTag := fs.String("fest-tag", "latest", "fest tag selector: latest, keep, or an explicit tag (a fest=... prefix is also accepted)")
-	campTag := fs.String("camp-tag", "latest", "camp tag selector: latest, keep, or an explicit tag (a camp=... prefix is also accepted)")
+	readSelectors := componentTagFlags(fs)
 	if err := fs.Parse(args); err != nil {
 		return bundleOptions{}, err
 	}
 	if fs.NArg() != 1 {
-		return bundleOptions{}, errors.New("usage: release-operator bundle <dev|rc|stable> [--repo-root PATH] [--fest-tag latest|keep|vX.Y.Z] [--camp-tag latest|keep|vX.Y.Z]")
+		return bundleOptions{}, fmt.Errorf("usage: release-operator bundle <dev|rc|stable> [--repo-root PATH] %s", componentTagUsage())
 	}
 	return bundleOptions{
-		RepoRoot:     *repoRootFlag,
-		Channel:      fs.Arg(0),
-		FestSelector: normalizeOptionalAssignment(*festTag, "fest"),
-		CampSelector: normalizeOptionalAssignment(*campTag, "camp"),
+		RepoRoot:  *repoRootFlag,
+		Channel:   fs.Arg(0),
+		Selectors: readSelectors(),
 	}, nil
 }
 
@@ -339,20 +373,45 @@ func parsePlanArgs(args []string) (planOptions, error) {
 	fs := commandFlags("plan")
 	repoRootFlag := fs.String("repo-root", ".", "festival repo root")
 	modeName := fs.String("mode", "stable", "release mode: stable, rc, or dev (a mode=... prefix is also accepted)")
-	festTag := fs.String("fest-tag", "latest", "fest tag selector: latest, keep, or an explicit tag (a fest=... prefix is also accepted)")
-	campTag := fs.String("camp-tag", "latest", "camp tag selector: latest, keep, or an explicit tag (a camp=... prefix is also accepted)")
+	readSelectors := componentTagFlags(fs)
 	if err := fs.Parse(args); err != nil {
 		return planOptions{}, err
 	}
 	if fs.NArg() != 0 {
-		return planOptions{}, errors.New("usage: release-operator plan [--mode stable|rc|dev] [--repo-root PATH] [--fest-tag latest|keep|vX.Y.Z] [--camp-tag latest|keep|vX.Y.Z]")
+		return planOptions{}, fmt.Errorf("usage: release-operator plan [--mode stable|rc|dev] [--repo-root PATH] %s", componentTagUsage())
 	}
 	return planOptions{
-		RepoRoot:     *repoRootFlag,
-		Channel:      normalizeOptionalAssignment(*modeName, "mode"),
-		FestSelector: normalizeOptionalAssignment(*festTag, "fest"),
-		CampSelector: normalizeOptionalAssignment(*campTag, "camp"),
+		RepoRoot:  *repoRootFlag,
+		Channel:   normalizeOptionalAssignment(*modeName, "mode"),
+		Selectors: readSelectors(),
 	}, nil
+}
+
+// componentVersionFlags registers a "--<flagname>-version" flag for every
+// component (bare version numbers, no leading v) and returns a func that
+// reads the parsed values back into a map keyed by Component.Dir.
+func componentVersionFlags(fs *flag.FlagSet) func() map[string]string {
+	values := make(map[string]*string, len(components))
+	for _, c := range components {
+		values[c.Dir] = fs.String(c.FlagName+"-version", "", c.Dir+" release version without leading v")
+	}
+	return func() map[string]string {
+		versions := make(map[string]string, len(components))
+		for _, c := range components {
+			versions[c.Dir] = *values[c.Dir]
+		}
+		return versions
+	}
+}
+
+// componentTagUsage renders the "[--fest-tag ...] [--camp-tag ...] ..."
+// portion of a usage string, one bracketed flag per component.
+func componentTagUsage() string {
+	parts := make([]string, 0, len(components))
+	for _, c := range components {
+		parts = append(parts, fmt.Sprintf("[--%s-tag latest|keep|vX.Y.Z]", c.FlagName))
+	}
+	return strings.Join(parts, " ")
 }
 
 func repoContextFromArgs(name string, args []string) (*repoContext, error) {
@@ -392,7 +451,7 @@ func printHelp(out io.Writer) {
 	fmt.Fprintln(out, "  If a run fails after the PR is created, rerun the same command to continue.")
 }
 
-func collectState(repoRoot, channel, festSelector, campSelector string) (operator.BundleInput, error) {
+func collectState(repoRoot, channel string, selectors map[string]string) (operator.BundleInput, error) {
 	if channel != "dev" && channel != "rc" && channel != "stable" {
 		return operator.BundleInput{}, fmt.Errorf("channel must be dev, rc, or stable (got %q)", channel)
 	}
@@ -410,23 +469,22 @@ func collectState(repoRoot, channel, festSelector, campSelector string) (operato
 		return operator.BundleInput{}, err
 	}
 
-	for _, sub := range submodules {
-		subPath := filepath.Join(repoRoot, sub)
+	for _, c := range components {
+		subPath := filepath.Join(repoRoot, c.Dir)
 		if dirty, err := worktreeDirty(subPath); err != nil {
 			return operator.BundleInput{}, err
 		} else if dirty {
-			return operator.BundleInput{}, fmt.Errorf("%s has uncommitted changes", sub)
+			return operator.BundleInput{}, fmt.Errorf("%s has uncommitted changes", c.Dir)
 		}
 	}
 
 	if err := fetchTags(repoRoot); err != nil {
 		return operator.BundleInput{}, err
 	}
-	if err := fetchTags(filepath.Join(repoRoot, "fest")); err != nil {
-		return operator.BundleInput{}, err
-	}
-	if err := fetchTags(filepath.Join(repoRoot, "camp")); err != nil {
-		return operator.BundleInput{}, err
+	for _, c := range components {
+		if err := fetchTags(filepath.Join(repoRoot, c.Dir)); err != nil {
+			return operator.BundleInput{}, err
+		}
 	}
 
 	branch, err := gitOutput(repoRoot, "rev-parse", "--abbrev-ref", "HEAD")
@@ -434,31 +492,24 @@ func collectState(repoRoot, channel, festSelector, campSelector string) (operato
 		return operator.BundleInput{}, err
 	}
 
-	currentFestTag, err := exactTagAtForMode(filepath.Join(repoRoot, "fest"), channel)
-	if err != nil {
-		return operator.BundleInput{}, err
-	}
-	currentCampTag, err := exactTagAtForMode(filepath.Join(repoRoot, "camp"), channel)
-	if err != nil {
-		return operator.BundleInput{}, err
-	}
-
-	selectedFestTag, err := resolveSelectedTag(filepath.Join(repoRoot, "fest"), channel, festSelector)
-	if err != nil {
-		return operator.BundleInput{}, err
-	}
-	selectedCampTag, err := resolveSelectedTag(filepath.Join(repoRoot, "camp"), channel, campSelector)
-	if err != nil {
-		return operator.BundleInput{}, err
+	currentPinned := make(map[string]string, len(components))
+	selectedTags := make(map[string]string, len(components))
+	for _, c := range components {
+		currentPinned[c.Dir], err = exactTagAtForMode(filepath.Join(repoRoot, c.Dir), channel)
+		if err != nil {
+			return operator.BundleInput{}, err
+		}
+		selectedTags[c.Dir], err = resolveSelectedTag(filepath.Join(repoRoot, c.Dir), channel, selectors[c.Dir])
+		if err != nil {
+			return operator.BundleInput{}, err
+		}
 	}
 
 	state := operator.BundleInput{
-		Channel:              channel,
-		CurrentBranch:        branch,
-		FestTag:              selectedFestTag,
-		CampTag:              selectedCampTag,
-		CurrentPinnedFestTag: currentFestTag,
-		CurrentPinnedCampTag: currentCampTag,
+		Channel:       channel,
+		CurrentBranch: branch,
+		SelectedTags:  selectedTags,
+		CurrentPinned: currentPinned,
 	}
 	state.LatestFestivalDev, err = latestReachableTagForMode(repoRoot, "dev")
 	if err != nil {

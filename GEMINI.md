@@ -3,8 +3,9 @@
 # Festival
 
 Festival is a goal-oriented project management methodology for human and AI development
-workflows, driven by the `fest` and `camp` CLIs. The skills imported below describe how to plan
-and execute festivals. Load them when working with festivals, phases, sequences, or tasks.
+workflows, driven by the `fest` and `camp` CLIs, installed and kept in sync by a third tool,
+`festival`. The skills imported below describe how to plan and execute festivals. Load them when
+working with festivals, phases, sequences, or tasks.
 
 The `fest` and `camp` CLIs install automatically on session start via the bundled
 `hooks/hooks.json` SessionStart hook (idempotent, per `packaging/survey/gemini.md`). If that hook

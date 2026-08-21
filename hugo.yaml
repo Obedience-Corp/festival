@@ -195,6 +195,10 @@ menu:
       parent: cli-reference
       url: /cli-reference/camp/
       weight: 52
+    - name: festival
+      parent: cli-reference
+      url: /cli-reference/festival/
+      weight: 53
 
     - name: 简体中文
       identifier: zh-cn

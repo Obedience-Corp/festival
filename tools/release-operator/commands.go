@@ -14,7 +14,61 @@ import (
 
 const festivalRepoSlug = "Obedience-Corp/festival"
 
-var submodules = []string{"fest", "camp"}
+// Component is one submodule that participates in a bundled festival release.
+type Component struct {
+	// Dir is the submodule path relative to the repo root, and the display name.
+	Dir string
+	// Repo is the GitHub slug used for tag lookups and release links.
+	Repo string
+	// FlagName is the CLI selector name, for example "fest" in --fest-tag.
+	FlagName string
+	// BinaryName is the shipped executable name. It matches Dir for every
+	// component except the hub, whose submodule directory is
+	// festival-installer but whose built binary is named festival.
+	BinaryName string
+}
+
+var components = []Component{
+	{Dir: "fest", Repo: "Obedience-Corp/fest", FlagName: "fest", BinaryName: "fest"},
+	{Dir: "camp", Repo: "Obedience-Corp/camp", FlagName: "camp", BinaryName: "camp"},
+	{Dir: "festival-installer", Repo: "Obedience-Corp/festival-installer", FlagName: "festival-installer", BinaryName: "festival"},
+}
+
+// componentDirs returns every component's Dir, in declaration order, for
+// callers that need a plain path list (git add, git diff pathspecs).
+func componentDirs() []string {
+	dirs := make([]string, len(components))
+	for i, c := range components {
+		dirs[i] = c.Dir
+	}
+	return dirs
+}
+
+// justRecipeParamName converts a component directory into the parameter
+// name .justfiles/release.just's draft-bootstrap recipe uses for it, for
+// example "festival-installer" -> "festival_installer_version". just
+// parameter names cannot contain hyphens, so the recipe uses underscores;
+// this keeps printed usage hints in sync with the recipe signature without
+// hardcoding a fixed argument count.
+func justRecipeParamName(dir string) string {
+	return strings.ReplaceAll(dir, "-", "_") + "_version"
+}
+
+// joinAnd renders items as an English list: "a", "a and b", or
+// "a, b, and c". Used for release commit messages so a fourth component
+// reads naturally without a special case.
+func joinAnd(items []string) string {
+	switch len(items) {
+	case 0:
+		return ""
+	case 1:
+		return items[0]
+	case 2:
+		return items[0] + " and " + items[1]
+	default:
+		return strings.Join(items[:len(items)-1], ", ") + ", and " + items[len(items)-1]
+	}
+}
 
 // ghClient abstracts the GitHub CLI operations the ship-via-PR path needs so
 // the PR create/merge flow can be exercised in tests without hitting GitHub.
@@ -140,13 +194,13 @@ func (r *repoContext) ensureRootWorktreeClean() error {
 // an uninitialized submodule directory silently resolves against the
 // superproject instead of the submodule.
 func (r *repoContext) ensureSubmoduleWorktreesClean() error {
-	for _, sub := range submodules {
-		dirty, err := worktreeDirty(r.submodulePath(sub))
+	for _, c := range components {
+		dirty, err := worktreeDirty(r.submodulePath(c.Dir))
 		if err != nil {
 			return err
 		}
 		if dirty {
-			return fmt.Errorf("%s has uncommitted changes", sub)
+			return fmt.Errorf("%s has uncommitted changes", c.Dir)
 		}
 	}
 	return nil
@@ -156,8 +210,8 @@ func (r *repoContext) fetchReleaseRefs() error {
 	if err := runCmd(r.Root, nil, "git", "fetch", "--prune", "--prune-tags", "origin", "+refs/tags/*:refs/tags/*", "+refs/heads/main:refs/remotes/origin/main"); err != nil {
 		return err
 	}
-	for _, sub := range submodules {
-		if err := runCmd(r.submodulePath(sub), nil, "git", "fetch", "--prune", "--prune-tags", "origin", "+refs/tags/*:refs/tags/*"); err != nil {
+	for _, c := range components {
+		if err := runCmd(r.submodulePath(c.Dir), nil, "git", "fetch", "--prune", "--prune-tags", "origin", "+refs/tags/*:refs/tags/*"); err != nil {
 			return err
 		}
 	}
@@ -165,11 +219,13 @@ func (r *repoContext) fetchReleaseRefs() error {
 }
 
 func (r *repoContext) stageReleaseArtifacts() error {
-	return r.runGit("add", "fest", "camp", "docs/cli-reference")
+	args := append([]string{"add"}, componentDirs()...)
+	args = append(args, "docs/cli-reference")
+	return r.runGit(args...)
 }
 
 func (r *repoContext) stageSubmoduleRefs() error {
-	return r.runGit("add", "fest", "camp")
+	return r.runGit(append([]string{"add"}, componentDirs()...)...)
 }
 
 func (r *repoContext) runDocs(mode releaseMode) error {
@@ -213,19 +269,22 @@ func (r *repoContext) exactTag(name string) (string, error) {
 	return exactTagAt(r.submodulePath(name))
 }
 
-func (r *repoContext) exactComponentTags(modeName string) (string, string, error) {
-	festTag, err := exactTagAtForMode(r.submodulePath("fest"), modeName)
-	if err != nil {
-		return "", "", err
+// exactComponentTags returns the exact modeName tag currently checked out
+// for every component, keyed by Component.Dir. Errors if any component is
+// not pinned to an exact tag matching modeName.
+func (r *repoContext) exactComponentTags(modeName string) (map[string]string, error) {
+	tags := make(map[string]string, len(components))
+	for _, c := range components {
+		tag, err := exactTagAtForMode(r.submodulePath(c.Dir), modeName)
+		if err != nil {
+			return nil, err
+		}
+		if tag == "" {
+			return nil, fmt.Errorf("%s is not pinned to an exact tag", c.Dir)
+		}
+		tags[c.Dir] = tag
 	}
-	campTag, err := exactTagAtForMode(r.submodulePath("camp"), modeName)
-	if err != nil {
-		return "", "", err
-	}
-	if festTag == "" || campTag == "" {
-		return "", "", errors.New("submodules are not pinned to exact tags")
-	}
-	return festTag, campTag, nil
+	return tags, nil
 }
 
 func (r *repoContext) cachedDiffExists(paths ...string) (bool, error) {
@@ -242,20 +301,25 @@ func (r *repoContext) cachedDiffExists(paths ...string) (bool, error) {
 	return false, nil
 }
 
-func releaseCommitMessage(currentFestTag, currentCampTag, festTag, campTag string) string {
-	festChanged := currentFestTag != festTag
-	campChanged := currentCampTag != campTag
-
-	switch {
-	case festChanged && campChanged:
-		return fmt.Sprintf("Release: pin fest %s and camp %s", festTag, campTag)
-	case festChanged:
-		return fmt.Sprintf("Release: pin fest %s", festTag)
-	case campChanged:
-		return fmt.Sprintf("Release: pin camp %s", campTag)
-	default:
-		return fmt.Sprintf("Release: refresh bundled docs for fest %s and camp %s", festTag, campTag)
+// releaseCommitMessage summarizes which components changed tag, keyed by
+// Component.Dir in both current and selected. When nothing changed (a docs
+// or metadata-only refresh), it lists every component's current tag instead.
+func releaseCommitMessage(current, selected map[string]string) string {
+	var changed []string
+	for _, c := range components {
+		if current[c.Dir] != selected[c.Dir] {
+			changed = append(changed, fmt.Sprintf("%s %s", c.FlagName, selected[c.Dir]))
+		}
 	}
+	if len(changed) > 0 {
+		return "Release: pin " + joinAnd(changed)
+	}
+
+	all := make([]string, 0, len(components))
+	for _, c := range components {
+		all = append(all, fmt.Sprintf("%s %s", c.FlagName, selected[c.Dir]))
+	}
+	return "Release: refresh bundled docs for " + joinAnd(all)
 }
 
 const shipBranchPrefix = "release-pin/"
@@ -276,13 +340,22 @@ func (r *repoContext) currentBranch() (string, error) {
 	return r.git("rev-parse", "--abbrev-ref", "HEAD")
 }
 
-func (r *repoContext) shipPinnedArtifacts(releaseTag, currentFestTag, currentCampTag, festTag, campTag string) error {
-	hasDiff, err := r.cachedDiffExists("fest", "camp", "docs/cli-reference")
+// shipPinnedArtifacts commits and ships the currently-staged submodule
+// pointer and docs changes. current and selected are keyed by Component.Dir;
+// selected holds what each component is now pinned to, current holds what
+// each was pinned to before this run.
+func (r *repoContext) shipPinnedArtifacts(releaseTag string, current, selected map[string]string) error {
+	diffPaths := append(componentDirs(), "docs/cli-reference")
+	hasDiff, err := r.cachedDiffExists(diffPaths...)
 	if err != nil {
 		return err
 	}
 	if !hasDiff {
-		fmt.Printf("Submodule pointers and docs already at fest=%s, camp=%s; no release commit needed.\n", festTag, campTag)
+		var pins []string
+		for _, c := range components {
+			pins = append(pins, fmt.Sprintf("%s=%s", c.FlagName, selected[c.Dir]))
+		}
+		fmt.Printf("Submodule pointers and docs already at %s; no release commit needed.\n", strings.Join(pins, ", "))
 		return nil
 	}
 
@@ -290,7 +363,7 @@ func (r *repoContext) shipPinnedArtifacts(releaseTag, currentFestTag, currentCam
 	if err != nil {
 		return err
 	}
-	message := releaseCommitMessage(currentFestTag, currentCampTag, festTag, campTag)
+	message := releaseCommitMessage(current, selected)
 	if !shipsViaPullRequest(branch) {
 		if err := r.runGit("commit", "-m", message); err != nil {
 			return err
@@ -484,24 +557,24 @@ func cleanRealPath(path string) string {
 // any further mutation happens rather than let git silently fall through
 // to the superproject. See festival-release-operator-running-pin-20260729-233926.
 func ensureSubmodulesReady(root string) error {
-	for _, sub := range submodules {
-		path := filepath.Join(root, sub)
+	for _, c := range components {
+		path := filepath.Join(root, c.Dir)
 		if submoduleIsIndependent(path) {
 			continue
 		}
 
-		fmt.Printf("%s submodule is not initialized; running 'git submodule update --init -- %s'\n", sub, sub)
-		if err := runCmd(root, nil, "git", "submodule", "update", "--init", "--", sub); err != nil {
-			return fmt.Errorf("initialize %s submodule: %w\nrun 'git submodule update --init -- %s' in %s and retry", sub, err, sub, root)
+		fmt.Printf("%s submodule is not initialized; running 'git submodule update --init -- %s'\n", c.Dir, c.Dir)
+		if err := runCmd(root, nil, "git", "submodule", "update", "--init", "--", c.Dir); err != nil {
+			return fmt.Errorf("initialize %s submodule: %w\nrun 'git submodule update --init -- %s' in %s and retry", c.Dir, err, c.Dir, root)
 		}
 		if !submoduleIsIndependent(path) {
-			return fmt.Errorf("%s did not become an independent git worktree after 'git submodule update --init'; refusing to continue rather than risk resolving refs against the superproject", sub)
+			return fmt.Errorf("%s did not become an independent git worktree after 'git submodule update --init'; refusing to continue rather than risk resolving refs against the superproject", c.Dir)
 		}
 
 		if err := runCmd(path, nil, "git", "fetch", "--prune", "--prune-tags", "origin", "+refs/tags/*:refs/tags/*"); err != nil {
-			return fmt.Errorf("fetch tags for %s after initializing submodule: %w", sub, err)
+			return fmt.Errorf("fetch tags for %s after initializing submodule: %w", c.Dir, err)
 		}
-		fmt.Printf("%s submodule initialized and tags fetched\n", sub)
+		fmt.Printf("%s submodule initialized and tags fetched\n", c.Dir)
 	}
 	return nil
 }
@@ -576,31 +649,32 @@ func (ref gitRef) restore(dir string) error {
 	return runCmd(dir, nil, "git", "checkout", "--detach", ref.commit)
 }
 
-// rollbackPin restores the festival repo and both submodules to exactly
-// where they stood before pinFromLatest began mutating them. It runs
+// rollbackPin restores the festival repo and every component submodule to
+// exactly where they stood before pinFromLatest began mutating them. It runs
 // whenever pinFromLatest fails partway through, so a failed pin never
 // leaves a submodule, or the superproject, sitting on an unrelated commit.
-// Restoring camp and fest first means that if root and a submodule ref were
+// Restoring components first means that if root and a submodule ref were
 // captured identically (the uninitialized-submodule fallthrough this guards
 // against), the submodule restore already lands root back on its starting
 // ref; the explicit root restore below is a second, independent guarantee
-// of the same outcome.
-func (r *repoContext) rollbackPin(root, fest, camp gitRef) {
-	if rerr := camp.restore(r.submodulePath("camp")); rerr != nil {
-		fmt.Fprintf(os.Stderr, "WARNING: failed to restore camp to its starting state: %v\n", rerr)
-	}
-	if rerr := fest.restore(r.submodulePath("fest")); rerr != nil {
-		fmt.Fprintf(os.Stderr, "WARNING: failed to restore fest to its starting state: %v\n", rerr)
+// of the same outcome. Components are restored in reverse declaration order
+// so the pattern matches the historical camp-before-fest restore order.
+func (r *repoContext) rollbackPin(root gitRef, starts map[string]gitRef) {
+	for i := len(components) - 1; i >= 0; i-- {
+		c := components[i]
+		if rerr := starts[c.Dir].restore(r.submodulePath(c.Dir)); rerr != nil {
+			fmt.Fprintf(os.Stderr, "WARNING: failed to restore %s to its starting state: %v\n", c.Dir, rerr)
+		}
 	}
 	if rerr := root.restore(r.Root); rerr != nil {
 		fmt.Fprintf(os.Stderr, "WARNING: failed to restore festival repo to its starting state: %v\n", rerr)
 	}
-	if _, rerr := r.git("reset", "--", "fest", "camp"); rerr != nil {
+	if _, rerr := r.git(append([]string{"reset", "--"}, componentDirs()...)...); rerr != nil {
 		fmt.Fprintf(os.Stderr, "WARNING: failed to unstage submodule pointer changes during rollback: %v\n", rerr)
 	}
 }
 
-func (r *repoContext) pinFromLatest(modeName, festSelector, campSelector string) (err error) {
+func (r *repoContext) pinFromLatest(modeName string, selectors map[string]string) (err error) {
 	mode, err := modeConfig(modeName)
 	if err != nil {
 		return err
@@ -618,25 +692,24 @@ func (r *repoContext) pinFromLatest(modeName, festSelector, campSelector string)
 		return err
 	}
 
-	// Capture exactly where the festival repo and both submodules stand
-	// before anything below mutates them, so any failure can restore all
-	// three to their starting branch/commit instead of leaving something
-	// checked out on an unrelated release commit.
+	// Capture exactly where the festival repo and every component submodule
+	// stand before anything below mutates them, so any failure can restore
+	// all of them to their starting branch/commit instead of leaving
+	// something checked out on an unrelated release commit.
 	startRoot, err := captureGitRef(r.Root)
 	if err != nil {
 		return err
 	}
-	startFest, err := captureGitRef(r.submodulePath("fest"))
-	if err != nil {
-		return err
-	}
-	startCamp, err := captureGitRef(r.submodulePath("camp"))
-	if err != nil {
-		return err
+	starts := make(map[string]gitRef, len(components))
+	for _, c := range components {
+		starts[c.Dir], err = captureGitRef(r.submodulePath(c.Dir))
+		if err != nil {
+			return err
+		}
 	}
 	defer func() {
 		if err != nil {
-			r.rollbackPin(startRoot, startFest, startCamp)
+			r.rollbackPin(startRoot, starts)
 		}
 	}()
 
@@ -644,50 +717,84 @@ func (r *repoContext) pinFromLatest(modeName, festSelector, campSelector string)
 		return err
 	}
 
-	festTag, err := resolveSelectedTag(r.submodulePath("fest"), mode.Name, festSelector)
-	if err != nil {
-		return err
+	tags := make(map[string]string, len(components))
+	missing := false
+	for _, c := range components {
+		tag, terr := resolveSelectedTag(r.submodulePath(c.Dir), mode.Name, selectors[c.Dir])
+		if terr != nil {
+			err = terr
+			return err
+		}
+		tags[c.Dir] = tag
+		if tag == "" {
+			missing = true
+		}
 	}
-	campTag, err := resolveSelectedTag(r.submodulePath("camp"), mode.Name, campSelector)
-	if err != nil {
-		return err
-	}
-	if festTag == "" || campTag == "" {
+	if missing {
 		fmt.Printf("ERROR: Missing %s tags.\n", mode.Name)
-		fmt.Printf("fest latest %s: %s\n", mode.Name, valueOrNone(festTag))
-		fmt.Printf("camp latest %s: %s\n", mode.Name, valueOrNone(campTag))
+		for _, c := range components {
+			fmt.Printf("%s latest %s: %s\n", c.Dir, mode.Name, valueOrNone(tags[c.Dir]))
+		}
 		switch mode.Name {
 		case "stable":
 			fmt.Println("For a first release, run:")
-			fmt.Println("  just release draft-bootstrap <festival_version> <fest_version> <camp_version>")
+			fmt.Print("  just release draft-bootstrap <festival_version>")
+			for _, c := range components {
+				fmt.Printf(" <%s>", justRecipeParamName(c.Dir))
+			}
+			fmt.Println()
 		case "rc":
-			fmt.Println("Create rc tags in fest/camp first, then rerun with mode=rc.")
+			fmt.Println("Create rc tags in fest/camp/festival-installer first, then rerun with mode=rc.")
 		default:
-			fmt.Println("Create dev tags in fest/camp first, then rerun with mode=dev.")
+			fmt.Println("Create dev tags in fest/camp/festival-installer first, then rerun with mode=dev.")
 		}
 		err = errors.New("missing component tags")
 		return err
 	}
 
-	if err = r.checkoutSubmoduleTag("fest", festTag); err != nil {
-		return err
-	}
-	if err = verifyCheckedOutTag(r.submodulePath("fest"), "fest", festTag); err != nil {
-		return err
-	}
-	if err = r.checkoutSubmoduleTag("camp", campTag); err != nil {
-		return err
-	}
-	if err = verifyCheckedOutTag(r.submodulePath("camp"), "camp", campTag); err != nil {
-		return err
+	for _, c := range components {
+		if err = r.checkoutSubmoduleTag(c.Dir, tags[c.Dir]); err != nil {
+			return err
+		}
+		if err = verifyCheckedOutTag(r.submodulePath(c.Dir), c.Dir, tags[c.Dir]); err != nil {
+			return err
+		}
 	}
 	if err = r.stageSubmoduleRefs(); err != nil {
 		return err
 	}
 
-	fmt.Printf("Pinned fest to: %s\n", festTag)
-	fmt.Printf("Pinned camp to: %s\n", campTag)
+	for _, c := range components {
+		fmt.Printf("Pinned %s to: %s\n", c.Dir, tags[c.Dir])
+	}
 	return nil
+}
+
+// stablePublishSecrets lists the GitHub repo secrets a stable release
+// needs, in report order. require-stable-publish-credentials and status
+// both read from this single list, so a newly required secret cannot drift
+// between the two checks the way MARKETPLACE_PUBLISH_TOKEN once did (it was
+// checked by the former but silently absent from the latter's report).
+var stablePublishSecrets = []struct {
+	Name        string
+	Label       string
+	FailureNote string
+}{
+	{
+		Name:        "HOMEBREW_TAP_GITHUB_TOKEN",
+		Label:       "Homebrew",
+		FailureNote: "Stable release would fail when publishing the Homebrew cask.",
+	},
+	{
+		Name:        "AUR_SSH_KEY",
+		Label:       "AUR",
+		FailureNote: "Stable release would fail when publishing the festival-bin AUR package.",
+	},
+	{
+		Name:        "MARKETPLACE_PUBLISH_TOKEN",
+		Label:       "Marketplace",
+		FailureNote: "Stable release would fail when publishing the marketplace entry (.github/workflows/release.yaml).",
+	},
 }
 
 func runRequireStablePublishCredentials(ctx *repoContext) error {
@@ -704,17 +811,12 @@ func runRequireStablePublishCredentials(ctx *repoContext) error {
 	}
 
 	missing := false
-	for _, name := range []string{"HOMEBREW_TAP_GITHUB_TOKEN", "AUR_SSH_KEY"} {
-		if !contains(secretNames, name) {
-			fmt.Printf("ERROR: %s is not configured for Obedience-Corp/festival.\n", name)
-			switch name {
-			case "HOMEBREW_TAP_GITHUB_TOKEN":
-				fmt.Println("Stable release would fail when publishing the Homebrew cask.")
-			case "AUR_SSH_KEY":
-				fmt.Println("Stable release would fail when publishing the festival-bin AUR package.")
-			}
+	for _, s := range stablePublishSecrets {
+		if !contains(secretNames, s.Name) {
+			fmt.Printf("ERROR: %s is not configured for Obedience-Corp/festival.\n", s.Name)
+			fmt.Println(s.FailureNote)
 			fmt.Println("Add it with:")
-			fmt.Printf("  gh secret set %s --repo Obedience-Corp/festival\n", name)
+			fmt.Printf("  gh secret set %s --repo Obedience-Corp/festival\n", s.Name)
 			missing = true
 		}
 	}
@@ -736,35 +838,36 @@ func runStatus(ctx *repoContext) error {
 
 	fmt.Printf("festival branch: %s\n\n", branch)
 	fmt.Println("Current submodule pins:")
-	for _, sub := range submodules {
-		sha, err := ctx.gitSubmodule(sub, "rev-parse", "--short", "HEAD")
+	for _, c := range components {
+		sha, err := ctx.gitSubmodule(c.Dir, "rev-parse", "--short", "HEAD")
 		if err != nil {
 			return err
 		}
-		tag, err := ctx.exactTag(sub)
+		tag, err := ctx.exactTag(c.Dir)
 		if err != nil {
 			return err
 		}
 		if tag == "" {
 			tag = "no tag"
 		}
-		fmt.Printf("  %s: %s (%s)\n", sub, sha, tag)
+		fmt.Printf("  %s: %s (%s)\n", c.Dir, sha, tag)
 	}
 
 	fmt.Println()
 	fmt.Println("Latest available tags:")
 	for _, modeName := range []string{"stable", "rc", "dev"} {
-		fmt.Printf("  %s: fest=%s camp=%s\n",
-			modeName,
-			valueOrNone(latestTagForMode(ctx.submodulePath("fest"), modeName)),
-			valueOrNone(latestTagForMode(ctx.submodulePath("camp"), modeName)),
-		)
+		var parts []string
+		for _, c := range components {
+			parts = append(parts, fmt.Sprintf("%s=%s", c.FlagName, valueOrNone(latestTagForMode(ctx.submodulePath(c.Dir), modeName))))
+		}
+		fmt.Printf("  %s: %s\n", modeName, strings.Join(parts, " "))
 	}
 
 	fmt.Println()
 	if !ghAuthenticated() {
-		fmt.Println("Homebrew stable publish: unknown (gh not authenticated)")
-		fmt.Println("AUR stable publish: unknown (gh not authenticated)")
+		for _, s := range stablePublishSecrets {
+			fmt.Printf("%s stable publish: unknown (gh not authenticated)\n", s.Label)
+		}
 		return nil
 	}
 
@@ -772,15 +875,12 @@ func runStatus(ctx *repoContext) error {
 	if err != nil {
 		return err
 	}
-	if contains(secrets, "HOMEBREW_TAP_GITHUB_TOKEN") {
-		fmt.Println("Homebrew stable publish: configured")
-	} else {
-		fmt.Println("Homebrew stable publish: missing HOMEBREW_TAP_GITHUB_TOKEN")
-	}
-	if contains(secrets, "AUR_SSH_KEY") {
-		fmt.Println("AUR stable publish: configured")
-	} else {
-		fmt.Println("AUR stable publish: missing AUR_SSH_KEY")
+	for _, s := range stablePublishSecrets {
+		if contains(secrets, s.Name) {
+			fmt.Printf("%s stable publish: configured\n", s.Label)
+		} else {
+			fmt.Printf("%s stable publish: missing %s\n", s.Label, s.Name)
+		}
 	}
 
 	return nil
@@ -788,9 +888,9 @@ func runStatus(ctx *repoContext) error {
 
 func runCheckBundledModules(ctx *repoContext) error {
 	fmt.Println("Checking bundled submodule module resolution:")
-	for _, sub := range submodules {
-		fmt.Printf("  %s: ", sub)
-		if err := ctx.checkBundledModuleResolution(sub); err != nil {
+	for _, c := range components {
+		fmt.Printf("  %s: ", c.Dir)
+		if err := ctx.checkBundledModuleResolution(c.Dir); err != nil {
 			fmt.Println("failed")
 			return err
 		}
@@ -813,23 +913,23 @@ func runPreflight(ctx *repoContext, mode releaseMode) error {
 	fmt.Println("=== Release Preflight ===")
 	fmt.Println()
 	fmt.Println("Submodule pins:")
-	for _, sub := range submodules {
-		sha, err := ctx.gitSubmodule(sub, "rev-parse", "--short", "HEAD")
+	for _, c := range components {
+		sha, err := ctx.gitSubmodule(c.Dir, "rev-parse", "--short", "HEAD")
 		if err != nil {
 			return err
 		}
-		tag, err := ctx.exactTag(sub)
+		tag, err := ctx.exactTag(c.Dir)
 		if err != nil {
 			return err
 		}
 		if tag == "" {
 			tag = "no tag"
 		}
-		branch, err := ctx.gitSubmodule(sub, "rev-parse", "--abbrev-ref", "HEAD")
+		branch, err := ctx.gitSubmodule(c.Dir, "rev-parse", "--abbrev-ref", "HEAD")
 		if err != nil {
 			return err
 		}
-		fmt.Printf("  %s: %s (%s) [branch: %s]\n", sub, sha, tag, branch)
+		fmt.Printf("  %s: %s (%s) [branch: %s]\n", c.Dir, sha, tag, branch)
 	}
 	fmt.Println()
 
@@ -906,12 +1006,12 @@ func runPreflight(ctx *repoContext, mode releaseMode) error {
 	return nil
 }
 
-func runDraftFromLatest(ctx *repoContext, version string, mode releaseMode, iteration int, festSelector, campSelector, currentFestTag, currentCampTag string) error {
+func runDraftFromLatest(ctx *repoContext, version string, mode releaseMode, iteration int, selectors, currentPinned map[string]string) error {
 	releaseTag := releaseTagFor(mode, version, iteration)
 	if err := ctx.ensureTagAbsent(releaseTag); err != nil {
 		return err
 	}
-	if err := ctx.pinFromLatest(mode.Name, festSelector, campSelector); err != nil {
+	if err := ctx.pinFromLatest(mode.Name, selectors); err != nil {
 		return err
 	}
 	if err := ctx.runDocs(mode); err != nil {
@@ -921,15 +1021,17 @@ func runDraftFromLatest(ctx *repoContext, version string, mode releaseMode, iter
 		return err
 	}
 
-	festTag, campTag, err := ctx.exactComponentTags(mode.Name)
+	tags, err := ctx.exactComponentTags(mode.Name)
 	if err != nil {
 		return err
 	}
-	if !operator.TagMatchesMode(festTag, mode.Name) || !operator.TagMatchesMode(campTag, mode.Name) {
-		return fmt.Errorf("submodules are not pinned to exact %s tags after refresh", mode.Name)
+	for _, c := range components {
+		if !operator.TagMatchesMode(tags[c.Dir], mode.Name) {
+			return fmt.Errorf("submodules are not pinned to exact %s tags after refresh", mode.Name)
+		}
 	}
 
-	if err := ctx.shipPinnedArtifacts(releaseTag, currentFestTag, currentCampTag, festTag, campTag); err != nil {
+	if err := ctx.shipPinnedArtifacts(releaseTag, currentPinned, tags); err != nil {
 		return err
 	}
 	if err := runPreflight(ctx, mode); err != nil {
@@ -943,8 +1045,9 @@ func runDraftFromLatest(ctx *repoContext, version string, mode releaseMode, iter
 	}
 	fmt.Println()
 	fmt.Printf("%s release %s pushed.\n", mode.ReleaseLabel, releaseTag)
-	fmt.Printf("fest pinned to: %s\n", festTag)
-	fmt.Printf("camp pinned to: %s\n", campTag)
+	for _, c := range components {
+		fmt.Printf("%s pinned to: %s\n", c.Dir, tags[c.Dir])
+	}
 	fmt.Println("Monitor: gh run watch --repo Obedience-Corp/festival")
 	return nil
 }
@@ -979,7 +1082,10 @@ func runDraftExplicit(ctx *repoContext, version string, mode releaseMode, iterat
 	return nil
 }
 
-func runDraftBootstrap(ctx *repoContext, festivalVersion, festVersion, campVersion string) error {
+// runDraftBootstrap creates the first stable tag for every component that
+// does not have one yet, keyed by Component.Dir in versions (bare version
+// numbers, no leading v), then bundles and tags the first festival release.
+func runDraftBootstrap(ctx *repoContext, festivalVersion string, versions map[string]string) error {
 	stable, err := modeConfig("stable")
 	if err != nil {
 		return err
@@ -998,33 +1104,29 @@ func runDraftBootstrap(ctx *repoContext, festivalVersion, festVersion, campVersi
 	}
 
 	releaseTag := releaseTagFor(stable, festivalVersion, 0)
-	festTag := "v" + festVersion
-	campTag := "v" + campVersion
-
-	if err := ctx.ensureSubmoduleTagAbsent("fest", festTag); err != nil {
-		return err
-	}
-	if err := ctx.ensureSubmoduleTagAbsent("camp", campTag); err != nil {
-		return err
-	}
-	if err := ctx.createAndPushSubmoduleTag("fest", festTag); err != nil {
-		return err
-	}
-	if err := ctx.createAndPushSubmoduleTag("camp", campTag); err != nil {
-		return err
+	tags := make(map[string]string, len(components))
+	for _, c := range components {
+		tags[c.Dir] = "v" + versions[c.Dir]
 	}
 
-	if err := ctx.checkoutSubmoduleTag("fest", festTag); err != nil {
-		return err
+	for _, c := range components {
+		if err := ctx.ensureSubmoduleTagAbsent(c.Dir, tags[c.Dir]); err != nil {
+			return err
+		}
 	}
-	if err := verifyCheckedOutTag(ctx.submodulePath("fest"), "fest", festTag); err != nil {
-		return err
+	for _, c := range components {
+		if err := ctx.createAndPushSubmoduleTag(c.Dir, tags[c.Dir]); err != nil {
+			return err
+		}
 	}
-	if err := ctx.checkoutSubmoduleTag("camp", campTag); err != nil {
-		return err
-	}
-	if err := verifyCheckedOutTag(ctx.submodulePath("camp"), "camp", campTag); err != nil {
-		return err
+
+	for _, c := range components {
+		if err := ctx.checkoutSubmoduleTag(c.Dir, tags[c.Dir]); err != nil {
+			return err
+		}
+		if err := verifyCheckedOutTag(ctx.submodulePath(c.Dir), c.Dir, tags[c.Dir]); err != nil {
+			return err
+		}
 	}
 	if err := ctx.runDocs(stable); err != nil {
 		return err
@@ -1032,7 +1134,7 @@ func runDraftBootstrap(ctx *repoContext, festivalVersion, festVersion, campVersi
 	if err := ctx.stageReleaseArtifacts(); err != nil {
 		return err
 	}
-	if err := ctx.shipPinnedArtifacts(releaseTag, "", "", festTag, campTag); err != nil {
+	if err := ctx.shipPinnedArtifacts(releaseTag, map[string]string{}, tags); err != nil {
 		return err
 	}
 
@@ -1050,10 +1152,21 @@ func runDraftBootstrap(ctx *repoContext, festivalVersion, festVersion, campVersi
 	}
 	fmt.Println()
 	fmt.Printf("Stable release %s pushed.\n", releaseTag)
-	fmt.Printf("fest pinned to: %s\n", festTag)
-	fmt.Printf("camp pinned to: %s\n", campTag)
+	for _, c := range components {
+		fmt.Printf("%s pinned to: %s\n", c.Dir, tags[c.Dir])
+	}
 	fmt.Println("Monitor: gh run watch --repo Obedience-Corp/festival")
 	return nil
+}
+
+// selectorArgsString renders selectors as a "just release" command-line
+// hint, one flag=value token per component, in declaration order.
+func selectorArgsString(selectors map[string]string) string {
+	parts := make([]string, 0, len(components))
+	for _, c := range components {
+		parts = append(parts, fmt.Sprintf("%s=%s", c.FlagName, selectors[c.Dir]))
+	}
+	return strings.Join(parts, " ")
 }
 
 func runPlanWithRoot(opts planOptions) error {
@@ -1062,7 +1175,7 @@ func runPlanWithRoot(opts planOptions) error {
 		return err
 	}
 
-	state, err := collectState(ctx.Root, opts.Channel, opts.FestSelector, opts.CampSelector)
+	state, err := collectState(ctx.Root, opts.Channel, opts.Selectors)
 	if err != nil {
 		return err
 	}
@@ -1081,13 +1194,14 @@ func runPlanWithRoot(opts planOptions) error {
 	fmt.Printf("  channel: %s\n", opts.Channel)
 	fmt.Printf("  festival branch: %s\n", state.CurrentBranch)
 	fmt.Printf("  planned release tag: %s\n", plan.ReleaseTag)
-	fmt.Printf("  fest: %s -> %s (%s)\n", valueOrNone(state.CurrentPinnedFestTag), state.FestTag, opts.FestSelector)
-	fmt.Printf("  camp: %s -> %s (%s)\n", valueOrNone(state.CurrentPinnedCampTag), state.CampTag, opts.CampSelector)
+	for _, c := range components {
+		fmt.Printf("  %s: %s -> %s (%s)\n", c.Dir, valueOrNone(state.CurrentPinned[c.Dir]), state.SelectedTags[c.Dir], opts.Selectors[c.Dir])
+	}
 	fmt.Printf("  docs profile: %s\n", mode.BuildProfile)
-	fmt.Printf("  commit message: %s\n", releaseCommitMessage(state.CurrentPinnedFestTag, state.CurrentPinnedCampTag, state.FestTag, state.CampTag))
+	fmt.Printf("  commit message: %s\n", releaseCommitMessage(state.CurrentPinned, state.SelectedTags))
 	fmt.Println()
 	fmt.Println(plan.Description)
-	fmt.Printf("Command: just release %s fest=%s camp=%s\n", opts.Channel, opts.FestSelector, opts.CampSelector)
+	fmt.Printf("Command: just release %s %s\n", opts.Channel, selectorArgsString(opts.Selectors))
 	fmt.Println()
 	return nil
 }
@@ -1102,7 +1216,7 @@ func runBundleWithRoot(opts bundleOptions) error {
 		return err
 	}
 
-	state, err := collectState(ctx.Root, opts.Channel, opts.FestSelector, opts.CampSelector)
+	state, err := collectState(ctx.Root, opts.Channel, opts.Selectors)
 	if err != nil {
 		return err
 	}
@@ -1119,15 +1233,16 @@ func runBundleWithRoot(opts bundleOptions) error {
 	fmt.Println()
 	fmt.Println("== Current State ==")
 	fmt.Printf("  festival branch: %s\n", state.CurrentBranch)
-	fmt.Printf("  fest: %s -> %s (%s)\n", valueOrNone(state.CurrentPinnedFestTag), state.FestTag, opts.FestSelector)
-	fmt.Printf("  camp: %s -> %s (%s)\n", valueOrNone(state.CurrentPinnedCampTag), state.CampTag, opts.CampSelector)
+	for _, c := range components {
+		fmt.Printf("  %s: %s -> %s (%s)\n", c.Dir, valueOrNone(state.CurrentPinned[c.Dir]), state.SelectedTags[c.Dir], opts.Selectors[c.Dir])
+	}
 	fmt.Println()
 	fmt.Printf("== %s Bundle Release ==\n", strings.ToUpper(opts.Channel))
 	fmt.Println(plan.Description)
-	fmt.Printf("Using selected %s tags for camp and fest.\n", opts.Channel)
+	fmt.Printf("Using selected %s tags for every component.\n", opts.Channel)
 	fmt.Println()
 
-	return runDraftFromLatest(ctx, plan.Version, mode, plan.Iteration, opts.FestSelector, opts.CampSelector, state.CurrentPinnedFestTag, state.CurrentPinnedCampTag)
+	return runDraftFromLatest(ctx, plan.Version, mode, plan.Iteration, opts.Selectors, state.CurrentPinned)
 }
 
 func runCleanup(ctx *repoContext, tag string) error {

@@ -2,12 +2,13 @@
 set -euo pipefail
 
 # Festival Methodology CLI Installer
-# Installs fest and camp binaries
+# Installs fest, camp, and festival binaries
 
 REPO="Obedience-Corp/festival"
 INSTALL_DIR="${INSTALL_DIR:-$HOME/.local/bin}"
 VERSION="${VERSION:-latest}"
 SHELL_SETUP="${FESTIVAL_INSTALL_SHELL:-auto}"
+INSTALLED_BINARIES=""
 
 # Colors
 RED='\033[0;31m'
@@ -186,6 +187,64 @@ find_matching_archive_url() {
     return 1
 }
 
+find_asset_url_by_name() {
+    local release_metadata="$1"
+    local name="$2"
+    local url base
+
+    while IFS= read -r url; do
+        base="${url##*/}"
+        if [ "$base" = "$name" ]; then
+            printf '%s\n' "$url"
+            return 0
+        fi
+    done <<< "$(extract_asset_urls "$release_metadata")"
+
+    return 1
+}
+
+sha256_tool() {
+    if command_exists sha256sum; then
+        echo "sha256sum"
+    elif command_exists shasum; then
+        echo "shasum -a 256"
+    else
+        return 1
+    fi
+}
+
+verify_archive_checksum() {
+    local version="$1"
+    local release_metadata="$2"
+    local archive_name="$3"
+    local archive_path="$4"
+    local checksums_url checksums_file sha_tool expected actual
+
+    sha_tool="$(sha256_tool)" || \
+        error "Neither sha256sum nor shasum is available to verify the downloaded archive. Install one and re-run this installer."
+
+    checksums_url="$(find_asset_url_by_name "$release_metadata" "checksums.txt")" || \
+        error "checksums.txt was not found in the release assets for ${version}. Refusing to install an unverified archive."
+
+    checksums_file="$(dirname "$archive_path")/checksums.txt"
+    info "Verifying checksum..."
+    if ! curl -fsSL "$checksums_url" -o "$checksums_file"; then
+        error "Failed to download checksums.txt for ${version}. Refusing to install an unverified archive."
+    fi
+
+    expected="$(awk -v name="$archive_name" '$2 == name { print $1; exit }' "$checksums_file")"
+    if [ -z "$expected" ]; then
+        error "No checksum entry for ${archive_name} in checksums.txt. Refusing to install an unverified or malformed archive."
+    fi
+
+    actual="$($sha_tool "$archive_path" | awk '{print $1}')"
+    if [ "$expected" != "$actual" ]; then
+        error "Checksum mismatch for ${archive_name}.\n  expected: ${expected}\n  actual:   ${actual}\nRefusing to install a corrupted or tampered archive."
+    fi
+
+    success "Checksum verified for ${archive_name}"
+}
+
 install_hint() {
     local dep="$1"
 
@@ -260,9 +319,43 @@ completion_asset_dir() {
     echo "$(install_prefix)/share/festival/completions"
 }
 
+install_binaries() {
+    local tmp_dir="$1"
+    local version="$2"
+    local binary
+
+    INSTALLED_BINARIES=""
+    for binary in fest camp festival; do
+        if [ -f "${tmp_dir}/${binary}" ]; then
+            cp "${tmp_dir}/${binary}" "${INSTALL_DIR}/${binary}"
+            chmod +x "${INSTALL_DIR}/${binary}"
+            INSTALLED_BINARIES="${INSTALLED_BINARIES:+${INSTALLED_BINARIES} }${binary}"
+        elif [ "$binary" = "festival" ]; then
+            warning "Release ${version} does not ship the 'festival' binary; installed fest and camp only. Releases that include the festival hub install all three."
+        else
+            error "Binary '${binary}' not found in archive"
+        fi
+    done
+}
+
+report_installed_version() {
+    local binary="$1"
+    local version_cmd="$2"
+
+    case " ${INSTALLED_BINARIES} " in
+        *" ${binary} "*)
+            success "${binary} $("${INSTALL_DIR}/${binary}" "$version_cmd" 2>/dev/null || echo 'installed')"
+            ;;
+    esac
+}
+
 install_completion_assets() {
     local tmp_dir="$1"
     local completions_dir="$2"
+    local binaries="$3"
+    local failed=0
+    local binary name
+    local -a binary_list
 
     if [ ! -d "${tmp_dir}/completions" ]; then
         warning "Completion files were not found in the release archive"
@@ -270,18 +363,28 @@ install_completion_assets() {
     fi
 
     mkdir -p "$completions_dir"
-    cp "${tmp_dir}/completions/fest.bash" "$completions_dir/fest.bash"
-    cp "${tmp_dir}/completions/_fest" "$completions_dir/_fest"
-    cp "${tmp_dir}/completions/fest.fish" "$completions_dir/fest.fish"
-    cp "${tmp_dir}/completions/camp.bash" "$completions_dir/camp.bash"
-    cp "${tmp_dir}/completions/_camp" "$completions_dir/_camp"
-    cp "${tmp_dir}/completions/camp.fish" "$completions_dir/camp.fish"
+    read -r -a binary_list <<< "$binaries"
+    for binary in "${binary_list[@]}"; do
+        for name in "${binary}.bash" "_${binary}" "${binary}.fish"; do
+            if ! cp "${tmp_dir}/completions/${name}" "${completions_dir}/${name}"; then
+                failed=1
+            fi
+        done
+    done
+
+    if [ "$failed" -ne 0 ]; then
+        warning "Some completion files failed to copy to ${completions_dir}"
+        return 1
+    fi
+
     success "Installed completion files to ${completions_dir}"
 }
 
 install_shell_helpers() {
     local tmp_dir="$1"
     local helper_dir="$2"
+    local failed=0
+    local name
 
     if [ ! -d "${tmp_dir}/shell" ]; then
         warning "Shell helper files were not found in the release archive"
@@ -289,9 +392,17 @@ install_shell_helpers() {
     fi
 
     mkdir -p "$helper_dir"
-    cp "${tmp_dir}/shell/festival.bash" "$helper_dir/festival.bash"
-    cp "${tmp_dir}/shell/festival.zsh" "$helper_dir/festival.zsh"
-    cp "${tmp_dir}/shell/festival.fish" "$helper_dir/festival.fish"
+    for name in festival.bash festival.zsh festival.fish; do
+        if ! cp "${tmp_dir}/shell/${name}" "${helper_dir}/${name}"; then
+            failed=1
+        fi
+    done
+
+    if [ "$failed" -ne 0 ]; then
+        warning "Some shell helper files failed to copy to ${helper_dir}"
+        return 1
+    fi
+
     success "Installed shell helper files to ${helper_dir}"
 }
 
@@ -463,35 +574,26 @@ main() {
         error "Download failed. Check that ${version} exists at https://github.com/${REPO}/releases"
     fi
 
+    verify_archive_checksum "$version" "$release_metadata" "$archive_name" "${tmp_dir}/archive.tar.gz"
+
     info "Extracting..."
     tar -xzf "${tmp_dir}/archive.tar.gz" -C "$tmp_dir"
 
     # Install binaries
     mkdir -p "$INSTALL_DIR"
 
-    for binary in fest camp; do
-        if [ -f "${tmp_dir}/${binary}" ]; then
-            cp "${tmp_dir}/${binary}" "${INSTALL_DIR}/${binary}"
-            chmod +x "${INSTALL_DIR}/${binary}"
-        else
-            error "Binary '${binary}' not found in archive"
-        fi
-    done
-
-    success "Installed fest and camp to ${INSTALL_DIR}"
+    install_binaries "$tmp_dir" "$version"
+    success "Installed ${INSTALLED_BINARIES// /, } to ${INSTALL_DIR}"
 
     helper_dir="$(shell_helper_dir)"
     completions_dir="$(completion_asset_dir)"
-    install_completion_assets "$tmp_dir" "$completions_dir" || true
+    install_completion_assets "$tmp_dir" "$completions_dir" "$INSTALLED_BINARIES" || true
     install_shell_helpers "$tmp_dir" "$helper_dir" || true
 
     # Verify
-    if command -v fest &>/dev/null; then
-        success "fest $(fest --version 2>/dev/null || echo 'installed')"
-    fi
-    if command -v camp &>/dev/null; then
-        success "camp $(camp --version 2>/dev/null || echo 'installed')"
-    fi
+    report_installed_version fest --version
+    report_installed_version camp --version
+    report_installed_version festival version
 
     echo ""
     warn_optional_scc
@@ -517,5 +619,7 @@ main() {
     success "Installation complete"
 }
 
-parse_args "$@"
-main "$@"
+if [ "${BASH_SOURCE[0]:-$0}" = "$0" ]; then
+    parse_args "$@"
+    main "$@"
+fi

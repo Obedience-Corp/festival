@@ -3,7 +3,7 @@ title: "Set up with your agent"
 weight: 14
 ---
 
-Festival is files and two CLIs. It works with any agent that can run shell commands and read files, which is nearly all of them. There is no plugin to install for the core loop: the agent runs `fest next`, reads the task document it prints, does the work, and runs `fest task completed` and `fest commit`. Everything else on this page is about making that loop shorter to reach.
+Festival is files and two CLIs the agent loop actually touches: `fest` and `camp`, installed and kept current by a third tool, `festival`. It works with any agent that can run shell commands and read files, which is nearly all of them. There is no plugin to install for the core loop: the agent runs `fest next`, reads the task document it prints, does the work, and runs `fest task completed` and `fest commit`. Everything else on this page is about making that loop shorter to reach.
 
 ## Skills for every agent
 

@@ -6,10 +6,11 @@
 
 Festival 是一个 local-first 的工作流层，用文件系统保存项目记忆、工作队列、结构化计划、决策记录和下一步行动。你的计划、进度和上下文都在仓库旁边的 Markdown 文件里，不绑定某一个 AI 工具或云服务。
 
-Festival 有两个核心层次：
+Festival 有三个核心组件：
 
 - `camp` 管理 campaign：项目、intent、设计文档、探索记录、work item、链接关系和当前工作。
 - `fest` 管理 festival：当工作复杂到需要 phase、sequence、task、质量门和跨会话追踪时，用它来执行结构化计划。
+- `festival` 负责安装和更新 `camp` 和 `fest`：`festival install` 安装、`festival update` 保持三者同步、`festival browse` 查看可用内容、`festival doctor` 检查安装状态。
 
 如果你正在用 AI 编程代理做长期功能、重构、发布、研究或多仓库工作，Festival 的目标很简单：下一次会话不需要从零开始解释。
 
@@ -35,7 +36,7 @@ Festival 有两个核心层次：
 
 **需要注册账号或者云服务吗？**
 
-不需要。`camp` 和 `fest` 是两个本地二进制文件。它们写下的一切都是你工作区里的文件，不会经过 Obedience Corp 的服务。模型和代理仍然由你自己选择。
+不需要。`camp`、`fest` 和 `festival` 是本地二进制文件。它们写下的一切都是你工作区里的文件，不会经过 Obedience Corp 的服务。模型和代理仍然由你自己选择。
 
 <p align="center">
   <img src="docs/images/demos/proof-loop.gif" alt="One sentence of intent scaffolds a festival, an agent runs the next task, the session is interrupted, fest next resumes it, then fest validate and fest commit close it out" width="700">

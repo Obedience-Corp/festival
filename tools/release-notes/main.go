@@ -58,6 +58,10 @@ func run(args []string) error {
 	if err != nil {
 		return fmt.Errorf("resolve pinned camp tag: %w", err)
 	}
+	hubTag, err := exactTag(filepath.Join(absRoot, "festival-installer"))
+	if err != nil {
+		return fmt.Errorf("resolve pinned festival-installer tag: %w", err)
+	}
 
 	festRelease, err := fetchRelease("Obedience-Corp/fest", festTag)
 	if err != nil {
@@ -66,6 +70,10 @@ func run(args []string) error {
 	campRelease, err := fetchRelease("Obedience-Corp/camp", campTag)
 	if err != nil {
 		return fmt.Errorf("fetch camp release %s: %w", campTag, err)
+	}
+	hubRelease, err := fetchRelease("Obedience-Corp/festival-installer", hubTag)
+	if err != nil {
+		return fmt.Errorf("fetch festival-installer release %s: %w", hubTag, err)
 	}
 	festivalNotes, err := fetchGeneratedReleaseNotes("Obedience-Corp/festival", *tag)
 	if err != nil {
@@ -80,17 +88,28 @@ func run(args []string) error {
 			URL:  releaseURL("Obedience-Corp/festival", *tag),
 			Body: festivalNotes.Body,
 		},
-		Fest: notes.ReleaseInfo{
-			Repo: "fest",
-			Tag:  festRelease.TagName,
-			URL:  festRelease.URL,
-			Body: festRelease.Body,
-		},
-		Camp: notes.ReleaseInfo{
-			Repo: "camp",
-			Tag:  campRelease.TagName,
-			URL:  campRelease.URL,
-			Body: campRelease.Body,
+		Components: []notes.ReleaseInfo{
+			{
+				Repo: "fest",
+				Tag:  festRelease.TagName,
+				URL:  festRelease.URL,
+				Body: festRelease.Body,
+			},
+			{
+				Repo: "camp",
+				Tag:  campRelease.TagName,
+				URL:  campRelease.URL,
+				Body: campRelease.Body,
+			},
+			{
+				// The hub component displays as "festival" (the shipped
+				// binary name), even though it is fetched from the
+				// festival-installer repo.
+				Repo: "festival",
+				Tag:  hubRelease.TagName,
+				URL:  hubRelease.URL,
+				Body: hubRelease.Body,
+			},
 		},
 	})
 	if err != nil {
@@ -109,7 +128,7 @@ func run(args []string) error {
 	}
 
 	fmt.Printf("Wrote release notes to %s\n", absOutput)
-	fmt.Printf("Included festival %s, fest %s, and camp %s\n", *tag, festRelease.TagName, campRelease.TagName)
+	fmt.Printf("Included festival %s, fest %s, camp %s, and festival-installer %s\n", *tag, festRelease.TagName, campRelease.TagName, hubRelease.TagName)
 	return nil
 }
 

@@ -4,7 +4,7 @@
 _festival_setup_zsh_completions() {
   local shell_dir completion_dir path_seen path_entry
 
-  shell_dir="${${(%):-%N}:A:h}"
+  shell_dir="${${(%):-%x}:A:h}"
   completion_dir="${shell_dir:h}/completions"
 
   if [[ -d "$completion_dir" ]]; then
@@ -30,7 +30,7 @@ _festival_setup_zsh_completions() {
 _festival_register_zsh_cli_completions() {
   local shell_dir completion_dir
 
-  shell_dir="${${(%):-%N}:A:h}"
+  shell_dir="${${(%):-%x}:A:h}"
   completion_dir="${shell_dir:h}/completions"
 
   if (( $+functions[compdef] )) && [[ -d "$completion_dir" ]]; then
@@ -41,6 +41,10 @@ _festival_register_zsh_cli_completions() {
     if [[ -f "$completion_dir/_fest" ]]; then
       autoload -Uz _fest
       compdef _fest fest
+    fi
+    if [[ -f "$completion_dir/_festival" ]]; then
+      autoload -Uz _festival
+      compdef _festival festival
     fi
   fi
 }

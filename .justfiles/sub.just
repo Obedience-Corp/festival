@@ -1,6 +1,6 @@
 # Submodule management
 
-subs := "fest camp"
+subs := "fest camp festival-installer"
 
 # Show available submodule commands
 [private]

@@ -2,10 +2,11 @@
 
 NPM installer for the Festival CLI suite.
 
-Festival includes two commands:
+Festival includes three commands:
 
 - `fest` - Festival planning and execution workflow CLI
 - `camp` - Campaign workspace management CLI
+- `festival` - installer and launcher for the suite
 
 ## Install
 
@@ -25,6 +26,7 @@ bun add -g @obedience-corp/festival
 ```bash
 fest version
 camp version
+festival version
 ```
 
 ## Supported Platforms
@@ -38,9 +40,10 @@ are re-enabled.
 ## How It Works
 
 This package downloads the matching Festival GitHub release archive for your
-platform, verifies it against the release `checksums.txt`, exposes `fest`
-and `camp` on your PATH, and keeps the release completion and shell-helper
-assets under `share/festival/` inside the installed npm package.
+platform, verifies it against the release `checksums.txt`, exposes `fest`,
+`camp`, and `festival` on your PATH, and keeps the release completion and
+shell-helper assets under `share/festival/` inside the installed npm
+package.
 
 The npm installer does not edit shell startup files. Add shell integration
 manually with:

@@ -58,9 +58,25 @@ builds:
       - -X github.com/Obedience-Corp/camp/internal/version.Commit={{.Commit}}
       - -X github.com/Obedience-Corp/camp/internal/version.BuildDate={{.Date}}
 
+  - id: festival
+    dir: festival-installer
+    main: ./cmd/festival
+    binary: festival
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w
+      - -X main.version={{.Version}}
+
 archives:
   - id: festival-suite
-    ids: [fest, camp]
+    ids: [fest, camp, festival]
     name_template: >-
       festival-
       {{- .Version }}-
@@ -88,12 +104,13 @@ nfpms:
     ids:
       - fest
       - camp
+      - festival
     vendor: Obedience Corp
     homepage: "https://fest.build"
     maintainer: "Lance Rogers <lance@obediencecorp.com>"
     description: |-
       Festival Methodology CLI suite.
-      AI-native project planning with fest and camp.
+      AI-native project planning with fest, camp, and the festival installer/launcher.
     license: "Apache-2.0"
     formats:
       - deb
@@ -103,6 +120,8 @@ nfpms:
     bindir: /usr/bin
     section: devel
     priority: optional
+    conflicts:
+      - festival
     contents:
       - src: ./LICENSE
         dst: /usr/share/licenses/festival/LICENSE
@@ -122,6 +141,12 @@ nfpms:
         dst: /usr/share/zsh/vendor-completions/_camp
       - src: ./completions/camp.fish
         dst: /usr/share/fish/vendor_completions.d/camp.fish
+      - src: ./completions/festival.bash
+        dst: /usr/share/bash-completion/completions/festival
+      - src: ./completions/_festival
+        dst: /usr/share/zsh/vendor-completions/_festival
+      - src: ./completions/festival.fish
+        dst: /usr/share/fish/vendor_completions.d/festival.fish
       - src: ./shell/festival.bash
         dst: /usr/share/festival/shell/festival.bash
       - src: ./shell/festival.zsh
@@ -134,7 +159,7 @@ aurs:
     ids:
       - festival-suite
     homepage: "https://fest.build"
-    description: "Festival Methodology CLI suite (fest + camp) - AI-native project planning"
+    description: "Festival Methodology CLI suite (fest, camp, and festival) - AI-native project planning"
     maintainers:
       - "Obedience Corp <contact@obediencecorp.com>"
     license: "Apache-2.0"
@@ -147,9 +172,11 @@ aurs:
     conflicts:
       - fest
       - camp
+      - festival
     package: |-
       install -Dm755 "./fest" "${pkgdir}/usr/bin/fest"
       install -Dm755 "./camp" "${pkgdir}/usr/bin/camp"
+      install -Dm755 "./festival" "${pkgdir}/usr/bin/festival"
       install -Dm644 "./LICENSE" "${pkgdir}/usr/share/licenses/festival/LICENSE"
       install -Dm644 "./NOTICE" "${pkgdir}/usr/share/licenses/festival/NOTICE"
       install -Dm644 "./completions/fest.bash" "${pkgdir}/usr/share/bash-completion/completions/fest"
@@ -158,6 +185,9 @@ aurs:
       install -Dm644 "./completions/camp.bash" "${pkgdir}/usr/share/bash-completion/completions/camp"
       install -Dm644 "./completions/_camp" "${pkgdir}/usr/share/zsh/site-functions/_camp"
       install -Dm644 "./completions/camp.fish" "${pkgdir}/usr/share/fish/vendor_completions.d/camp.fish"
+      install -Dm644 "./completions/festival.bash" "${pkgdir}/usr/share/bash-completion/completions/festival"
+      install -Dm644 "./completions/_festival" "${pkgdir}/usr/share/zsh/site-functions/_festival"
+      install -Dm644 "./completions/festival.fish" "${pkgdir}/usr/share/fish/vendor_completions.d/festival.fish"
       install -Dm644 "./shell/festival.bash" "${pkgdir}/usr/share/festival/shell/festival.bash"
       install -Dm644 "./shell/festival.zsh" "${pkgdir}/usr/share/festival/shell/festival.zsh"
       install -Dm644 "./shell/festival.fish" "${pkgdir}/usr/share/festival/shell/festival.fish"
@@ -173,7 +203,7 @@ aurs:
 #       branch: main
 #       token: "{{ .Env.SCOOP_GITHUB_TOKEN }}"
 #     homepage: "https://fest.build"
-#     description: "Festival Methodology CLI suite (fest + camp) - AI-native project planning"
+#     description: "Festival Methodology CLI suite (fest, camp, and festival) - AI-native project planning"
 #     license: "Apache-2.0"
 
 checksum:
@@ -201,7 +231,7 @@ homebrew_casks:
     ids:
       - festival-suite
     homepage: "https://github.com/Obedience-Corp/festival"
-    description: "Festival Methodology CLI suite (fest + camp)"
+    description: "Festival Methodology CLI suite (fest, camp, and festival)"
     license: "Apache-2.0"
     skip_upload: auto
     directory: Casks
@@ -209,6 +239,7 @@ homebrew_casks:
     binaries:
       - fest
       - camp
+      - festival
     completions:
       bash: completions/fest.bash
       zsh: completions/_fest
@@ -218,7 +249,7 @@ homebrew_casks:
       post:
         install: |
           if OS.mac?
-            system_command "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "#{staged_path}/fest", "#{staged_path}/camp"]
+            system_command "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "#{staged_path}/fest", "#{staged_path}/camp", "#{staged_path}/festival"]
           end
           shell_dir = "#{HOMEBREW_PREFIX}/share/festival/shell"
           system_command "/bin/mkdir", args: ["-p", shell_dir, "#{HOMEBREW_PREFIX}/etc/bash_completion.d", "#{HOMEBREW_PREFIX}/share/zsh/site-functions", "#{HOMEBREW_PREFIX}/share/fish/vendor_completions.d"]
@@ -228,11 +259,14 @@ homebrew_casks:
           system_command "/bin/cp", args: ["#{staged_path}/completions/camp.bash", "#{HOMEBREW_PREFIX}/etc/bash_completion.d/camp"]
           system_command "/bin/cp", args: ["#{staged_path}/completions/_camp", "#{HOMEBREW_PREFIX}/share/zsh/site-functions/_camp"]
           system_command "/bin/cp", args: ["#{staged_path}/completions/camp.fish", "#{HOMEBREW_PREFIX}/share/fish/vendor_completions.d/camp.fish"]
+          system_command "/bin/cp", args: ["#{staged_path}/completions/festival.bash", "#{HOMEBREW_PREFIX}/etc/bash_completion.d/festival"]
+          system_command "/bin/cp", args: ["#{staged_path}/completions/_festival", "#{HOMEBREW_PREFIX}/share/zsh/site-functions/_festival"]
+          system_command "/bin/cp", args: ["#{staged_path}/completions/festival.fish", "#{HOMEBREW_PREFIX}/share/fish/vendor_completions.d/festival.fish"]
         uninstall: |
-          system_command "/bin/rm", args: ["-f", "#{HOMEBREW_PREFIX}/share/festival/shell/festival.bash", "#{HOMEBREW_PREFIX}/share/festival/shell/festival.zsh", "#{HOMEBREW_PREFIX}/share/festival/shell/festival.fish", "#{HOMEBREW_PREFIX}/etc/bash_completion.d/camp", "#{HOMEBREW_PREFIX}/share/zsh/site-functions/_camp", "#{HOMEBREW_PREFIX}/share/fish/vendor_completions.d/camp.fish"]
+          system_command "/bin/rm", args: ["-f", "#{HOMEBREW_PREFIX}/share/festival/shell/festival.bash", "#{HOMEBREW_PREFIX}/share/festival/shell/festival.zsh", "#{HOMEBREW_PREFIX}/share/festival/shell/festival.fish", "#{HOMEBREW_PREFIX}/etc/bash_completion.d/camp", "#{HOMEBREW_PREFIX}/share/zsh/site-functions/_camp", "#{HOMEBREW_PREFIX}/share/fish/vendor_completions.d/camp.fish", "#{HOMEBREW_PREFIX}/etc/bash_completion.d/festival", "#{HOMEBREW_PREFIX}/share/zsh/site-functions/_festival", "#{HOMEBREW_PREFIX}/share/fish/vendor_completions.d/festival.fish"]
 
     caveats: |
-      Homebrew installs static fest and camp completions. To activate navigation helpers
+      Homebrew installs static fest, camp, and festival completions. To activate navigation helpers
       (cgo, cr, csw, cint, fgo, fls) as well, add one line to your shell config:
 
         # bash (~/.bashrc)
@@ -254,7 +288,7 @@ release:
   header: |
     ## Festival {{ .Tag }}
 
-    Festival Methodology CLI suite release — includes `fest` and `camp`.
+    Festival Methodology CLI suite release, including `fest`, `camp`, and `festival`.
 
   footer: |
     **Full Changelog**: https://github.com/Obedience-Corp/festival/compare/{{ .PreviousTag }}...{{ .Tag }}
@@ -272,7 +306,7 @@ release:
     | Fedora/RHEL | Download `.rpm` from assets below |
     | Windows | Temporarily paused while Windows support is stabilized |
 
-# macOS signing and notarization — disabled until Apple Developer account is configured.
+# macOS signing and notarization: disabled until Apple Developer account is configured.
 # To enable: set MACOS_SIGN_P12, MACOS_SIGN_PASSWORD, MACOS_NOTARY_KEY,
 # MACOS_NOTARY_KEY_ID, and MACOS_NOTARY_ISSUER_ID secrets, then uncomment below.
 #
@@ -294,3 +328,6 @@ universal_binaries:
   - replace: true
     id: camp
     name_template: "camp"
+  - replace: true
+    id: festival
+    name_template: "festival"

@@ -5,7 +5,20 @@ weight: 11
 
 # Installation
 
-Festival includes two CLI tools: **fest** (festival planning) and **camp** (campaign management). All installation methods install both.
+Festival ships as a three-binary suite: **fest** (festival planning), **camp**
+(campaign management), and **festival** (the suite installer and updater).
+All installation methods below install all three.
+
+`festival` installs, updates, and launches `camp` and `fest`. It verifies
+signed package metadata against a compiled-in key and refuses unsigned
+content by default.
+
+```bash
+festival install festival  # install the suite (camp, fest, and festival)
+festival update            # keep camp, fest, and festival in sync
+festival browse            # see what is available
+festival doctor            # check the install
+```
 
 ## Requirements
 
@@ -19,9 +32,10 @@ npm install -g @obedience-corp/festival
 ```
 
 The npm package downloads the matching Festival GitHub release archive for your
-platform, verifies it against the release checksums, and exposes both `fest` and
-`camp`. It also keeps the release completion and shell-helper assets inside the
-installed package, but it does not edit your shell startup files.
+platform, verifies it against the release checksums, and exposes `fest`,
+`camp`, and `festival`. It also keeps the release completion and shell-helper
+assets inside the installed package, but it does not edit your shell startup
+files.
 
 {{< tabs names="macOS, Linux, Windows (Temporarily Paused)" >}}
 
@@ -39,7 +53,7 @@ extract, and move to your PATH:
 
 ```bash
 tar xzf festival-*-macOS-*.tar.gz
-sudo mv fest camp /usr/local/bin/
+sudo mv fest camp festival /usr/local/bin/
 ```
 
 <!-- tab -->
@@ -75,7 +89,7 @@ sudo apk add --allow-untrusted festival_*.apk
 
 ```bash
 tar xzf festival-*-linux-*.tar.gz
-sudo mv fest camp /usr/local/bin/
+sudo mv fest camp festival /usr/local/bin/
 ```
 
 <!-- tab -->
@@ -109,7 +123,9 @@ When run from an interactive terminal, it asks whether to add the helper source 
 ### From Source
 
 {{< note >}}
-The `fest` and `camp` source repositories are private. Building from source requires access to the private repos. Most users should use the package manager or binary download methods above.
+The `fest` and `camp` source repositories are public. The `festival` source
+repository is not public yet, so there is no `go install` line for it below;
+use the package manager or binary download methods above to get `festival`.
 {{< /note >}}
 
 Requires Go 1.25+:
@@ -124,6 +140,7 @@ go install github.com/Obedience-Corp/camp/cmd/camp@latest
 ```bash
 fest --version
 camp --version
+festival --version
 ```
 
 ## Upgrading
@@ -173,7 +190,8 @@ go install github.com/Obedience-Corp/camp/cmd/camp@latest
 ## Shell Integration
 
 Package installs include sourceable helper files for shell functions such as
-`cgo`, `cr`, `csw`, `cint`, `fgo`, and `fls`. Add the line for your install
+`cgo`, `cr`, `csw`, `cint`, `fgo`, and `fls`, and they also register tab
+completion for `camp`, `fest`, and `festival`. Add the line for your install
 method and shell:
 
 ```bash

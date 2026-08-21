@@ -19,3 +19,9 @@ end
 if test -f "$_festival_completion_dir/fest.fish"
     source "$_festival_completion_dir/fest.fish"
 end
+
+if command -q festival
+    if test -f "$_festival_completion_dir/festival.fish"
+        source "$_festival_completion_dir/festival.fish"
+    end
+end

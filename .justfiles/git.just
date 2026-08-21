@@ -1,6 +1,6 @@
 # Git commands for festival repo management
 
-subs := "fest camp"
+subs := "fest camp festival-installer"
 
 # Show available git commands
 [private]

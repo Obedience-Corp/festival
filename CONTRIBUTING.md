@@ -6,8 +6,11 @@ project.
 
 Most changes belong in the component repos rather than this bundle:
 [camp](https://github.com/Obedience-Corp/camp) and
-[fest](https://github.com/Obedience-Corp/fest). This repo owns the release
-bundle, packaging, docs site, and release tooling.
+[fest](https://github.com/Obedience-Corp/fest). `festival`, the suite
+installer and updater, has its own source repository too, but it is not
+public yet, so there is nowhere to send a pull request against it from here.
+This repo owns the release bundle, packaging, docs site, and release
+tooling.
 
 ## Developer Certificate of Origin
 

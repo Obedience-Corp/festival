@@ -7,8 +7,32 @@ default:
 
 # Test all projects
 [no-cd]
-all: fest camp release-operator release-notes plugin
+all: fest camp festival-installer release-operator release-notes plugin no-em-dash
     @echo "All tests passed"
+
+# Fail if an em dash (U+2014) appears in tracked or untracked files this repo
+# owns (still honors .gitignore). README.zh-CN.md is excluded: Chinese
+# typography uses the em dash. docs/cli-reference/camp/ and .../fest/ are
+# excluded: those pages mirror the pinned camp/fest submodules' own compiled
+# help text, this repo does not own that content, and any local fix here
+# would be silently reverted by the next `just docs all`.
+[no-cd]
+no-em-dash:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    hits="$(git grep -n --untracked $'\xe2\x80\x94' -- \
+        '*.sh' '*.js' '*.mjs' '*.yaml' '*.yml' '*.just' '*.json' '*.go' 'justfile' \
+        'README.md' 'CHANGELOG.md' \
+        'docs/cli-reference/*.md' ':!docs/cli-reference/camp' ':!docs/cli-reference/fest' \
+        || true)"
+    if [ -n "$hits" ]; then
+        echo "em dash (U+2014) found:" >&2
+        echo "$hits" >&2
+        echo "" >&2
+        echo "This repo does not allow em dashes in these files. Use a colon, a comma, parentheses, or two sentences instead." >&2
+        exit 1
+    fi
+    echo "no em dashes found"
 
 # Check mirrored camp/fest doc copies against their source repos
 [no-cd]
@@ -45,6 +69,11 @@ fest:
 [no-cd]
 camp:
     cd camp && just test all
+
+# Test the festival hub
+[no-cd]
+festival-installer:
+    cd festival-installer && just test
 
 # Test the release operator logic used by just release dev|rc|stable
 [no-cd]

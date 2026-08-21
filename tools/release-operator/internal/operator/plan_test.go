@@ -6,8 +6,7 @@ func TestDeriveBundlePlanDevFromFestivalHistory(t *testing.T) {
 	plan, err := DeriveBundlePlan(BundleInput{
 		Channel:              "dev",
 		CurrentBranch:        "develop",
-		FestTag:              "v0.2.0-dev.9",
-		CampTag:              "v0.1.3-dev.2",
+		SelectedTags:         map[string]string{"fest": "v0.2.0-dev.9", "camp": "v0.1.3-dev.2"},
 		LatestFestivalStable: "v0.1.1",
 		LatestFestivalDev:    "v0.1.2-dev.3",
 	})
@@ -24,8 +23,7 @@ func TestDeriveBundlePlanDevRejectsWrongBranch(t *testing.T) {
 	_, err := DeriveBundlePlan(BundleInput{
 		Channel:       "dev",
 		CurrentBranch: "main",
-		FestTag:       "v0.2.0-dev.9",
-		CampTag:       "v0.1.3-dev.2",
+		SelectedTags:  map[string]string{"fest": "v0.2.0-dev.9", "camp": "v0.1.3-dev.2"},
 	})
 	if err == nil {
 		t.Fatal("expected error")
@@ -36,8 +34,7 @@ func TestDeriveBundlePlanRCFromReleaseBranch(t *testing.T) {
 	plan, err := DeriveBundlePlan(BundleInput{
 		Channel:                 "rc",
 		CurrentBranch:           "release/v0.3.0",
-		FestTag:                 "v0.2.1-rc.2",
-		CampTag:                 "v0.2.0-rc.7",
+		SelectedTags:            map[string]string{"fest": "v0.2.1-rc.2", "camp": "v0.2.0-rc.7"},
 		LatestFestivalVersionRC: "v0.3.0-rc.4",
 	})
 	if err != nil {
@@ -53,10 +50,8 @@ func TestDeriveBundlePlanStableBumpsLatestStablePatch(t *testing.T) {
 	plan, err := DeriveBundlePlan(BundleInput{
 		Channel:              "stable",
 		CurrentBranch:        "main",
-		FestTag:              "v0.2.0",
-		CampTag:              "v0.2.1",
-		CurrentPinnedFestTag: "v0.1.9",
-		CurrentPinnedCampTag: "v0.2.1",
+		SelectedTags:         map[string]string{"fest": "v0.2.0", "camp": "v0.2.1"},
+		CurrentPinned:        map[string]string{"fest": "v0.1.9", "camp": "v0.2.1"},
 		LatestFestivalStable: "v0.1.1",
 	})
 	if err != nil {
@@ -72,8 +67,7 @@ func TestDeriveBundlePlanStableRejectsWhenMainHasNoStableHistory(t *testing.T) {
 	_, err := DeriveBundlePlan(BundleInput{
 		Channel:       "stable",
 		CurrentBranch: "main",
-		FestTag:       "v0.2.0",
-		CampTag:       "v0.2.1",
+		SelectedTags:  map[string]string{"fest": "v0.2.0", "camp": "v0.2.1"},
 	})
 	if err == nil {
 		t.Fatal("expected error")
@@ -84,10 +78,8 @@ func TestDeriveBundlePlanStableRejectsWhenCurrentCommitAlreadyBundlesSelectedTag
 	_, err := DeriveBundlePlan(BundleInput{
 		Channel:                         "stable",
 		CurrentBranch:                   "main",
-		FestTag:                         "v0.2.0",
-		CampTag:                         "v0.2.1",
-		CurrentPinnedFestTag:            "v0.2.0",
-		CurrentPinnedCampTag:            "v0.2.1",
+		SelectedTags:                    map[string]string{"fest": "v0.2.0", "camp": "v0.2.1"},
+		CurrentPinned:                   map[string]string{"fest": "v0.2.0", "camp": "v0.2.1"},
 		LatestFestivalStable:            "v0.2.0",
 		CurrentCommitTaggedLatestStable: true,
 	})
