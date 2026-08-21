@@ -4,6 +4,21 @@ set -euo pipefail
 : "${FESTIVAL_TAG:?missing FESTIVAL_TAG}"
 : "${RELEASE_CHANNEL:?missing RELEASE_CHANNEL}"
 
+# Schema-check the generated package manifest before cloning the
+# marketplace. Signature is not required: the marketplace Sign metadata
+# workflow signs after the PR opens. Schema drift must fail this release,
+# not a user's install. Tests inject FESTIVAL_METADATA_BIN; the release
+# path uses the festival-installer submodule.
+if [ ! -f dist/marketplace/obey-package.json ]; then
+  echo "refusing to publish: missing dist/marketplace/obey-package.json" >&2
+  exit 1
+fi
+if [ -n "${FESTIVAL_METADATA_BIN:-}" ]; then
+  "${FESTIVAL_METADATA_BIN}" validate --kind manifest dist/marketplace/obey-package.json
+else
+  go run ./festival-installer/cmd/festival-metadata validate --kind manifest dist/marketplace/obey-package.json
+fi
+
 # gh authenticates from GH_TOKEN. Reuse the marketplace publish token so the
 # git push and the gh pr create below share one credential.
 export GH_TOKEN="${MARKETPLACE_PUBLISH_TOKEN:-${GH_TOKEN:-}}"

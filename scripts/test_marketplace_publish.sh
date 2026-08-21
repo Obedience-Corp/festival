@@ -14,10 +14,14 @@ set -euo pipefail
 #     opening a pull request" and stops).
 #   - The real marketplace verifier. testdata/marketplace-fixture/tools/metadata
 #     is a stand-in that exits 0 or 1 based on FIXTURE_VERIFY_EXIT; it does not
-#     check signatures or schema. The real verifier is exercised in sequence 03.
+#     check signatures. The real verifier is exercised in sequence 03.
 #   - The GitHub Actions wiring in .github/workflows/release.yaml. Only a real
 #     release exercises that; both call sites are diffed side by side instead
 #     (see results/ for sequence 02, task 01).
+#
+# Schema coverage: the generated obey-package.json is checked with the real
+# festival-metadata validate command (FESTIVAL_METADATA_BIN). Case "schema
+# invalid" asserts an empty published_at fails the release and pushes nothing.
 
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 work="$(mktemp -d)"
@@ -83,6 +87,17 @@ JSON
 }
 new_release_manifest > "${staged_repo}/dist/marketplace/obey-package.json"
 
+# Build the real hub CLI once. publish_marketplace_entry.sh schema-checks
+# through FESTIVAL_METADATA_BIN so this fixture does not need a full
+# festival-installer checkout inside staged_repo.
+meta_bin="${work}/festival-metadata"
+if [ ! -d "${repo_root}/festival-installer/cmd/festival-metadata" ]; then
+  fail "festival-installer submodule is required to build festival-metadata"
+fi
+( cd "${repo_root}/festival-installer" && go build -o "${meta_bin}" ./cmd/festival-metadata ) \
+  || fail "go build festival-metadata"
+export FESTIVAL_METADATA_BIN="${meta_bin}"
+
 # make_fixture builds a bare "remote" marketplace repository at $1. In
 # "stale" mode (the default) it seeds an older entry, so publishing the new
 # v9.9.9 entry produces a real diff. In "matching" mode it seeds the exact
@@ -142,6 +157,25 @@ run_script() {
   (cd "${staged_repo}" && env -u MARKETPLACE_PUBLISH_TOKEN \
     bash "${repo_root}/scripts/publish_marketplace_entry.sh")
 }
+
+# --- Case 0: ERROR, generated entry fails hub schema ---------------------
+# Empty published_at is the v0.2.17 defect: release-operator used to emit it
+# and the failure only showed up at install time.
+python3 - "${staged_repo}/dist/marketplace/obey-package.json" <<'PY'
+import json, pathlib, sys
+p = pathlib.Path(sys.argv[1])
+doc = json.loads(p.read_text())
+doc["releases"][0]["published_at"] = ""
+p.write_text(json.dumps(doc, indent=2) + "\n")
+PY
+make_fixture "${work}/bare-schema-bad.git"
+out="$(FIXTURE_VERIFY_EXIT=0 MARKETPLACE_REPO_URL="${work}/bare-schema-bad.git" \
+  FESTIVAL_TAG=v9.9.9 RELEASE_CHANNEL=stable run_script 2>&1 || true)"
+grep -q "published_at" <<<"${out}" || fail "missing published_at schema error: ${out}"
+[ -z "$(git --git-dir="${work}/bare-schema-bad.git" branch --list 'release/*')" ] \
+  || fail "a branch was pushed despite the schema refusal"
+pass "refuses to publish a schema-invalid package manifest, and pushes nothing"
+new_release_manifest > "${staged_repo}/dist/marketplace/obey-package.json"
 
 # --- Case 1: ERROR, marketplace does not verify before the change ---------
 make_fixture "${work}/bare-broken.git"
