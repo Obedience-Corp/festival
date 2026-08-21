@@ -8,6 +8,7 @@ REPO="Obedience-Corp/festival"
 INSTALL_DIR="${INSTALL_DIR:-$HOME/.local/bin}"
 VERSION="${VERSION:-latest}"
 SHELL_SETUP="${FESTIVAL_INSTALL_SHELL:-auto}"
+INSTALLED_BINARIES=""
 
 # Colors
 RED='\033[0;31m'
@@ -318,11 +319,43 @@ completion_asset_dir() {
     echo "$(install_prefix)/share/festival/completions"
 }
 
+install_binaries() {
+    local tmp_dir="$1"
+    local version="$2"
+    local binary
+
+    INSTALLED_BINARIES=""
+    for binary in fest camp festival; do
+        if [ -f "${tmp_dir}/${binary}" ]; then
+            cp "${tmp_dir}/${binary}" "${INSTALL_DIR}/${binary}"
+            chmod +x "${INSTALL_DIR}/${binary}"
+            INSTALLED_BINARIES="${INSTALLED_BINARIES:+${INSTALLED_BINARIES} }${binary}"
+        elif [ "$binary" = "festival" ]; then
+            warning "Release ${version} does not ship the 'festival' binary; installed fest and camp only. Releases that include the festival hub install all three."
+        else
+            error "Binary '${binary}' not found in archive"
+        fi
+    done
+}
+
+report_installed_version() {
+    local binary="$1"
+    local version_cmd="$2"
+
+    case " ${INSTALLED_BINARIES} " in
+        *" ${binary} "*)
+            success "${binary} $("${INSTALL_DIR}/${binary}" "$version_cmd" 2>/dev/null || echo 'installed')"
+            ;;
+    esac
+}
+
 install_completion_assets() {
     local tmp_dir="$1"
     local completions_dir="$2"
+    local binaries="$3"
     local failed=0
-    local name
+    local binary name
+    local -a binary_list
 
     if [ ! -d "${tmp_dir}/completions" ]; then
         warning "Completion files were not found in the release archive"
@@ -330,11 +363,13 @@ install_completion_assets() {
     fi
 
     mkdir -p "$completions_dir"
-    for name in fest.bash _fest fest.fish camp.bash _camp camp.fish \
-        festival.bash _festival festival.fish; do
-        if ! cp "${tmp_dir}/completions/${name}" "${completions_dir}/${name}"; then
-            failed=1
-        fi
+    read -r -a binary_list <<< "$binaries"
+    for binary in "${binary_list[@]}"; do
+        for name in "${binary}.bash" "_${binary}" "${binary}.fish"; do
+            if ! cp "${tmp_dir}/completions/${name}" "${completions_dir}/${name}"; then
+                failed=1
+            fi
+        done
     done
 
     if [ "$failed" -ne 0 ]; then
@@ -547,34 +582,18 @@ main() {
     # Install binaries
     mkdir -p "$INSTALL_DIR"
 
-    for binary in fest camp festival; do
-        if [ -f "${tmp_dir}/${binary}" ]; then
-            cp "${tmp_dir}/${binary}" "${INSTALL_DIR}/${binary}"
-            chmod +x "${INSTALL_DIR}/${binary}"
-        elif [ "$binary" = "festival" ]; then
-            error "Binary 'festival' not found in archive. The requested release (${version}) predates the festival hub. Set VERSION=latest, or pick a release that ships all three binaries."
-        else
-            error "Binary '${binary}' not found in archive"
-        fi
-    done
-
-    success "Installed fest, camp, and festival to ${INSTALL_DIR}"
+    install_binaries "$tmp_dir" "$version"
+    success "Installed ${INSTALLED_BINARIES// /, } to ${INSTALL_DIR}"
 
     helper_dir="$(shell_helper_dir)"
     completions_dir="$(completion_asset_dir)"
-    install_completion_assets "$tmp_dir" "$completions_dir" || true
+    install_completion_assets "$tmp_dir" "$completions_dir" "$INSTALLED_BINARIES" || true
     install_shell_helpers "$tmp_dir" "$helper_dir" || true
 
     # Verify
-    if command -v fest &>/dev/null; then
-        success "fest $(fest --version 2>/dev/null || echo 'installed')"
-    fi
-    if command -v camp &>/dev/null; then
-        success "camp $(camp --version 2>/dev/null || echo 'installed')"
-    fi
-    if command -v festival &>/dev/null; then
-        success "festival $(festival version 2>/dev/null || echo 'installed')"
-    fi
+    report_installed_version fest --version
+    report_installed_version camp --version
+    report_installed_version festival version
 
     echo ""
     warn_optional_scc
@@ -600,5 +619,7 @@ main() {
     success "Installation complete"
 }
 
-parse_args "$@"
-main "$@"
+if [ "${BASH_SOURCE[0]:-$0}" = "$0" ]; then
+    parse_args "$@"
+    main "$@"
+fi
