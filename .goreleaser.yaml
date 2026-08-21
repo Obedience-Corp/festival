@@ -120,6 +120,8 @@ nfpms:
     bindir: /usr/bin
     section: devel
     priority: optional
+    conflicts:
+      - festival
     contents:
       - src: ./LICENSE
         dst: /usr/share/licenses/festival/LICENSE
@@ -167,7 +169,6 @@ aurs:
     provides:
       - fest
       - camp
-      - festival
     conflicts:
       - fest
       - camp
