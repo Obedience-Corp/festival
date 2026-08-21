@@ -143,6 +143,33 @@ camp --version
 festival --version
 ```
 
+`fest` and `camp` each report their own release, so the two numbers differ from
+each other and from the Festival suite version. `festival --version` reports the
+suite version, because the suite installer ships one per Festival release.
+
+To see which suite release a tool came from, run its full version command:
+
+```bash
+fest version
+camp version
+```
+
+Bundles published from camp and fest releases that carry the bundle field add a
+`bundle:` line on the second line of the output, between the tool's own version
+and its commit (illustrative values):
+
+```
+fest v0.6.3
+bundle: festival v0.2.18
+commit: 1a2b3c4
+```
+
+Bundles published before that change (v0.2.17 and earlier) have no `bundle:`
+line and report the suite version as the tool's version instead.
+
+Binaries built with `go install` have no `bundle:` line, since they were not
+built from a suite release.
+
 ## Upgrading
 
 How you upgrade depends on how you installed Festival.

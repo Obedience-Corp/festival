@@ -150,6 +150,13 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      # GoReleaser stamps each bundled tool with its own version and commit,
+      # read from the pinned submodules. It errors on an unset .Env key, so a
+      # missing step here fails the release instead of shipping binaries that
+      # report the festival tag as their fest/camp version.
+      - name: Resolve bundled tool versions
+        run: bash scripts/tool-versions.sh >> "$GITHUB_ENV"
+
       # AUR (and occasionally other publishers) can fail after the GitHub release
       # is already live. Soft-fail GoReleaser in that case so npm/marketplace and
       # release-notes rewrite still run; hard-fail only if no release was created.

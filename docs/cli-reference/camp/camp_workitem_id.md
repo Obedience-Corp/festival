@@ -20,7 +20,7 @@ stable id, key, campaign-relative path, directory slug, festival id, or intent
 frontmatter id. A filesystem path (absolute or relative to the current directory)
 is accepted and translated to the campaign-relative form the selector expects.
 
-Stdout is the bare durable id for shell scripting — stable .workitem id when
+Stdout is the bare durable id for shell scripting: stable .workitem id when
 present, otherwise a source-declared id (festival fest.yaml id or intent
 frontmatter id), otherwise the path-derived key. It is the id sibling of
 `camp workitem --print`, which prints a path. Use --key for the

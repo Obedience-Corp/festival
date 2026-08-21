@@ -14,7 +14,7 @@ Edit an idea in your preferred editor or programmatically via flags.
 
 If no programmatic flags are given, opens the idea in $EDITOR.
 If any programmatic flag is present, applies the update directly and
-emits an audit event — no editor is launched.
+emits an audit event; no editor is launched.
 
 PICKER / EDITOR PATH:
   If ID is provided, opens the idea directly (supports partial matching).

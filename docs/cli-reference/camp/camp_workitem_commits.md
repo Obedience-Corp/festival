@@ -34,7 +34,7 @@ camp workitem commits [selector] [flags]
       --json              emit JSON instead of the default table
       --limit int         maximum commits to return (default 100)
       --offset int        number of commits to skip (after sorting)
-      --ref string        query by workitem ref directly (e.g. WI-abc123) — skips resolver
+      --ref string        query by workitem ref directly (e.g. WI-abc123); skips resolver
       --source string     where to read commits from: auto (ledger when present, else scan), ledger, or scan (default "auto")
       --workitem string   alias for the positional <selector>
 ```

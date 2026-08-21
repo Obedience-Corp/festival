@@ -34,7 +34,7 @@ Examples:
   camp skills link --tool claude       Project skills into .claude/skills/
   camp skills link --tool agents       Project skills into .agents/skills/
   camp skills link --path custom/dir   Project skills into custom/dir
-  camp skills link --tool claude -n    Dry run — show what would happen
+  camp skills link --tool claude -n    Dry run: show what would happen
   camp skills link --tool claude -f    Replace conflicting symlink entries
 
 ```

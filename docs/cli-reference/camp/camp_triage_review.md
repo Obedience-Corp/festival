@@ -17,7 +17,7 @@ camp triage approve; re-rendering replaces the files, so an edit made in them
 is lost rather than honored. Each carries that statement at the top.
 
 Every row in the run appears exactly once across the review's lanes, including
-rows nobody has proposed anything for — a document that quietly omitted them
+rows nobody has proposed anything for. A document that quietly omitted them
 could be approved without the operator ever seeing what it left out.
 
 Rendering is pure: the same run data always produces the same bytes, so

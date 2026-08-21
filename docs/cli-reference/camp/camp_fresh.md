@@ -30,16 +30,26 @@ WORKITEM COMPLETION
 
 Two fresh.yaml settings decide what happens to workitems whose work looks done:
 
-  completed_runs     Tier 1, once per run, campaign-root scoped. "sweep"
-                     (default) promotes every workitem whose workflow run
-                     completed, "report" prints a read-only banner, "off" skips
-                     it. This is the same sweep 'camp workitem sweep' performs.
+  completed_runs     Tier 1, once per run, campaign-root scoped. "prompt"
+                     (default) asks per workitem on a TTY and reports otherwise,
+                     "report" prints a read-only banner and the reason for every
+                     non-move, "sweep" promotes automatically (the pre-2026-08
+                     behavior), "off" skips it. This is the same work
+                     'camp workitem sweep' performs.
   merged_workitems   Tier 2, per project. A workitem whose branch merged is
                      inferred evidence, so it never auto-promotes: "prompt"
                      asks on a TTY and reports otherwise, "report" prints the
                      exact promote commands to run, "off" skips it.
 
-Both are configured in fresh.yaml, not by flags. See 'camp fresh configure'.
+completed_runs asks rather than sweeps because a completed workflow run is not
+the same claim for every kind of work. For a bug or a chore the loop was the
+work. For explore and research it means findings now exist and need a home, so
+the prompt offers to route them into docs/ instead of burying them. For a design
+it means a specification exists that nobody has built yet, so a completed run
+never promotes one; a design waits for a merged branch or a completed festival.
+
+Both settings are configured in fresh.yaml, not by flags. See
+'camp fresh configure'.
 
 Examples:
   camp fresh                            # Sync current project (checkout default, fetch, prune)

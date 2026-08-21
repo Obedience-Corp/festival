@@ -36,7 +36,7 @@ camp leverage [directory] [flags]
 ### Options
 
 ```
-      --author string    filter by author email (git substring match — 'alice@co' matches 'alice@co.com')
+      --author string    filter by author email (git substring match: 'alice@co' matches 'alice@co.com')
       --by-author        show per-author leverage breakdown
       --dir string       score a specific directory (skips campaign project resolution)
   -h, --help             help for leverage

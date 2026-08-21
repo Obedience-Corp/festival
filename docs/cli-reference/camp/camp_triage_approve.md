@@ -20,7 +20,7 @@ Selectors:
   camp triage approve --lane parked      every row in a lane
   camp triage approve --batch 2          every row in a review batch
 
-Bulk selectors deliberately do not cover terminal rows — anything that retires
+Bulk selectors deliberately do not cover terminal rows: anything that retires
 a workitem into the dungeon or splits it. Approving a batch is not meaningful
 consent to each irreversible action inside it, so those rows are listed and
 skipped, and approving one means naming it. When you do, the confirmation

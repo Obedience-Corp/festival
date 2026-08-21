@@ -43,6 +43,9 @@ NEXT STEPS after creating a sequence:
 
 Run 'fest validate tasks' to verify task files exist.
 
+The optional "Create task files now?" prompt is skipped when stdin is not a
+TTY (agent shells). Pass --json or --no-prompt to skip it explicitly.
+
 ```
 fest create sequence [flags]
 ```
@@ -59,7 +62,7 @@ fest create sequence [flags]
       --markers string        JSON string with REPLACE marker hint→value mappings
       --markers-file string   JSON file with REPLACE marker hint→value mappings
       --name string           Sequence name (required)
-      --no-prompt             Skip interactive prompts
+      --no-prompt             Skip interactive prompts (also skipped when stdin is not a TTY)
       --path string           Path to phase directory (directory containing numbered sequences) (default ".")
       --skip-markers          Skip REPLACE marker processing
       --vars-file string      JSON vars for rendering

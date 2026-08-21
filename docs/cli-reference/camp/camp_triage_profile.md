@@ -15,7 +15,7 @@ Print the profile a run would use, fully merged.
 Resolution is: the campaign's .campaign/triage/profile.yaml when it exists,
 otherwise the named built-in. Keys the file omits inherit the built-in default.
 A type's policy is types/<type>.yaml, else types/_default.yaml, else camp's
-built-in — and a type policy that declares dispositions replaces the inherited
+built-in, and a type policy that declares dispositions replaces the inherited
 vocabulary rather than adding to it, so a type can genuinely restrict what it
 may be decided into.
 

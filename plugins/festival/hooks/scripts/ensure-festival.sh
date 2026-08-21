@@ -215,10 +215,29 @@ is_release_version() {
     printf '%s' "$v" | grep -Eq '^v?[0-9]+\.[0-9]+\.[0-9]+([.-][A-Za-z0-9.]+)?$'
 }
 
+# parse_bundle_version FULL_OUTPUT
+#
+# The festival suite version from `fest version`'s `bundle:` line, empty when
+# there is none. The line reads "bundle: festival vX.Y.Z", so the version is the
+# last field rather than field 2, and it is read through the semver grep so a
+# CRLF line ending or stray whitespace cannot ride along into the comparison.
+parse_bundle_version() {
+    printf '%s\n' "${1-}" | grep '^bundle:' |
+        grep -oE 'v?[0-9]+\.[0-9]+\.[0-9]+' | head -1 || true
+}
+
+# has_build_profile FULL_OUTPUT: 0 when `fest version` printed a `profile:`
+# line, which every bundle-capable fest does, bundled or not.
+has_build_profile() {
+    printf '%s\n' "${1-}" | grep -q '^profile:'
+}
+
+# read_local_fest_version FULL_OUTPUT: fest's own release token, from an
+# already-captured `fest version` block plus a fresh `fest version --short`.
 read_local_fest_version() {
-    local short full
+    local full="${1-}"
+    local short
     short="$(fest version --short 2>/dev/null || true)"
-    full="$(fest version 2>/dev/null || true)"
     parse_local_fest_version "$short" "$full"
 }
 
@@ -263,7 +282,30 @@ main() {
         exit 0
     fi
 
-    CURRENT_VERSION="$(read_local_fest_version)"
+    # This compares against the latest festival suite tag, so it needs the suite
+    # version, not fest's own release. `fest version` distinguishes three cases:
+    #
+    #   bundle: line   a suite build; that line carries the version to compare
+    #   profile: line  a bundle-capable fest that was not built from a suite
+    #                  release (go install, just build)
+    #   neither        a bundle published before either line existed, which
+    #                  stamped the suite version into fest's own version field
+    FEST_VERSION_OUTPUT="$(fest version 2>/dev/null)" || FEST_VERSION_OUTPUT=""
+    CURRENT_VERSION="$(parse_bundle_version "$FEST_VERSION_OUTPUT")"
+
+    if [ -z "$CURRENT_VERSION" ] && has_build_profile "$FEST_VERSION_OUTPUT"; then
+        # A bundle-capable fest with no bundle line was never part of a suite
+        # release, so there is no suite version to compare the tag against.
+        # Saying anything here nags forever about an update the user did not
+        # install and cannot apply, so record the check and stay quiet.
+        record_check
+        exit 0
+    fi
+
+    if [ -z "$CURRENT_VERSION" ]; then
+        CURRENT_VERSION="$(read_local_fest_version "$FEST_VERSION_OUTPUT")"
+    fi
+
     if ! is_release_version "$CURRENT_VERSION"; then
         if [ -n "$CURRENT_VERSION" ]; then
             info "Festival update check skipped: local fest version '${CURRENT_VERSION}' is not a release"

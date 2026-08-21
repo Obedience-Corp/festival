@@ -26,11 +26,17 @@ builds:
     # ignore:
     #   - goos: windows
     #     goarch: arm64
+    # Version and Commit describe the pinned fest submodule, not this repo, so
+    # `fest version` reports the fest release the bundle actually ships. Bundle
+    # carries the festival suite tag. scripts/tool-versions.sh computes the
+    # FEST_* values; GoReleaser fails when an .Env key is unset, which keeps a
+    # release from ever shipping unstamped or mis-stamped binaries again.
     ldflags:
       - -s -w
-      - -X github.com/Obedience-Corp/fest/internal/version.Version={{.Version}}
-      - -X github.com/Obedience-Corp/fest/internal/version.Commit={{.Commit}}
-      - -X github.com/Obedience-Corp/fest/internal/version.BuildDate={{.Date}}
+      - -X github.com/Obedience-Corp/fest/internal/version.Version={{ .Env.FEST_VERSION }}
+      - -X github.com/Obedience-Corp/fest/internal/version.Commit={{ .Env.FEST_COMMIT }}
+      - -X github.com/Obedience-Corp/fest/internal/version.BuildDate={{ .Date }}
+      - -X github.com/Obedience-Corp/fest/internal/version.Bundle={{ .Tag }}
 
   - id: camp
     dir: camp
@@ -52,11 +58,15 @@ builds:
     # ignore:
     #   - goos: windows
     #     goarch: arm64
+    # Same contract as the fest build above: CAMP_* comes from
+    # scripts/tool-versions.sh and describes the pinned camp submodule, while
+    # Bundle carries the festival suite tag.
     ldflags:
       - -s -w
-      - -X github.com/Obedience-Corp/camp/internal/version.Version={{.Version}}
-      - -X github.com/Obedience-Corp/camp/internal/version.Commit={{.Commit}}
-      - -X github.com/Obedience-Corp/camp/internal/version.BuildDate={{.Date}}
+      - -X github.com/Obedience-Corp/camp/internal/version.Version={{ .Env.CAMP_VERSION }}
+      - -X github.com/Obedience-Corp/camp/internal/version.Commit={{ .Env.CAMP_COMMIT }}
+      - -X github.com/Obedience-Corp/camp/internal/version.BuildDate={{ .Date }}
+      - -X github.com/Obedience-Corp/camp/internal/version.Bundle={{ .Tag }}
 
   - id: festival
     dir: festival-installer

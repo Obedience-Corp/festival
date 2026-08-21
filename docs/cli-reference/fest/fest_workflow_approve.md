@@ -30,8 +30,8 @@ Auto approval:
   agent-actor decisions are recorded only via the judge path.
 
   Checkpoint classes:
-    artifact_review         — deliverables can be auto-judged when evidence is ready
-    operator_attestation    — human must approve; --auto is refused and plain
+    artifact_review         : deliverables can be auto-judged when evidence is ready
+    operator_attestation    : human must approve; --auto is refused and plain
                               manual approval requires an interactive TTY
 
   Presentation-like steps require non-empty evidence (e.g. output_specs/PRESENTATION.md)
