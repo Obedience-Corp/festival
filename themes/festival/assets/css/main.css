@@ -1345,6 +1345,23 @@ summary {
 
 .howto__visual { min-width: 0; }
 
+.site-body--docs .content figure {
+  margin: 1.5rem 0;
+}
+
+.site-body--docs .content figure img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+}
+
+.site-body--docs .content figcaption {
+  margin-top: 0.7rem;
+  font-size: 0.88rem;
+  color: var(--festival-500);
+  line-height: 1.5;
+}
+
 .terminal-demo__pre {
   margin: 0;
   padding: 0;
