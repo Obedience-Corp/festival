@@ -5,13 +5,13 @@ weight: 21
 
 # Other agents
 
-Festival is two CLIs and a directory of files. Any agent that can run shell commands and read files can drive it, and the agents on this page do exactly that with no plugin and no adapter.
+Festival is two CLIs and a directory of files: `fest` and `camp`, installed and kept current by a third tool, `festival`. Any agent that can run shell commands and read files can drive it, and the agents on this page do exactly that with no plugin and no adapter.
 
 This page is the path for all of them, followed by what is specifically known about a few by name.
 
 ## The universal path
 
-**1. Install `fest` and `camp`.** Pick one:
+**1. Install `fest`, `camp`, and `festival`.** Pick one:
 
 ```bash
 # Homebrew
@@ -24,11 +24,12 @@ npm install -g @obedience-corp/festival
 curl -fsSL https://raw.githubusercontent.com/Obedience-Corp/festival/main/install.sh | bash
 ```
 
-Then check both answer:
+Then check all three answer:
 
 ```bash
 fest --version
 camp --version
+festival --version
 ```
 
 Full install options are on the [installation page](../installation/).

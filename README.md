@@ -42,7 +42,7 @@ Each task carries completion criteria, `fest validate` checks the plan against t
 
 **Do I need an account or a hosted service?**
 
-No. `camp` and `fest` are two local binaries. Everything they write is a file in your workspace, and nothing is routed through Obedience Corp. Bring your own models and your own agent. See [how Festival compares](https://docs.fest.build/compare/) to hosted agent workspaces.
+No. `camp`, `fest`, and `festival` are local binaries. Everything they write is a file in your workspace, and nothing is routed through Obedience Corp. Bring your own models and your own agent. See [how Festival compares](https://docs.fest.build/compare/) to hosted agent workspaces.
 
 <p align="center">
   <img src="docs/images/demos/proof-loop.gif" alt="One sentence of intent scaffolds a festival, an agent runs the next task, the session is interrupted, fest next resumes it, then fest validate and fest commit close it out" width="700">
@@ -50,6 +50,18 @@ No. `camp` and `fest` are two local binaries. Everything they write is a file in
 <p align="center"><em>One sentence of intent. A scaffolded festival. The agent runs the next task, the session is interrupted, and <code>fest next</code> picks it back up. Validate, commit, done.</em></p>
 
 ## Install
+
+Every method below installs three binaries: `camp`, `fest`, and `festival`.
+`festival` installs, updates, and launches the other two; it verifies signed
+package metadata against a compiled-in key and refuses unsigned content by
+default.
+
+```bash
+festival install   # install camp and fest
+festival update     # keep camp, fest, and festival in sync
+festival browse      # see what is available
+festival doctor       # check the install
+```
 
 **npm / pnpm / bun:**
 
@@ -196,13 +208,15 @@ Festival is the organizational layer for work done with AI. Instead of asking "w
 
 ## What Festival Does
 
-Festival ships two CLIs (`camp` and `fest`) that solve the three problems above.
+Festival ships as a three-binary suite (`camp`, `fest`, and `festival`) that solves the three problems above.
 
 **`camp`** manages campaigns: isolated workspaces that hold all the projects, docs, research, and planning for a single mission, a high-level purpose like your startup, your job, or a hobby. A mission grows over time, and the campaign grows with it. It gives you instant navigation across everything in the workspace, project lifecycle management, and shell shortcuts that make `cd` obsolete.
 
 Work items are the campaign-level work queue. `camp workitem` surfaces intents, design docs, explore notes, festivals, and custom tracked work through one dashboard. It can mark current work, link work to projects or festivals, and commit changes scoped to the resolved work item.
 
 **`fest`** manages festivals: structured plans that break work into phases, sequences, and tasks. The hierarchy is designed for AI agents to execute autonomously, pause, and resume without context loss. Run `fest next` and the agent gets its next task with full surrounding context. Run `fest commit` and every commit traces back to the plan.
+
+**`festival`** installs, updates, and launches `camp` and `fest` as a matched pair. `festival browse` shows what is available across registered marketplaces, `festival update` moves all three binaries together, and `festival doctor` reports the installer's view of your PATH, sources, and receipts. It verifies signed package metadata against a compiled-in key and refuses unsigned content by default.
 
 ### Where Festival Fits
 
@@ -296,7 +310,7 @@ Full guide: **[Loops & Orchestration](https://docs.fest.build/guides/loops-and-o
 
 ## Navigation
 
-Shell integration gives you shorthand functions that make navigating a campaign instant. Package installs include helper files that load both CLIs:
+Shell integration gives you shorthand functions that make navigating a campaign instant. Package installs include helper files that load `camp` and `fest` shell functions plus tab completion for all three binaries:
 
 ```bash
 # install.sh default location
@@ -407,7 +421,7 @@ camp p list                   # Same as: camp project list
 
 ## CLI Overview
 
-Full reference: [fest CLI](https://docs.fest.build/cli-reference/fest/) | [camp CLI](https://docs.fest.build/cli-reference/camp/)
+Full reference: [fest CLI](https://docs.fest.build/cli-reference/fest/) | [camp CLI](https://docs.fest.build/cli-reference/camp/) | [festival CLI](https://docs.fest.build/cli-reference/festival/)
 
 ### camp: workspace management
 
@@ -437,6 +451,19 @@ fest understand                  # Teach an AI agent the full methodology
 ```
 
 `fest next` is the entry point for agents: it resolves the next task with context from every level of the hierarchy and respects workflow ordering and completion criteria. See [Agentic Loops](#agentic-loops) for how it drives execution end to end.
+
+### festival: suite installer and updater
+
+```bash
+festival install                 # install camp and fest
+festival update                  # keep camp, fest, and festival in sync
+festival browse                  # see what is available across marketplaces
+festival doctor                  # report PATH, sources, and receipts
+festival which camp              # resolve the real binary path for a suite tool
+festival version                 # print the festival manager version
+```
+
+`festival` is not part of the day-to-day agentic loop; `fest` and `camp` are. It exists to get those two installed correctly and keep them current.
 
 ## Claude Code Plugin
 

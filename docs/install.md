@@ -6,6 +6,18 @@ title: "Install Festival"
 
 `git` is required for Festival. `scc` is recommended for `camp leverage`, but optional.
 
+Every method on this page installs three binaries: `camp`, `fest`, and
+`festival`. `festival` installs, updates, and launches the other two; it
+verifies signed package metadata against a compiled-in key and refuses
+unsigned content by default.
+
+```bash
+festival install   # install camp and fest
+festival update     # keep camp, fest, and festival in sync
+festival browse      # see what is available
+festival doctor       # check the install
+```
+
 <div id="install-macos" class="install-platform" style="display:none">
 
 ## macOS

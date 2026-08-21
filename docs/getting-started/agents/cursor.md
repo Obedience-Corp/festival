@@ -24,11 +24,12 @@ npm install -g @obedience-corp/festival
 curl -fsSL https://raw.githubusercontent.com/Obedience-Corp/festival/main/install.sh | bash
 ```
 
-Then check both binaries answer:
+Then check all three binaries answer:
 
 ```bash
 fest --version
 camp --version
+festival --version
 ```
 
 If either one is missing or resolves somewhere you did not expect, `festival doctor` reports the installer's view of your PATH, sources, and receipts. Full install options are on the [installation page](../installation/).
