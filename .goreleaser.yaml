@@ -306,7 +306,7 @@ release:
     | Fedora/RHEL | Download `.rpm` from assets below |
     | Windows | Temporarily paused while Windows support is stabilized |
 
-# macOS signing and notarization — disabled until Apple Developer account is configured.
+# macOS signing and notarization: disabled until Apple Developer account is configured.
 # To enable: set MACOS_SIGN_P12, MACOS_SIGN_PASSWORD, MACOS_NOTARY_KEY,
 # MACOS_NOTARY_KEY_ID, and MACOS_NOTARY_ISSUER_ID secrets, then uncomment below.
 #

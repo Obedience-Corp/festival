@@ -341,7 +341,7 @@ commands can `cd` in your current shell. Because of that, plain `which camp` /
 `which fest` usually prints the function body, not a filesystem path.
 
 ```bash
-# zsh — path of the external binary (skips shell functions)
+# zsh: path of the external binary (skips shell functions)
 whence -p camp
 whence -p fest
 # or: which -p camp / which -p fest
