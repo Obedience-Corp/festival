@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"sort"
+	"time"
 )
 
 type MarketplaceEntryInput struct {
@@ -103,6 +104,18 @@ func BuildMarketplaceEntry(in MarketplaceEntryInput) ([]byte, error) {
 	}
 	if len(in.Artifacts) == 0 {
 		return nil, fmt.Errorf("no artifacts for %s", in.FestivalVersion)
+	}
+	// The hub's manifest schema requires published_at to be "format":
+	// "date-time". v0.2.17 shipped with published_at="" because the workflow
+	// omitted --published-at and this function accepted the empty string
+	// anyway; the failure only surfaced on a user's machine as "schema
+	// invalid at /releases/0/published_at". Refuse it here instead, so a
+	// missing or malformed value fails the release, not the install.
+	if in.PublishedAt == "" {
+		return nil, fmt.Errorf("missing published_at for %s", in.FestivalVersion)
+	}
+	if _, err := time.Parse(time.RFC3339, in.PublishedAt); err != nil {
+		return nil, fmt.Errorf("published_at %q is not RFC 3339: %w", in.PublishedAt, err)
 	}
 
 	binaries := make([]string, len(in.Components))

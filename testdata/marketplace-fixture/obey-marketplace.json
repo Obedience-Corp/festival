@@ -1,0 +1,25 @@
+{
+  "id": "obedience-corp/official-fixture",
+  "name": "Fixture Marketplace",
+  "description": "Local fixture marketplace for scripts/test_marketplace_publish.sh. Not a real marketplace; never point a real client at it.",
+  "homepage": "https://example.invalid/fixture-marketplace",
+  "schema_version": "1",
+  "namespace": "obedience-corp",
+  "packages": [
+    {
+      "id": "obedience-corp/festival",
+      "display_name": "Festival Suite",
+      "class": "product",
+      "summary": "Fixture entry for the festival suite.",
+      "host_runtimes": [
+        "camp-cli",
+        "fest-cli",
+        "fest-extension"
+      ],
+      "channels": [
+        "stable"
+      ],
+      "manifest_path": "packages/obedience-corp/festival/obey-package.json"
+    }
+  ]
+}
