@@ -129,6 +129,7 @@ nfpms:
         dst: /usr/share/licenses/festival/NOTICE
       - src: ./README.md
         dst: /usr/share/doc/festival/README.md
+      # BEGIN GENERATED NFPM COMPLETIONS
       - src: ./completions/fest.bash
         dst: /usr/share/bash-completion/completions/fest
       - src: ./completions/_fest
@@ -147,6 +148,7 @@ nfpms:
         dst: /usr/share/zsh/vendor-completions/_festival
       - src: ./completions/festival.fish
         dst: /usr/share/fish/vendor_completions.d/festival.fish
+      # END GENERATED NFPM COMPLETIONS
       - src: ./shell/festival.bash
         dst: /usr/share/festival/shell/festival.bash
       - src: ./shell/festival.zsh
@@ -179,6 +181,7 @@ aurs:
       install -Dm755 "./festival" "${pkgdir}/usr/bin/festival"
       install -Dm644 "./LICENSE" "${pkgdir}/usr/share/licenses/festival/LICENSE"
       install -Dm644 "./NOTICE" "${pkgdir}/usr/share/licenses/festival/NOTICE"
+      # BEGIN GENERATED AUR COMPLETIONS
       install -Dm644 "./completions/fest.bash" "${pkgdir}/usr/share/bash-completion/completions/fest"
       install -Dm644 "./completions/_fest" "${pkgdir}/usr/share/zsh/site-functions/_fest"
       install -Dm644 "./completions/fest.fish" "${pkgdir}/usr/share/fish/vendor_completions.d/fest.fish"
@@ -188,6 +191,7 @@ aurs:
       install -Dm644 "./completions/festival.bash" "${pkgdir}/usr/share/bash-completion/completions/festival"
       install -Dm644 "./completions/_festival" "${pkgdir}/usr/share/zsh/site-functions/_festival"
       install -Dm644 "./completions/festival.fish" "${pkgdir}/usr/share/fish/vendor_completions.d/festival.fish"
+      # END GENERATED AUR COMPLETIONS
       install -Dm644 "./shell/festival.bash" "${pkgdir}/usr/share/festival/shell/festival.bash"
       install -Dm644 "./shell/festival.zsh" "${pkgdir}/usr/share/festival/shell/festival.zsh"
       install -Dm644 "./shell/festival.fish" "${pkgdir}/usr/share/festival/shell/festival.fish"
@@ -240,10 +244,12 @@ homebrew_casks:
       - fest
       - camp
       - festival
+    # BEGIN GENERATED HOMEBREW COMPLETIONS STANZA
     completions:
       bash: completions/fest.bash
       zsh: completions/_fest
       fish: completions/fest.fish
+    # END GENERATED HOMEBREW COMPLETIONS STANZA
 
     hooks:
       post:
@@ -256,14 +262,29 @@ homebrew_casks:
           system_command "/bin/cp", args: ["#{staged_path}/shell/festival.bash", "#{shell_dir}/festival.bash"]
           system_command "/bin/cp", args: ["#{staged_path}/shell/festival.zsh", "#{shell_dir}/festival.zsh"]
           system_command "/bin/cp", args: ["#{staged_path}/shell/festival.fish", "#{shell_dir}/festival.fish"]
+          # BEGIN GENERATED HOMEBREW EXTRA COMPLETION INSTALL
           system_command "/bin/cp", args: ["#{staged_path}/completions/camp.bash", "#{HOMEBREW_PREFIX}/etc/bash_completion.d/camp"]
           system_command "/bin/cp", args: ["#{staged_path}/completions/_camp", "#{HOMEBREW_PREFIX}/share/zsh/site-functions/_camp"]
           system_command "/bin/cp", args: ["#{staged_path}/completions/camp.fish", "#{HOMEBREW_PREFIX}/share/fish/vendor_completions.d/camp.fish"]
           system_command "/bin/cp", args: ["#{staged_path}/completions/festival.bash", "#{HOMEBREW_PREFIX}/etc/bash_completion.d/festival"]
           system_command "/bin/cp", args: ["#{staged_path}/completions/_festival", "#{HOMEBREW_PREFIX}/share/zsh/site-functions/_festival"]
           system_command "/bin/cp", args: ["#{staged_path}/completions/festival.fish", "#{HOMEBREW_PREFIX}/share/fish/vendor_completions.d/festival.fish"]
+          # END GENERATED HOMEBREW EXTRA COMPLETION INSTALL
         uninstall: |
-          system_command "/bin/rm", args: ["-f", "#{HOMEBREW_PREFIX}/share/festival/shell/festival.bash", "#{HOMEBREW_PREFIX}/share/festival/shell/festival.zsh", "#{HOMEBREW_PREFIX}/share/festival/shell/festival.fish", "#{HOMEBREW_PREFIX}/etc/bash_completion.d/camp", "#{HOMEBREW_PREFIX}/share/zsh/site-functions/_camp", "#{HOMEBREW_PREFIX}/share/fish/vendor_completions.d/camp.fish", "#{HOMEBREW_PREFIX}/etc/bash_completion.d/festival", "#{HOMEBREW_PREFIX}/share/zsh/site-functions/_festival", "#{HOMEBREW_PREFIX}/share/fish/vendor_completions.d/festival.fish"]
+          system_command "/bin/rm", args: [
+            "-f",
+            "#{HOMEBREW_PREFIX}/share/festival/shell/festival.bash",
+            "#{HOMEBREW_PREFIX}/share/festival/shell/festival.zsh",
+            "#{HOMEBREW_PREFIX}/share/festival/shell/festival.fish",
+            # BEGIN GENERATED HOMEBREW EXTRA COMPLETION UNINSTALL
+            "#{HOMEBREW_PREFIX}/etc/bash_completion.d/camp",
+            "#{HOMEBREW_PREFIX}/share/zsh/site-functions/_camp",
+            "#{HOMEBREW_PREFIX}/share/fish/vendor_completions.d/camp.fish",
+            "#{HOMEBREW_PREFIX}/etc/bash_completion.d/festival",
+            "#{HOMEBREW_PREFIX}/share/zsh/site-functions/_festival",
+            "#{HOMEBREW_PREFIX}/share/fish/vendor_completions.d/festival.fish",
+            # END GENERATED HOMEBREW EXTRA COMPLETION UNINSTALL
+          ]
 
     caveats: |
       Homebrew installs static fest, camp, and festival completions. To activate navigation helpers

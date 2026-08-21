@@ -7,7 +7,7 @@ default:
 
 # Test all projects
 [no-cd]
-all: fest camp festival-installer release-operator release-notes plugin marketplace-publish no-em-dash
+all: fest camp festival-installer release-operator release-notes plugin marketplace-publish completion-assets no-em-dash
     @echo "All tests passed"
 
 # Fail if an em dash (U+2014) appears in tracked or untracked files this repo
@@ -64,6 +64,11 @@ beginner-path-smoke:
 [no-cd]
 marketplace-publish:
     bash scripts/test_marketplace_publish.sh
+
+# Verify packaged completion filenames come from scripts/completion-clis.txt
+[no-cd]
+completion-assets:
+    bash scripts/test_completion_assets.sh
 
 # Test fest
 [no-cd]

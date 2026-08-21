@@ -12,16 +12,10 @@ if command -q fest
     fest shell-init fish | source
 end
 
-if test -f "$_festival_completion_dir/camp.fish"
-    source "$_festival_completion_dir/camp.fish"
-end
-
-if test -f "$_festival_completion_dir/fest.fish"
-    source "$_festival_completion_dir/fest.fish"
-end
-
-if command -q festival
-    if test -f "$_festival_completion_dir/festival.fish"
-        source "$_festival_completion_dir/festival.fish"
+if test -d "$_festival_completion_dir"
+    for _festival_completion_file in $_festival_completion_dir/*.fish
+        if test -f "$_festival_completion_file"
+            source "$_festival_completion_file"
+        end
     end
 end
