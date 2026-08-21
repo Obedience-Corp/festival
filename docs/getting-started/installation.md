@@ -154,14 +154,18 @@ fest version
 camp version
 ```
 
-Binaries installed from a Festival release add a `bundle:` line naming that
-release, next to the tool's own version and commit:
+Bundles published from camp and fest releases that carry the bundle field add a
+`bundle:` line on the second line of the output, between the tool's own version
+and its commit (illustrative values):
 
 ```
-fest v0.6.2
-commit: 62ebfca
-bundle: festival v0.2.17
+fest v0.6.3
+bundle: festival v0.2.18
+commit: 1a2b3c4
 ```
+
+Bundles published before that change (v0.2.17 and earlier) have no `bundle:`
+line and report the suite version as the tool's version instead.
 
 Binaries built with `go install` have no `bundle:` line, since they were not
 built from a suite release.
