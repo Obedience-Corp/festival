@@ -184,67 +184,111 @@ download_and_install() {
     done
 }
 
-# --- Main ---
-
-require_command curl
-require_command tar
-require_command grep
-require_command sed
-require_command awk
-require_command find
-require_command install
-require_checksum_command
-detect_platform
-
-if ! check_installed; then
-    # Fresh install
-    info "Festival CLI not found. Installing fest and camp..."
-
-    RELEASE_JSON=$(fetch_release) || {
-        info "Could not fetch release info. Install manually: curl -fsSL https://raw.githubusercontent.com/${REPO}/main/install.sh | bash"
-        exit 1
-    }
-
-    ARCHIVE_URL=$(find_archive_url "$RELEASE_JSON")
-    if [ -z "$ARCHIVE_URL" ]; then
-        info "No compatible archive found for ${OS}/${ARCH}. Install manually: curl -fsSL https://raw.githubusercontent.com/${REPO}/main/install.sh | bash"
-        exit 1
+# parse_local_fest_version SHORT_OUTPUT FULL_OUTPUT
+#
+# Prefer `fest version --short` (a single token: "dev", "v0.2.16", ...). If that
+# is empty (old binary, flag unknown), take field 2 of the first `fest version`
+# line ("fest v0.2.16" / "fest dev"). Do not scan the whole block for X.Y.Z:
+# the Go runtime line is `go: go1.26.4` and a greedy grep treats 1.26.4 as the
+# installed festival version.
+parse_local_fest_version() {
+    local short="${1-}"
+    local full="${2-}"
+    local token
+    token="$(printf '%s\n' "$short" | awk 'NR==1 {print $1; exit}')"
+    if [ -n "$token" ]; then
+        printf '%s' "$token"
+        return 0
     fi
-
-    download_and_install "$ARCHIVE_URL"
-    record_check
-
-    if command -v fest >/dev/null 2>&1; then
-        info "Festival installed successfully: $(fest version 2>/dev/null || echo 'fest ready')"
-    else
-        info "Installed to ${INSTALL_DIR}. You may need to add it to your PATH: export PATH=\"${INSTALL_DIR}:\$PATH\""
-    fi
-    exit 0
-fi
-
-# Already installed, check for updates (rate-limited to once/day)
-if ! should_check_update; then
-    exit 0
-fi
-
-CURRENT_VERSION=$(fest version 2>/dev/null | grep -oE 'v?[0-9]+\.[0-9]+\.[0-9]+' | head -1 || echo "")
-if [ -z "$CURRENT_VERSION" ]; then
-    record_check
-    exit 0
-fi
-
-RELEASE_JSON=$(fetch_release 2>/dev/null) || {
-    record_check
-    exit 0
+    printf '%s\n' "$full" | awk 'NR==1 {print $2; exit}'
 }
 
-LATEST_TAG=$(extract_tag "$RELEASE_JSON")
-# Normalize: strip leading v for comparison
-CURRENT_CLEAN="${CURRENT_VERSION#v}"
-LATEST_CLEAN="${LATEST_TAG#v}"
+# is_release_version TOKEN: 0 when TOKEN is a festival release semver
+# (optional leading v, X.Y.Z, optional -rc.N / dotted suffix). Rejects "dev",
+# empty, and *-dev.* snapshot builds.
+is_release_version() {
+    local v="${1-}"
+    case "$v" in
+        ""|dev|unknown) return 1 ;;
+        *-dev|*-dev.*) return 1 ;;
+    esac
+    printf '%s' "$v" | grep -Eq '^v?[0-9]+\.[0-9]+\.[0-9]+([.-][A-Za-z0-9.]+)?$'
+}
 
-record_check
+read_local_fest_version() {
+    local short full
+    short="$(fest version --short 2>/dev/null || true)"
+    full="$(fest version 2>/dev/null || true)"
+    parse_local_fest_version "$short" "$full"
+}
 
-if [ "$CURRENT_CLEAN" != "$LATEST_CLEAN" ]; then
-    info "Festival update available: ${CURRENT_VERSION} -> ${LATEST_TAG}. Run: curl -fsSL https://raw.githubusercontent.com/${REPO}/main/install.sh | bash"
+main() {
+    require_command curl
+    require_command tar
+    require_command grep
+    require_command sed
+    require_command awk
+    require_command find
+    require_command install
+    require_checksum_command
+    detect_platform
+
+    if ! check_installed; then
+        info "Festival CLI not found. Installing fest and camp..."
+
+        RELEASE_JSON=$(fetch_release) || {
+            info "Could not fetch release info. Install manually: curl -fsSL https://raw.githubusercontent.com/${REPO}/main/install.sh | bash"
+            exit 1
+        }
+
+        ARCHIVE_URL=$(find_archive_url "$RELEASE_JSON")
+        if [ -z "$ARCHIVE_URL" ]; then
+            info "No compatible archive found for ${OS}/${ARCH}. Install manually: curl -fsSL https://raw.githubusercontent.com/${REPO}/main/install.sh | bash"
+            exit 1
+        fi
+
+        download_and_install "$ARCHIVE_URL"
+        record_check
+
+        if command -v fest >/dev/null 2>&1; then
+            info "Festival installed successfully: $(fest version 2>/dev/null || echo 'fest ready')"
+        else
+            info "Installed to ${INSTALL_DIR}. You may need to add it to your PATH: export PATH=\"${INSTALL_DIR}:\$PATH\""
+        fi
+        exit 0
+    fi
+
+    # Already installed: check for updates (rate-limited to once/day)
+    if ! should_check_update; then
+        exit 0
+    fi
+
+    CURRENT_VERSION="$(read_local_fest_version)"
+    if ! is_release_version "$CURRENT_VERSION"; then
+        if [ -n "$CURRENT_VERSION" ]; then
+            info "Festival update check skipped: local fest version '${CURRENT_VERSION}' is not a release"
+        fi
+        record_check
+        exit 0
+    fi
+
+    RELEASE_JSON=$(fetch_release 2>/dev/null) || {
+        record_check
+        exit 0
+    }
+
+    LATEST_TAG=$(extract_tag "$RELEASE_JSON")
+    CURRENT_CLEAN="${CURRENT_VERSION#v}"
+    LATEST_CLEAN="${LATEST_TAG#v}"
+
+    record_check
+
+    if [ "$CURRENT_CLEAN" != "$LATEST_CLEAN" ]; then
+        info "Festival update available: ${CURRENT_VERSION} -> ${LATEST_TAG}. Run: curl -fsSL https://raw.githubusercontent.com/${REPO}/main/install.sh | bash"
+    fi
+}
+
+# Run main only when executed, not when sourced by the test harness.
+if [ "${BASH_SOURCE[0]:-$0}" = "$0" ]; then
+    main "$@"
 fi

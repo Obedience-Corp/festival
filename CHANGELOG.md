@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- SessionStart `ensure-festival.sh` no longer treats the Go toolchain line (`go: go1.26.4`) as the installed festival version. Dev builds (`fest version --short` → `dev`) skip the update compare instead of nagging `Festival update available: 1.26.4 -> vX.Y.Z`.
 - The plugin's hooks did not load on Claude Code. `claude-plugin/hooks/hooks.json` listed `SessionStart` and `PreToolUse` at the top level, and Claude Code (2.1.235) wants the event map nested under a top-level `hooks` object, so the plugin installed and then reported `Status: failed to load` with `Hook load failed: hooks: Invalid input: expected record, received undefined`. Skills, commands, and agents loaded; both hooks were lost, which meant no session-start CLI install and no commit guard. The file now carries the `description` plus `hooks` wrapper, the Codex projection in `packaging/targets/codex.target.mjs` was corrected the same way (Codex documents the same shape), and `just plugin check` gained a shape check so a bare event map fails the gate instead of shipping. The plugin manifests are bumped to 1.3.1 so marketplace users pick the working bundle up.
 - Plugin manifests (Claude, Codex, Cursor) and every generated Hermes tap skill declared `MIT`; the repo and everything in it is Apache 2.0 (ADR-0002). All now say `Apache-2.0`.
 
