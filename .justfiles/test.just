@@ -12,10 +12,8 @@ all: fest camp festival-installer release-operator release-notes plugin marketpl
 
 # Fail if an em dash (U+2014) appears in tracked or untracked files this repo
 # owns (still honors .gitignore). README.zh-CN.md is excluded: Chinese
-# typography uses the em dash. docs/cli-reference/camp/ and .../fest/ are
-# excluded: those pages mirror the pinned camp/fest submodules' own compiled
-# help text, this repo does not own that content, and any local fix here
-# would be silently reverted by the next `just docs all`.
+# typography uses the em dash. Generated camp/fest CLI pages are included:
+# cobra help strings are fixed in those repos, so regen must stay clean.
 [no-cd]
 no-em-dash:
     #!/usr/bin/env bash
@@ -23,7 +21,7 @@ no-em-dash:
     hits="$(git grep -n --untracked $'\xe2\x80\x94' -- \
         '*.sh' '*.js' '*.mjs' '*.yaml' '*.yml' '*.just' '*.json' '*.go' 'justfile' \
         'README.md' 'CHANGELOG.md' \
-        'docs/cli-reference/*.md' ':!docs/cli-reference/camp' ':!docs/cli-reference/fest' \
+        'docs/cli-reference' \
         || true)"
     if [ -n "$hits" ]; then
         echo "em dash (U+2014) found:" >&2
