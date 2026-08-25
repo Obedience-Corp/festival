@@ -6,7 +6,9 @@ description: "Print shell code to put the installer-managed bin dir on PATH"
 
 ## festival shell-init
 
-Print shell code to put the installer-managed bin dir on PATH
+Print origin-aware shell code. Package installs print `source` of the packaged
+helper (not `export PATH=` for `~/.obey/installer/bin`). Hub-managed installs
+still prepend the managed bin dir.
 
 ```
 festival shell-init <zsh|bash|fish> [flags]

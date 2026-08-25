@@ -44,8 +44,14 @@ A hosted workspace keeps your continuity in someone else's account and usually r
 ## 1. Set Up Shell Integration
 
 ```bash
+# Linux packages (AUR festival-bin, deb/rpm/apk obedience-festival)
+source /usr/share/festival/shell/festival.zsh
+
 # Add to ~/.zshrc when installed with install.sh
 source ~/.local/share/festival/shell/festival.zsh
+
+# Homebrew
+source "$(brew --prefix)/share/festival/shell/festival.zsh"
 
 # Or, if no helper file is installed:
 eval "$(camp shell-init zsh)"

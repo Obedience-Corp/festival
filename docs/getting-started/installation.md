@@ -64,13 +64,13 @@ Download the `.deb` package from
 [GitHub Releases](https://github.com/Obedience-Corp/festival/releases/latest):
 
 ```bash
-sudo dpkg -i festival_*_amd64.deb
+sudo dpkg -i obedience-festival_*_amd64.deb
 ```
 
 ### Fedora / RHEL
 
 ```bash
-sudo rpm -i festival-*.x86_64.rpm
+sudo rpm -i obedience-festival-*.x86_64.rpm
 ```
 
 ### Arch Linux (AUR)
@@ -82,7 +82,7 @@ yay -S festival-bin
 ### Alpine
 
 ```bash
-sudo apk add --allow-untrusted festival_*.apk
+sudo apk add --allow-untrusted obedience-festival_*.apk
 ```
 
 ### Direct Download
@@ -169,6 +169,17 @@ line and report the suite version as the tool's version instead.
 
 Binaries built with `go install` have no `bundle:` line, since they were not
 built from a suite release.
+
+Then run `festival doctor`. On a coherent AUR (`festival-bin`), Homebrew, npm,
+or `obedience-festival` (deb/rpm/apk) install, doctor **exits 0**. Marketplace
+empty (`no marketplaces registered`) is a **warn**, not a failure. Browse if
+you want the official catalog; doctor does not require it.
+
+Package users should **not** run `eval "$(festival shell-init zsh)"`. That
+prepends an empty hub bin dir (`~/.obey/installer/bin`) ahead of the package.
+Source the packaged helper instead (see Shell Integration). Do not run
+`festival install` on top of a package install unless you pass `--force`; that
+plants a second copy under `~/.obey/installer`.
 
 ## Upgrading
 
