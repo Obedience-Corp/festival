@@ -30,3 +30,19 @@ with sign-offs before merge.
 - Run `just release preflight <mode>` and `just test release-operator` before
   release-tooling PRs.
 - Match the surrounding code's conventions; see the README for layout.
+
+## Claude Code plugin directory
+
+The Claude Code plugin lives in `claude-plugin/`. Do not open a pull request
+against [anthropics/claude-plugins-community](https://github.com/anthropics/claude-plugins-community);
+that repo is a read-only nightly mirror.
+
+To list Festival on Anthropic's community marketplace, follow
+[docs/claude-plugin-submission](docs/claude-plugin-submission/_index.md)
+and paste [the form copy](docs/claude-plugin-submission/form-copy.md) into
+the in-app form. Validate first:
+
+```bash
+claude plugin validate ./claude-plugin --strict
+just plugin check
+```

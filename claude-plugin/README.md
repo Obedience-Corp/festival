@@ -67,6 +67,9 @@ downloads `fest` and `camp` if they are missing, checksum-verifies the archive,
 and installs them. It also checks for updates once per day and notifies you when
 a new release is available.
 
+To list this plugin on Anthropic's community marketplace, see
+[docs/claude-plugin-submission](../docs/claude-plugin-submission/_index.md).
+
 ## Commit guard
 
 A `PreToolUse` (Bash) hook (`hooks/scripts/commit-guard.sh`) enforces campaign
@@ -118,9 +121,26 @@ every local default test run, not only in the release workflow.
   Split a skill when its `SKILL.md` crosses roughly 100 lines or carries a large
   reference table. The current 12 skills are short and stay single-file.
 
+## Privacy and network access
+
+The plugin does not collect conversation content, chat history, memory, or
+uploaded files. Nothing in the bundle sends user data to Obedience Corp.
+
+The only network use is the `SessionStart` hook, which talks to GitHub for
+the `Obedience-Corp/festival` repository: `releases/latest`, the release
+checksum file, and the platform archive. Downloads are checksum-verified
+before install. Update checks are rate-limited to once per day. When `fest`
+and `camp` are already on PATH and current, the hook does not download
+anything.
+
+The `PreToolUse` commit guard does not make network calls. It only inspects
+the Bash command line, and only when the session is inside a campaign and
+`camp` and `jq` are available.
+
 ## Methodology docs
 
 This README covers the plugin bundle only. For the Festival methodology itself:
 
 - `festivals/README.md` in a campaign workspace (the agent entry point)
 - Full docs at https://docs.fest.build
+- Anthropic community-directory submission: [docs/claude-plugin-submission](../docs/claude-plugin-submission/_index.md)

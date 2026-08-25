@@ -158,6 +158,8 @@ Phase gates are checkpoints for a human. The agent submits a gate and stops. You
 
 [Claude Code project management](/use-cases/claude-code-project-management/) covers the session-instructions pattern: what to put in front of the agent so it drives the loop without being told each step. The [quickstart](../quickstart/) is the agent-agnostic version of this page.
 
+Maintainers listing this plugin on Anthropic's community marketplace should use the [Claude plugin directory guide]({{< ref "/claude-plugin-submission" >}}). After that listing is live, this page should mention `/plugin install festival@claude-community` alongside the self-hosted marketplace install above.
+
 ## What was verified
 
 The shell install flow was exercised against Claude Code 2.1.235 on 2026-08-19, at plugin version 1.3.1, in an isolated configuration directory, from a local marketplace path pointing at the branch that carries the hook fix (the `Obedience-Corp/festival` shorthand serves it once that release is out). `claude plugin list` reported `enabled`, `claude plugin details` reported both hooks, and a session's debug log showed `Registered 2 hooks from 1 plugins` followed by `Hook SessionStart:startup (SessionStart) success` with the installer's own output. The older failure quoted in section 5 was reproduced side by side from a fixture carrying the previous manifest shape. Component counts were taken from the plugin tree on the same date. The in-session slash-command form is documented by the plugin bundle and was not exercised from a script.
