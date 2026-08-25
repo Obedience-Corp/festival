@@ -109,7 +109,7 @@ archives:
 
 nfpms:
   - id: festival
-    package_name: festival
+    package_name: obedience-festival
     file_name_template: "{{ .ConventionalFileName }}"
     ids:
       - fest
@@ -132,6 +132,8 @@ nfpms:
     priority: optional
     conflicts:
       - festival
+    scripts:
+      postinstall: ./packaging/nfpm-postinstall.sh
     contents:
       - src: ./LICENSE
         dst: /usr/share/licenses/festival/LICENSE
@@ -298,8 +300,9 @@ homebrew_casks:
           ]
 
     caveats: |
-      Homebrew installs static fest, camp, and festival completions. To activate navigation helpers
-      (cgo, cr, csw, cint, fgo, fls) as well, add one line to your shell config:
+      Homebrew installs static fest, camp, and festival completions. This cask does not
+      edit your shell rc. To activate navigation helpers (cgo, cr, csw, cint, fgo, fls),
+      add one line to your shell config:
 
         # bash (~/.bashrc)
         source \"$(brew --prefix)/share/festival/shell/festival.bash\"
@@ -309,6 +312,10 @@ homebrew_casks:
 
         # fish (~/.config/fish/config.fish)
         source \"$(brew --prefix)/share/festival/shell/festival.fish\"
+
+      Do not run festival install (that plants a second copy under ~/.obey/installer).
+      Upgrade with: brew upgrade --cask festival
+
 
 release:
   github:

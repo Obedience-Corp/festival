@@ -45,13 +45,15 @@ platform, verifies it against the release `checksums.txt`, exposes `fest`,
 shell-helper assets under `share/festival/` inside the installed npm
 package.
 
-The npm installer does not edit shell startup files. Add shell integration
-manually with:
+The npm installer does not edit shell startup files. Source the packaged helper
+(not `camp shell-init` / `fest shell-init`):
 
 ```bash
-eval "$(camp shell-init zsh)"
-eval "$(fest shell-init zsh)"
+source "$(npm root -g)/@obedience-corp/festival/share/festival/shell/festival.zsh"
 ```
+
+Do not run `festival install` (that plants a second copy under `~/.obey/installer`).
+Upgrade with: `npm install -g @obedience-corp/festival@latest`
 
 ## Maintainer Notes
 
