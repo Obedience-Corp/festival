@@ -181,6 +181,39 @@ Source the packaged helper instead (see Shell Integration). Do not run
 `festival install` on top of a package install unless you pass `--force`; that
 plants a second copy under `~/.obey/installer`.
 
+## Migrate from leftover / source installs
+
+Leftover `camp` / `fest` copies (from `go install`, or an old `$HOME/local/bin`
+drop) can sit ahead of a package install on PATH. `festival uninstall` cannot
+remove those files: it only deletes receipt-owned files under the hub home
+(`~/.obey/installer`). Delete the leftover **files**, not the directory (other
+tools may live in `$HOME/local/bin`; keep that directory on PATH).
+
+```bash
+type -a camp
+whence -p camp    # zsh; bash: type -P camp
+# If the binary is not /usr/bin/camp or $(brew --prefix)/bin/camp:
+rm "$HOME/local/bin/camp" "$HOME/local/bin/fest"
+# Do not: rm -r ~/local/bin
+# Do not strip ~/local/bin from PATH (other tools may live there)
+```
+
+Then install with your package manager (`yay -S festival-bin` or
+`obedience-festival` for deb/rpm/apk) and run `festival doctor`.
+
+## Name clash with Edinburgh TTS
+
+Arch's official `festival` package is Edinburgh speech synthesis. It already
+owns `/usr/bin/festival`. Obedience Corp's AUR package is **`festival-bin`**.
+Deb/rpm/apk packages are named **`obedience-festival`**. Both still ship
+`/usr/bin/festival`, so they **conflict** with TTS. If you have an old GitHub
+`.deb` still named `festival`:
+
+```bash
+sudo dpkg -r festival
+sudo dpkg -i obedience-festival_*_amd64.deb
+```
+
 ## Upgrading
 
 How you upgrade depends on how you installed Festival.
