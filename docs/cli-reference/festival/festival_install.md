@@ -1,12 +1,20 @@
 ---
 title: "festival install"
 linkTitle: "festival install"
-description: "Install the festival suite (camp + fest)"
+description: "Install the festival suite (camp, fest, and festival)"
 ---
 
 ## festival install
 
-Install the festival suite (camp + fest)
+Install the festival suite (camp, fest, and festival)
+
+### Synopsis
+
+install installs the festival suite (camp, fest, and festival).
+
+The target is required. festival, camp, and fest all install the suite bundle;
+camp and fest are not published independently, so passing either one still installs
+the whole suite and prints a notice saying so.
 
 ```
 festival install <festival|camp|fest> [flags]

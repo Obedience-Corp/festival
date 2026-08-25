@@ -56,7 +56,6 @@ camp workitem [flags]
 * [camp workitem adopt](../camp_workitem_adopt/)	 - Adopt an existing directory or file as a workitem
 * [camp workitem commit](../camp_workitem_commit/)	 - Commit changes scoped to a workitem
 * [camp workitem commits](../camp_workitem_commits/)	 - List commits referencing a workitem
-* [camp workitem convert](../camp_workitem_convert/)	 - Move a workitem to another workflow type
 * [camp workitem create](../camp_workitem_create/)	 - Create workitem tracking metadata
 * [camp workitem demote](../camp_workitem_demote/)	 - Move a rail resident back to its type root
 * [camp workitem doctor](../camp_workitem_doctor/)	 - Report link-registry health issues
