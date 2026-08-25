@@ -1287,7 +1287,12 @@ func ghSecretNames(dir string) ([]string, error) {
 }
 
 func ghAuthenticated() bool {
-	cmd := exec.Command("gh", "auth", "status")
+	// `gh auth status` reports every stored account and exits non-zero when
+	// any inactive profile has an expired token. That is not the question the
+	// release operator needs answered, and it breaks valid per-command
+	// GH_TOKEN injection on multi-account machines. Query the authenticated
+	// viewer instead so success reflects the credentials gh will actually use.
+	cmd := exec.Command("gh", "api", "user", "--jq", ".login")
 	cmd.Stdout = io.Discard
 	cmd.Stderr = io.Discard
 	return cmd.Run() == nil
