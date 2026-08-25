@@ -197,7 +197,7 @@ A festival is an autonomous loop, not a session you have to sit in. Point an age
 <p align="center">
   <img src="docs/images/parallel-festivals.png" alt="Four live fest show panes watching independent festivals run in parallel, including a 1,184-task intent backlog" width="100%">
 </p>
-<p align="center"><em>Four festivals, four agent sessions, one terminal grid. The rightmost pane is a 1,184-task festival still running on its own. Each pane is a live <code>fest show</code> of an independent loop.</em></p>
+<p align="center"><em>Four festivals, four agent sessions, one terminal grid. The rightmost pane is a 1,184-task festival still running on its own. Each pane is a live <code>fest watch</code> of an independent loop.</em></p>
 
 How to run that pattern: **[Loops & Orchestration](https://docs.fest.build/guides/loops-and-orchestration/)**.
 
