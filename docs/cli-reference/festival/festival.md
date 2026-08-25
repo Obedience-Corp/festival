@@ -37,7 +37,7 @@ festival [flags]
 * [festival browse](../festival_browse/)	 - Browse available packages across registered marketplaces
 * [festival completion](../festival_completion/)	 - Generate the autocompletion script for the specified shell
 * [festival doctor](../festival_doctor/)	 - Diagnose installer state (PATH, sources, receipts)
-* [festival install](../festival_install/)	 - Install the festival suite (camp + fest)
+* [festival install](../festival_install/)	 - Install the festival suite (camp, fest, and festival)
 * [festival list](../festival_list/)	 - List installed packages
 * [festival marketplace](../festival_marketplace/)	 - Manage marketplaces
 * [festival shell-init](../festival_shell-init/)	 - Print shell code to put the installer-managed bin dir on PATH

@@ -17,11 +17,6 @@ data and never walks the filesystem, so it is instant and keeps meaning even
 after the campaign moves underneath the run. Comparing a run against the
 current state of the campaign is what camp triage refresh does.
 
-When the last refresh is older than the campaign's runs.stale_after_days
-threshold, or workitems have changed since, it also prints the same one-line
-notice high-traffic commands share (from the cached verdict, not a discovery
-walk).
-
 Exits 0 when there is no run: a campaign that has not triaged yet is a state,
 not an error.
 
