@@ -185,6 +185,7 @@ aurs:
       - fest
       - camp
       - festival
+    install: ./packaging/festival.install
     package: |-
       install -Dm755 "./fest" "${pkgdir}/usr/bin/fest"
       install -Dm755 "./camp" "${pkgdir}/usr/bin/camp"
