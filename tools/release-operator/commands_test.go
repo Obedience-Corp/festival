@@ -67,6 +67,25 @@ func TestShipsViaPullRequest(t *testing.T) {
 	}
 }
 
+func TestGHAuthenticatedChecksTheActiveAPIViewer(t *testing.T) {
+	binDir := t.TempDir()
+	gh := filepath.Join(binDir, "gh")
+	script := `#!/bin/sh
+if [ "$1" = "api" ] && [ "$2" = "user" ] && [ "$3" = "--jq" ] && [ "$4" = ".login" ]; then
+  exit 0
+fi
+exit 42
+`
+	if err := os.WriteFile(gh, []byte(script), 0o755); err != nil {
+		t.Fatalf("write fake gh: %v", err)
+	}
+	t.Setenv("PATH", binDir+string(os.PathListSeparator)+os.Getenv("PATH"))
+
+	if !ghAuthenticated() {
+		t.Fatal("expected authenticated viewer API probe to succeed")
+	}
+}
+
 // tagMap builds a component-keyed tag map for fest and camp, the two
 // components these tests care about; festival-installer is intentionally
 // absent, since a missing key on both sides of a current/selected pair
