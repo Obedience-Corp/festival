@@ -16,7 +16,7 @@ fi
 if [ -n "${FESTIVAL_METADATA_BIN:-}" ]; then
   "${FESTIVAL_METADATA_BIN}" validate --kind manifest dist/marketplace/obey-package.json
 else
-  go run ./festival-installer/cmd/festival-metadata validate --kind manifest dist/marketplace/obey-package.json
+  go -C festival-installer run ./cmd/festival-metadata validate --kind manifest ../dist/marketplace/obey-package.json
 fi
 
 # gh authenticates from GH_TOKEN. Reuse the marketplace publish token so the

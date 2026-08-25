@@ -20,8 +20,9 @@ set -euo pipefail
 #     (see results/ for sequence 02, task 01).
 #
 # Schema coverage: the generated obey-package.json is checked with the real
-# festival-metadata validate command (FESTIVAL_METADATA_BIN). Case "schema
-# invalid" asserts an empty published_at fails the release and pushes nothing.
+# festival-metadata validate command. Case "schema invalid" deliberately
+# leaves FESTIVAL_METADATA_BIN unset so it exercises the exact module-aware
+# fallback used by release CI. The remaining cases inject the built binary.
 
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 work="$(mktemp -d)"
@@ -40,6 +41,7 @@ mkdir -p "${staged_repo}/scripts" "${staged_repo}/dist/marketplace"
 cp "${repo_root}/scripts/publish_marketplace_entry.sh" "${staged_repo}/scripts/publish_marketplace_entry.sh"
 cp "${repo_root}/scripts/upsert_marketplace_index.py" "${staged_repo}/scripts/upsert_marketplace_index.py"
 chmod +x "${staged_repo}/scripts/publish_marketplace_entry.sh"
+cp -R "${repo_root}/festival-installer" "${staged_repo}/festival-installer"
 
 new_release_manifest() {
   # The v9.9.9 entry this test publishes. Distinct from the fixture's seeded
@@ -158,6 +160,11 @@ run_script() {
     bash "${repo_root}/scripts/publish_marketplace_entry.sh")
 }
 
+run_script_with_module_validator() {
+  (cd "${staged_repo}" && env -u MARKETPLACE_PUBLISH_TOKEN -u FESTIVAL_METADATA_BIN \
+    bash "${repo_root}/scripts/publish_marketplace_entry.sh")
+}
+
 # --- Case 0: ERROR, generated entry fails hub schema ---------------------
 # Empty published_at is the v0.2.17 defect: release-operator used to emit it
 # and the failure only showed up at install time.
@@ -170,7 +177,7 @@ p.write_text(json.dumps(doc, indent=2) + "\n")
 PY
 make_fixture "${work}/bare-schema-bad.git"
 out="$(FIXTURE_VERIFY_EXIT=0 MARKETPLACE_REPO_URL="${work}/bare-schema-bad.git" \
-  FESTIVAL_TAG=v9.9.9 RELEASE_CHANNEL=stable run_script 2>&1 || true)"
+  FESTIVAL_TAG=v9.9.9 RELEASE_CHANNEL=stable run_script_with_module_validator 2>&1 || true)"
 grep -q "published_at" <<<"${out}" || fail "missing published_at schema error: ${out}"
 [ -z "$(git --git-dir="${work}/bare-schema-bad.git" branch --list 'release/*')" ] \
   || fail "a branch was pushed despite the schema refusal"

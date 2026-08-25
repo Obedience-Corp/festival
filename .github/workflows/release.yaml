@@ -305,6 +305,13 @@ jobs:
           node-version: '24'
           registry-url: 'https://registry.npmjs.org'
 
+      # Recovery checks out the immutable release tag, which may contain the
+      # bug being recovered from. Build the validator explicitly and inject
+      # the script's supported override so post-publish does not depend on the
+      # tag's fallback `go run` invocation.
+      - name: Build marketplace metadata validator
+        run: go -C festival-installer build -o "${RUNNER_TEMP}/festival-metadata" ./cmd/festival-metadata
+
       - name: Require published GitHub release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -369,4 +376,5 @@ jobs:
           GH_TOKEN: ${{ secrets.MARKETPLACE_PUBLISH_TOKEN }}
           FESTIVAL_TAG: v${{ inputs.version }}
           RELEASE_CHANNEL: ${{ inputs.release_mode }}
+          FESTIVAL_METADATA_BIN: ${{ runner.temp }}/festival-metadata
         run: scripts/publish_marketplace_entry.sh
