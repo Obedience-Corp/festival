@@ -67,9 +67,6 @@ downloads `fest` and `camp` if they are missing, checksum-verifies the archive,
 and installs them. It also checks for updates once per day and notifies you when
 a new release is available.
 
-To list this plugin on Anthropic's community marketplace, see
-[docs/claude-plugin-submission](../docs/claude-plugin-submission/_index.md).
-
 ## Commit guard
 
 A `PreToolUse` (Bash) hook (`hooks/scripts/commit-guard.sh`) enforces campaign
@@ -143,4 +140,3 @@ This README covers the plugin bundle only. For the Festival methodology itself:
 
 - `festivals/README.md` in a campaign workspace (the agent entry point)
 - Full docs at https://docs.fest.build
-- Anthropic community-directory submission: [docs/claude-plugin-submission](../docs/claude-plugin-submission/_index.md)

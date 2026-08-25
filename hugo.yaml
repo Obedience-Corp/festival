@@ -139,10 +139,6 @@ menu:
       parent: guides
       url: /guides/loops-and-orchestration/
       weight: 34
-    - name: Claude Plugin Directory
-      parent: guides
-      url: /claude-plugin-submission/
-      weight: 35
 
     - name: Use Cases
       identifier: use-cases
