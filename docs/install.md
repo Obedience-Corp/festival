@@ -61,10 +61,10 @@ Choose your distribution's package format:
 
 | Distribution | Command |
 |-------------|---------|
-| Debian / Ubuntu | `sudo dpkg -i festival_*_amd64.deb` |
-| Fedora / RHEL | `sudo rpm -i festival-*.x86_64.rpm` |
+| Debian / Ubuntu | `sudo dpkg -i obedience-festival_*_amd64.deb` |
+| Fedora / RHEL | `sudo rpm -i obedience-festival-*.x86_64.rpm` |
 | Arch Linux | `yay -S festival-bin` |
-| Alpine | `sudo apk add --allow-untrusted festival_*.apk` |
+| Alpine | `sudo apk add --allow-untrusted obedience-festival_*.apk` |
 
 <a href="https://github.com/Obedience-Corp/festival/releases/latest" class="btn btn--primary">Download Linux Packages</a>
 

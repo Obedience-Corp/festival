@@ -19,9 +19,12 @@ source ~/.local/share/festival/shell/festival.zsh
 # Homebrew
 source "$(brew --prefix)/share/festival/shell/festival.zsh"
 
-# Linux packages
+# Linux packages (AUR festival-bin, deb/rpm/apk obedience-festival)
 source /usr/share/festival/shell/festival.zsh
 ```
+
+Package installs do not need `eval "$(festival shell-init zsh)"`; that prepends
+an empty hub-managed bin dir. Source the helper file instead.
 
 For bash, use `festival.bash`. For fish, use `festival.fish`. There is no
 packaged helper file for POSIX sh; use the dynamic fallback below.
