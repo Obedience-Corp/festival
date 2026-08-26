@@ -81,7 +81,7 @@ brew install --cask Obedience-Corp/tap/festival
 yay -S festival-bin
 ```
 
-**Debian/Ubuntu:** Download `.deb` from [releases](https://github.com/Obedience-Corp/festival/releases/latest)
+**Debian/Ubuntu:** Download `obedience-festival_*.deb` from [releases](https://github.com/Obedience-Corp/festival/releases/latest)
 
 **Windows:** Stable Windows packages are temporarily paused while support is being hardened.
 For now, use WSL2 and the Linux install method above.
@@ -96,8 +96,14 @@ For now, use WSL2 and the Linux install method above.
 ```bash
 # Shell integration (add one setup path to ~/.zshrc)
 
+# Linux packages (AUR festival-bin, deb/rpm/apk obedience-festival)
+source /usr/share/festival/shell/festival.zsh
+
 # Preferred when installed with install.sh:
 source ~/.local/share/festival/shell/festival.zsh
+
+# Homebrew
+source "$(brew --prefix)/share/festival/shell/festival.zsh"
 
 # Or, if no helper file is installed:
 eval "$(camp shell-init zsh)"

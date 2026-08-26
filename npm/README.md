@@ -46,7 +46,9 @@ shell-helper assets under `share/festival/` inside the installed npm
 package.
 
 The npm installer does not edit shell startup files. Source the packaged helper
-(not `camp shell-init` / `fest shell-init`):
+(not `camp shell-init` / `fest shell-init`). Helpers live under
+`share/festival/shell` inside the installed package. Walk up from the binary
+or use `npm root -g`:
 
 ```bash
 source "$(npm root -g)/@obedience-corp/festival/share/festival/shell/festival.zsh"
