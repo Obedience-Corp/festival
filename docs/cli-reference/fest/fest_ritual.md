@@ -26,4 +26,5 @@ Manage repeatable ritual festivals
 ### SEE ALSO
 
 * [fest](../fest/)	 - Festival Methodology CLI - goal-oriented project management for AI agents
+* [fest ritual convert](../fest_ritual_convert/)	 - Convert a festival into a reusable ritual template
 * [fest ritual run](../fest_ritual_run/)	 - Create a new run of a ritual festival in active/

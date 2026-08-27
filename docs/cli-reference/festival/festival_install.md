@@ -25,6 +25,7 @@ festival install <festival|camp|fest> [flags]
 ```
       --allow-unverified   allow installing unsigned content without prompting
       --channel string     release channel (stable|rc|dev) (default "stable")
+      --force              install a hub copy even when a package-manager suite is already on PATH
   -h, --help               help for install
       --json               emit JSON output
 ```

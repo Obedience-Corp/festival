@@ -24,7 +24,8 @@ Examples:
   camp workitem list active
   camp workitem list --category research --query auth
   camp workitem list --tag public-launch --tag schema
-  camp workitem list festival --status ready --json
+  camp workitem list festival --stage ready --json
+  camp workitem list --attention-stage active --json
 
 ```
 camp workitem list [type|status|category] [flags]
@@ -40,12 +41,14 @@ camp workitem list [type|status|category] [flags]
   -h, --help                          help for list
       --json                          Output as JSON
       --limit int                     Maximum number of items to return (non-interactive / --json only)
+      --no-tokens                     Skip token count annotation
       --project stringArray           Filter by related project (repeat for OR)
       --query string                  Search query to filter items
       --show-parked                   Include parked attention-stage workitems
       --stage stringArray             Filter by lifecycle stage (repeat for OR)
-      --status stringArray            Filter by displayed status: current, next, active, parked, inbox, ready, plan, ritual, chains, none (repeat for OR)
+      --status stringArray            Deprecated: use --stage and/or --attention-stage
       --tag stringArray               Filter by tag (repeat; item must have ALL given tags)
+      --token-model string            Tokenizer model for token counts (default "gpt-4o")
       --type stringArray              Filter by workflow type (repeat for OR)
 ```
 

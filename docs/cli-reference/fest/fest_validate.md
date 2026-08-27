@@ -19,10 +19,15 @@ this command validates METHODOLOGY COMPLIANCE:
   • Implementation sequences have TASK FILES (not just goals)
   • Quality gates are present in implementation sequences
   • Naming conventions are followed
-  • Templates have been filled out (no [FILL:] markers)
+  • Unfilled [REPLACE:]/[FILL:] markers are reported as "markers pending"
+    (they do not fail structure validation or zero the score)
 
 AI agents execute TASK FILES, not goals. If your sequences only have
 SEQUENCE_GOAL.md without task files, agents won't know HOW to execute.
+
+Unfilled template markers after scaffolding are expected. Fill them as you
+write real content: do not paste filler to restore a score. Missing files,
+missing task files, and missing quality gates still fail validation.
 
 Use --fix to automatically apply safe fixes (like adding quality gates).
 

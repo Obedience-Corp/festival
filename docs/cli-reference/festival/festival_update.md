@@ -16,6 +16,10 @@ The target argument is optional and defaults to "festival", which updates the wh
 suite. camp and fest are accepted as aliases: they are not published independently, so
 passing either one still updates the whole suite and prints a notice saying so.
 
+A package-manager install (AUR, Homebrew, npm, distro packages) is never replaced with
+~/.obey/installer. update reports whether a newer suite exists and prints the package
+manager upgrade command instead.
+
 ```
 festival update [festival|camp|fest] [flags]
 ```
@@ -25,6 +29,7 @@ festival update [festival|camp|fest] [flags]
 ```
       --allow-unverified   allow updating from unsigned content without prompting
       --channel string     override the release channel (default: the installed channel)
+      --force              update/install a hub copy even when a package-manager suite is already on PATH
   -h, --help               help for update
       --json               emit JSON output
 ```
