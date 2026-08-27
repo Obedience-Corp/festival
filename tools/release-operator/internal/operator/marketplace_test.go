@@ -1,10 +1,16 @@
 package operator
 
 import (
+	"bytes"
+	"encoding/json"
+	"errors"
+	"io"
 	"os"
 	"path/filepath"
 	"strings"
 	"testing"
+
+	canonical "github.com/gibson042/canonicaljson-go"
 )
 
 func TestBuildMarketplaceEntry_Golden(t *testing.T) {
@@ -51,6 +57,7 @@ func TestBuildMarketplaceEntry_Golden(t *testing.T) {
 	if string(got) != string(want) {
 		t.Fatalf("manifest mismatch\n--- got ---\n%s\n--- want ---\n%s", got, want)
 	}
+	assertCanonicalJSON(t, got)
 }
 
 func TestBuildMarketplaceEntry_DeterministicAcrossRuns(t *testing.T) {
@@ -132,8 +139,30 @@ func TestBuildMarketplaceEntry_AcceptsValidPublishedAt(t *testing.T) {
 	if err != nil {
 		t.Fatalf("BuildMarketplaceEntry: %v", err)
 	}
-	if !strings.Contains(string(out), `"published_at": "2026-08-20T01:51:38Z"`) {
+	if !strings.Contains(string(out), `"published_at":"2026-08-20T01:51:38Z"`) {
 		t.Fatalf("emitted manifest does not contain the published_at value:\n%s", out)
+	}
+	assertCanonicalJSON(t, out)
+}
+
+func assertCanonicalJSON(t *testing.T, raw []byte) {
+	t.Helper()
+	dec := json.NewDecoder(bytes.NewReader(raw))
+	dec.UseNumber()
+	var value any
+	if err := dec.Decode(&value); err != nil {
+		t.Fatalf("decode generated manifest: %v", err)
+	}
+	var trailing any
+	if err := dec.Decode(&trailing); !errors.Is(err, io.EOF) {
+		t.Fatalf("generated manifest has trailing JSON: %v", err)
+	}
+	want, err := canonical.Marshal(value)
+	if err != nil {
+		t.Fatalf("canonicalize generated manifest: %v", err)
+	}
+	if !bytes.Equal(raw, want) {
+		t.Fatalf("generated manifest is not RFC 8785 canonical JSON\n got: %s\nwant: %s", raw, want)
 	}
 }
 

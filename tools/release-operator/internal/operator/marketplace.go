@@ -1,10 +1,11 @@
 package operator
 
 import (
-	"encoding/json"
 	"fmt"
 	"sort"
 	"time"
+
+	canonical "github.com/gibson042/canonicaljson-go"
 )
 
 type MarketplaceEntryInput struct {
@@ -201,11 +202,15 @@ func BuildMarketplaceEntry(in MarketplaceEntryInput) ([]byte, error) {
 		}},
 	}
 
-	out, err := json.MarshalIndent(m, "", "  ")
+	// Marketplace verify requires the on-disk bytes to already be RFC 8785
+	// canonical JSON (sorted keys, no whitespace). Pretty-printed output
+	// fails CI with "is not canonical JSON" until the Sign workflow
+	// rewrites the file.
+	out, err := canonical.Marshal(m)
 	if err != nil {
 		return nil, fmt.Errorf("marshal product manifest: %w", err)
 	}
-	return append(out, '\n'), nil
+	return out, nil
 }
 
 func sortedKeys(set map[string]struct{}) []string {
