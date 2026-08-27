@@ -42,7 +42,7 @@ fest promote [festival] [flags]
       --force            skip readiness validation
   -h, --help             help for promote
       --json             output as JSON
-      --no-commit        skip auto-commit after promotion
+      --no-commit        skip auto-commit after promotion (rejected when agent.require_auto_commit is enabled)
 ```
 
 ### Options inherited from parent commands

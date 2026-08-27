@@ -14,10 +14,10 @@ List festivals filtered by status.
 
 Works from anywhere - finds the festivals workspace automatically.
 
-STATUS can be: active, ready, planning, ritual, completed, all,
+STATUS can be: active, ready, planning, parked, ritual, completed, all,
 dungeon, dungeon/completed, dungeon/archived, dungeon/someday
 
-By default, shows active, ready, planning, and ritual festivals.
+By default, shows active, ready, planning, parked, and ritual festivals.
 Use 'fest list all' (or --all) to include completed and dungeon festivals.
 
 Use --watch to refresh the multi-festival status board when festival progress

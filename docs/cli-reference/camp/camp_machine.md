@@ -84,4 +84,5 @@ camp machine [flags]
 * [camp machine adopt](../camp_machine_adopt/)	 - Register the machine this session was hopped from
 * [camp machine diagnose](../camp_machine_diagnose/)	 - Inspect machine auth, probe line, and ssh ControlMaster sockets
 * [camp machine list](../camp_machine_list/)	 - List configured machines
+* [camp machine pair](../camp_machine_pair/)	 - Exchange ssh keys with a machine so hops work both ways
 * [camp machine remove](../camp_machine_remove/)	 - Remove a machine

@@ -16,7 +16,7 @@ CONTEXT-AWARE BEHAVIOR:
 When no explicit level flag is provided, the command auto-detects the
 appropriate level based on your current directory:
 
-  Festival root  → Sets festival status (planning/active/completed/dungeon)
+  Festival root  → Sets festival status (planning/parked/active/completed/dungeon)
   Phase directory → Sets phase status (pending/in_progress/completed)
   Sequence directory → Sets sequence status (pending/in_progress/completed)
   Task directory → Shows hint (task status requires explicit --task flag)
@@ -63,7 +63,7 @@ fest status set <status> [flags]
   -h, --help              help for set
   -i, --interactive       force interactive festival selection
       --json              output in JSON format
-      --no-commit         skip auto-commit after status change
+      --no-commit         skip auto-commit after status change (rejected when agent.require_auto_commit is enabled)
       --path string       explicit file path for status change
       --phase string      target phase by name or number (e.g., '001_CRITICAL' or '001')
       --sequence string   target sequence by name (e.g., '01_api_design' or '002/01')

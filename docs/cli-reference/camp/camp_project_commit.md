@@ -15,9 +15,12 @@ Commit changes within a project submodule.
 Auto-detects the current project from your working directory,
 or use --project to specify a project by name.
 
-Commit tags use explicit --workitem or context from the current path. They do
-not inherit the per-machine current workitem selection, which can be stale;
-use --workitem or a primary workitem link for WI- tag scoping.
+Commit tags are traceability-aware: when the current project or cwd resolves
+to an active festival or workitem (via path links, ancestor .workitem
+markers, or festival-scoped links), the commit message carries the same
+FE-<ref> / WI-<ref> tracking components that `fest commit` would
+include. Use --workitem to override cwd-based resolution. When no
+festival/workitem context resolves, the tag is the bare campaign tag.
 
 Examples:
   # From within a project directory

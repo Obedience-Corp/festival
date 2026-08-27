@@ -60,6 +60,18 @@ Examples:
   camp fresh --no-follow-up             # Sync without running configured follow-ups
   camp fresh --dry-run                  # Preview what would happen (follow-ups listed, not run)
 
+  camp fresh --branch feat/aggregate-CW0003 --cleanup-stack
+                                        # Switch to an existing aggregate branch and
+                                        # remove child worktrees merged into it
+                                        # (ancestry or squash/patch-id). Refuses
+                                        # main/master unless --allow-default-target.
+                                        # Worktrees whose branches also landed on
+                                        # the default branch are skipped (not stack
+                                        # children). The default-branch prune still
+                                        # runs first; pass --no-prune to skip it.
+  camp fresh --branch feat/aggregate-CW0003 --cleanup-stack --dry-run
+                                        # Preview the stack cleanup plan without removing anything
+
 ```
 camp fresh [project-name] [flags]
 ```
@@ -67,16 +79,18 @@ camp fresh [project-name] [flags]
 ### Options
 
 ```
-  -b, --branch string    Branch to create after syncing (overrides config)
-  -n, --dry-run          Preview without making changes
-  -h, --help             help for fresh
-      --list strings     Comma-separated set of projects to cycle in one run
-      --no-branch        Skip branch creation even if configured
-      --no-drain         Do not wait for camp's queued commits first
-      --no-follow-up     Skip configured follow-up command workflows
-      --no-prune         Skip pruning merged branches
-      --no-push          Skip pushing the new branch upstream
-  -p, --project string   Project name (auto-detected from cwd)
+      --allow-default-target   Permit --cleanup-stack against the default branch (main/master). Without this, cleanup-stack refuses default-branch targets because every merged feature worktree would look like a stack child
+  -b, --branch string          Branch to create after syncing (overrides config)
+      --cleanup-stack          Target an existing aggregate branch and remove child worktrees merged into it by ancestry or squash (requires --branch; refuses the default branch unless --allow-default-target)
+  -n, --dry-run                Preview without making changes
+  -h, --help                   help for fresh
+      --list strings           Comma-separated set of projects to cycle in one run
+      --no-branch              Skip branch creation even if configured
+      --no-drain               Do not wait for camp's queued commits first
+      --no-follow-up           Skip configured follow-up command workflows
+      --no-prune               Skip pruning merged branches
+      --no-push                Skip pushing the new branch upstream
+  -p, --project string         Project name (auto-detected from cwd)
 ```
 
 ### Options inherited from parent commands

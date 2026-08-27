@@ -20,6 +20,10 @@ The worktree will be created at: projects/worktrees/<project>/<name>/
 By default, creates a new branch with the worktree name based on the current branch.
 Use --branch to checkout an existing branch instead.
 
+If origin/<name> exists and no local branch does, camp refuses rather than
+forking a divergent local branch from HEAD. Use --track origin/<name> (or
+--branch <name>) instead.
+
 Examples:
   # Create worktree with new branch based on current branch (default)
   camp project worktree add feature-auth
