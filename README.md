@@ -4,13 +4,15 @@
 
 <p align="center"><a href="https://github.com/Obedience-Corp/festival/stargazers"><img src="https://img.shields.io/github/stars/Obedience-Corp/festival?style=social" alt="Star Festival on GitHub"></a></p>
 
-<p align="center"><strong>Your files. Any agent.</strong></p>
+<p align="center"><strong>Scale your agent workflows without losing control.</strong></p>
 
-**A standardized workspace and workflow for solving difficult, multi-faceted problems with AI.**
+**A standardized workspace and workflow for solving complex, ambiguous problems with AI.**
 
 To use AI to solve hard problems you need three things: **context**, **direction**, and **verification**. Festival provides a structured layer for each, resulting in dramatically fewer tokens and less time spent getting to the outcome you want.
 
-Festival is the planning and verification layer for long-running agent work. The campaign is files you own. The harness is whatever you already run. The next session starts from `fest next` instead of from a re-explained prompt.
+Use festival to group context/workflows/designs/plans into camps, like your job, your side projects, your home projects, etc... and keep all the projects related to that camp in a version controlled workspace so that the context and workflows related compound over time and increase your productivity for future work.  The 2 core systems in festival are version controlled AI workspaces and festival methodology plans for long running autonomous goals.
+
+With AI advancing rapidly being tied to a particular provider or tool puts you at risk of falling behind, festival is designed with that in mind, everything lives as files or git history on your local hardware or hosted server, it works with any tool that can access your files or git history.  It exist to make things easier and more efficient while ensuring you have full control over your own data and workflows. The included workflows are recursive state machines designed to keep the user in a flow state, context up to date and make orchestrating agents easy and consistent and they can be extended, customized or replaced to work with anything you need the system to do.
 
 > [Get started](https://docs.fest.build/getting-started/quickstart) (takes ~5 minutes).
 
