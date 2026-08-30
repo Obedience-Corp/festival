@@ -4,7 +4,7 @@
 
 <p align="center"><a href="https://github.com/Obedience-Corp/festival/stargazers"><img src="https://img.shields.io/github/stars/Obedience-Corp/festival?style=social" alt="Star Festival on GitHub"></a></p>
 
-<p align="center"><strong>Scale your agent workflows without giving up control over your data.</strong></p>
+<p align="center"><strong>Scale your agent workflows without losing control.</strong></p>
 
 **A standardized workspace and workflow for solving complex, ambiguous problems with AI.**
 
