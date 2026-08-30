@@ -10,9 +10,9 @@
 
 To use AI to solve hard problems you need three things: **context**, **direction**, and **verification**. Festival provides a structured layer for each, resulting in dramatically fewer tokens and less time spent getting to the outcome you want.
 
-Festival is the planning and verification layer for long-running agent work. The campaign is your workspace, your files/scripts/workflows, etc... the work you do that may relate to more than one project. The harness is whatever you already run. 
+Use festival to group context/workflows/designs/plans into camps, like your job, your side projects, your home projects, etc... and keep all the projects related to that camp in a version controlled workspace so that the context and workflows related compound over time and increase your productivity for future work.  The 2 core systems in festival are version controlled AI workspaces and festival methodology plans for long running autonomous goals.
 
-AI Is advancing too rapidly to risk being tied to a particular provider or tool, this system is designed with that in mind, everything lives as files or git history on your hardware or your server, it works with any tool that can access your files or git history.  It exist to make things easier and more efficient while ensuring you have as much control over your own data and your own workflows as possible.  If you don't like something, it's probably a config setting your agents can help you change and if it isn't open an issue.
+With AI advancing rapidly being tied to a particular provider or tool puts you at risk of falling behind, festival is designed with that in mind, everything lives as files or git history on your local hardware or hosted server, it works with any tool that can access your files or git history.  It exist to make things easier and more efficient while ensuring you have full control over your own data and workflows. The included workflows are recursive state machines designed to keep the user in a flow state, context up to date and make orchestrating agents easy and consistent and they can be extended, customized or replaced to work with anything you need the system to do.
 
 > [Get started](https://docs.fest.build/getting-started/quickstart) (takes ~5 minutes).
 
