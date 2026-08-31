@@ -10,10 +10,13 @@ on:
       - camp
       - fest
       - festival-installer
+      - scripts/submit-go-dependency-snapshot.sh
   workflow_dispatch:
 
 # A user-submitted snapshot takes precedence over GitHub's stale automatic
 # analysis of the go.mod files behind the camp and fest gitlinks.
+# Submit with the real go.mod path as the manifest name so Dependabot alerts
+# attached to fest/go.mod / camp/go.mod can auto-resolve.
 permissions:
   contents: write
 
@@ -59,6 +62,7 @@ jobs:
           }
 
           require_module_at_least 'golang.org/x/crypto' 'v0.54.0'
+          require_module_at_least 'github.com/moby/go-archive' 'v0.3.0'
           require_module_at_least 'go.opentelemetry.io/otel' 'v1.43.0'
           require_module_at_least 'go.opentelemetry.io/otel/sdk' 'v1.43.0'
 
@@ -68,12 +72,10 @@ jobs:
           fi
 
       - name: Submit dependency snapshot
-        # Node 24 revision of GitHub's action; pinned until its next release.
-        uses: actions/go-dependency-submission@58a892e48687d602add5889d7aa09e32efeb19a7
         env:
           GOWORK: "off"
-        with:
-          go-mod-path: fest/go.mod
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bash scripts/submit-go-dependency-snapshot.sh fest/go.mod
 
   submit-camp:
     name: Submit Camp dependencies
@@ -92,13 +94,45 @@ jobs:
           go-version-file: camp/go.mod
           cache-dependency-path: camp/go.sum
 
-      - name: Submit dependency snapshot
-        # Node 24 revision of GitHub's action; pinned until its next release.
-        uses: actions/go-dependency-submission@58a892e48687d602add5889d7aa09e32efeb19a7
+      - name: Verify repaired dependency graph
         env:
           GOWORK: "off"
-        with:
-          go-mod-path: camp/go.mod
+        run: |
+          modules="$RUNNER_TEMP/camp-modules.txt"
+          go -C camp list -m all | tee "$modules"
+
+          require_module_at_least() {
+            module="$1"
+            minimum="$2"
+            actual="$(awk -v module="$module" '$1 == module { print $2 }' "$modules")"
+
+            if [[ -z "$actual" ]]; then
+              echo "Required module $module is missing from the Camp graph." >&2
+              exit 1
+            fi
+
+            earliest="$(printf '%s\n%s\n' "$minimum" "$actual" | sort -V | head -n 1)"
+            if [[ "$earliest" != "$minimum" ]]; then
+              echo "$module must be at least $minimum; resolved $actual." >&2
+              exit 1
+            fi
+          }
+
+          require_module_at_least 'golang.org/x/crypto' 'v0.54.0'
+          require_module_at_least 'github.com/moby/go-archive' 'v0.3.0'
+          require_module_at_least 'go.opentelemetry.io/otel' 'v1.43.0'
+          require_module_at_least 'go.opentelemetry.io/otel/sdk' 'v1.43.0'
+
+          if grep -Eq '^github\.com/docker/docker( |$)' "$modules"; then
+            echo 'Legacy github.com/docker/docker module remains in the Camp graph.' >&2
+            exit 1
+          fi
+
+      - name: Submit dependency snapshot
+        env:
+          GOWORK: "off"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bash scripts/submit-go-dependency-snapshot.sh camp/go.mod
 
   submit-festival-installer:
     name: Submit Festival Installer dependencies
@@ -118,9 +152,7 @@ jobs:
           cache-dependency-path: festival-installer/go.sum
 
       - name: Submit dependency snapshot
-        # Node 24 revision of GitHub's action; pinned until its next release.
-        uses: actions/go-dependency-submission@58a892e48687d602add5889d7aa09e32efeb19a7
         env:
           GOWORK: "off"
-        with:
-          go-mod-path: festival-installer/go.mod
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bash scripts/submit-go-dependency-snapshot.sh festival-installer/go.mod
