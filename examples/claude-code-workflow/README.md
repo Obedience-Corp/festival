@@ -14,7 +14,7 @@ The plan lives in chat notes. A new Claude Code session has to rediscover the pr
 
 See [after/](after/).
 
-The work has a campaign-level agent instruction file, an active festival, task documents, and a context handoff file. A new Claude Code session can run:
+The work has a camp-level agent instruction file, an active festival, task documents, and a context handoff file. A new Claude Code session can run:
 
 ```bash
 fest next

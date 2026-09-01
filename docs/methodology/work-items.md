@@ -149,7 +149,7 @@ commit runs. It never silently widens to `git add .` at the camp root.
 camp workitem commit -m "implement timeline grouping"
 ```
 
-The commit carries a short work item reference inside its campaign tag, so every
+The commit carries a short work item reference inside its camp tag, so every
 commit can be traced back to the work item it served. To retrieve that history later,
 across the camp root and every linked repo:
 

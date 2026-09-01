@@ -5,16 +5,16 @@ weight: 15
 
 # Examples
 
-Real example campaigns and festivals you can clone, read, and run. Browse them all
+Real example camps and festivals you can clone, read, and run. Browse them all
 in the [examples repo](https://github.com/Obedience-Corp/examples); the project
 repos live in the [Festival-Examples](https://github.com/Festival-Examples)
 organization.
 
-## Campaigns
+## Camps
 
-A campaign is a workspace that holds the projects, plans, and context for a mission.
+A camp is a workspace that holds the projects, plans, and context for a mission.
 
-### Festival Example Campaign
+### Example Camp
 
 **Repository:** <https://github.com/Festival-Examples/example-campaign>
 

@@ -121,14 +121,14 @@ Three active festivals means three agent sessions running independently. Five me
 
 ## Across Camps
 
-Camps are independent workspaces -- different projects, different domains, different teams. Each campaign has its own festivals, intents, projects, and design docs.
+Camps are independent workspaces -- different projects, different domains, different teams. Each camp has its own festivals, intents, projects, and design docs.
 
 ```bash
 camp list              # See all registered camps
-camp switch <name>     # Switch active campaign
+camp switch <name>     # Switch active camp
 ```
 
-One campaign might have three active festivals while another has one. The portfolio spans camps. `camp list` shows the full picture.
+One camp might have three active festivals while another has one. The portfolio spans camps. `camp list` shows the full picture.
 
 ---
 

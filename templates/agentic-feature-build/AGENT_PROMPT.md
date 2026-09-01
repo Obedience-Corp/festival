@@ -3,7 +3,7 @@
 Use this prompt at the start of an AI coding session:
 
 ```text
-Use Festival for this project. Start by resolving the current campaign work:
+Use Festival for this project. Start by resolving the current camp work:
 
 1. Run `camp workitem current`.
 2. If no current work item is set, run `camp workitem --json --stage active` and ask the operator which item to use.

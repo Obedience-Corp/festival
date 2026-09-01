@@ -68,7 +68,7 @@ camp hello --name Ada
 ```
 
 When you run `camp hello`, Camp looks for `camp-hello`, runs it, and forwards
-the arguments after `hello`. If Camp can detect the current campaign root, it
+the arguments after `hello`. If Camp can detect the current camp root, it
 also sets `CAMP_ROOT` for the plugin process.
 
 The current public example of this pattern is `camp-graph`: installing the

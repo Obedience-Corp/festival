@@ -2,7 +2,7 @@
 
 Use Festival for this project.
 
-At the start of a campaign session, confirm the current work:
+At the start of a camp session, confirm the current work:
 
 ```bash
 camp workitem current

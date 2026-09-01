@@ -26,7 +26,7 @@ Camps are independent. Switching from your day-job camp to your side-project cam
 ## Camp Directory Layout
 
 ```
-my-campaign/
+my-camp/
 ├── .campaign/              # Camp configuration
 │   └── campaign.yaml       # Name, type, description, metadata
 ├── projects/               # Git submodules - your actual code
@@ -74,7 +74,7 @@ The `camp` CLI manages camps. It handles creation, navigation, project managemen
 ### Creating a Camp
 
 ```bash
-camp init my-campaign
+camp init my-camp
 ```
 
 Scaffolds the full directory layout, initializes git, and creates the `.campaign/campaign.yaml` configuration.
@@ -179,7 +179,7 @@ camp dungeon move old-festival                   # Archive completed work
 ```bash
 camp register               # Register the current directory as a camp
 camp list                    # List all registered camps
-camp switch other-campaign   # Switch to a different camp
+camp switch other-camp       # Switch to a different camp
 ```
 
 ## Working Across Camps

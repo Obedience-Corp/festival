@@ -66,7 +66,7 @@ so it will not parse under those shells.
 
 ### camp shell functions
 
-- `cgo` - Navigate between campaign projects with fuzzy finding
+- `cgo` - Navigate between camp projects with fuzzy finding
 
 ## Finding the installed binaries
 
