@@ -1,6 +1,6 @@
 ---
 name: campaign-structure
-description: Orient within campaign directory structure. Use when deciding where work belongs (intents vs festivals vs design vs docs vs dungeon), especially when a task is not yet planned or folder ownership is unclear.
+description: Orient within a camp's directory structure. Use when deciding where work belongs (intents vs festivals vs design vs docs vs dungeon), especially when a task is not yet planned or folder ownership is unclear.
 version: "1.3.1"
 author: Obedience Corp
 license: Apache-2.0
@@ -14,37 +14,54 @@ metadata:
     category: camp
 ---
 
-# Campaign Structure
+# Camp Structure
+
+A camp was previously called a campaign; the layout below is the same either way.
 
 ## Placement Rules
 
-- Raw idea / bug / future work: `workflow/intents/`
-- Structured execution plan: `festivals/`
-- Internal design/spec: `workflow/design/`
-- User-facing docs: `docs/`
-- AI-generated analysis/research: `ai_docs/`
-- Archive/defer: local `dungeon/` or campaign `dungeon/`
+- Raw idea / bug / future work / quick capture: `.campaign/intents/inbox/` (use `camp intent add`)
+- Enriching or preparing for execution: `.campaign/intents/active/`
+- Ready for structured work: `.campaign/intents/ready/` → promote to festival
+- Structured multi-phase execution: `festivals/`
+- Internal design, architecture, or deep exploration: `workflow/design/`
+- User-facing documentation: `docs/`
+- Research, analysis, and exploration notes: `workflow/explore/`
+- Archive / defer / killed: `.campaign/intents/dungeon/` or top-level `dungeon/`
 
 ## Critical Distinctions
 
-- `workflow/intents/` is idea capture.
-- `festivals/dungeon/` is for already-planned festivals in terminal states.
-- `docs/` and `workflow/design/` serve different audiences.
+- `.campaign/intents/` (especially `inbox/`) is the primary capture surface for new ideas, bugs, and tasks.
+- `workflow/design/` is for thoughtful internal design documents and specs.
+- `festivals/` is for planned, phased execution (not raw ideas).
+- `docs/` is user-facing; `workflow/explore/` is internal.
 
-## Layout
+Canonical reference: `.campaign/intents/OBEY.md`
+
+## Layout Snapshot (Current)
 
 ```text
 .campaign/
-projects/
-festivals/
+├── intents/          # Idea capture (inbox / active / ready / dungeon)
+│   └── OBEY.md       # Authoritative intent guide
+├── quests/           # Long-lived working contexts
+└── skills/           # Camp-specific agent skills (loaded at runtime)
+
+projects/             # Git submodules (the actual codebases)
 workflow/
-ai_docs/
-docs/
-dungeon/
+├── code_reviews/
+├── pipelines/
+├── design/           # Design documents & specs
+└── explore/          # Historical research notes
+
+festivals/            # Festival methodology (planning + active)
+docs/                 # User-facing documentation
+dungeon/              # Top-level archive
 ```
 
 ## Common Mistakes
 
-- Putting unplanned ideas directly into festival dungeons.
-- Treating all documentation as `docs/`.
-- Creating new top-level directories instead of using campaign taxonomy.
+- Putting raw ideas directly into `festivals/` or `workflow/design/` without going through intents first.
+- Treating `docs/` as the place for internal specs (use `workflow/design/` or `.campaign/intents/`).
+- Creating ad-hoc top-level directories instead of using the established taxonomy.
+- Forgetting that `cgo i` now navigates to `.campaign/intents/`.

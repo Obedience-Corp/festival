@@ -7,7 +7,7 @@ weight: 16
 
 Codex runs Festival through a plugin that carries the skills and a session-start hook. The loop is the same `fest next` loop it is everywhere else. The plugin's job is narrow: make sure the `fest` and `camp` CLIs exist, and make sure the agent knows the vocabulary.
 
-Order matters. Install the binaries first, then open a campaign, then install the plugin.
+Order matters. Install the binaries first, then open a camp, then install the plugin.
 
 ## 1. Install Festival
 
@@ -36,16 +36,16 @@ If either one is missing or resolves somewhere you did not expect, `festival doc
 
 The plugin's session-start hook installs these too, so this step is belt and braces. Doing it by hand means your first session works before the hook has run once.
 
-## 2. Open a campaign
+## 2. Open a camp
 
-A campaign is the directory Festival works in. Create one and stay at its root:
+A camp is the directory Festival works in. Create one and stay at its root:
 
 ```bash
-mkdir my-campaign && cd my-campaign
+mkdir my-camp && cd my-camp
 camp init
 ```
 
-`camp init` writes the campaign layout, initializes git, creates the festivals tree, and writes an `AGENTS.md` at the root. That last file is the one Codex reads as persistent instructions, which is why section 6 is worth reading before you start editing it.
+`camp init` writes the camp layout, initializes git, creates the festivals tree, and writes an `AGENTS.md` at the root. That last file is the one Codex reads as persistent instructions, which is why section 6 is worth reading before you start editing it.
 
 ## 3. Install the Festival plugin
 
@@ -80,7 +80,7 @@ Festival self-hosts its marketplace inside the repository, at `.agents/plugins/m
 
 ## 4. What the plugin ships
 
-- **12 skills**, one `SKILL.md` each, covering campaign navigation, campaign structure, commit discipline, festival planning, festival execution, standalone workflows, and work intake.
+- **12 skills**, one `SKILL.md` each, covering camp navigation, camp structure, commit discipline, festival planning, festival execution, standalone workflows, and work intake.
 - **A `SessionStart` hook** that installs and updates the CLIs. See section 7.
 
 Skills are Codex's recommended primitive for this kind of capability, so a skills-plus-hook bundle is the native shape on this harness rather than a stripped-down one. What the next section describes is not missing functionality; it is the same functionality reached through a different door.
@@ -95,12 +95,12 @@ Both of these are harness capability facts recorded in the Festival plugin surve
 
 ## 6. AGENTS.md
 
-Codex reads `AGENTS.md` as persistent instructions, resolved through a precedence chain, with a 32 KiB cap (survey, verified 2026-06-16). `camp init` writes one at the campaign root describing the campaign layout and the commands to use.
+Codex reads `AGENTS.md` as persistent instructions, resolved through a precedence chain, with a 32 KiB cap (survey, verified 2026-06-16). `camp init` writes one at the camp root describing the camp layout and the commands to use.
 
 Two consequences:
 
-- **Start Codex at the campaign root** so it picks that file up. A session started inside a project subdirectory may resolve a different `AGENTS.md`, or none.
-- **Keep it lean.** Past the cap Codex truncates rather than failing, so an overgrown `AGENTS.md` loses its tail silently. Put durable campaign instructions in it and let festival documents carry the detail.
+- **Start Codex at the camp root** so it picks that file up. A session started inside a project subdirectory may resolve a different `AGENTS.md`, or none.
+- **Keep it lean.** Past the cap Codex truncates rather than failing, so an overgrown `AGENTS.md` loses its tail silently. Put durable camp instructions in it and let festival documents carry the detail.
 
 ## 7. The install hook
 
@@ -124,7 +124,7 @@ fest validate
 fest next
 ```
 
-`fest next` only works inside a festival directory, not at the campaign root. An agent that starts at the root will get `not inside a festival` and should navigate into `festivals/active/<festival>` before retrying.
+`fest next` only works inside a festival directory, not at the camp root. An agent that starts at the root will get `not inside a festival` and should navigate into `festivals/active/<festival>` before retrying.
 
 Phase gates are checkpoints for a human. The agent submits a gate and stops. You run `fest workflow approve` when you have looked at what it did.
 

@@ -27,7 +27,7 @@ That loop breaks down on real projects. The agent forgets prior decisions, dupli
 
 Festival turns project work into a filesystem-backed plan:
 
-- **Campaigns** hold related repos, docs, plans, and research.
+- **Camps** hold related repos, docs, plans, and research.
 - **Festivals** define a goal and the work needed to reach it.
 - **Phases** group work by stage, such as ingest, plan, implement, review, or release.
 - **Sequences** group related tasks.

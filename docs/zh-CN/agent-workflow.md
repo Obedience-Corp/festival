@@ -20,7 +20,7 @@ weight: 63
 
 不用 Festival 时，这些计划通常散落在聊天记录里。下次会话开始时，代理不知道哪些已经完成，也不知道下一步应该做什么。
 
-## 1. 创建 campaign 并添加项目
+## 1. 创建 camp 并添加项目
 
 ```bash
 camp init api-work
@@ -42,7 +42,7 @@ fest validate
 
 ## 3. 确认当前 work item
 
-先让代理确认 campaign 当前工作：
+先让代理确认 camp 当前工作：
 
 ```bash
 camp workitem current
@@ -77,7 +77,7 @@ fest commit -m "add rate limit middleware"
 
 ## 6. 换工具或第二天继续
 
-下一次会话，不管你使用 Claude Code、Codex 还是 Cursor，都先确认 campaign 当前工作：
+下一次会话，不管你使用 Claude Code、Codex 还是 Cursor，都先确认 camp 当前工作：
 
 ```bash
 camp workitem current
@@ -99,7 +99,7 @@ If the current work item is an active festival, run `fest next`.
 Follow the task instructions, run the required validation commands,
 mark completed festival work with `fest task completed`, and commit with `fest commit`.
 If this is not festival task execution, read the resolved work item and commit with `camp workitem commit`.
-If context is missing, inspect the campaign work item or festival files before making assumptions.
+If context is missing, inspect the camp work item or festival files before making assumptions.
 ```
 
 ## 关键原则

@@ -7,7 +7,7 @@ arguments:
     required: false
 ---
 
-# Campaign Intents
+# Camp Intents
 
 Intents are lightweight idea capture, the entry point for work that isn't yet planned.
 

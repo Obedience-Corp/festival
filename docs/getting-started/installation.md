@@ -6,7 +6,7 @@ weight: 11
 # Installation
 
 Festival ships as a three-binary suite: **fest** (festival planning), **camp**
-(campaign management), and **festival** (the suite installer and updater).
+(camp management), and **festival** (the suite installer and updater).
 All installation methods below install all three.
 
 `festival` installs, updates, and launches `camp` and `fest`. It verifies
@@ -22,7 +22,7 @@ festival doctor            # check the install
 
 ## Requirements
 
-- `git` is required. Festival depends on it for campaign init, project management, template sync, and commit-aware workflows.
+- `git` is required. Festival depends on it for camp init, project management, template sync, and commit-aware workflows.
 - `scc` is recommended but optional. Without it, `camp leverage` features will not work.
 
 ## npm / pnpm / bun

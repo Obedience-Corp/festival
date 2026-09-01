@@ -1,15 +1,15 @@
 ---
 name: camp-init
-description: Initialize a new campaign workspace
+description: Initialize a new camp
 arguments:
   - name: name
-    description: "Name for the new campaign"
+    description: "Name for the new camp"
     required: true
 ---
 
-# Initialize Campaign
+# Initialize a Camp
 
-Create a new campaign workspace with the standard directory structure.
+Create a new camp with the standard directory structure. A camp was previously called a campaign; `camp init` is the same command either way.
 
 ```bash
 camp init {{name}}
@@ -20,7 +20,7 @@ This creates:
 - `festivals/`: festival methodology workspace
 - `workflow/`: intents, design docs, code reviews
 - `docs/`: human-authored documentation
-- `.campaign/`: workspace configuration
+- `.campaign/`: camp metadata directory (that path is stable; do not rename it)
 
 After init, remind the user to set up shell integration:
 

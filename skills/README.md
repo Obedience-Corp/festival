@@ -45,27 +45,27 @@ reachable as soon as they are installed. The sandboxed backends (docker, singula
 modal, daytona, vercel_sandbox) use the container's own `PATH`, so the binaries have to
 be provisioned inside the image there.
 
-## Using them in a campaign
+## Using them in a camp
 
-- Keep `AGENTS.md` as the campaign's context file. `camp init` writes it and points
+- Keep `AGENTS.md` as the camp's context file. `camp init` writes it and points
   `CLAUDE.md` at it, and Hermes reads it.
 - Never add a `.hermes.md`. Hermes context-file precedence is winner-take-one
   (`.hermes.md` > `AGENTS.override.md` > `AGENTS.md` > `CLAUDE.md`), so a
   `.hermes.md` replaces `AGENTS.md` instead of supplementing it.
-- Start Hermes from the campaign root. The context chain walks up to the nearest git
+- Start Hermes from the camp root. The context chain walks up to the nearest git
   root, and projects and worktrees under `projects/` are their own git roots.
 
 ## Skills in this tap
 
-### Campaign workspace (camp)
+### Camp workspace (camp)
 
-- `camp-navigation`: Navigate campaign workspaces with `cgo` and `camp go`. Use when you need to move between projects/festivals/workflow directories, switch context quickly, or resolve script-safe paths with `camp go --print`.
-- `camp-projects`: Manage campaign submodule projects. Use when committing inside `projects/*`, deciding status/pull/push scope (root vs submodule vs all), or creating/removing project worktrees.
-- `camp-workitems`: Find, filter, choose, create, or adopt campaign work items with `camp workitem`, `camp wi`, or `camp workitems`. Use when a user wants current active work across intents, designs, explore notes, festivals, or tracked workflow directories; when agents need safe `camp workitem --json` output; or when creating/adopting tracked workflow folders.
-- `campaign-commit`: Choose the correct commit command in a campaign workspace. Use when you are about to commit and need to select `camp commit`, `camp p commit`, `fest commit`, or intentional root pointer sync via `camp refs-sync`.
-- `campaign-structure`: Orient within campaign directory structure. Use when deciding where work belongs (intents vs festivals vs design vs docs vs dungeon), especially when a task is not yet planned or folder ownership is unclear.
-- `campaign-workflows`: Manage campaign intents, dungeons, and workflow collections with `camp`. Use when capturing ideas, promoting intents to festivals, archiving work, or moving workflow items between statuses.
-- `cross-campaign`: Discover and reference other campaigns, projects, and files across campaign boundaries. Use when the user mentions another campaign by name, references work done "in another project/campaign", or needs to find/copy/compare code across campaigns.
+- `camp-navigation`: Navigate a camp with `cgo` and `camp go`. Use when you need to move between projects/festivals/workflow directories, switch context quickly, or resolve script-safe paths with `camp go --print`.
+- `camp-projects`: Manage a camp's projects. Use when committing inside `projects/*`, deciding status/pull/push scope (root vs submodule vs all), or creating/removing project worktrees.
+- `camp-workitems`: Find, filter, choose, create, or adopt camp work items with `camp workitem`, `camp wi`, or `camp workitems`. Use when a user wants current active work across intents, designs, explore notes, festivals, or tracked workflow directories; when agents need safe `camp workitem --json` output; or when creating/adopting tracked workflow folders.
+- `campaign-commit`: Choose the correct commit command in a camp, also called a campaign. Use when you are about to commit and need to select `camp commit`, `camp p commit`, `fest commit`, or intentional root pointer sync via `camp refs-sync`.
+- `campaign-structure`: Orient within a camp's directory structure. Use when deciding where work belongs (intents vs festivals vs design vs docs vs dungeon), especially when a task is not yet planned or folder ownership is unclear.
+- `campaign-workflows`: Manage a camp's intents, dungeons, and workflow collections with `camp`. Use when capturing ideas, promoting intents to festivals, archiving work, or moving workflow items between statuses.
+- `cross-campaign`: Discover and reference other camps, projects, and files across camp boundaries. Use when the user mentions another camp or campaign by name, references work done "in another project/camp", or needs to find/copy/compare code across camps.
 
 ### Festival planning and execution (fest)
 

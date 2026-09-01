@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
-# PreToolUse (Bash) guard: block raw `git commit` inside a campaign workspace.
+# PreToolUse (Bash) guard: block raw `git commit` inside a camp.
 #
-# Ships with the Festival Claude Code plugin. Unlike a campaign-local hook, this
+# Ships with the Festival Claude Code plugin. Unlike a camp-local hook, this
 # fires in every session the plugin is enabled in, so it self-scopes: it only
 # enforces when the Bash command is a raw `git commit` AND the session is inside
-# a campaign (detected via `camp id`). Outside a campaign, when `camp` or `jq`
+# a camp (detected via `camp id`). Outside a camp, when `camp` or `jq`
 # is missing, or when the command is not a raw commit, it exits 0 (fails open)
 # so it never blocks unrelated repositories.
 #
 # Commit discipline: commits must route through the camp/fest wrappers so
-# festival traceability and campaign bookkeeping are preserved. See the
+# festival traceability and camp bookkeeping are preserved. See the
 # campaign-commit skill.
 #
 # Scope: this is a discipline guard, not a security control. It catches direct
@@ -46,7 +46,7 @@ is_raw_git_commit() {
   return 1
 }
 
-# in_campaign CWD -> 0 if the session is inside a campaign. Prefers the hook
+# in_campaign CWD -> 0 if the session is inside a camp. Prefers the hook
 # payload's cwd, falling back to the hook process cwd.
 in_campaign() {
   local cwd="$1"
@@ -73,12 +73,12 @@ main() {
 
   is_raw_git_commit "$command" || exit 0
 
-  # Only enforce inside a campaign. Elsewhere this is some other repository and
+  # Only enforce inside a camp. Elsewhere this is some other repository and
   # the rule does not apply.
   cwd="$(printf '%s' "$input" | jq -r '.cwd // empty' 2>/dev/null)"
   in_campaign "$cwd" || exit 0
 
-  echo "raw git commit is forbidden inside a campaign; use \`camp commit\` (campaign root), \`camp p commit\` (inside projects/*), or \`fest commit\` (during festivals); see the campaign-commit skill. Set CAMP_ALLOW_RAW_GIT=1 to override deliberately." >&2
+  echo "raw git commit is forbidden inside a camp; use \`camp commit\` (camp root), \`camp p commit\` (inside projects/*), or \`fest commit\` (during festivals); see the campaign-commit skill. Set CAMP_ALLOW_RAW_GIT=1 to override deliberately." >&2
   exit 2
 }
 

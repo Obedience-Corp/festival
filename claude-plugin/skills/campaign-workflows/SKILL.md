@@ -1,9 +1,11 @@
 ---
 name: campaign-workflows
-description: Manage campaign intents, dungeons, and workflow collections with `camp`. Use when capturing ideas, promoting intents to festivals, archiving work, or moving workflow items between statuses.
+description: Manage a camp's intents, dungeons, and workflow collections with `camp`. Use when capturing ideas, promoting intents to festivals, archiving work, or moving workflow items between statuses.
 ---
 
-# Campaign Workflows
+# Camp Workflows
+
+A camp was previously called a campaign; these commands work the same either way.
 
 All workflow commands here are `camp`, not `fest`.
 
@@ -30,7 +32,7 @@ camp dungeon crawl
 
 ## Workflow Collections
 
-A workflow collection is a campaign directory under `workflow/<type>/` with its
+A workflow collection is a camp directory under `workflow/<type>/` with its
 own navigation config and workitem types.
 
 ```bash

@@ -7,7 +7,7 @@ weight: 15
 
 Claude Code runs Festival through a plugin. The plugin does not replace the loop: the loop is still `fest next`, do the task, `fest task completed`, `fest commit`. What the plugin adds is that the methodology skills are already loaded, the `fest` and `camp` verbs have slash-command shortcuts, and two agents are available for planning and execution.
 
-Order matters. Install the binaries first, then open a campaign, then install the plugin.
+Order matters. Install the binaries first, then open a camp, then install the plugin.
 
 ## 1. Install Festival
 
@@ -36,16 +36,16 @@ If either one is missing or resolves somewhere you did not expect, `festival doc
 
 The plugin's session-start hook installs both binaries for you ([section 5](#5-the-install-hook)), so this step is belt and braces. Do it anyway: your shell has `fest` and `camp` before the first session starts, and you can confirm where they resolve from rather than finding out mid-loop.
 
-## 2. Open a campaign
+## 2. Open a camp
 
-A campaign is the directory Festival works in. Create one and stay at its root:
+A camp is the directory Festival works in. Create one and stay at its root:
 
 ```bash
-mkdir my-campaign && cd my-campaign
+mkdir my-camp && cd my-camp
 camp init
 ```
 
-`camp init` writes the campaign layout, initializes git, and creates the festivals tree. It also writes two context files, or rather one file and one link:
+`camp init` writes the camp layout, initializes git, and creates the festivals tree. It also writes two context files, or rather one file and one link:
 
 ```bash
 $ ls -l AGENTS.md CLAUDE.md
@@ -55,12 +55,12 @@ lrwxr-xr-x  CLAUDE.md -> AGENTS.md
 
 That symlink is the point. Claude Code reads `CLAUDE.md`, Festival writes `AGENTS.md`, and the link means one file serves both. Edit `AGENTS.md`; your Claude Code sessions see the same content.
 
-`camp init` also links the campaign skills into `.claude/skills` and `.agents/skills`. Those are camp's own skills for working in a campaign, and they are separate from the plugin bundle described below.
+`camp init` also links the camp skills into `.claude/skills` and `.agents/skills`. Those are camp's own skills for working in a camp, and they are separate from the plugin bundle described below.
 
 If you are scripting `camp init` rather than running it in a terminal, it needs a description and a mission up front:
 
 ```bash
-camp init -d "what this campaign is" -m "what it is for"
+camp init -d "what this camp is" -m "what it is for"
 ```
 
 ## 3. Install the Festival plugin
@@ -91,7 +91,7 @@ Both spellings resolve the same thing: a marketplace manifest at the repository 
 
 Counted from the bundle, not from a README:
 
-- **12 skills**, one `SKILL.md` each, covering campaign navigation, campaign structure, commit discipline, festival planning, festival execution, standalone workflows, and work intake.
+- **12 skills**, one `SKILL.md` each, covering camp navigation, camp structure, commit discipline, festival planning, festival execution, standalone workflows, and work intake.
 - **11 slash commands**, which are shortcuts to the CLI verbs you would otherwise type: `/fest-next`, `/fest-commit`, `/festival-plan`, and eight more.
 - **2 agents**: `fest-executor` and `fest-planner`.
 - **2 hooks**: a `SessionStart` installer and a `PreToolUse` commit guard, described in sections 5 and 6.
@@ -122,15 +122,15 @@ Earlier bundles shipped a hook manifest that Claude Code rejected: the plugin in
 
 ## 6. The commit guard
 
-A `PreToolUse` hook on `Bash` blocks a raw `git commit` inside a campaign. Campaigns have their own commit verbs, and they exist so that work stays traceable: `camp commit` at the campaign root, `camp p commit` inside `projects/*`, and `fest commit` during a festival.
+A `PreToolUse` hook on `Bash` blocks a raw `git commit` inside a camp. Camps have their own commit verbs, and they exist so that work stays traceable: `camp commit` at the camp root, `camp p commit` inside `projects/*`, and `fest commit` during a festival.
 
 Because a plugin hook fires in every session, the guard self-scopes. It blocks a command only when all three of these hold:
 
 - the command has a raw `git commit` segment, and
-- the session is inside a campaign, and
+- the session is inside a camp, and
 - both `camp` and `jq` are available.
 
-Outside a campaign, in repositories without `camp`, or on machines without `jq`, it exits without interfering. To override it deliberately for a single command, set `CAMP_ALLOW_RAW_GIT=1`.
+Outside a camp, in repositories without `camp`, or on machines without `jq`, it exits without interfering. To override it deliberately for a single command, set `CAMP_ALLOW_RAW_GIT=1`.
 
 The guard splits a compound command on `;`, `&&`, `||`, and newlines and checks each segment from its start, so a raw commit hidden after a wrapper is still caught. It is a discipline guard rather than a security control: it does not try to defeat `bash -c`, aliases, or `eval`.
 
@@ -148,7 +148,7 @@ fest validate
 fest next
 ```
 
-`fest next` only works inside a festival directory, not at the campaign root. An agent that starts at the root will get `not inside a festival` and should navigate into `festivals/active/<festival>` before retrying.
+`fest next` only works inside a festival directory, not at the camp root. An agent that starts at the root will get `not inside a festival` and should navigate into `festivals/active/<festival>` before retrying.
 
 The plugin's slash commands are shortcuts to these same verbs. `/fest-next` and `fest next` do the same work; nothing about the loop changes when you use one or the other.
 

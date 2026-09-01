@@ -34,14 +34,14 @@ festival --version
 
 Full install options are on the [installation page](../installation/).
 
-**2. Open a campaign.** In a new directory:
+**2. Open a camp.** In a new directory:
 
 ```bash
-mkdir my-campaign && cd my-campaign
+mkdir my-camp && cd my-camp
 camp init
 ```
 
-This writes the campaign layout, initializes git, creates the festivals tree, and writes an `AGENTS.md` describing all of it.
+This writes the camp layout, initializes git, creates the festivals tree, and writes an `AGENTS.md` describing all of it.
 
 **3. Point the agent at `AGENTS.md`.** Most agents read it by convention. If yours reads a differently named file, symlink it rather than maintaining two copies that drift:
 
@@ -69,7 +69,7 @@ fest validate
 fest next
 ```
 
-`fest next` only works inside a festival directory, not at the campaign root. An agent that starts at the root will get `not inside a festival` and should navigate into `festivals/active/<festival>` before retrying.
+`fest next` only works inside a festival directory, not at the camp root. An agent that starts at the root will get `not inside a festival` and should navigate into `festivals/active/<festival>` before retrying.
 
 Phase gates are checkpoints for a human. The agent submits a gate and stops. You run `fest workflow approve` when you have looked at what it did.
 
@@ -77,13 +77,13 @@ Phase gates are checkpoints for a human. The agent submits a gate and stops. You
 
 Festival ships no Grok bundle, and there is nothing Grok-specific to install. The universal path above is the whole setup.
 
-The one thing worth knowing is that camp may have already done the skills step for you. When camp creates a project worktree it projects the campaign's skill bundles into that worktree as `.agents/skills` and `.claude/skills`, and then links `.grok/skills` to `.agents/skills` so Grok discovers the same set. A Grok Build session started inside a camp worktree therefore sees the campaign skills with no install step. camp reports this in its own output when it creates the worktree:
+The one thing worth knowing is that camp may have already done the skills step for you. When camp creates a project worktree it projects the camp's skill bundles into that worktree as `.agents/skills` and `.claude/skills`, and then links `.grok/skills` to `.agents/skills` so Grok discovers the same set. A Grok Build session started inside a camp worktree therefore sees the camp skills with no install step. camp reports this in its own output when it creates the worktree:
 
 ```text
-Skills: projected campaign skill bundles into worktree (.agents/.claude/.grok)
+Skills: projected camp skill bundles into worktree (.agents/.claude/.grok)
 ```
 
-Note that this happens in worktrees. At a campaign root, `camp init` projects into `.agents/skills` and `.claude/skills`, and there is no `.grok` alias there.
+Note that this happens in worktrees. At a camp root, `camp init` projects into `.agents/skills` and `.claude/skills`, and there is no `.grok` alias there.
 
 Outside a camp worktree, use the universal path.
 

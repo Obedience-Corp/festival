@@ -2,8 +2,8 @@
   "$schema": "https://skills.sh/schemas/skills.sh.schema.json",
   "groupings": [
     {
-      "title": "Campaign workspace (camp)",
-      "description": "Navigate, commit, and organize a campaign workspace with the camp CLI.",
+      "title": "Camp workspace (camp)",
+      "description": "Navigate, commit, and organize a camp with the camp CLI.",
       "skills": [
         "camp-navigation",
         "camp-projects",

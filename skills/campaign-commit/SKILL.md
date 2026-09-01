@@ -1,6 +1,6 @@
 ---
 name: campaign-commit
-description: Choose the correct commit command in a campaign workspace. Use when you are about to commit and need to select `camp commit`, `camp p commit`, `fest commit`, or intentional root pointer sync via `camp refs-sync`.
+description: Choose the correct commit command in a camp, also called a campaign. Use when you are about to commit and need to select `camp commit`, `camp p commit`, `fest commit`, or intentional root pointer sync via `camp refs-sync`.
 version: "1.3.1"
 author: Obedience Corp
 license: Apache-2.0
@@ -14,14 +14,16 @@ metadata:
     category: camp
 ---
 
-# Campaign Commit Decision
+# Camp Commit Decision
+
+A camp was previously called a campaign; this skill applies whichever word the user uses.
 
 ## Decision
 
 - Project change (submodule, linked project, or worktree): `camp p commit -m "msg"`
 - Festival task execution: `fest commit -m "msg"`
-- Campaign root files: `camp commit -m "msg"` (stages all root-level changes; submodule refs excluded by default)
-- Campaign root, scoped to specific paths: `git add <paths>` then `camp commit --all=false -m "msg"` (commits only what is staged)
+- Camp root files: `camp commit -m "msg"` (stages all root-level changes; submodule refs excluded by default)
+- Camp root, scoped to specific paths: `git add <paths>` then `camp commit --all=false -m "msg"` (commits only what is staged)
 - Intentional root pointer sync: `camp refs-sync [submodule...]`
 
 ## Festival Commits Cover the Linked Project
@@ -31,14 +33,14 @@ commits even when you run it from inside the festival:
 
 - a project commit staging the project's changes, skipped when the project is
   clean
-- a campaign root commit staging only festival-scoped files, the campaign's
+- a camp root commit staging only festival-scoped files, the camp's
   `.campaign/fest/` state, and the submodule pointer
 
 So during festival execution do not run `camp p commit` first and `fest commit`
-after. One `fest commit` covers both sides. Use `--no-root` to skip the campaign
+after. One `fest commit` covers both sides. Use `--no-root` to skip the camp
 root commit.
 
-A festival with no linked project makes the single campaign root commit only.
+A festival with no linked project makes the single camp root commit only.
 
 ## Deferred Commit Queue
 
@@ -60,7 +62,7 @@ commit message writer stopped answering; `--running` is what ends that wait.
 
 ## Rules
 
-- Never run raw `git commit` anywhere in a campaign workspace; staging with `git add` is fine.
+- Never run raw `git commit` anywhere in a camp; staging with `git add` is fine.
 - Keep submodule commits and root pointer sync as separate, explicit actions.
 - Do not bypass hooks with `--no-verify` without clear justification.
 - Do not add agent co-author trailers unless explicitly requested.

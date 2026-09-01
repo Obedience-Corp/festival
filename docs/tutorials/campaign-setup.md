@@ -1,17 +1,17 @@
 ---
-title: "Campaign Setup"
+title: "Camp Setup"
 weight: 42
 ---
 
-# Campaign Setup
+# Camp Setup
 
-Set up a campaign workspace from scratch. You will create the workspace, add shell integration, bring in your projects as submodules, navigate efficiently with shortcuts, and connect festival planning to your codebase.
+Set up a camp from scratch. You will create the workspace, add shell integration, bring in your projects as submodules, navigate efficiently with shortcuts, and connect festival planning to your codebase.
 
 ---
 
-## Create a Campaign
+## Create a Camp
 
-Start by initializing a new campaign workspace:
+Start by initializing a new camp:
 
 ```bash
 camp init my-startup
@@ -57,15 +57,15 @@ source ~/.zshrc
 
 This gives you two navigation commands:
 
-- **`cgo`** - campaign navigation (directories, projects, categories)
+- **`cgo`** - camp navigation (directories, projects, categories)
 - **`fgo`** - festival navigation (jump to festivals, toggle between planning and code)
 
-## Navigate Your Campaign
+## Navigate Your Camp
 
 Use `cgo` with category shortcuts to move around your workspace instantly:
 
 ```bash
-cgo              # Campaign root
+cgo              # Camp root
 cgo p            # projects/
 cgo f            # festivals/
 cgo d            # docs/
@@ -76,11 +76,11 @@ cgo wt           # worktrees/
 
 No more typing long paths. Every important directory is one shortcut away.
 
-{{< terminal-demo src="/images/demos/cgo-navigation.gif" title="my-startup" alt="cgo jumping between projects, festivals, and design directories, plus csw to switch campaigns" >}}
+{{< terminal-demo src="/images/demos/cgo-navigation.gif" title="my-startup" alt="cgo jumping between projects, festivals, and design directories, plus csw to switch camps" >}}
 
 ## Add Projects
 
-Bring your codebases into the campaign as git submodules:
+Bring your codebases into the camp as git submodules:
 
 ```bash
 camp project add https://github.com/you/api-service
@@ -88,7 +88,7 @@ camp project add https://github.com/you/web-app
 camp project list  # See all projects
 ```
 
-Projects live under `projects/` as git submodules. They retain their own git history, branches, and remotes while staying tracked by the campaign.
+Projects live under `projects/` as git submodules. They retain their own git history, branches, and remotes while staying tracked by the camp.
 
 Navigate to any project with fuzzy matching:
 
@@ -98,12 +98,12 @@ cgo p api        # Jump to projects/api-service
 
 ## Navigate Between Projects
 
-Switch between projects and the campaign root without thinking about paths:
+Switch between projects and the camp root without thinking about paths:
 
 ```bash
 cgo p api        # Jump to projects/api-service
 cgo p web        # Jump to projects/web-app
-cgo              # Back to campaign root
+cgo              # Back to camp root
 ```
 
 Fuzzy matching means you only need to type enough characters to uniquely identify the project.
@@ -150,10 +150,10 @@ If you are unsure whether to start with an intent, a design doc in `workflow/des
 
 ## Health Check
 
-Keep your campaign in good shape:
+Keep your camp in good shape:
 
 ```bash
-camp doctor          # Diagnose campaign issues
+camp doctor          # Diagnose camp issues
 camp sync            # Sync all submodules
 ```
 
@@ -161,24 +161,24 @@ Run `camp doctor` periodically to catch stale submodules, broken links, or struc
 
 ## Register Globally
 
-If you work across multiple campaigns, register them for quick switching:
+If you work across multiple camps, register them for quick switching:
 
 ```bash
-camp register        # Add current campaign to global registry
-camp list            # See all registered campaigns
-camp switch          # Switch between campaigns
+camp register        # Add current camp to global registry
+camp list            # See all registered camps
+camp switch          # Switch between camps
 ```
 
-This lets you manage several campaign workspaces from anywhere in your terminal.
+This lets you manage several camps from anywhere in your terminal.
 
 ## What You Built
 
-You now have a fully structured campaign workspace with:
+You now have a fully structured camp with:
 
 - **Projects** tracked as git submodules under `projects/`
 - **Festival planning** initialized and ready for structured execution
 - **Shell navigation** via `cgo` and `fgo` for instant movement
-- **Global registration** for multi-campaign workflows
+- **Global registration** for multi-camp workflows
 
 ## Next Steps
 

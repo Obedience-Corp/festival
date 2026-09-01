@@ -23,7 +23,7 @@ claude-plugin/
     hooks.json                  SessionStart + PreToolUse hook wiring
     scripts/ensure-festival.sh  installs and updates fest and camp
     scripts/ensure-festival.test.sh  unit tests for local-version parsing (run by the gate)
-    scripts/commit-guard.sh     blocks raw `git commit` inside a campaign
+    scripts/commit-guard.sh     blocks raw `git commit` inside a camp
     scripts/commit-guard.test.sh  unit tests for the guard (run by the gate)
     scripts/sync-check.sh       checks plugin command refs against the CLIs
 ```
@@ -69,17 +69,17 @@ a new release is available.
 
 ## Commit guard
 
-A `PreToolUse` (Bash) hook (`hooks/scripts/commit-guard.sh`) enforces campaign
-commit discipline: commits must route through `camp commit` (campaign root),
+A `PreToolUse` (Bash) hook (`hooks/scripts/commit-guard.sh`) enforces camp
+commit discipline: commits must route through `camp commit` (camp root),
 `camp p commit` (inside `projects/*`), or `fest commit` (during festivals) so
-festival traceability and campaign bookkeeping are preserved.
+festival traceability and camp bookkeeping are preserved.
 
 Because a plugin hook fires in every session, the guard self-scopes. It blocks a
 Bash command only when all of the following hold, and otherwise exits without
 interfering:
 
 - the command has a raw `git commit` segment, and
-- the session is inside a campaign (detected via `camp id`), and
+- the session is inside a camp (detected via `camp id`), and
 - `camp` and `jq` are both available.
 
 The command is split on `;`, `&&`, `||`, and newlines and each segment is
@@ -89,7 +89,7 @@ appearing only inside a wrapper's quoted message is not a false positive.
 Detection is a discipline guard, not a security control: it does not defeat
 deliberate obfuscation (`bash -c`, aliases, `eval`).
 
-Outside a campaign, in repos without `camp`, or on machines without `jq`, it
+Outside a camp, in repos without `camp`, or on machines without `jq`, it
 fails open. Set `CAMP_ALLOW_RAW_GIT=1` to override deliberately for one command.
 `commit-guard.test.sh` encodes the detection matrix and runs in the plugin gate.
 
@@ -131,12 +131,12 @@ and `camp` are already on PATH and current, the hook does not download
 anything.
 
 The `PreToolUse` commit guard does not make network calls. It only inspects
-the Bash command line, and only when the session is inside a campaign and
+the Bash command line, and only when the session is inside a camp and
 `camp` and `jq` are available.
 
 ## Methodology docs
 
 This README covers the plugin bundle only. For the Festival methodology itself:
 
-- `festivals/README.md` in a campaign workspace (the agent entry point)
+- `festivals/README.md` in a camp (the agent entry point)
 - Full docs at https://docs.fest.build

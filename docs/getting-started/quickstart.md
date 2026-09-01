@@ -7,9 +7,9 @@ weight: 12
 
 **Your files. Any agent.**
 
-Festival is the planning and verification layer for long-running agent work. The campaign is files you own. The harness is whatever you already run. The next session starts from `fest next`, not from a vendor brief.
+Festival is the planning and verification layer for long-running agent work. The camp is files you own. The harness is whatever you already run. The next session starts from `fest next`, not from a vendor brief.
 
-Create your first campaign and festival in under 5 minutes.
+Create your first camp and festival in under 5 minutes.
 
 ## Common Questions
 
@@ -19,7 +19,7 @@ No. Keep Claude Code, Codex, Grok, or whatever you use. Festival is the work sys
 
 **Where does the memory live?**
 
-In your campaign: phases, sequences, tasks, intents, and git history, as plain files on your disk. You can copy it, diff it, and leave with it.
+In your camp: phases, sequences, tasks, intents, and git history, as plain files on your disk. You can copy it, diff it, and leave with it.
 
 **What happens when a session ends?**
 
@@ -61,28 +61,28 @@ eval "$(fest shell-init zsh)"
 source ~/.zshrc
 ```
 
-This gives you `cgo` for campaign navigation and `fgo` for festival shortcuts.
+This gives you `cgo` for camp navigation and `fgo` for festival shortcuts.
 
-## 2. Create a Campaign
+## 2. Create a Camp
 
 ```bash
 camp init my-project
 cd my-project
 ```
 
-This creates the campaign directory structure with `projects/`, `festivals/`, `docs/`, and the `.campaign/` workspace config.
+This creates the camp directory structure with `projects/`, `festivals/`, `docs/`, and the `.campaign/` workspace config.
 
-## 3. Navigate the Campaign
+## 3. Navigate the Camp
 
 ```bash
-cgo              # Jump to campaign root
+cgo              # Jump to camp root
 cgo p            # Jump to projects/
 cgo f            # Jump to festivals/
-csw              # Interactive campaign picker -- switch between campaigns
+csw              # Interactive camp picker -- switch between camps
 csw my-project   # Switch directly by name
 ```
 
-Single-letter shortcuts make navigation instant. `cgo p api` fuzzy-matches project names so you never type full paths. `csw` switches between campaigns -- use it when you're managing multiple campaigns.
+Single-letter shortcuts make navigation instant. `cgo p api` fuzzy-matches project names so you never type full paths. `csw` switches between camps -- use it when you're managing more than one.
 
 ## 4. Add a Project (Optional)
 
@@ -155,7 +155,7 @@ fest progress      # Detailed execution progress with phase/sequence breakdown
 
 `fest status` gives a high-level view. `fest progress` shows exactly where you are in the phase-sequence-task hierarchy.
 
-To see every festival in the campaign at once, grouped by status, use `fest list`:
+To see every festival in the camp at once, grouped by status, use `fest list`:
 
 {{< terminal-demo src="/images/demos/tui-fest-list.gif" title="fest list" alt="fest list showing festivals grouped by status: active, ready, and planning" max="600" >}}
 

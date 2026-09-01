@@ -41,7 +41,7 @@ If the task is a single prompt or a quick edit, you may not need Festival. If th
 
 ## Start Here
 
-Install Festival, create a campaign workspace, then create your first festival:
+Install Festival, create a camp, then create your first festival:
 
 ```bash
 brew install --cask Obedience-Corp/tap/festival
