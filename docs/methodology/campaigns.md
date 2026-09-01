@@ -15,7 +15,7 @@ The problem compounds with AI-assisted development. An agent session needs to un
 
 A camp solves this by isolating one mission into a single, navigable workspace. Everything related to that mission - every repo, every plan, every design doc - lives under one root with a predictable layout. Humans can `cd` into it and know where things are. Agents can read the structure and orient themselves immediately.
 
-## What is a Campaign?
+## What is a Camp?
 
 A camp is an isolated workspace for a single mission, a high-level purpose such as a startup, a job, or an open-source project you maintain. A mission is broad and long-lived, so a camp grows with it over months and years. It groups all related projects, as git submodules or as links to repositories already on your machine, all festival plans in a structured hierarchy, and all supporting materials - documentation, research, workflow configs, design artifacts - into a standard directory layout.
 

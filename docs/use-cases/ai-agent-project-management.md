@@ -77,7 +77,7 @@ Use Festival for:
 
 Do not reach for Festival for every tiny edit. It is most useful when work has enough shape that losing context would be expensive.
 
-## Start With a Campaign
+## Start With a Camp
 
 ```bash
 camp init my-product
