@@ -27,7 +27,7 @@ That loop breaks down on real projects. The agent forgets prior decisions, dupli
 
 Festival turns project work into a filesystem-backed plan:
 
-- **Campaigns** hold related repos, docs, plans, and research.
+- **Camps** hold related repos, docs, plans, and research.
 - **Festivals** define a goal and the work needed to reach it.
 - **Phases** group work by stage, such as ingest, plan, implement, review, or release.
 - **Sequences** group related tasks.
@@ -77,7 +77,7 @@ Use Festival for:
 
 Do not reach for Festival for every tiny edit. It is most useful when work has enough shape that losing context would be expensive.
 
-## Start With a Campaign
+## Start With a Camp
 
 ```bash
 camp init my-product

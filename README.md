@@ -32,7 +32,7 @@ No. Keep Claude Code, Codex, Grok, or whatever you already run. Festival is the 
 
 **Where does the memory live?**
 
-In your campaign: phases, sequences, tasks, intents, and git history, as plain files in directories you own. You can copy it, diff it, and leave with it.
+In your camp: phases, sequences, tasks, intents, and git history, as plain files in directories you own. You can copy it, diff it, and leave with it.
 
 **What happens when a session ends?**
 
@@ -90,7 +90,7 @@ For now, use WSL2 and the Linux install method above.
 
 ## Requirements
 
-- `git` is required. `camp` and `fest` use git internally for campaign init, project management, template sync, and commit-aware workflows.
+- `git` is required. `camp` and `fest` use git internally for camp init, project management, template sync, and commit-aware workflows.
 - `scc` is recommended but optional. Without it, `camp leverage` features will not work.
 
 ## Quick Start
@@ -121,7 +121,7 @@ eval "$(fest shell-init zsh)"
 #       realpath "$(whence -p camp)"
 # Or run the binary directly: command camp version
 
-# Create a campaign
+# Create a camp
 camp init my-project && cd my-project
 
 # Add a project
@@ -147,7 +147,7 @@ After installing, see the [quick start guide](https://docs.fest.build/getting-st
 <table>
   <tr>
     <td align="center" width="33%">
-      <img src="docs/images/demos/cgo-navigation.gif" alt="cgo jumping between projects, festivals, and design directories, plus csw to switch campaigns"><br>
+      <img src="docs/images/demos/cgo-navigation.gif" alt="cgo jumping between projects, festivals, and design directories, plus csw to switch camps"><br>
       <sub><b><code>cgo</code></b><br>Jump anywhere in the workspace</sub>
     </td>
     <td align="center" width="33%">
@@ -219,7 +219,7 @@ AI makes this harder, not easier. It generates plans, code, research, and tasks 
 
 So every new AI session starts from zero. No memory of the larger goal, no structure for multi-step work, no way to pick up where you left off. You re-explain the same context, get inconsistent results, and lose coherence across sessions.
 
-Festival is the organizational layer for work done with AI. Instead of asking "where should this go?" you put it in the campaign it belongs to. Instead of asking "what was I working on?" you resume the campaign. To turn that organization into outcomes, Festival gives every mission three things:
+Festival is the organizational layer for work done with AI. Instead of asking "where should this go?" you put it in the camp it belongs to. Instead of asking "what was I working on?" you resume the camp. To turn that organization into outcomes, Festival gives every mission three things:
 
 1. **Context**: a workspace that holds all projects, docs, and planning for a mission in one place
 2. **Direction**: structured plans that AI agents can pick up, execute, and resume without losing the thread
@@ -229,9 +229,9 @@ Festival is the organizational layer for work done with AI. Instead of asking "w
 
 Festival ships as a three-binary suite (`camp`, `fest`, and `festival`) that solves the three problems above.
 
-**`camp`** manages campaigns: isolated workspaces that hold all the projects, docs, research, and planning for a single mission, a high-level purpose like your startup, your job, or a hobby. A mission grows over time, and the campaign grows with it. It gives you instant navigation across everything in the workspace, project lifecycle management, and shell shortcuts that make `cd` obsolete.
+**`camp`** manages camps: isolated workspaces that hold all the projects, docs, research, and planning for a single mission, a high-level purpose like your startup, your job, or a hobby. A camp was previously called a campaign. A mission grows over time, and the camp grows with it. It gives you instant navigation across everything in the workspace, project lifecycle management, and shell shortcuts that make `cd` obsolete.
 
-Work items are the campaign-level work queue. `camp workitem` surfaces intents, design docs, explore notes, festivals, and custom tracked work through one dashboard. It can mark current work, link work to projects or festivals, and commit changes scoped to the resolved work item.
+Work items are the camp-level work queue. `camp workitem` surfaces intents, design docs, explore notes, festivals, and custom tracked work through one dashboard. It can mark current work, link work to projects or festivals, and commit changes scoped to the resolved work item.
 
 **`fest`** manages festivals: structured plans that break work into phases, sequences, and tasks. The hierarchy is designed for AI agents to execute autonomously, pause, and resume without context loss. Run `fest next` and the agent gets its next task with full surrounding context. Run `fest commit` and every commit traces back to the plan.
 
@@ -262,12 +262,12 @@ Festival is built around Festival Methodology: a hierarchical, goal-based planni
 
 ### Real Example
 
-Here's what `obey-campaign` looks like, a real campaign that orchestrates Obedience Corp's internal platform and product stack:
+Here's what `obey-campaign` looks like, a real camp that orchestrates Obedience Corp's internal platform and product stack:
 
 ```
 obey-campaign/
 ├── projects/                     # 32 project submodules
-│   ├── camp/                     # Campaign CLI
+│   ├── camp/                     # Camp CLI
 │   ├── fest/                     # Festival planning CLI
 │   ├── festival/                 # Distribution repo (this one)
 │   ├── obey-platform-monorepo/   # Core platform
@@ -283,7 +283,7 @@ obey-campaign/
 │   ├── ritual/                   # Recurring processes
 │   ├── chains/                   # Linked festival workflows
 │   └── dungeon/                  # completed/ | archived/ | someday/
-├── .campaign/                    # Campaign state and work queue
+├── .campaign/                    # Camp metadata and work queue
 │   ├── intents/                  # Captured ideas, bugs, and future work
 │   ├── quests/                   # Long-lived working contexts
 │   └── workitems/                # Tracked work-item metadata
@@ -329,7 +329,7 @@ Full guide: **[Loops & Orchestration](https://docs.fest.build/guides/loops-and-o
 
 ## Navigation
 
-Shell integration gives you shorthand functions that make navigating a campaign instant. Package installs include helper files that load `camp` and `fest` shell functions plus tab completion for all three binaries:
+Shell integration gives you shorthand functions that make navigating a camp instant. Package installs include helper files that load `camp` and `fest` shell functions plus tab completion for all three binaries:
 
 ```bash
 # install.sh default location
@@ -386,7 +386,7 @@ or `command fest version`.
 `cgo` wraps `camp go` with real `cd` behavior. It's the fastest way to move around:
 
 ```bash
-cgo                   # Toggle between campaign root and last location
+cgo                   # Toggle between camp root and last location
 cgo p                 # Jump to projects/
 cgo p api             # Fuzzy-find "api" in projects/ (matches api-server, api-gateway, etc.)
 cgo f                 # Jump to festivals/
@@ -394,13 +394,13 @@ cgo w                 # Jump to workflow/
 cgo wt api@feat       # Jump to a worktree branch
 ```
 
-Category shortcuts (`p`, `f`, `w`, `a`, `d`, `i`, `wt`, `du`, `cr`, `de`) map to common campaign locations (`i` jumps to `.campaign/intents/`, `de` to `workflow/design/`, and so on). After the category, any additional argument is a fuzzy search. `cgo p mono` lands you in `obey-platform-monorepo/`. Tab completion works at every level.
+Category shortcuts (`p`, `f`, `w`, `a`, `d`, `i`, `wt`, `du`, `cr`, `de`) map to common camp locations (`i` jumps to `.campaign/intents/`, `de` to `workflow/design/`, and so on). After the category, any additional argument is a fuzzy search. `cgo p mono` lands you in `obey-platform-monorepo/`. Tab completion works at every level.
 
 You can also run a command without leaving your current directory:
 
 ```bash
 cgo -c p api ls       # Run ls inside projects/api-* without cd'ing
-cr just build         # Run "just build" from campaign root
+cr just build         # Run "just build" from camp root
 ```
 
 ### fgo: toggle between a festival and its linked project
@@ -423,9 +423,9 @@ Link a festival to a project once (`fgo link`) and `fgo` with no args toggles be
 
 | Shorthand | Expands to | What it does |
 |-----------|------------|--------------|
-| `csw`     | `camp switch` | Switch between campaigns (fuzzy match + interactive picker) |
+| `csw`     | `camp switch` | Switch between camps (fuzzy match + interactive picker) |
 | `cint`    | `camp intent add` | Quick-capture an idea to the intent inbox |
-| `cr`      | `camp run` | Run a command from campaign root |
+| `cr`      | `camp run` | Run a command from camp root |
 | `fls`     | `fest list` | List festivals by status |
 
 ### Concept shortcuts
@@ -445,7 +445,7 @@ Full reference: [fest CLI](https://docs.fest.build/cli-reference/fest/) | [camp 
 ### camp: workspace management
 
 ```bash
-camp init my-startup             # Create a campaign
+camp init my-startup             # Create a camp
 camp project add <url>           # Add a project as submodule
 camp p commit -m "fix auth"      # Commit in a project (auto-stages all changes)
 camp workitem                    # Dashboard across intents, designs, explore docs, festivals
@@ -516,7 +516,7 @@ When a release includes template changes, update in two explicit steps:
 # Refresh the local system template cache
 fest system sync
 
-# Preview campaign methodology/template changes before applying them
+# Preview camp methodology/template changes before applying them
 fest system update --dry-run
 
 # Apply interactively, or create backups before updating
@@ -532,14 +532,14 @@ Full documentation at **[docs.fest.build](https://docs.fest.build)**:
 
 - [Methodology Overview](https://docs.fest.build/methodology/overview/): core principles and concepts
 - [Agent Workflows](https://docs.fest.build/guides/agent-workflows/): using Festival with AI coding tools
-- [Work Items](https://docs.fest.build/methodology/work-items/): campaign-level work discovery, current work, links, and scoped commits
+- [Work Items](https://docs.fest.build/methodology/work-items/): camp-level work discovery, current work, links, and scoped commits
 - [First Festival Tutorial](https://docs.fest.build/tutorials/first-festival/): end-to-end walkthrough
 - [CI Integration](https://docs.fest.build/tutorials/ci-integration/): release smoke ownership and launch-path verification
 
 Repository entry points:
 
 - [README.zh-CN.md](README.zh-CN.md): Simplified Chinese overview for Chinese developers
-- [Example campaigns & festivals](https://github.com/Obedience-Corp/examples): real, cloneable example campaigns and festivals to read and run
+- [Example camps & festivals](https://github.com/Obedience-Corp/examples): real, cloneable example camps and festivals to read and run
 - [Examples](examples/): before/after shapes for resumable AI coding work
 - [Templates](templates/): reusable planning scaffolds for AI-assisted feature work
 

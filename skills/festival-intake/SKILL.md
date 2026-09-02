@@ -17,7 +17,7 @@ metadata:
 
 # Festival Intake
 
-This is the front door. Every other campaign skill assumes the user already
+This is the front door. Every other camp skill assumes the user already
 knows what a festival is. This one does not, and it must fire before they do.
 
 When it fires, you owe the user the six steps below, in order. Do not skip

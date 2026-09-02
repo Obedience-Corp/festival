@@ -7,7 +7,7 @@ weight: 27
 
 ## One Model for Every Kind of Work
 
-A campaign accumulates work in several forms. Ideas land as intents. Design
+A camp accumulates work in several forms. Ideas land as intents. Design
 documents grow under `workflow/design/`. Exploratory research collects under
 `workflow/explore/`. Larger efforts become festivals. Each of these is "work in
 progress," but each used to have its own shape, its own location, and its own way
@@ -19,13 +19,13 @@ single dashboard, link them to the code they touch, mark one as the thing you ar
 currently working on, and commit changes scoped to it. You stop thinking about four
 different filing systems and start thinking about one stream of work.
 
-This is the organizational primitive underneath a campaign. Campaigns give a mission
+This is the organizational primitive underneath a camp. Camps give a mission
 a workspace; work items give the work inside that workspace a shared identity.
 
 ## What Is a Work Item?
 
-A work item is any tracked unit of work in a campaign. It has a type, a stable id, a
-title, and a location on disk. `camp` discovers work items across the campaign and
+A work item is any tracked unit of work in a camp. It has a type, a stable id, a
+title, and a location on disk. `camp` discovers work items across the camp and
 presents them through one interface.
 
 There are two categories of type:
@@ -41,7 +41,7 @@ There are two categories of type:
 ## The Dashboard
 
 `camp workitem` (aliases `wi`, `workitems`) is the entry point. With no arguments it
-opens an interactive dashboard across every work item in the campaign. For agents and
+opens an interactive dashboard across every work item in the camp. For agents and
 scripts, the same data is available as JSON:
 
 {{< terminal-demo src="/images/demos/tui-workitems.gif" title="camp wi" alt="The camp wi dashboard: intents, designs, explores, and festivals in one unified list, narrowed by search" max="720" >}}
@@ -100,7 +100,7 @@ Some work item types move through stages, which map directly to directories:
 When a stage-bearing item finishes, it moves into a terminal dungeon
 (`workflow/<type>/dungeon/completed/`, `archived/`, or `someday/`). Dungeon items are
 preserved but are not treated as active work. See
-[Campaigns]({{< ref "/methodology/campaigns" >}}) for the surrounding directory layout.
+[Camps]({{< ref "/methodology/campaigns" >}}) for the surrounding directory layout.
 
 ## The Current Work Item
 
@@ -136,22 +136,22 @@ camp workitem unlink <link-id>                        # remove a link
 Each link has a role. A `primary` link marks the active work item for a scope, and
 commit tooling picks it up automatically. `related`, `blocked_by`, and `supersedes`
 roles record context without affecting commit routing. Links are stored in
-`.campaign/workitems/links.yaml`, which is committed with the campaign so the whole
+`.campaign/workitems/links.yaml`, which is committed with the camp so the whole
 team shares the same graph.
 
 ## Scoped Commits
 
 `camp workitem commit` commits the changes that belong to a work item and nothing
 else. The staging plan is computed from the resolved context and printed before the
-commit runs. It never silently widens to `git add .` at the campaign root.
+commit runs. It never silently widens to `git add .` at the camp root.
 
 ```bash
 camp workitem commit -m "implement timeline grouping"
 ```
 
-The commit carries a short work item reference inside its campaign tag, so every
+The commit carries a short work item reference inside its camp tag, so every
 commit can be traced back to the work item it served. To retrieve that history later,
-across the campaign root and every linked repo:
+across the camp root and every linked repo:
 
 ```bash
 camp workitem commits my-feature      # all commits attributed to this work item
@@ -170,7 +170,7 @@ camp workitem doctor --fix    # repair what can be repaired automatically
 
 ## Why It Matters
 
-Work items are how a campaign stays navigable as it grows. Instead of remembering
+Work items are how a camp stays navigable as it grows. Instead of remembering
 which folder a design doc lives in or which branch a feature is on, you ask the
-campaign: what work exists, what am I on, and what does it touch. The answer is the
+camp: what work exists, what am I on, and what does it touch. The answer is the
 same shape whether the work is an intent, a research note, or a multi-phase festival.

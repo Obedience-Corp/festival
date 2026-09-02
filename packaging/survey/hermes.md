@@ -36,7 +36,7 @@ plugin manifest we can ship components through, so the target emits a skills tap
   Source: `website/docs/user-guide/features/hooks.md` ; `website/docs/user-guide/features/plugins.md`
 - Context file: YES, `AGENTS.md` is read. Precedence is winner-take-one
   (`.hermes.md` > `AGENTS.override.md` > `AGENTS.md` > `CLAUDE.md` > `.cursorrules`): only the first
-  match loads, so a `.hermes.md` would REPLACE the campaign's `AGENTS.md`, never supplement it.
+  match loads, so a `.hermes.md` would REPLACE the camp's `AGENTS.md`, never supplement it.
   Source: `website/docs/user-guide/features/context-files.md`
 - PATH: the default `local` terminal backend passes `PATH` through (only named Hermes secrets are
   stripped), so `fest` and `camp` are reachable with zero config. The five sandboxed backends
@@ -75,7 +75,7 @@ GitHub tap plus skills.sh, from one tree:
   warns is an open spike question (Q4 in the design workitem), and shortening descriptions would
   degrade trigger accuracy for every other harness that shares the source.
 - Context-file precedence is the sharpest user-facing hazard: a user who drops a `.hermes.md` next
-  to a campaign `AGENTS.md` silently loses the campaign instructions.
+  to a camp `AGENTS.md` silently loses the camp instructions.
 - Headless approvals (`approvals.single_query_mode`, `approvals.cron_mode`) default to `deny`, so an
   unattended `hermes -z` run refuses flagged shell commands rather than escalating. Matters for
   anyone scripting the loop, not for the tap itself.

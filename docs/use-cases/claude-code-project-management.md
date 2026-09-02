@@ -55,7 +55,7 @@ Festival commits tie changes back to the plan, which makes review and status tra
 
 ## Recommended Claude Code Flow
 
-1. Start the session in the campaign or project workspace.
+1. Start the session in the camp or project workspace.
 2. Run `fest intro` if this is the first Festival session.
 3. Run `fest next`.
 4. Let Claude Code execute the task.

@@ -7,7 +7,7 @@ Festival is files and two CLIs the agent loop actually touches: `fest` and `camp
 
 ## Skills for every agent
 
-Festival publishes 12 skills that teach an agent the campaign and festival vocabulary: how to navigate a campaign, how to commit inside one, how to plan a festival, and how to execute one. They are plain `SKILL.md` files in the open agent-skills layout, so one command installs them into most agents:
+Festival publishes 12 skills that teach an agent the camp and festival vocabulary: how to navigate a camp, how to commit inside one, how to plan a festival, and how to execute one. They are plain `SKILL.md` files in the open agent-skills layout, so one command installs them into most agents:
 
 ```bash
 npx skills add Obedience-Corp/festival
@@ -23,8 +23,8 @@ Some agents have their own skill channels and their own conventions. These guide
 - [Codex](codex/): install the plugin from the self-hosted marketplace and get the skills plus the session install hook.
 - [Cursor](cursor/): the plugin carries skills, commands, agents, and a blocking install hook.
 - [Gemini CLI](gemini/): install the extension from GitHub in one command.
-- [Hermes Agent](hermes/): install the binaries, add the Festival skills tap, and run the loop from a campaign root.
+- [Hermes Agent](hermes/): install the binaries, add the Festival skills tap, and run the loop from a camp root.
 - [opencode](opencode/): drop the plugin into your opencode config and let native skill discovery do the rest.
-- [Other agents](other-agents/): Grok Build, Aider, Crush, OpenClaw, and anything you built yourself. Binaries, a campaign, and the loop.
+- [Other agents](other-agents/): Grok Build, Aider, Crush, OpenClaw, and anything you built yourself. Binaries, a camp, and the loop.
 
-Every agent in the list above has a guide. If yours is not on it, [Other agents](other-agents/) is the page for you: install the binaries from the [installation page](../installation/), run `camp init`, and start your agent from the campaign root. The [quickstart](../quickstart/) is agent agnostic.
+Every agent in the list above has a guide. If yours is not on it, [Other agents](other-agents/) is the page for you: install the binaries from the [installation page](../installation/), run `camp init`, and start your agent from the camp root. The [quickstart](../quickstart/) is agent agnostic.

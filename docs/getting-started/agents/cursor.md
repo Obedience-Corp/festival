@@ -7,7 +7,7 @@ weight: 17
 
 Cursor's plugin system, which shipped in Cursor 2.5, carries every Festival surface: skills, commands, agents, and hooks. This is the fullest bundle after Claude Code. The loop is unchanged: `fest next`, do the task, `fest task completed`, `fest commit`.
 
-Order matters. Install the binaries first, then open a campaign, then add the plugin.
+Order matters. Install the binaries first, then open a camp, then add the plugin.
 
 ## 1. Install Festival
 
@@ -36,16 +36,16 @@ If either one is missing or resolves somewhere you did not expect, `festival doc
 
 The plugin's install hook does this for you as well, in the way section 5 describes. Doing it by hand first means your first shell command in a session does not pause.
 
-## 2. Open a campaign
+## 2. Open a camp
 
-A campaign is the directory Festival works in. Create one and stay at its root:
+A camp is the directory Festival works in. Create one and stay at its root:
 
 ```bash
-mkdir my-campaign && cd my-campaign
+mkdir my-camp && cd my-camp
 camp init
 ```
 
-`camp init` writes the campaign layout, initializes git, creates the festivals tree, and writes an `AGENTS.md` at the root describing all of it. That file is the context every agent reads.
+`camp init` writes the camp layout, initializes git, creates the festivals tree, and writes an `AGENTS.md` at the root describing all of it. That file is the context every agent reads.
 
 ## 3. Add the Festival plugin
 
@@ -67,7 +67,7 @@ That is deliberately all this page shows. Cursor's documented install surface is
 
 Counted from the bundle:
 
-- **12 skills**, one `SKILL.md` each, covering campaign navigation, campaign structure, commit discipline, festival planning, festival execution, standalone workflows, and work intake.
+- **12 skills**, one `SKILL.md` each, covering camp navigation, camp structure, commit discipline, festival planning, festival execution, standalone workflows, and work intake.
 - **11 commands**, the same `fest-*` and `camp-*` verbs available as slash commands.
 - **2 agents**: `fest-executor` and `fest-planner`.
 - **1 hook**, the installer described in the next section.
@@ -86,9 +86,9 @@ The fire-and-forget behavior of `sessionStart` comes from Cursor's hooks documen
 
 ## 6. AGENTS.md
 
-`camp init` writes `AGENTS.md` at the campaign root, and it is the file to keep as your context. Edit it as the campaign grows; do not replace it with an editor-specific context file, or your sessions stop seeing the campaign instructions.
+`camp init` writes `AGENTS.md` at the camp root, and it is the file to keep as your context. Edit it as the camp grows; do not replace it with an editor-specific context file, or your sessions stop seeing the camp instructions.
 
-Start Cursor at the campaign root. Projects inside a campaign are usually their own git repositories, and a session started inside one may resolve a different context file, or none.
+Start Cursor at the camp root. Projects inside a camp are usually their own git repositories, and a session started inside one may resolve a different context file, or none.
 
 ## 7. The loop
 
@@ -104,7 +104,7 @@ fest validate
 fest next
 ```
 
-`fest next` only works inside a festival directory, not at the campaign root. An agent that starts at the root will get `not inside a festival` and should navigate into `festivals/active/<festival>` before retrying.
+`fest next` only works inside a festival directory, not at the camp root. An agent that starts at the root will get `not inside a festival` and should navigate into `festivals/active/<festival>` before retrying.
 
 Phase gates are checkpoints for a human. The agent submits a gate and stops. You run `fest workflow approve` when you have looked at what it did.
 

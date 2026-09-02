@@ -15,7 +15,7 @@ cleanup() {
 trap cleanup EXIT
 
 if [[ ! -f "$projects_root/camp/README.md" || ! -f "$projects_root/fest/README.md" ]]; then
-    echo "skip: doc sync requires campaign workspace layout (../camp and ../fest)" >&2
+    echo "skip: doc sync requires camp workspace layout (../camp and ../fest)" >&2
     exit 0
 fi
 

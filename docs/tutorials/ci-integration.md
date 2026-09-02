@@ -17,7 +17,7 @@ just test beginner-path-smoke
 
 That command runs `scripts/smoke_beginner_path.sh`, which exercises the audited no-network launch path:
 
-1. Create a temporary campaign with `camp init`
+1. Create a temporary camp with `camp init`
 2. Add one local git repo with `camp project add --local`
 3. Create a standard festival with `fest create festival --name ... --type standard --markers-file ...`
 4. Run `fest validate`

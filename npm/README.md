@@ -5,7 +5,7 @@ NPM installer for the Festival CLI suite.
 Festival includes three commands:
 
 - `fest` - Festival planning and execution workflow CLI
-- `camp` - Campaign workspace management CLI
+- `camp` - Camp workspace management CLI
 - `festival` - installer and launcher for the suite
 
 ## Install

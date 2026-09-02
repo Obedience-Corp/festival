@@ -27,39 +27,39 @@ producing work to organizing it. Every new session starts from nothing: no memor
 the larger goal, no structure for multi-step work, no thread to pick back up. You
 spend your time re-explaining context that an organized workspace would make obvious.
 
-## Campaigns: A Workspace for a Mission
+## Camps: A Workspace for a Mission
 
 Festival is a workspace system built for that reality. It organizes work into
-campaigns.
+camps.
 
-A campaign is a workspace for a mission: a high-level purpose like your startup, your
+A camp, previously called a campaign, is a workspace for a mission: a high-level purpose like your startup, your
 job, or a hobby you keep coming back to. A mission is not a single task. It is a
 durable area of focus that grows over time, accumulating many projects, plans,
-documents, research, and decisions. A campaign keeps all of that in one place, however
+documents, research, and decisions. A camp keeps all of that in one place, however
 large it gets and however long it runs.
 
 Instead of asking:
 
 > "Where should this go?"
 
-You put it in the campaign it belongs to.
+You put it in the camp it belongs to.
 
 Instead of asking:
 
 > "What was I working on?"
 
-You resume the campaign.
+You resume the camp.
 
-Both humans and AI agents can enter a campaign and immediately understand its
-structure, because every campaign uses the same predictable layout. See
-[Campaigns]({{< ref "/methodology/campaigns" >}}) for the full directory model.
+Both humans and AI agents can enter a camp and immediately understand its
+structure, because every camp uses the same predictable layout. See
+[Camps]({{< ref "/methodology/campaigns" >}}) for the full directory model.
 
 ## From Organization to Outcomes
 
 Organization is the foundation, not the finish line. Once your work has a home,
 Festival gives every mission three things that turn structure into results:
 
-1. **Context** - a campaign workspace that holds all projects, docs, and research.
+1. **Context** - a camp that holds all projects, docs, and research.
 2. **Direction** - structured plans that AI agents can execute, pause, and resume.
 3. **Verification** - work captured in reviewable files you can trace and audit.
 
@@ -71,13 +71,13 @@ through.
 ## Built to Scale
 
 This is not a system for one project. It is how the author of Festival manages 17
-campaigns and more than 150 projects without losing context between them.
+camps and more than 150 projects without losing context between them.
 
-A campaign can be a side project with two or three repos, or a mission spanning
+A camp can be a side project with two or three repos, or a mission spanning
 dozens of projects and hundreds of plans. The structure scales in both directions,
 and switching between missions is a single command.
 
 ## Get Started
 
-Create your first campaign and run your first festival in about five minutes:
+Create your first camp and run your first festival in about five minutes:
 [Quick Start]({{< ref "/getting-started/quickstart" >}}).

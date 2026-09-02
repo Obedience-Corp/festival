@@ -1,5 +1,5 @@
 {
-  "description": "Festival: install the fest and camp CLIs at session start; block raw git commit inside a campaign.",
+  "description": "Festival: install the fest and camp CLIs at session start; block raw git commit inside a camp.",
   "hooks": {
     "SessionStart": [
       {

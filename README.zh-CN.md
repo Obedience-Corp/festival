@@ -8,7 +8,7 @@ Festival 是一个 local-first 的工作流层，用文件系统保存项目记�
 
 Festival 有三个核心组件：
 
-- `camp` 管理 campaign：项目、intent、设计文档、探索记录、work item、链接关系和当前工作。
+- `camp` 管理 camp：项目、intent、设计文档、探索记录、work item、链接关系和当前工作。
 - `fest` 管理 festival：当工作复杂到需要 phase、sequence、task、质量门和跨会话追踪时，用它来执行结构化计划。
 - `festival` 负责安装和更新 `camp` 和 `fest`：`festival install` 安装、`festival update` 保持三者同步、`festival browse` 查看可用内容、`festival doctor` 检查安装状态。
 
@@ -24,7 +24,7 @@ Festival 有三个核心组件：
 
 **记忆保存在哪里？**
 
-在你自己的 campaign 里：phase、sequence、task、intent 和 git 历史，都是你目录下的普通文件。你可以复制它、diff 它，也可以带着它离开。
+在你自己的 camp 里：phase、sequence、task、intent 和 git 历史，都是你目录下的普通文件。你可以复制它、diff 它，也可以带着它离开。
 
 **一次会话结束之后呢？**
 
@@ -89,7 +89,7 @@ Windows 稳定包暂时暂停维护；目前建议使用 WSL2 和 Linux 安装�
 先用 `camp workitem` 找到或确认当前工作：
 
 ```bash
-camp workitem                         # 查看 campaign 里的工作队列
+camp workitem                         # 查看 camp 里的工作队列
 camp workitem --json --stage active   # 给代理或脚本使用的机器可读输出
 camp workitem current                 # 查看当前 work item
 camp workitem current my-feature      # 设置当前 work item
@@ -112,7 +112,7 @@ fest task completed       # 在文件系统中记录进度
 fest commit -m "message"  # 提交代码，并保留计划追踪信息
 ```
 
-明天回来、换一个 AI 工具、或者切到同一个 campaign 里的另一个仓库时，先用 `camp workitem` 找到当前工作；如果当前工作是 active festival，再继续运行：
+明天回来、换一个 AI 工具、或者切到同一个 camp 里的另一个仓库时，先用 `camp workitem` 找到当前工作；如果当前工作是 active festival，再继续运行：
 
 ```bash
 fest next
@@ -134,7 +134,7 @@ AI 编程工具很快，但会话本身通常是短暂的。每次重开会话�
 
 Festival 把这些东西放进一个可审查、可提交、可恢复的工作结构里：
 
-- **Context**：一个 campaign 工作区，保存项目、文档、研究和计划
+- **Context**：一个 camp 工作区，保存项目、文档、研究和计划
 - **Direction**：可由 AI 代理执行、暂停和恢复的结构化计划
 - **Verification**：每一步都有可检查的完成标准和可追踪输出
 

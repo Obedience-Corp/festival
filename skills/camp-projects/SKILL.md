@@ -1,6 +1,6 @@
 ---
 name: camp-projects
-description: Manage campaign submodule projects. Use when committing inside `projects/*`, deciding status/pull/push scope (root vs submodule vs all), or creating/removing project worktrees.
+description: Manage a camp's projects. Use when committing inside `projects/*`, deciding status/pull/push scope (root vs submodule vs all), or creating/removing project worktrees.
 version: "1.3.1"
 author: Obedience Corp
 license: Apache-2.0
@@ -15,7 +15,9 @@ metadata:
     category: camp
 ---
 
-# Campaign Projects
+# Camp Projects
+
+A camp was previously called a campaign; project commands work the same either way.
 
 ## Commit in Submodules
 
@@ -51,8 +53,8 @@ camp project rename <current> <new> --dry-run --json
 camp project rename <current> <new> --remote-url git@github.com:org/new-name.git
 ```
 
-Renames submodules, linked workspace symlinks, and campaign-owned directories,
-migrating the campaign references in one transaction. Dirty checkouts and linked
+Renames submodules, linked workspace symlinks, and camp-owned directories,
+migrating the camp references in one transaction. Dirty checkouts and linked
 worktrees are preserved; destination collisions and unmanaged directories are
 rejected before anything is written.
 
@@ -69,8 +71,8 @@ camp project worktree remove <name>
 
 ## Common Mistakes
 
-- Assuming submodule commits should auto-update campaign-root pointers.
+- Assuming submodule commits should auto-update camp-root pointers.
 - Running `camp pull`/`camp push` expecting submodule scope without `--sub`.
 - Passing worktree path to remove; command expects worktree name.
 - Renaming a project directory by hand instead of `camp project rename`, which
-  leaves the campaign references pointing at the old name.
+  leaves the camp references pointing at the old name.

@@ -36,16 +36,16 @@ If either one is missing or resolves somewhere you did not expect, `festival doc
 
 The extension's session-start hook installs these too, so this step is belt and braces. Doing it by hand means your first session works before the hook has run once.
 
-## 2. Open a campaign
+## 2. Open a camp
 
-A campaign is the directory Festival works in. Create one and stay at its root:
+A camp is the directory Festival works in. Create one and stay at its root:
 
 ```bash
-mkdir my-campaign && cd my-campaign
+mkdir my-camp && cd my-camp
 camp init
 ```
 
-`camp init` writes the campaign layout, initializes git, creates the festivals tree, and writes an `AGENTS.md` at the root describing all of it.
+`camp init` writes the camp layout, initializes git, creates the festivals tree, and writes an `AGENTS.md` at the root describing all of it.
 
 ## 3. Install the extension
 
@@ -101,7 +101,7 @@ Two files, two jobs, and they do not conflict.
 
 `GEMINI.md` ships with the extension. It describes Festival to Gemini and imports the skills. You do not write or edit it; it is generated.
 
-`AGENTS.md` sits at your campaign root and describes your campaign: what the projects are, what the conventions are, what you want an agent to do. `camp init` writes the first version and you grow it from there.
+`AGENTS.md` sits at your camp root and describes your camp: what the projects are, what the conventions are, what you want an agent to do. `camp init` writes the first version and you grow it from there.
 
 Keep both.
 
@@ -119,7 +119,7 @@ fest validate
 fest next
 ```
 
-`fest next` only works inside a festival directory, not at the campaign root. An agent that starts at the root will get `not inside a festival` and should navigate into `festivals/active/<festival>` before retrying.
+`fest next` only works inside a festival directory, not at the camp root. An agent that starts at the root will get `not inside a festival` and should navigate into `festivals/active/<festival>` before retrying.
 
 Phase gates are checkpoints for a human. The agent submits a gate and stops. You run `fest workflow approve` when you have looked at what it did.
 

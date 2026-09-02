@@ -1,11 +1,11 @@
 ---
 name: camp-workitems
-description: Find, filter, choose, create, or adopt campaign work items with `camp workitem`, `camp wi`, or `camp workitems`. Use when a user wants current active work across intents, designs, explore notes, festivals, or tracked workflow directories; when agents need safe `camp workitem --json` output; or when creating/adopting tracked workflow folders.
+description: Find, filter, choose, create, or adopt camp work items with `camp workitem`, `camp wi`, or `camp workitems`. Use when a user wants current active work across intents, designs, explore notes, festivals, or tracked workflow directories; when agents need safe `camp workitem --json` output; or when creating/adopting tracked workflow folders.
 ---
 
 # Camp Workitems
 
-Use `camp workitem` to find current campaign work across intents, workflow
+Use `camp workitem` to find current camp work across intents, workflow
 design/explore docs, festivals, and tracked workflow directories.
 
 `camp workitem` is canonical. `camp wi` and `camp workitems` are aliases.

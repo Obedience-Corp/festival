@@ -107,5 +107,5 @@ This moves the festival from `active/` to `dungeon/completed/`. The work is pres
 ## Next Steps
 
 - [Methodology Overview]({{< ref "/methodology/overview" >}}) -- Phases, sequences, and task design in depth
-- [Campaign Setup]({{< ref "/tutorials/campaign-setup" >}}) -- Organizing projects within a campaign workspace
+- [Camp Setup]({{< ref "/tutorials/campaign-setup" >}}) -- Organizing projects within a camp
 - [Agent Workflows]({{< ref "/guides/agent-workflows" >}}) -- Using festivals with AI agents for autonomous sessions

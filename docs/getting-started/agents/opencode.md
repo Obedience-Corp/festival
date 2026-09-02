@@ -36,16 +36,16 @@ If either one is missing or resolves somewhere you did not expect, `festival doc
 
 The plugin tries to do this for you at load. It is best effort by design, as section 5 explains, so doing it once by hand is the reliable path.
 
-## 2. Open a campaign
+## 2. Open a camp
 
-A campaign is the directory Festival works in. Create one and stay at its root:
+A camp is the directory Festival works in. Create one and stay at its root:
 
 ```bash
-mkdir my-campaign && cd my-campaign
+mkdir my-camp && cd my-camp
 camp init
 ```
 
-`camp init` writes the campaign layout, initializes git, creates the festivals tree, and writes an `AGENTS.md` at the root describing all of it.
+`camp init` writes the camp layout, initializes git, creates the festivals tree, and writes an `AGENTS.md` at the root describing all of it.
 
 ## 3. Install the Festival plugin
 
@@ -83,7 +83,7 @@ The git URL is the path today. There is no published npm package for the opencod
 
 The 12 Festival skills ship under `.opencode/skills/`, and opencode's native skill auto-discovery picks them up. There is no registration step and no config edit.
 
-One detail worth knowing if you work in campaigns: opencode also auto-discovers `.claude/skills/<name>/SKILL.md` and `.agents/skills/`. `camp init` writes campaign skills into both of those directories, and `camp` projects them into worktrees as well. So a session started inside a campaign or a camp worktree already sees those skills without any opencode-specific copy.
+One detail worth knowing if you work in camps: opencode also auto-discovers `.claude/skills/<name>/SKILL.md` and `.agents/skills/`. `camp init` writes camp skills into both of those directories, and `camp` projects them into worktrees as well. So a session started inside a camp or a camp worktree already sees those skills without any opencode-specific copy.
 
 ## 5. How the CLIs get installed
 
@@ -102,7 +102,7 @@ curl -fsSL https://raw.githubusercontent.com/Obedience-Corp/festival/main/instal
 
 ## 6. AGENTS.md
 
-`camp init` writes `AGENTS.md` at the campaign root, and it is the file to keep as your context. Start opencode at the campaign root so the session picks it up. Projects inside a campaign are usually their own git repositories, and a session started inside one may resolve a different context file, or none.
+`camp init` writes `AGENTS.md` at the camp root, and it is the file to keep as your context. Start opencode at the camp root so the session picks it up. Projects inside a camp are usually their own git repositories, and a session started inside one may resolve a different context file, or none.
 
 ## 7. The loop
 
@@ -118,7 +118,7 @@ fest validate
 fest next
 ```
 
-`fest next` only works inside a festival directory, not at the campaign root. An agent that starts at the root will get `not inside a festival` and should navigate into `festivals/active/<festival>` before retrying.
+`fest next` only works inside a festival directory, not at the camp root. An agent that starts at the root will get `not inside a festival` and should navigate into `festivals/active/<festival>` before retrying.
 
 Phase gates are checkpoints for a human. The agent submits a gate and stops. You run `fest workflow approve` when you have looked at what it did.
 

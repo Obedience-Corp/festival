@@ -7,7 +7,7 @@ weight: 34
 
 The festival system is built to run as loops, and most loops start with something
 you say to an agent. This guide covers the kinds of loops you can build, the
-prompts that start them, and how one campaign acts as a shared planning substrate
+prompts that start them, and how one camp acts as a shared planning substrate
 for orchestrating work across many projects at once.
 
 ## Two kinds of loop
@@ -24,7 +24,7 @@ It helps to separate two things that both get called "the loop":
   subagents and worktrees, and drive each one to completion (often via its own
   `fest next` loop). `fest next` does not drive this outer loop. The agent does.
 
-Both run on one shared substrate: the campaign, which holds your intents, designs,
+Both run on one shared substrate: the camp, which holds your intents, designs,
 explore notes, and festivals, and spans every project in the workspace.
 
 ## Loops start with a prompt
@@ -155,11 +155,11 @@ the work requires.
 
 Work items unify intents, designs, explore notes, and festivals into one model with
 a stable id, a type, and a location. They are the substrate both kinds of loop run
-on, and they span every project in the campaign.
+on, and they span every project in the camp.
 
 They exist for two reasons, both about loops:
 
-- **Resuming.** When you come back to a campaign, `camp workitem` tells you what
+- **Resuming.** When you come back to a camp, `camp workitem` tells you what
   exists and what you were on, so you do not reconstruct it from memory or the git
   log.
 - **Orchestration.** `camp workitem --json` is a machine-readable queue. You hand it
@@ -178,9 +178,9 @@ away and pick it back up, and so can a different agent.
 
 ## Multi-project orchestration
 
-A campaign is not a single repository. It holds many projects (`projects/*` and
+A camp is not a single repository. It holds many projects (`projects/*` and
 their worktrees) and one shared planning layer over all of them. Intents, work
-items, and festivals can reference work in any project, which makes the campaign a
+items, and festivals can reference work in any project, which makes the camp a
 **shared planning substrate for orchestrating multiple projects at once**.
 
 This is the agent-driven loop in its fullest form. You point an agent at the work

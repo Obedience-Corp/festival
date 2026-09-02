@@ -108,7 +108,7 @@ fest create festival --name "release-cycle" --type ritual      # Repeatable proc
 Each festival is self-contained. One agent session runs one festival via `fest next`. Run N festivals by running N agent sessions. No coordination needed between them -- each festival has its own goal, phases, tasks, and rules.
 
 ```bash
-fest list              # See all festivals in current campaign
+fest list              # See all festivals in current camp
 fgo <name>             # Jump to a specific festival
 fest status            # Check progress on current festival
 ```
@@ -119,16 +119,16 @@ Three active festivals means three agent sessions running independently. Five me
 
 ---
 
-## Across Campaigns
+## Across Camps
 
-Campaigns are independent workspaces -- different projects, different domains, different teams. Each campaign has its own festivals, intents, projects, and design docs.
+Camps are independent workspaces -- different projects, different domains, different teams. Each camp has its own festivals, intents, projects, and design docs.
 
 ```bash
-camp list              # See all registered campaigns
-camp switch <name>     # Switch active campaign
+camp list              # See all registered camps
+camp switch <name>     # Switch active camp
 ```
 
-One campaign might have three active festivals while another has one. The portfolio spans campaigns. `camp list` shows the full picture.
+One camp might have three active festivals while another has one. The portfolio spans camps. `camp list` shows the full picture.
 
 ---
 

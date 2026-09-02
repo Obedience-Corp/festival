@@ -19,7 +19,7 @@ Festival 把这些工作状态放回文件系统里。计划、任务、进度�
 
 ## 三个核心作用
 
-**Context**：campaign 工作区保存项目、文档、研究和计划，让代理知道当前工作属于哪个长期目标。
+**Context**：camp 工作区保存项目、文档、研究和计划，让代理知道当前工作属于哪个长期目标。
 
 **Direction**：festival 把目标拆成 phase、sequence 和 task。代理不需要猜下一步，运行 `fest next` 就能拿到当前任务和必要上下文。
 

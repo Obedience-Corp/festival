@@ -5,7 +5,7 @@ weight: 26
 
 # Tasks
 
-Tasks are the atomic work units of the Festival Methodology, sitting at the bottom of the hierarchy: **Campaign > Festival > Phase > Sequence > Task**.
+Tasks are the atomic work units of the Festival Methodology, sitting at the bottom of the hierarchy: **Camp > Festival > Phase > Sequence > Task**.
 
 ## What is a Task?
 

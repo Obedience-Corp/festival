@@ -46,9 +46,9 @@ yay -S festival-bin
 
 Debian / Ubuntu 可以从 [latest release](https://github.com/Obedience-Corp/festival/releases/latest) 下载 `.deb` 包。
 
-## 3. 创建 campaign
+## 3. 创建 camp
 
-campaign 是一个长期工作区，可以包含多个项目、文档、研究和计划。
+camp 是一个长期工作区，可以包含多个项目、文档、研究和计划。
 
 ```bash
 camp init my-project
@@ -79,7 +79,7 @@ fest validate
 
 ## 6. 让代理开始工作
 
-先确认 campaign 里的当前工作：
+先确认 camp 里的当前工作：
 
 ```bash
 camp workitem current

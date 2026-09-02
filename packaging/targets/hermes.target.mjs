@@ -5,12 +5,12 @@ const TAP_ROOT = "skills";
 const SKILLS_SH_SCHEMA = "https://skills.sh/schemas/skills.sh.schema.json";
 
 const CATEGORY_TITLES = {
-  camp: "Campaign workspace (camp)",
+  camp: "Camp workspace (camp)",
   festival: "Festival planning and execution (fest)",
 };
 
 const CATEGORY_DESCRIPTIONS = {
-  camp: "Navigate, commit, and organize a campaign workspace with the camp CLI.",
+  camp: "Navigate, commit, and organize a camp with the camp CLI.",
   festival: "Plan and execute festivals (phases, sequences, tasks) with the fest CLI.",
 };
 
@@ -203,14 +203,14 @@ reachable as soon as they are installed. The sandboxed backends (docker, singula
 modal, daytona, vercel_sandbox) use the container's own \`PATH\`, so the binaries have to
 be provisioned inside the image there.
 
-## Using them in a campaign
+## Using them in a camp
 
-- Keep \`AGENTS.md\` as the campaign's context file. \`camp init\` writes it and points
+- Keep \`AGENTS.md\` as the camp's context file. \`camp init\` writes it and points
   \`CLAUDE.md\` at it, and Hermes reads it.
 - Never add a \`.hermes.md\`. Hermes context-file precedence is winner-take-one
   (\`.hermes.md\` > \`AGENTS.override.md\` > \`AGENTS.md\` > \`CLAUDE.md\`), so a
   \`.hermes.md\` replaces \`AGENTS.md\` instead of supplementing it.
-- Start Hermes from the campaign root. The context chain walks up to the nearest git
+- Start Hermes from the camp root. The context chain walks up to the nearest git
   root, and projects and worktrees under \`projects/\` are their own git roots.
 
 ## Skills in this tap
