@@ -45,4 +45,4 @@ camp org delete <name> [flags]
 
 ### SEE ALSO
 
-* [camp org](../camp_org/)	 - Group campaigns into orgs
+* [camp org](../camp_org/)	 - Group camps into orgs

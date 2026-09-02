@@ -10,7 +10,7 @@ List workitem links
 
 ### Synopsis
 
-List workitem links recorded in the campaign link registry.
+List workitem links recorded in the camp link registry.
 
 The command reads .campaign/workitems/links.yaml and prints every link, or only
 links for the supplied workitem selector. Use this to audit which projects,
@@ -36,4 +36,4 @@ camp workitem links [selector] [flags]
 
 ### SEE ALSO
 
-* [camp workitem](../camp_workitem/)	 - View active campaign work items
+* [camp workitem](../camp_workitem/)	 - View active camp work items

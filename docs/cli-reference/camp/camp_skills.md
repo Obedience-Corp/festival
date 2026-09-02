@@ -1,16 +1,16 @@
 ---
 title: "camp skills"
 linkTitle: "camp skills"
-description: "Manage campaign skill directory links"
+description: "Manage camp skill directory links"
 ---
 
 ## camp skills
 
-Manage campaign skill directory links
+Manage camp skill directory links
 
 ### Synopsis
 
-Manage campaign skill bundle projection for tool interoperability.
+Manage camp skill bundle projection for tool interoperability.
 
 Skills are centralized in .campaign/skills/ and projected into tool ecosystems
 (Claude, agents, Grok, etc.) as per-bundle symlinks. This keeps a single source
@@ -19,7 +19,7 @@ of truth while preserving existing provider-native skills directories.
 Project worktrees under projects/worktrees/<project>/<name>/ are also supported:
 'camp project worktree add' projects skills into each new worktree automatically,
 and 'camp skills link --worktrees' repairs all of them. That way harnesses whose
-git root is the worktree (not the campaign root) still discover campaign skills.
+git root is the worktree (not the camp root) still discover camp skills.
 Only git checkouts are projected (directory must contain .git). A loose git root
 at projects/worktrees/<name>/ is accepted; package subdirs under it are not.
 
@@ -54,7 +54,7 @@ camp skills [flags]
 
 ### SEE ALSO
 
-* [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces
-* [camp skills link](../camp_skills_link/)	 - Project campaign skill bundles into tool-specific skills directories
+* [camp](../camp/)	 - Manage your camps and the projects and festivals inside them
+* [camp skills link](../camp_skills_link/)	 - Project camp skill bundles into tool-specific skills directories
 * [camp skills status](../camp_skills_status/)	 - Show the current state of projected skill bundle symlinks
 * [camp skills unlink](../camp_skills_unlink/)	 - Remove projected skill bundle symlinks

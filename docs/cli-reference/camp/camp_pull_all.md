@@ -10,9 +10,9 @@ Pull latest changes for all repos
 
 ### Synopsis
 
-Pull latest changes for all repositories in the campaign.
+Pull latest changes for all repositories in the camp.
 
-Scans the campaign root and all submodules, checks which have a tracking
+Scans the camp root and all submodules, checks which have a tracking
 branch with upstream, and pulls them. Any extra flags are passed through
 to git pull for each repo.
 

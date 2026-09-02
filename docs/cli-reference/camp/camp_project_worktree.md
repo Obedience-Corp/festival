@@ -54,7 +54,7 @@ camp project worktree [flags]
 
 ### SEE ALSO
 
-* [camp project](../camp_project/)	 - Manage campaign projects
+* [camp project](../camp_project/)	 - Manage camp projects
 * [camp project worktree add](../camp_project_worktree_add/)	 - Create a new worktree for the project
 * [camp project worktree list](../camp_project_worktree_list/)	 - List worktrees for the project
 * [camp project worktree remove](../camp_project_worktree_remove/)	 - Remove a worktree

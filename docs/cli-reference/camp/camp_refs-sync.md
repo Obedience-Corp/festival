@@ -1,16 +1,16 @@
 ---
 title: "camp refs-sync"
 linkTitle: "camp refs-sync"
-description: "Sync submodule ref pointers in campaign root"
+description: "Sync submodule ref pointers in camp root"
 ---
 
 ## camp refs-sync
 
-Sync submodule ref pointers in campaign root
+Sync submodule ref pointers in camp root
 
 ### Synopsis
 
-Update the campaign root's recorded submodule pointers to match
+Update the camp root's recorded submodule pointers to match
 each submodule's current HEAD. Creates a single atomic commit.
 
 Without arguments, syncs all submodules. Specify paths to sync specific ones.
@@ -40,4 +40,4 @@ camp refs-sync [submodule...] [flags]
 
 ### SEE ALSO
 
-* [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces
+* [camp](../camp/)	 - Manage your camps and the projects and festivals inside them

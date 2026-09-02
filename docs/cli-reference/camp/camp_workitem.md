@@ -1,16 +1,16 @@
 ---
 title: "camp workitem"
 linkTitle: "camp workitem"
-description: "View active campaign work items"
+description: "View active camp work items"
 ---
 
 ## camp workitem
 
-View active campaign work items
+View active camp work items
 
 ### Synopsis
 
-View active campaign work items.
+View active camp work items.
 
 Launches an interactive dashboard on a TTY. Non-interactive callers must pass
 --json, --list, or --print.
@@ -54,7 +54,7 @@ camp workitem [flags]
 
 ### SEE ALSO
 
-* [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces
+* [camp](../camp/)	 - Manage your camps and the projects and festivals inside them
 * [camp workitem adopt](../camp_workitem_adopt/)	 - Adopt an existing directory or file as a workitem
 * [camp workitem commit](../camp_workitem_commit/)	 - Commit changes scoped to a workitem
 * [camp workitem commits](../camp_workitem_commits/)	 - List commits referencing a workitem

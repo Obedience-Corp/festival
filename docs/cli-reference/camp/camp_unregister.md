@@ -1,26 +1,26 @@
 ---
 title: "camp unregister"
 linkTitle: "camp unregister"
-description: "Remove campaign from registry"
+description: "Remove a camp from the registry"
 ---
 
 ## camp unregister
 
-Remove campaign from registry
+Remove a camp from the registry
 
 ### Synopsis
 
-Remove a campaign from the global registry.
+Remove a camp from the global registry.
 
-This does NOT delete any files - it only removes the campaign from
+This does NOT delete any files - it only removes the camp from
 tracking in the global registry. Use this when:
-  - A campaign directory was deleted manually
-  - A campaign was moved to a different location
-  - You no longer want to track a campaign
+  - A camp directory was deleted manually
+  - A camp was moved to a different location
+  - You no longer want to track a camp
 
-The campaign files remain untouched on disk.
+The camp files remain untouched on disk.
 
-You can specify the campaign by name or ID (or ID prefix).
+You can specify the camp by name or ID (or ID prefix).
 
 Examples:
   camp unregister old-project            # Remove by name
@@ -46,4 +46,4 @@ camp unregister <name-or-id> [flags]
 
 ### SEE ALSO
 
-* [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces
+* [camp](../camp/)	 - Manage your camps and the projects and festivals inside them

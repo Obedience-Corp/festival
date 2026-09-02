@@ -13,9 +13,9 @@ Manage camp configuration
 Interactive menu for managing camp configuration.
 
 Global settings live in ~/.obey/campaign/config.json and apply to every
-campaign. Local settings live in .campaign/settings/local.json and apply
-only to the current campaign; a local theme override wins over the global
-theme while you are inside that campaign.
+camp. Local settings live in .campaign/settings/local.json and apply
+only to the current camp; a local theme override wins over the global
+theme while you are inside that camp.
 
 For non-interactive access, use 'camp settings get' and
 'camp settings set'. See docs/campaign-settings-files.md in the camp
@@ -48,6 +48,6 @@ camp settings [flags]
 
 ### SEE ALSO
 
-* [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces
+* [camp](../camp/)	 - Manage your camps and the projects and festivals inside them
 * [camp settings get](../camp_settings_get/)	 - Print camp settings
 * [camp settings set](../camp_settings_set/)	 - Set a camp setting

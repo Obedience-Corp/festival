@@ -26,4 +26,4 @@ camp notify restore <notice-id> [flags]
 
 ### SEE ALSO
 
-* [camp notify](../camp_notify/)	 - Manage campaign state notices
+* [camp notify](../camp_notify/)	 - Manage camp state notices

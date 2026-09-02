@@ -28,6 +28,7 @@ camp leverage reset [flags]
 
 ```
   -h, --help             help for reset
+      --no-commit        skip the automatic commit of .campaign/leverage data
   -p, --project string   clear snapshots for a single project
 ```
 
@@ -39,4 +40,4 @@ camp leverage reset [flags]
 
 ### SEE ALSO
 
-* [camp leverage](../camp_leverage/)	 - Compute leverage scores for campaign projects
+* [camp leverage](../camp_leverage/)	 - Compute leverage scores for the camp's projects

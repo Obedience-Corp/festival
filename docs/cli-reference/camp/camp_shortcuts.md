@@ -13,7 +13,7 @@ List all available shortcuts
 List all navigation and command shortcuts from .campaign/settings/jumps.yaml.
 
 Navigation shortcuts (path-based):
-  These shortcuts jump to directories within the campaign.
+  These shortcuts jump to directories within the camp.
   Usage: camp go <shortcut>
 
 Command shortcuts (command-based):
@@ -49,9 +49,9 @@ camp shortcuts [flags]
 
 ### SEE ALSO
 
-* [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces
-* [camp shortcuts add](../camp_shortcuts_add/)	 - Add a shortcut (campaign-level or project sub-shortcut)
+* [camp](../camp/)	 - Manage your camps and the projects and festivals inside them
+* [camp shortcuts add](../camp_shortcuts_add/)	 - Add a shortcut (camp-level or project sub-shortcut)
 * [camp shortcuts diff](../camp_shortcuts_diff/)	 - Show differences between current and default shortcuts
 * [camp shortcuts list](../camp_shortcuts_list/)	 - List shortcuts for a specific project
-* [camp shortcuts remove](../camp_shortcuts_remove/)	 - Remove a shortcut (campaign-level or project sub-shortcut)
+* [camp shortcuts remove](../camp_shortcuts_remove/)	 - Remove a shortcut (camp-level or project sub-shortcut)
 * [camp shortcuts reset](../camp_shortcuts_reset/)	 - Reset auto-generated shortcuts to current defaults

@@ -1,16 +1,16 @@
 ---
 title: "camp skills link"
 linkTitle: "camp skills link"
-description: "Project campaign skill bundles into tool-specific skills directories"
+description: "Project camp skill bundles into tool-specific skills directories"
 ---
 
 ## camp skills link
 
-Project campaign skill bundles into tool-specific skills directories
+Project camp skill bundles into tool-specific skills directories
 
 ### Synopsis
 
-Project campaign skill bundles from .campaign/skills/ into tool-specific
+Project camp skill bundles from .campaign/skills/ into tool-specific
 skills directories.
 
 This command creates one symlink per skill bundle. It does not replace entire
@@ -19,8 +19,8 @@ provider skills directories, so existing user skills remain intact.
 With neither --tool nor --path, skills are projected into every registered tool.
 Pass --worktrees with no --tool/--path to also project into every
 projects/worktrees/<project>/<name> git checkout (so Grok/Claude sessions
-opened inside a worktree still see campaign skills). Use --worktrees-only to
-project into worktrees without touching campaign-root tool directories.
+opened inside a worktree still see camp skills). Use --worktrees-only to
+project into worktrees without touching camp-root tool directories.
 
 Worktree discovery only includes directories with a .git file/dir. The normal
 layout is projects/worktrees/<project>/<name>/. A loose git root at
@@ -50,7 +50,7 @@ camp skills link [flags]
   -p, --path string      Custom destination directory
   -t, --tool string      Tool to link: claude, agents
       --worktrees        Also project into every projects/worktrees/*/* worktree
-      --worktrees-only   Project only into project worktrees (skip campaign tool dirs)
+      --worktrees-only   Project only into project worktrees (skip camp tool dirs)
 ```
 
 ### Options inherited from parent commands
@@ -61,4 +61,4 @@ camp skills link [flags]
 
 ### SEE ALSO
 
-* [camp skills](../camp_skills/)	 - Manage campaign skill directory links
+* [camp skills](../camp_skills/)	 - Manage camp skill directory links

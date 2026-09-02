@@ -23,7 +23,7 @@ The gather process:
      the rename)
   3. Stamp gathered_into/gathered_at on each source .workitem
   4. Migrate manual priority state and re-home workitem links
-  5. Rewrite campaign markdown and quest links that pointed at the sources
+  5. Rewrite camp markdown and quest links that pointed at the sources
   6. Commit the move (unless --no-commit)
 
 Moved sources stop appearing as separate workitems because discovery only

@@ -1,20 +1,20 @@
 ---
 title: "camp go"
 linkTitle: "camp go"
-description: "Navigate to campaign directories"
+description: "Navigate to camp directories"
 ---
 
 ## camp go
 
-Navigate to campaign directories
+Navigate to camp directories
 
 ### Synopsis
 
-Navigate within the campaign using shortcuts.
+Navigate within the camp using shortcuts.
 
 Usage patterns:
-  camp go           Toggle between campaign root and last location
-  camp go --root    Jump to campaign root (ignore toggle)
+  camp go           Toggle between camp root and last location
+  camp go --root    Jump to camp root (ignore toggle)
   camp go t         Jump to last visited location (cd - equivalent)
   camp go p         Jump to projects/
   camp go f         Jump to festivals/
@@ -22,8 +22,8 @@ Usage patterns:
   camp go p api     Fuzzy search projects/ for "api"
 
 Toggle behavior (no args):
-  - From anywhere: jump to campaign root, save current location
-  - From campaign root: jump back to saved location
+  - From anywhere: jump to camp root, save current location
+  - From camp root: jump back to saved location
 
 Toggle keyword (t / toggle):
   - Jump to the last visited location regardless of where you are
@@ -55,7 +55,7 @@ camp go [shortcut] [query...] [flags]
 
 ```
   camp go               # Toggle: root ↔ last location
-  camp go --root        # Force jump to campaign root
+  camp go --root        # Force jump to camp root
   camp go t             # Jump to last visited location (cd -)
   camp go p             # Jump to projects/
   camp go design        # Jump to exact pin "design"
@@ -73,7 +73,7 @@ camp go [shortcut] [query...] [flags]
   -h, --help                  help for go
   -l, --list                  List available sub-shortcuts for a project
       --print                 Print path only (for shell integration)
-      --root                  Jump to campaign root (ignore last location)
+      --root                  Jump to camp root (ignore last location)
 ```
 
 ### Options inherited from parent commands
@@ -84,4 +84,4 @@ camp go [shortcut] [query...] [flags]
 
 ### SEE ALSO
 
-* [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces
+* [camp](../camp/)	 - Manage your camps and the projects and festivals inside them

@@ -10,7 +10,7 @@ Manage the note store (folders, moves, meetings)
 
 ### Synopsis
 
-Manage the campaign note store under .campaign/intents/notes/.
+Manage the camp note store under .campaign/intents/notes/.
 
 Use "camp idea note" to capture a note. This command group manages folders
 and placement of notes already in the store.
@@ -41,7 +41,7 @@ camp idea notes [flags]
 
 ### SEE ALSO
 
-* [camp idea](../camp_idea/)	 - Manage campaign ideas
+* [camp idea](../camp_idea/)	 - Manage camp ideas
 * [camp idea notes folders](../camp_idea_notes_folders/)	 - List note folders
 * [camp idea notes import-meeting](../camp_idea_notes_import-meeting/)	 - Import a meeting bundle into notes/meetings/
 * [camp idea notes mv](../camp_idea_notes_mv/)	 - Move a note into a folder

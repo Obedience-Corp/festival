@@ -15,7 +15,7 @@ Stage and commit changes belonging to a resolved workitem.
 The staging plan is computed from the resolver context (cwd-aware, with
 explicit positional <selector> or --project overrides) and printed to stderr
 before the commit runs. The plan never silently widens to "git add ." at the
-campaign root.
+camp root.
 
 See docs/workitem-commit-reference.md for the staging matrix and flag
 precedence.
@@ -48,4 +48,4 @@ camp workitem commit [selector] [flags]
 
 ### SEE ALSO
 
-* [camp workitem](../camp_workitem/)	 - View active campaign work items
+* [camp workitem](../camp_workitem/)	 - View active camp work items

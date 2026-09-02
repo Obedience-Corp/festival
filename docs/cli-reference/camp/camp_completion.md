@@ -28,7 +28,7 @@ See each sub-command's help for details on how to use the generated script.
 
 ### SEE ALSO
 
-* [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces
+* [camp](../camp/)	 - Manage your camps and the projects and festivals inside them
 * [camp completion bash](../camp_completion_bash/)	 - Generate the autocompletion script for bash
 * [camp completion fish](../camp_completion_fish/)	 - Generate the autocompletion script for fish
 * [camp completion powershell](../camp_completion_powershell/)	 - Generate the autocompletion script for powershell

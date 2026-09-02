@@ -17,19 +17,19 @@ a linked project directory (see 'fest link'), or use --festival to specify one.
 
 The fest commit command wraps git commit and automatically:
   1. Stages changes and prepends the festival reference to the commit message
-  2. Creates a campaign root commit for festival-scoped files (task docs, progress, state)
+  2. Creates a camp root commit for festival-scoped files (task docs, progress, state)
 
 When a festival or sequence has a linked project, up to two commits are created
 even when this command is run from inside the festival:
   - Project commit: stages all project changes (skipped when the project is clean)
-  - Campaign root commit: stages only festival directory, .campaign/fest/,
+  - Camp root commit: stages only festival directory, .campaign/fest/,
     festivals/.festival/.state/, and the submodule pointer
 
 The sequence's fest_working_dir is preferred over the festival navigation link
 and legacy fest.yaml project_path. A festival with no linked project creates one
-campaign-root commit containing only festival-scoped files (not git add -A).
+camp root commit containing only festival-scoped files (not git add -A).
 
-Use --no-root to skip the campaign root commit.
+Use --no-root to skip the camp root commit.
 
 Reference format: [FE-{id}]
   - FE: Festival component identifier
@@ -70,7 +70,7 @@ Examples:
   # Skip auto-staging, commit only what's already staged
 
   fest commit --auto-write
-  # Run the configured campaign commit-message hook from the target repo
+  # Run the configured camp commit-message hook from the target repo
 ```
 
 ```
@@ -87,7 +87,7 @@ fest commit [flags]
   -h, --help              help for commit
       --json              output result as JSON
   -m, --message string    commit message (required unless --auto-write)
-      --no-root           skip campaign root commit (project commit only)
+      --no-root           skip camp root commit (project commit only)
       --no-tag            don't prepend task reference
       --stage             auto-stage all changes before commit (default true)
       --task string       task reference ID to use (e.g., FEST-123456)

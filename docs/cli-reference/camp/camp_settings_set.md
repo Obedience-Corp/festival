@@ -15,7 +15,7 @@ Set a camp setting non-interactively.
 Accepts the same keys as 'camp settings get'. Theme values are one of
 adaptive, light, dark, or high-contrast. Boolean values accept true/false.
 Setting local.theme_override to 'inherit' clears the override; local.* keys
-require running inside a campaign.
+require running inside a camp.
 
 ```
 camp settings set <key> <value> [flags]

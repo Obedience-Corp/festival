@@ -10,7 +10,7 @@ Remove workitem links
 
 ### Synopsis
 
-Remove workitem links from the campaign link registry.
+Remove workitem links from the camp link registry.
 
 The command updates .campaign/workitems/links.yaml by link id, workitem
 selector, explicit path, or scope filter. Use --all when a selector matches
@@ -41,4 +41,4 @@ camp workitem unlink [selector] [path] [flags]
 
 ### SEE ALSO
 
-* [camp workitem](../camp_workitem/)	 - View active campaign work items
+* [camp workitem](../camp_workitem/)	 - View active camp work items

@@ -1,12 +1,12 @@
 ---
 title: "camp tag list"
 linkTitle: "camp tag list"
-description: "List all tags in use with campaign counts"
+description: "List all tags in use with camp counts"
 ---
 
 ## camp tag list
 
-List all tags in use with campaign counts
+List all tags in use with camp counts
 
 ```
 camp tag list [flags]
@@ -33,4 +33,4 @@ camp tag list [flags]
 
 ### SEE ALSO
 
-* [camp tag](../camp_tag/)	 - Label campaigns with tags
+* [camp tag](../camp_tag/)	 - Label camps with tags

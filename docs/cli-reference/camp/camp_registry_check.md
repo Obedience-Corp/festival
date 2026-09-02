@@ -15,7 +15,7 @@ Validate the registry and report any issues found.
 Checks for:
 - Stale entries (paths that don't exist)
 - Missing .campaign/ directories
-- Campaigns in /tmp/ directories
+- Camps in /tmp/ directories
 - Duplicate entries (multiple IDs pointing to the same path)
 
 Examples:
@@ -39,4 +39,4 @@ camp registry check [flags]
 
 ### SEE ALSO
 
-* [camp registry](../camp_registry/)	 - Manage the campaign registry
+* [camp registry](../camp_registry/)	 - Manage the camp registry

@@ -18,7 +18,7 @@ Each transition validates readiness:
   active → completed:  All tasks must be completed
 
 By default, promotes the festival you are currently inside. From elsewhere in a
-campaign, pass a festival name or run promote interactively to pick one:
+camp, pass a festival name or run promote interactively to pick one:
 ```bash
   fest promote my-feature       Promote a festival by name (tab completion)
   fest promote                  Pick a festival from a fuzzy picker (in a terminal)

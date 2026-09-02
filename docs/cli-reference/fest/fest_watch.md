@@ -17,7 +17,7 @@ Without a selector, it watches the current festival when run from a festival
 directory, the linked festival when run from a linked project directory, or a
 standalone WORKFLOW.md from that workflow directory.
 
-From a campaign or festivals workspace in an interactive terminal, fest watch
+From a camp or festivals workspace in an interactive terminal, fest watch
 opens a festival picker. Watch mode refreshes in place until you press Ctrl+C.
 It does not change your shell directory.
 

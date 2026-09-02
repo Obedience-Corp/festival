@@ -28,7 +28,7 @@ camp jobs run [flags]
 ### Options
 
 ```
-      --campaign string   Campaign root to serve (defaults to the detected campaign)
+      --campaign string   Camp root to serve (defaults to the detected camp)
   -h, --help              help for run
 ```
 

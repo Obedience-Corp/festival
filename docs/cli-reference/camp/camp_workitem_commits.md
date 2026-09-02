@@ -12,10 +12,10 @@ List commits referencing a workitem
 
 List commits referencing this workitem, newest first.
 
-When the campaign event ledger already holds the workitem's commit evidence,
+When the camp event ledger already holds the workitem's commit evidence,
 the answer comes from a single merged ledger read (fast path). Otherwise it
-falls back to scanning the campaign root and every linked
-project/repo/worktree/festival repo for commits whose campaign tag references
+falls back to scanning the camp root and every linked
+project/repo/worktree/festival repo for commits whose camp tag references
 the workitem's ref (pre-ledger history).
 
 Use --json for structured output; the "source" field reports which path
@@ -47,4 +47,4 @@ camp workitem commits [selector] [flags]
 
 ### SEE ALSO
 
-* [camp workitem](../camp_workitem/)	 - View active campaign work items
+* [camp workitem](../camp_workitem/)	 - View active camp work items

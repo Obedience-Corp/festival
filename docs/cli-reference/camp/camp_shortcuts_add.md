@@ -1,18 +1,18 @@
 ---
 title: "camp shortcuts add"
 linkTitle: "camp shortcuts add"
-description: "Add a shortcut (campaign-level or project sub-shortcut)"
+description: "Add a shortcut (camp-level or project sub-shortcut)"
 ---
 
 ## camp shortcuts add
 
-Add a shortcut (campaign-level or project sub-shortcut)
+Add a shortcut (camp-level or project sub-shortcut)
 
 ### Synopsis
 
 Add a shortcut for quick navigation.
 
-Campaign-level shortcut (2 args):
+Camp-level shortcut (2 args):
   Adds a navigation shortcut to .campaign/settings/jumps.yaml.
   Usage: camp shortcuts add <name> <path>
 
@@ -31,7 +31,7 @@ camp shortcuts add <name> <path> | <project> <name> <path> [flags]
 
 ```
   camp shortcuts add                                  Interactive TUI mode
-  camp shortcuts add api projects/api-service/        Campaign shortcut
+  camp shortcuts add api projects/api-service/        Camp shortcut
   camp shortcuts add api projects/api/ -d "API svc"   With description
   camp shortcuts add cfg "" -c config                 Concept-only shortcut
   camp shortcuts add camp default cmd/camp/            Project sub-shortcut

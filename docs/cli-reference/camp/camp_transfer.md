@@ -1,25 +1,25 @@
 ---
 title: "camp transfer"
 linkTitle: "camp transfer"
-description: "Copy files between campaigns (and machines)"
+description: "Copy files between camps (and machines)"
 ---
 
 ## camp transfer
 
-Copy files between campaigns (and machines)
+Copy files between camps (and machines)
 
 ### Synopsis
 
-Copy files between campaigns, and between this machine and a registered
+Copy files between camps, and between this machine and a registered
 fleet machine.
 
 Transfer always copies; it never moves or deletes the source.
 
 Local forms:
-  campaign:path     another registered campaign on this machine
-  path              relative to the current campaign root
+  campaign:path     another registered camp on this machine
+  path              relative to the current camp root
   local:campaign:path
-                    force the campaign reading when campaign name collides
+                    force the camp reading when camp name collides
                     with a registered machine id
 
 Machine forms (one side only; both-remote is refused):
@@ -28,8 +28,8 @@ Machine forms (one side only; both-remote is refused):
 
 See docs/transfer.md for the full grammar, transport, and skew guidance.
 
-At least one side must reference a different campaign or machine. For copies
-within the same campaign on this machine, use 'camp copy' instead.
+At least one side must reference a different camp or machine. For copies
+within the same camp on this machine, use 'camp copy' instead.
 
 ```
 camp transfer <src> <dest> [flags]
@@ -61,4 +61,4 @@ camp transfer <src> <dest> [flags]
 
 ### SEE ALSO
 
-* [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces
+* [camp](../camp/)	 - Manage your camps and the projects and festivals inside them

@@ -13,7 +13,7 @@ Rename a managed project
 Rename a managed project and migrate its active Camp references.
 
 Supported projects are declared Git submodules, linked workspace symlinks,
-and ordinary campaign-owned directories tracked by the campaign repository.
+and ordinary camp-owned directories tracked by the camp repository.
 Dirty project checkouts and linked worktrees are preserved. Destination
 collisions and unmanaged directories are rejected before mutation.
 
@@ -34,11 +34,11 @@ camp project rename <current> <new> [flags]
 ### Options
 
 ```
-  -c, --campaign string     Target campaign by name or ID; omit value to pick interactively
+  -c, --campaign string     Target camp by name or ID; omit value to pick interactively
       --dry-run             Print the complete plan without writing
   -h, --help                help for rename
       --json                Output a versioned JSON plan or result
-      --no-commit           Apply the rename without a campaign commit
+      --no-commit           Apply the rename without a camp commit
       --no-verify           Skip remote connectivity verification
       --remote-url string   Explicitly update the project's origin URL
 ```
@@ -51,4 +51,4 @@ camp project rename <current> <new> [flags]
 
 ### SEE ALSO
 
-* [camp project](../camp_project/)	 - Manage campaign projects
+* [camp project](../camp_project/)	 - Manage camp projects

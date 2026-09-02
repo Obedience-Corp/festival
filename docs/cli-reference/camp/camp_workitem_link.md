@@ -10,7 +10,7 @@ Create a workitem link
 
 ### Synopsis
 
-Attach a workitem to a project, festival, worktree, or campaign path.
+Attach a workitem to a project, festival, worktree, or camp path.
 
 Links are stored in .campaign/workitems/links.yaml and connect a .workitem
 identity to an explicit scope for planning, execution, and lookup. Pass a
@@ -59,4 +59,4 @@ camp workitem link <selector> [path] [flags]
 
 ### SEE ALSO
 
-* [camp workitem](../camp_workitem/)	 - View active campaign work items
+* [camp workitem](../camp_workitem/)	 - View active camp work items

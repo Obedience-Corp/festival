@@ -11,7 +11,7 @@ Delete merged branches across all projects
 ### Synopsis
 
 Delete local branches that have been merged into the default branch,
-across every project submodule in the campaign.
+across every project submodule in the camp.
 
 Produces a per-project summary showing what was (or would be) pruned.
 

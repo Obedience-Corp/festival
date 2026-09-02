@@ -1,19 +1,19 @@
 ---
 title: "camp push"
 linkTitle: "camp push"
-description: "Push campaign changes to remote"
+description: "Push camp changes to remote"
 ---
 
 ## camp push
 
-Push campaign changes to remote
+Push camp changes to remote
 
 ### Synopsis
 
-Push campaign changes to the remote repository.
+Push camp changes to the remote repository.
 
-Works from anywhere within the campaign - always pushes from
-the campaign root repository.
+Works from anywhere within the camp - always pushes from
+the camp root repository.
 
 Use --sub to push from the submodule detected from your current directory.
 Use --project to push from a specific project.
@@ -47,5 +47,5 @@ camp push [flags] [remote] [branch]
 
 ### SEE ALSO
 
-* [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces
+* [camp](../camp/)	 - Manage your camps and the projects and festivals inside them
 * [camp push all](../camp_push_all/)	 - Push all repos with unpushed commits

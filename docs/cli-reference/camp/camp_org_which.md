@@ -1,12 +1,12 @@
 ---
 title: "camp org which"
 linkTitle: "camp org which"
-description: "Print the current campaign's org"
+description: "Print the current camp's org"
 ---
 
 ## camp org which
 
-Print the current campaign's org
+Print the current camp's org
 
 ```
 camp org which [flags]
@@ -33,4 +33,4 @@ camp org which [flags]
 
 ### SEE ALSO
 
-* [camp org](../camp_org/)	 - Group campaigns into orgs
+* [camp org](../camp_org/)	 - Group camps into orgs

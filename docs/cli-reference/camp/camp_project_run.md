@@ -10,10 +10,10 @@ Run a command inside a project directory, like cr but project-scoped
 
 ### Synopsis
 
-Run any shell command inside a project directory from anywhere in the campaign.
+Run any shell command inside a project directory from anywhere in the camp.
 
 This is the project-scoped counterpart to 'camp run' (cr): cr runs from the
-campaign root, camp project run (cr -p) runs inside a project.
+camp root, camp project run (cr -p) runs inside a project.
 
 The project is resolved in this order:
   1. --project / -p flag (explicit project name, tab-completes registered projects)
@@ -59,4 +59,4 @@ camp project run [--project <name>] [--] <command> [args...] [flags]
 
 ### SEE ALSO
 
-* [camp project](../camp_project/)	 - Manage campaign projects
+* [camp project](../camp_project/)	 - Manage camp projects

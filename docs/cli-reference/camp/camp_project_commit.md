@@ -20,7 +20,7 @@ to an active festival or workitem (via path links, ancestor .workitem
 markers, or festival-scoped links), the commit message carries the same
 FE-<ref> / WI-<ref> tracking components that `fest commit` would
 include. Use --workitem to override cwd-based resolution. When no
-festival/workitem context resolves, the tag is the bare campaign tag.
+festival/workitem context resolves, the tag is the bare camp tag.
 
 Examples:
   # From within a project directory
@@ -47,7 +47,7 @@ camp project commit [flags]
       --no-drain              Do not wait for camp's queued commits first
       --no-sync               Do not sync submodule ref even if settings enable it
   -p, --project string        Project name (auto-detected from cwd if not specified)
-      --sync                  Sync submodule ref at campaign root after commit (also enabled by commit.sync_project_refs setting)
+      --sync                  Sync submodule ref at camp root after commit (also enabled by commit.sync_project_refs setting)
       --workitem string       explicit workitem selector for the commit tag (overrides cwd-based resolution)
 ```
 
@@ -59,4 +59,4 @@ camp project commit [flags]
 
 ### SEE ALSO
 
-* [camp project](../camp_project/)	 - Manage campaign projects
+* [camp project](../camp_project/)	 - Manage camp projects

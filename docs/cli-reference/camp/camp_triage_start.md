@@ -1,20 +1,20 @@
 ---
 title: "camp triage start"
 linkTitle: "camp triage start"
-description: "Snapshot the campaign and open a triage run"
+description: "Snapshot the camp and open a triage run"
 ---
 
 ## camp triage start
 
-Snapshot the campaign and open a triage run
+Snapshot the camp and open a triage run
 
 ### Synopsis
 
-Snapshot the campaign's workitems and open a triage run.
+Snapshot the camp's workitems and open a triage run.
 
-The snapshot is frozen: the run records what the campaign contained when it
+The snapshot is frozen: the run records what the camp contained when it
 started, along with the resolved profile it will be judged under, so a verdict
-stays explainable even after the campaign and the profile move on.
+stays explainable even after the camp and the profile move on.
 
 Scope expressions use the same filters as camp workitem, one per --scope flag:
 
@@ -40,7 +40,7 @@ camp triage start [flags]
       --identity string     Override the profile's identity policy: repair (adopt and report) or strict (refuse and list)
       --json                Output result as a single JSON object
       --no-workflow-doc     Skip the companion WORKFLOW.md scaffold
-      --profile string      Use a named built-in profile instead of the campaign's: default, sweep, or deep
+      --profile string      Use a named built-in profile instead of the camp's: default, sweep, or deep
       --scope stringArray   Limit the run with a key:value filter (repeat for more)
 ```
 
@@ -52,4 +52,4 @@ camp triage start [flags]
 
 ### SEE ALSO
 
-* [camp triage](../camp_triage/)	 - Review the campaign's workitems in a recorded session
+* [camp triage](../camp_triage/)	 - Review the camp's workitems in a recorded session
