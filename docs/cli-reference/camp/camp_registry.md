@@ -1,23 +1,23 @@
 ---
 title: "camp registry"
 linkTitle: "camp registry"
-description: "Manage the campaign registry"
+description: "Manage the camp registry"
 ---
 
 ## camp registry
 
-Manage the campaign registry
+Manage the camp registry
 
 ### Synopsis
 
-Manage the campaign registry at ~/.obey/campaign/registry.json.
+Manage the camp registry at ~/.obey/campaign/registry.json.
 
-The registry tracks all known campaigns for quick navigation and lookup.
+The registry tracks all known camps for quick navigation and lookup.
 Use these commands to maintain registry health and resolve issues.
 
 Commands:
-  prune   Remove stale entries (campaigns that no longer exist)
-  sync    Update registry entry for current campaign
+  prune   Remove stale entries (camps that no longer exist)
+  sync    Update registry entry for current camp
   check   Validate registry integrity
 
 ```
@@ -27,9 +27,9 @@ camp registry [flags]
 ### Examples
 
 ```
-  camp registry prune             Remove entries for non-existent campaigns
+  camp registry prune             Remove entries for non-existent camps
   camp registry prune --dry-run   Show what would be removed
-  camp registry sync              Update path for current campaign
+  camp registry sync              Update path for current camp
   camp registry check             Check for issues
 ```
 
@@ -47,7 +47,7 @@ camp registry [flags]
 
 ### SEE ALSO
 
-* [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces
+* [camp](../camp/)	 - Manage your camps and the projects and festivals inside them
 * [camp registry check](../camp_registry_check/)	 - Check registry integrity
 * [camp registry prune](../camp_registry_prune/)	 - Remove stale registry entries
-* [camp registry sync](../camp_registry_sync/)	 - Sync current campaign with registry
+* [camp registry sync](../camp_registry_sync/)	 - Sync current camp with registry

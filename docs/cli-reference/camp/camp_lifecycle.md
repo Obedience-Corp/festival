@@ -1,23 +1,23 @@
 ---
 title: "camp lifecycle"
 linkTitle: "camp lifecycle"
-description: "Manage campaign lifecycle status"
+description: "Manage camp lifecycle status"
 ---
 
 ## camp lifecycle
 
-Manage campaign lifecycle status
+Manage camp lifecycle status
 
 ### Synopsis
 
-Manage a campaign's lifecycle status.
+Manage a camp's lifecycle status.
 
 The status is one of a fixed set:
   active      in current use (default); shown in 'camp list'
   inactive    paused or shelved; hidden from default 'camp list'
   reference   preserved read-only context; hidden from default views
 
-Setting inactive or reference does not unregister the campaign; use
+Setting inactive or reference does not unregister the camp; use
 'camp unregister' to remove it from the registry entirely.
 
 This group is 'camp lifecycle', not 'camp status' ('camp status' is the git
@@ -48,6 +48,6 @@ camp lifecycle [flags]
 
 ### SEE ALSO
 
-* [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces
+* [camp](../camp/)	 - Manage your camps and the projects and festivals inside them
 * [camp lifecycle list](../camp_lifecycle_list/)	 - List status counts across the registry
-* [camp lifecycle set](../camp_lifecycle_set/)	 - Set a campaign's lifecycle status
+* [camp lifecycle set](../camp_lifecycle_set/)	 - Set a camp's lifecycle status

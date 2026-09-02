@@ -41,4 +41,4 @@ camp workitem validate [path] [flags]
 
 ### SEE ALSO
 
-* [camp workitem](../camp_workitem/)	 - View active campaign work items
+* [camp workitem](../camp_workitem/)	 - View active camp work items

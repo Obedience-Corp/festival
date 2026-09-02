@@ -13,13 +13,13 @@ Display festival information
 Display festival information for a single festival.
 
 When run inside a festival directory, shows the current festival's details.
-When run outside a festival in an interactive campaign workspace, opens a
+When run outside a festival in an interactive camp, opens a
 cyclable view; use ←/→ to move between festivals and q/Ctrl+C to exit.
 
 ```bash
   fest show                        Show current festival, or cycle festivals in a workspace
   fest show <name>                 Show details of a specific festival by name
-  fest show --festival <selector>  Show a festival by explicit selector (campaign workspace)
+  fest show --festival <selector>  Show a festival by explicit selector (from a camp)
 ```
 
 To list festivals by status, use 'fest list' (e.g. 'fest list active',
@@ -41,7 +41,7 @@ fest show [festival-name] [flags]
 
 ```
       --collapsed         show collapsed tree with counters only
-      --festival string   festival selector (name or ID) from within a campaign workspace
+      --festival string   festival selector (name or ID) from within a camp
       --goals             show goals for phases and sequences
   -h, --help              help for show
       --inprogress        expand only in-progress phases and sequences

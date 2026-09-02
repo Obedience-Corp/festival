@@ -12,7 +12,7 @@ List shortcuts for a specific project
 
 List all sub-shortcuts configured for a specific project.
 
-If no project is specified, lists all campaign shortcuts.
+If no project is specified, lists all camp shortcuts.
 
 ```
 camp shortcuts list [project] [flags]

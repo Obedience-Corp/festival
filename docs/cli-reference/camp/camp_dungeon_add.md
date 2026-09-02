@@ -51,4 +51,4 @@ camp dungeon add [flags]
 
 ### SEE ALSO
 
-* [camp dungeon](../camp_dungeon/)	 - Manage the campaign dungeon
+* [camp dungeon](../camp_dungeon/)	 - Manage the camp dungeon

@@ -10,7 +10,7 @@ Report workflow surface inconsistencies
 
 ### Synopsis
 
-Report inconsistencies between workflow directories and campaign configuration.
+Report inconsistencies between workflow directories and camp configuration.
 
 The command reads campaign.yaml, .campaign/settings/jumps.yaml, workflow/
 directories, and the navigation cache to find missing concepts, stale

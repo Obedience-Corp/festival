@@ -31,6 +31,7 @@ camp leverage snapshot [flags]
 
 ```
   -h, --help             help for snapshot
+      --no-commit        skip the automatic commit of .campaign/leverage data
   -p, --project string   snapshot a specific project only
 ```
 
@@ -42,4 +43,4 @@ camp leverage snapshot [flags]
 
 ### SEE ALSO
 
-* [camp leverage](../camp_leverage/)	 - Compute leverage scores for campaign projects
+* [camp leverage](../camp_leverage/)	 - Compute leverage scores for the camp's projects

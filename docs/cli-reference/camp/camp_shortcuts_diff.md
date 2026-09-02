@@ -10,7 +10,7 @@ Show differences between current and default shortcuts
 
 ### Synopsis
 
-Compare your campaign's shortcuts against the current defaults.
+Compare your camp's shortcuts against the current defaults.
 
 Shows:
   + Missing    defaults not in your config (available to add)

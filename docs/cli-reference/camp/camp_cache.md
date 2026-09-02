@@ -30,7 +30,7 @@ camp cache [flags]
 
 ### SEE ALSO
 
-* [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces
+* [camp](../camp/)	 - Manage your camps and the projects and festivals inside them
 * [camp cache clear](../camp_cache_clear/)	 - Delete the navigation cache
 * [camp cache info](../camp_cache_info/)	 - Show cache status and metadata
 * [camp cache rebuild](../camp_cache_rebuild/)	 - Force rebuild the navigation cache

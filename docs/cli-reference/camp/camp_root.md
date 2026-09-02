@@ -1,16 +1,16 @@
 ---
 title: "camp root"
 linkTitle: "camp root"
-description: "Print the current campaign root"
+description: "Print the current camp root"
 ---
 
 ## camp root
 
-Print the current campaign root
+Print the current camp root
 
 ### Synopsis
 
-Print the current campaign root relative to the current working directory.
+Print the current camp root relative to the current working directory.
 
 ```
 camp root [flags]
@@ -38,4 +38,4 @@ camp root [flags]
 
 ### SEE ALSO
 
-* [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces
+* [camp](../camp/)	 - Manage your camps and the projects and festivals inside them

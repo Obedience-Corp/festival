@@ -1,23 +1,23 @@
 ---
 title: "camp org add"
 linkTitle: "camp org add"
-description: "Assign campaigns to an org (reassigns; single-membership)"
+description: "Assign camps to an org (reassigns; single-membership)"
 ---
 
 ## camp org add
 
-Assign campaigns to an org (reassigns; single-membership)
+Assign camps to an org (reassigns; single-membership)
 
 ### Synopsis
 
-Assign one or more campaigns to <org>.
+Assign one or more camps to <org>.
 
-Membership is single, so this is also the reassign verb: a campaign added to a
+Membership is single, so this is also the reassign verb: a camp added to a
 new org leaves its previous org in the same step. The org is created implicitly.
-Adding a campaign already in <org> is a no-op for that campaign.
+Adding a camp already in <org> is a no-op for that camp.
 
 ```
-camp org add <org> <campaign>... [flags]
+camp org add <org> <camp>... [flags]
 ```
 
 ### Examples
@@ -42,4 +42,4 @@ camp org add <org> <campaign>... [flags]
 
 ### SEE ALSO
 
-* [camp org](../camp_org/)	 - Group campaigns into orgs
+* [camp org](../camp_org/)	 - Group camps into orgs

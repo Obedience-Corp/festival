@@ -10,9 +10,9 @@ Push all repos with unpushed commits
 
 ### Synopsis
 
-Push all repositories in the campaign that have unpushed commits.
+Push all repositories in the camp that have unpushed commits.
 
-Scans all submodules and the campaign root, checks which have commits
+Scans all submodules and the camp root, checks which have commits
 ahead of their upstream, and pushes them. Any extra flags are passed
 through to git push for each repo.
 
@@ -43,4 +43,4 @@ camp push all [git push flags] [flags]
 
 ### SEE ALSO
 
-* [camp push](../camp_push/)	 - Push campaign changes to remote
+* [camp push](../camp_push/)	 - Push camp changes to remote

@@ -49,4 +49,4 @@ camp idea note [text] [flags]
 
 ### SEE ALSO
 
-* [camp idea](../camp_idea/)	 - Manage campaign ideas
+* [camp idea](../camp_idea/)	 - Manage camp ideas

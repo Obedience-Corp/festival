@@ -1,12 +1,12 @@
 ---
 title: "camp org show"
 linkTitle: "camp org show"
-description: "Show an org's member campaigns"
+description: "Show an org's member camps"
 ---
 
 ## camp org show
 
-Show an org's member campaigns
+Show an org's member camps
 
 ```
 camp org show <org> [flags]
@@ -33,4 +33,4 @@ camp org show <org> [flags]
 
 ### SEE ALSO
 
-* [camp org](../camp_org/)	 - Group campaigns into orgs
+* [camp org](../camp_org/)	 - Group camps into orgs

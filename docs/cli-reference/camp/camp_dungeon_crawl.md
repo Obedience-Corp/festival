@@ -20,7 +20,7 @@ Without flags, auto-detects what to crawl:
 Use --triage or --inner to force a specific mode.
 
 For each item, you'll be prompted to decide its fate.
-Triage mode includes a route-to-docs action for existing campaign-root docs/<subdirectory>.
+Triage mode includes a route-to-docs action for existing camp-root docs/<subdirectory>.
 Statistics are gathered when available (requires scc or fest).
 All decisions are logged to crawl.jsonl for history.
 
@@ -49,4 +49,4 @@ camp dungeon crawl [flags]
 
 ### SEE ALSO
 
-* [camp dungeon](../camp_dungeon/)	 - Manage the campaign dungeon
+* [camp dungeon](../camp_dungeon/)	 - Manage the camp dungeon

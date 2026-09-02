@@ -21,6 +21,7 @@ Configuration parameters:
   --cocomo-type  COCOMO project type (organic, semi-detached, embedded)
   --exclude      Exclude a project from leverage scoring
   --include      Include a previously excluded project
+  --autocommit   Commit .campaign/leverage data automatically (default true)
 
 Examples:
   camp leverage config                         Show current config
@@ -28,6 +29,7 @@ Examples:
   camp leverage config --start 2025-01-01      Set project start date
   camp leverage config --exclude obey-daemon   Exclude a project
   camp leverage config --include obey-daemon   Re-include a project
+  camp leverage config --autocommit=false      Stop auto-committing leverage data
 
 ```
 camp leverage config [flags]
@@ -37,10 +39,12 @@ camp leverage config [flags]
 
 ```
       --author-email string   default author email for personal leverage (empty = team view)
+      --autocommit            commit .campaign/leverage data automatically after leverage commands (default true)
       --cocomo-type string    COCOMO project type (organic, semi-detached, embedded)
       --exclude string        exclude a project from leverage scoring
   -h, --help                  help for config
       --include string        include a previously excluded project
+      --no-commit             skip the automatic commit of .campaign/leverage data
       --people int            number of developers on the team (0 = auto-detect from git)
       --start string          project start date (YYYY-MM-DD)
 ```
@@ -53,4 +57,4 @@ camp leverage config [flags]
 
 ### SEE ALSO
 
-* [camp leverage](../camp_leverage/)	 - Compute leverage scores for campaign projects
+* [camp leverage](../camp_leverage/)	 - Compute leverage scores for the camp's projects

@@ -60,4 +60,4 @@ camp triage approve [stable-id...] [flags]
 
 ### SEE ALSO
 
-* [camp triage](../camp_triage/)	 - Review the campaign's workitems in a recorded session
+* [camp triage](../camp_triage/)	 - Review the camp's workitems in a recorded session

@@ -1,22 +1,22 @@
 ---
 title: "camp org remove"
 linkTitle: "camp org remove"
-description: "Return campaigns to the default org"
+description: "Return camps to the default org"
 ---
 
 ## camp org remove
 
-Return campaigns to the default org
+Return camps to the default org
 
 ### Synopsis
 
-Return one or more campaigns to the "default" org.
+Return one or more camps to the "default" org.
 
-Since a campaign is always in exactly one org, you do not name the org.
-Removing a campaign already in "default" is a no-op.
+Since a camp is always in exactly one org, you do not name the org.
+Removing a camp already in "default" is a no-op.
 
 ```
-camp org remove <campaign>... [flags]
+camp org remove <camp>... [flags]
 ```
 
 ### Examples
@@ -41,4 +41,4 @@ camp org remove <campaign>... [flags]
 
 ### SEE ALSO
 
-* [camp org](../camp_org/)	 - Group campaigns into orgs
+* [camp org](../camp_org/)	 - Group camps into orgs

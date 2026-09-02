@@ -1,12 +1,12 @@
 ---
 title: "camp leverage"
 linkTitle: "camp leverage"
-description: "Compute leverage scores for campaign projects"
+description: "Compute leverage scores for the camp's projects"
 ---
 
 ## camp leverage
 
-Compute leverage scores for campaign projects
+Compute leverage scores for the camp's projects
 
 ### Synopsis
 
@@ -18,6 +18,11 @@ traditional estimation models predict for the same team and time.
 
   FullLeverage   = (EstimatedPeople x EstimatedMonths) / (ActualPeople x ElapsedMonths)
   SimpleLeverage = EstimatedPeople / ActualPeople
+
+Leverage commands commit the data they write under .campaign/leverage so the
+score history stays versioned without extra steps. Nothing outside that
+directory is staged. Pass --no-commit to skip it once, or run
+'camp leverage config --autocommit=false' to turn it off for the camp.
 
 Examples:
   camp leverage                              Show team leverage (auto-detect authors from git)
@@ -38,9 +43,10 @@ camp leverage [directory] [flags]
 ```
       --author string    filter by author email (git substring match: 'alice@co' matches 'alice@co.com')
       --by-author        show per-author leverage breakdown
-      --dir string       score a specific directory (skips campaign project resolution)
+      --dir string       score a specific directory (skips camp project resolution)
   -h, --help             help for leverage
       --json             output as JSON
+      --no-commit        skip the automatic commit of .campaign/leverage data
       --no-legend        hide the leverage formula legend
       --people int       override team size (0 = auto-detect from git)
   -p, --project string   filter by project name
@@ -55,7 +61,7 @@ camp leverage [directory] [flags]
 
 ### SEE ALSO
 
-* [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces
+* [camp](../camp/)	 - Manage your camps and the projects and festivals inside them
 * [camp leverage backfill](../camp_leverage_backfill/)	 - Reconstruct historical leverage data from git history
 * [camp leverage config](../camp_leverage_config/)	 - View or update leverage configuration
 * [camp leverage history](../camp_leverage_history/)	 - Show leverage score history over time

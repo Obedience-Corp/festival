@@ -1,16 +1,16 @@
 ---
 title: "camp project remove"
 linkTitle: "camp project remove"
-description: "Remove a project from campaign"
+description: "Remove a project from camp"
 ---
 
 ## camp project remove
 
-Remove a project from campaign
+Remove a project from camp
 
 ### Synopsis
 
-Remove a project from the campaign.
+Remove a project from the camp.
 
 By default, this only removes the project from git submodule tracking.
 The project directory is removed from the working tree by git rm. Pass --delete
@@ -50,4 +50,4 @@ camp project remove <name> [flags]
 
 ### SEE ALSO
 
-* [camp project](../camp_project/)	 - Manage campaign projects
+* [camp project](../camp_project/)	 - Manage camp projects

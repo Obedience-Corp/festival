@@ -1,12 +1,12 @@
 ---
 title: "camp idea list"
 linkTitle: "camp idea list"
-description: "List ideas in the campaign"
+description: "List ideas in the camp"
 ---
 
 ## camp idea list
 
-List ideas in the campaign
+List ideas in the camp
 
 ### Synopsis
 
@@ -58,4 +58,4 @@ camp idea list [flags]
 
 ### SEE ALSO
 
-* [camp idea](../camp_idea/)	 - Manage campaign ideas
+* [camp idea](../camp_idea/)	 - Manage camp ideas

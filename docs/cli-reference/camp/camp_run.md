@@ -1,16 +1,16 @@
 ---
 title: "camp run"
 linkTitle: "camp run"
-description: "Execute command from campaign root, or just recipe in a project"
+description: "Execute command from camp root, or just recipe in a project"
 ---
 
 ## camp run
 
-Execute command from campaign root, or just recipe in a project
+Execute command from camp root, or just recipe in a project
 
 ### Synopsis
 
-Execute any command from the campaign root directory, or run just recipes
+Execute any command from the camp root directory, or run just recipes
 in a project directory.
 
 If the first argument exactly matches a project name (a directory in projects/
@@ -18,7 +18,7 @@ with a git repo), camp dispatches to 'just' in that project's directory.
 Any remaining arguments are passed as the recipe and arguments to just.
 
 If the first argument does not match a project, it is treated as a shell command
-and executed from the campaign root directory.
+and executed from the camp root directory.
 
 Use @shortcut prefix to run from a shortcut's directory instead of root.
 Only navigation shortcuts (those with paths) can be used.
@@ -38,10 +38,10 @@ camp run [project | @shortcut] [command | recipe] [args...] [flags]
   camp run camp test all     # Run 'just test all' in projects/camp/
   camp run festival build    # Run 'just build' in projects/festival/
 
-  # Raw command from campaign root (first arg is not a project):
+  # Raw command from camp root (first arg is not a project):
   camp run just --list       # Show just recipes from root
-  camp run git status        # Run git status from campaign root
-  camp run ls -la            # List campaign root contents
+  camp run git status        # Run git status from camp root
+  camp run ls -la            # List camp root contents
 
   # Shortcut-based execution:
   camp run @p ls             # List projects/ directory
@@ -62,4 +62,4 @@ camp run [project | @shortcut] [command | recipe] [args...] [flags]
 
 ### SEE ALSO
 
-* [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces
+* [camp](../camp/)	 - Manage your camps and the projects and festivals inside them

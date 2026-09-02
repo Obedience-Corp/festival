@@ -14,7 +14,7 @@ Update a remote URL across all tracked locations with automatic rollback.
 
 For submodule projects, updates three locations in order:
   1. .gitmodules  (canonical, tracked in git)
-  2. local git submodule config (.git/config of the campaign root)
+  2. local git submodule config (.git/config of the camp root)
   3. remote config inside the project repo
 
 If any step fails, previous steps are automatically rolled back to keep
