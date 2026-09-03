@@ -1,12 +1,12 @@
 ---
 title: "camp idea"
 linkTitle: "camp idea"
-description: "Manage campaign ideas"
+description: "Manage camp ideas"
 ---
 
 ## camp idea
 
-Manage campaign ideas
+Manage camp ideas
 
 ### Synopsis
 
@@ -58,7 +58,7 @@ camp idea [flags]
 
 ### SEE ALSO
 
-* [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces
+* [camp](../camp/)	 - Manage your camps and the projects and festivals inside them
 * [camp idea add](../camp_idea_add/)	 - Create a new idea
 * [camp idea archive](../camp_idea_archive/)	 - Archive an idea
 * [camp idea claim](../camp_idea_claim/)	 - Claim an intent for an agent or session
@@ -69,7 +69,7 @@ camp idea [flags]
 * [camp idea explore](../camp_idea_explore/)	 - Interactive idea explorer
 * [camp idea find](../camp_idea_find/)	 - Search for ideas by title or content
 * [camp idea gather](../camp_idea_gather/)	 - Gather related ideas into a unified document
-* [camp idea list](../camp_idea_list/)	 - List ideas in the campaign
+* [camp idea list](../camp_idea_list/)	 - List ideas in the camp
 * [camp idea move](../camp_idea_move/)	 - Move idea to a different status
 * [camp idea note](../camp_idea_note/)	 - Capture a quick note
 * [camp idea notes](../camp_idea_notes/)	 - Manage the note store (folders, moves, meetings)

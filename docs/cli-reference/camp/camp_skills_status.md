@@ -10,7 +10,7 @@ Show the current state of projected skill bundle symlinks
 
 ### Synopsis
 
-Show projection status for campaign skill bundles across tool targets.
+Show projection status for camp skill bundles across tool targets.
 
 Reports whether each tool's skills directory has projected entries from
 .campaign/skills/, is partially projected, missing, broken, or blocked.
@@ -39,4 +39,4 @@ camp skills status [flags]
 
 ### SEE ALSO
 
-* [camp skills](../camp_skills/)	 - Manage campaign skill directory links
+* [camp skills](../camp_skills/)	 - Manage camp skill directory links

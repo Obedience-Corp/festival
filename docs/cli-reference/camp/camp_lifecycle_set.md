@@ -1,22 +1,22 @@
 ---
 title: "camp lifecycle set"
 linkTitle: "camp lifecycle set"
-description: "Set a campaign's lifecycle status"
+description: "Set a camp's lifecycle status"
 ---
 
 ## camp lifecycle set
 
-Set a campaign's lifecycle status
+Set a camp's lifecycle status
 
 ### Synopsis
 
-Transition a campaign to one of: active, inactive, reference.
+Transition a camp to one of: active, inactive, reference.
 
 Any other value is rejected. Setting inactive or reference does not unregister
-the campaign.
+the camp.
 
 ```
-camp lifecycle set <campaign> <status> [flags]
+camp lifecycle set <camp> <status> [flags]
 ```
 
 ### Examples
@@ -40,4 +40,4 @@ camp lifecycle set <campaign> <status> [flags]
 
 ### SEE ALSO
 
-* [camp lifecycle](../camp_lifecycle/)	 - Manage campaign lifecycle status
+* [camp lifecycle](../camp_lifecycle/)	 - Manage camp lifecycle status

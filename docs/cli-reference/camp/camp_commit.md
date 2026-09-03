@@ -1,21 +1,21 @@
 ---
 title: "camp commit"
 linkTitle: "camp commit"
-description: "Commit changes in the campaign root"
+description: "Commit changes in the camp root"
 ---
 
 ## camp commit
 
-Commit changes in the campaign root
+Commit changes in the camp root
 
 ### Synopsis
 
-Commit changes in the campaign root directory.
+Commit changes in the camp root directory.
 
 Automatically stages all changes and creates a commit. Handles
 stale lock files from crashed processes.
 
-At the campaign root, submodule ref changes (projects/*) are excluded
+At the camp root, submodule ref changes (projects/*) are excluded
 from staging by default to prevent accidental ref conflicts across
 machines. Use --include-refs to stage them explicitly.
 
@@ -46,7 +46,7 @@ camp commit [flags]
       --commit-large          Commit over-threshold files instead of keeping them out of git
       --commit-nested         Commit undeclared nested git repositories as gitlinks instead of keeping them out of git
   -h, --help                  help for commit
-      --include-refs          Include submodule ref changes when staging at campaign root
+      --include-refs          Include submodule ref changes when staging at camp root
       --json                  Emit a JSON result on stdout; human output goes to stderr
   -m, --message stringArray   Commit message (repeatable; multiple -m are joined git-style into subject + body; required unless --auto-write)
       --no-drain              Do not wait for camp's queued commits first
@@ -64,4 +64,4 @@ camp commit [flags]
 
 ### SEE ALSO
 
-* [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces
+* [camp](../camp/)	 - Manage your camps and the projects and festivals inside them

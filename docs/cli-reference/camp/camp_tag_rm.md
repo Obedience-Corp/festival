@@ -1,21 +1,21 @@
 ---
 title: "camp tag rm"
 linkTitle: "camp tag rm"
-description: "Remove tags from a campaign"
+description: "Remove tags from a camp"
 ---
 
 ## camp tag rm
 
-Remove tags from a campaign
+Remove tags from a camp
 
 ### Synopsis
 
-Remove one or more tags from a campaign.
+Remove one or more tags from a camp.
 
-Removing a tag the campaign does not carry is a no-op for that tag.
+Removing a tag the camp does not carry is a no-op for that tag.
 
 ```
-camp tag rm <campaign> <tag>... [flags]
+camp tag rm <camp> <tag>... [flags]
 ```
 
 ### Examples
@@ -39,4 +39,4 @@ camp tag rm <campaign> <tag>... [flags]
 
 ### SEE ALSO
 
-* [camp tag](../camp_tag/)	 - Label campaigns with tags
+* [camp tag](../camp_tag/)	 - Label camps with tags

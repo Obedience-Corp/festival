@@ -10,7 +10,7 @@ Claim an intent for an agent or session
 
 ### Synopsis
 
-Assign an intent to an agent so the campaign tracks who is working it.
+Assign an intent to an agent so the camp tracks who is working it.
 
 Stamps assigned_to and assigned_at, and merges any --ref values (a PR URL,
 branch, or festival path) into work_ref. Calling claim again on an
@@ -47,4 +47,4 @@ camp idea claim <id> [flags]
 
 ### SEE ALSO
 
-* [camp idea](../camp_idea/)	 - Manage campaign ideas
+* [camp idea](../camp_idea/)	 - Manage camp ideas

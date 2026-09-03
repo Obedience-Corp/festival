@@ -16,8 +16,8 @@ By default, moves an item already in the dungeon root to a status directory.
 When the item exists in the parent directory and not in the dungeon root, the
 command automatically treats it as triage work and moves it into the dungeon.
 Use --triage to force a parent-directory move.
-With --triage and --to-docs, routes items to an existing campaign-root docs/<subdirectory>.
-With --workitem, resolves a campaign workitem from anywhere and moves its directory
+With --triage and --to-docs, routes items to an existing camp-root docs/<subdirectory>.
+With --workitem, resolves a camp workitem from anywhere and moves its directory
 into the workitem type's local dungeon.
 Moves are always auto-committed so dungeon history remains auditable.
 
@@ -52,9 +52,9 @@ camp dungeon move <item>... [status] [flags]
       --dry-run          Preview the move(s) without touching the filesystem or creating a commit
   -h, --help             help for move
       --json             Emit the dry-run plan as JSON (requires --dry-run)
-      --to-docs string   Route triage item into an existing campaign-root docs/<subdir> (requires --triage)
+      --to-docs string   Route triage item into an existing camp-root docs/<subdir> (requires --triage)
       --triage           Move from parent directory (not from dungeon root)
-      --workitem         Resolve item as a campaign workitem and move its directory to the local dungeon
+      --workitem         Resolve item as a camp workitem and move its directory to the local dungeon
 ```
 
 ### Options inherited from parent commands
@@ -65,4 +65,4 @@ camp dungeon move <item>... [status] [flags]
 
 ### SEE ALSO
 
-* [camp dungeon](../camp_dungeon/)	 - Manage the campaign dungeon
+* [camp dungeon](../camp_dungeon/)	 - Manage the camp dungeon

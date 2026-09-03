@@ -12,8 +12,8 @@ Pull latest changes from remote
 
 Pull latest changes from the remote repository.
 
-Works from anywhere within the campaign - always pulls to
-the campaign root repository.
+Works from anywhere within the camp - always pulls to
+the camp root repository.
 
 Use --sub to pull the submodule detected from your current directory.
 Use --project to pull a specific project.
@@ -48,5 +48,5 @@ camp pull [flags] [remote] [branch]
 
 ### SEE ALSO
 
-* [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces
+* [camp](../camp/)	 - Manage your camps and the projects and festivals inside them
 * [camp pull all](../camp_pull_all/)	 - Pull latest changes for all repos

@@ -10,7 +10,7 @@ Wait until every lane is empty
 
 ### Synopsis
 
-Block until no queued commit is outstanding anywhere in the campaign.
+Block until no queued commit is outstanding anywhere in the camp.
 
 Commands that touch git history already do this for the repo they act on, so
 this is for the cases that are not one command: before archiving a machine,

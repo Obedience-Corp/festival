@@ -15,7 +15,7 @@ List items in the dungeon or parent items eligible for triage.
 By default, lists items at the dungeon root (items already in the dungeon).
 Use --triage to list parent directory items that could be moved into the dungeon.
 The command resolves dungeon context by walking from the current directory up to
-campaign root and using the nearest available dungeon.
+camp root and using the nearest available dungeon.
 
 OUTPUT FORMATS:
   table (default)   Human-readable table with columns
@@ -51,4 +51,4 @@ camp dungeon list [flags]
 
 ### SEE ALSO
 
-* [camp dungeon](../camp_dungeon/)	 - Manage the campaign dungeon
+* [camp dungeon](../camp_dungeon/)	 - Manage the camp dungeon

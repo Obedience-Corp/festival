@@ -37,7 +37,7 @@ Examples:
   camp idea add "Add dark mode"        Ultra-fast capture
   camp idea add -c obey-campaign "Add dark mode"
   camp idea add                        Fast TUI (3-step form)
-  camp idea add --campaign             Pick a target campaign interactively
+  camp idea add --campaign             Pick a target camp interactively
   camp idea add --full                 Full TUI (includes body)
   camp idea add --note                 Note TUI (title + body, no type/concept)
   camp idea add --note "Meeting note" --body "Follow up next week"
@@ -57,7 +57,7 @@ camp idea add [title] [flags]
       --author string      Override the default author attribution
       --body string        Set idea body as a literal string
       --body-file string   Read idea body from file (- for stdin, 10 MiB cap)
-  -c, --campaign string    Target campaign by name or ID; omit value to pick interactively
+  -c, --campaign string    Target camp by name or ID; omit value to pick interactively
       --concept string     Set the concept field (e.g., projects/camp)
   -e, --edit               Open in $EDITOR for deep capture
       --full               Full TUI mode with body textarea
@@ -77,4 +77,4 @@ camp idea add [title] [flags]
 
 ### SEE ALSO
 
-* [camp idea](../camp_idea/)	 - Manage campaign ideas
+* [camp idea](../camp_idea/)	 - Manage camp ideas

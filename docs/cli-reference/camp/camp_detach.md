@@ -1,25 +1,25 @@
 ---
 title: "camp detach"
 linkTitle: "camp detach"
-description: "Remove the current campaign's attachment binding"
+description: "Remove the current camp's attachment binding"
 ---
 
 ## camp detach
 
-Remove the current campaign's attachment binding
+Remove the current camp's attachment binding
 
 ### Synopsis
 
-Remove the current campaign's binding from the .camp attachment marker.
+Remove the current camp's binding from the .camp attachment marker.
 
 Refuses on linked-project markers; use 'camp project unlink' for those.
-The user-managed symlink (if any) is not modified. If run outside any campaign,
+The user-managed symlink (if any) is not modified. If run outside any camp,
 the entire attachment marker is removed.
 
-On an attachment shared by several campaigns this removes only the current
-campaign's binding; the others keep resolving. Detaching the campaign that a
+On an attachment shared by several camps this removes only the current
+camp's binding; the others keep resolving. Detaching the camp that a
 bare cd into the shared target resolved to shifts that fallback to the next
-remaining campaign.
+remaining camp.
 
 Examples:
   camp detach docs/examples/external-repo
@@ -43,4 +43,4 @@ camp detach <path> [flags]
 
 ### SEE ALSO
 
-* [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces
+* [camp](../camp/)	 - Manage your camps and the projects and festivals inside them

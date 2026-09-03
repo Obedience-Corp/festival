@@ -1,18 +1,18 @@
 ---
 title: "camp triage"
 linkTitle: "camp triage"
-description: "Review the campaign's workitems in a recorded session"
+description: "Review the camp's workitems in a recorded session"
 ---
 
 ## camp triage
 
-Review the campaign's workitems in a recorded session
+Review the camp's workitems in a recorded session
 
 ### Synopsis
 
-Review the campaign's workitems in a recorded, resumable session.
+Review the camp's workitems in a recorded, resumable session.
 
-A triage run freezes what the campaign contains, collects evidence about each
+A triage run freezes what the camp contains, collects evidence about each
 item, records your verdicts, and applies them through camp's normal workitem
 machinery. Every step is written to .campaign/triage/runs/<run-id>/, so a run
 survives being interrupted and the decisions stay auditable afterwards.
@@ -21,7 +21,7 @@ Camp never calls a model. Agents read the queue and submit evidence and
 proposals; you approve them; camp applies what you approved.
 
 Session:
-  start     Snapshot the campaign and open a run
+  start     Snapshot the camp and open a run
   status    Show where the active run stands
   abandon   Close the active run without applying it
 
@@ -65,7 +65,7 @@ camp triage [flags]
 
 ### SEE ALSO
 
-* [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces
+* [camp](../camp/)	 - Manage your camps and the projects and festivals inside them
 * [camp triage abandon](../camp_triage_abandon/)	 - Close the active triage run without applying it
 * [camp triage apply](../camp_triage_apply/)	 - Execute the approved verdicts of the active run
 * [camp triage approve](../camp_triage_approve/)	 - Record verdicts on proposed dispositions
@@ -77,6 +77,6 @@ camp triage [flags]
 * [camp triage queue](../camp_triage_queue/)	 - List rows awaiting judgment
 * [camp triage refresh](../camp_triage_refresh/)	 - Re-check the active run against the world
 * [camp triage review](../camp_triage_review/)	 - Render the review documents for the active run
-* [camp triage start](../camp_triage_start/)	 - Snapshot the campaign and open a triage run
+* [camp triage start](../camp_triage_start/)	 - Snapshot the camp and open a triage run
 * [camp triage status](../camp_triage_status/)	 - Show where the active triage run stands
-* [camp triage verify](../camp_triage_verify/)	 - Prove the campaign matches the approved decisions
+* [camp triage verify](../camp_triage_verify/)	 - Prove the camp matches the approved decisions

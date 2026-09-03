@@ -10,7 +10,7 @@ Declare an artifact root
 
 ### Synopsis
 
-Declare a campaign-relative directory as an artifact root.
+Declare a camp-relative directory as an artifact root.
 
 Policy 'always' (default) syncs the root on every 'camp sync --from
 <machine>'; 'on-demand' syncs it only when artifacts are requested

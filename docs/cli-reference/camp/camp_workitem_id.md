@@ -16,9 +16,9 @@ With no argument, the workitem is detected from the current context using the
 same tiered resolution as `camp workitem resolve` (explicit selector, cwd
 ancestor, linked scope, festival, current-workitem pointer). With an argument,
 the workitem is resolved through the shared selector family: workitem ref,
-stable id, key, campaign-relative path, directory slug, festival id, or intent
+stable id, key, camp-relative path, directory slug, festival id, or intent
 frontmatter id. A filesystem path (absolute or relative to the current directory)
-is accepted and translated to the campaign-relative form the selector expects.
+is accepted and translated to the camp-relative form the selector expects.
 
 Stdout is the bare durable id for shell scripting: stable .workitem id when
 present, otherwise a source-declared id (festival fest.yaml id or intent
@@ -54,4 +54,4 @@ camp workitem id [selector-or-path] [flags]
 
 ### SEE ALSO
 
-* [camp workitem](../camp_workitem/)	 - View active campaign work items
+* [camp workitem](../camp_workitem/)	 - View active camp work items

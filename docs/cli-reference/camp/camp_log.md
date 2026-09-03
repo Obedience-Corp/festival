@@ -1,19 +1,19 @@
 ---
 title: "camp log"
 linkTitle: "camp log"
-description: "Show git log of the campaign"
+description: "Show git log of the camp"
 ---
 
 ## camp log
 
-Show git log of the campaign
+Show git log of the camp
 
 ### Synopsis
 
-Show git log of the campaign root repository.
+Show git log of the camp root repository.
 
-Works from anywhere within the campaign - always shows the log
-of the campaign root repository.
+Works from anywhere within the camp - always shows the log
+of the camp root repository.
 
 Use --sub to show log of the submodule detected from your current directory.
 Use --project/-p to show log of a specific project.
@@ -44,4 +44,4 @@ camp log [flags]
 
 ### SEE ALSO
 
-* [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces
+* [camp](../camp/)	 - Manage your camps and the projects and festivals inside them

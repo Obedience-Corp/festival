@@ -11,7 +11,7 @@ Run fresh across all project submodules
 ### Synopsis
 
 Run the fresh cycle (fetch and safely sync default, prune, optional branch)
-across every project submodule in the campaign.
+across every project submodule in the camp.
 
 Examples:
   camp fresh all                     # Sync all projects

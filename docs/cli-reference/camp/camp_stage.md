@@ -1,23 +1,23 @@
 ---
 title: "camp stage"
 linkTitle: "camp stage"
-description: "Stage changes in the campaign root"
+description: "Stage changes in the camp root"
 ---
 
 ## camp stage
 
-Stage changes in the campaign root
+Stage changes in the camp root
 
 ### Synopsis
 
-Stage changes in the campaign root directory without committing.
+Stage changes in the camp root directory without committing.
 
 Runs the same auto-staging logic as 'camp commit' (including stale lock
 file cleanup) but stops before creating a commit, so you can use a
 different commit strategy (interactive 'git commit --patch', a GUI
 client, signing flow, etc.).
 
-At the campaign root, submodule ref changes (projects/*) are excluded
+At the camp root, submodule ref changes (projects/*) are excluded
 from staging by default to prevent accidental ref conflicts across
 machines. Use --include-refs to stage them explicitly.
 
@@ -38,7 +38,7 @@ camp stage [flags]
 
 ```
   -h, --help             help for stage
-      --include-refs     Include submodule ref changes when staging at campaign root
+      --include-refs     Include submodule ref changes when staging at camp root
       --no-drain         Do not wait for camp's queued commits first
   -p, --project string   Operate on a specific project/submodule path
       --sub              Operate on the submodule detected from current directory
@@ -52,4 +52,4 @@ camp stage [flags]
 
 ### SEE ALSO
 
-* [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces
+* [camp](../camp/)	 - Manage your camps and the projects and festivals inside them

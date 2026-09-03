@@ -43,7 +43,7 @@ The following shell aliases and functions are also installed:
   cie    camp intent explore (interactive intent browser)
 
 The cgo function enables quick navigation:
-  cgo                 Interactive picker or jump to campaign root
+  cgo                 Interactive picker or jump to camp root
   cgo p               Jump to projects/
   cgo p api           Fuzzy find "api" in projects/
   cgo -c p ls         Run "ls" in projects/ directory
@@ -82,4 +82,4 @@ camp shell-init <shell> [flags]
 
 ### SEE ALSO
 
-* [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces
+* [camp](../camp/)	 - Manage your camps and the projects and festivals inside them

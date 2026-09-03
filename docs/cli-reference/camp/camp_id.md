@@ -1,16 +1,16 @@
 ---
 title: "camp id"
 linkTitle: "camp id"
-description: "Print the current campaign ID"
+description: "Print the current camp ID"
 ---
 
 ## camp id
 
-Print the current campaign ID
+Print the current camp ID
 
 ### Synopsis
 
-Print the current campaign ID from .campaign/campaign.yaml.
+Print the current camp ID from .campaign/campaign.yaml.
 
 ```
 camp id [flags]
@@ -36,4 +36,4 @@ camp id [flags]
 
 ### SEE ALSO
 
-* [camp](../camp/)	 - Campaign management CLI for multi-project AI workspaces
+* [camp](../camp/)	 - Manage your camps and the projects and festivals inside them

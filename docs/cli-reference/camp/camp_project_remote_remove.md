@@ -16,7 +16,7 @@ Removing the "origin" remote is blocked by default because it is the
 canonical remote for submodule tracking. Use --force to override.
 
 When --force is used to remove origin from a submodule project, the
-.gitmodules entry is also cleaned up to keep the campaign consistent.
+.gitmodules entry is also cleaned up to keep the camp consistent.
 
 Note: if you want to change the canonical URL instead of removing it,
 use "camp project remote set-url".

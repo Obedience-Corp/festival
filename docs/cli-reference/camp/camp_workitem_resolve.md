@@ -10,7 +10,7 @@ Print the workitem for the current context
 
 ### Synopsis
 
-Resolve the active workitem from the current campaign context.
+Resolve the active workitem from the current camp context.
 
 Resolution checks explicit selectors, cwd, festival context, linked scopes,
 and the current-workitem file without mutating any files. Use --explain to show
@@ -39,4 +39,4 @@ camp workitem resolve [flags]
 
 ### SEE ALSO
 
-* [camp workitem](../camp_workitem/)	 - View active campaign work items
+* [camp workitem](../camp_workitem/)	 - View active camp work items
