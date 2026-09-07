@@ -222,6 +222,65 @@ func TestShipPinnedArtifactsShipsViaPullRequestOnMain(t *testing.T) {
 	}
 }
 
+// TestShipPinnedArtifactsShipsViaPullRequestFromDetachedCheckout is the
+// end-to-end shape of the change: a checkout that holds no branch at all
+// still ships the pin through a PR against main and lands back on the merged
+// commit, which is the commit runDraftFromLatest tags moments later.
+func TestShipPinnedArtifactsShipsViaPullRequestFromDetachedCheckout(t *testing.T) {
+	repo := initTestRepo(t)
+	bare := addBareOrigin(t, repo)
+	ctx := testRepoContext(t, repo)
+	gh := &fakeGH{t: t, bare: bare, authed: true, canMerge: true}
+	ctx.gh = gh
+
+	runGit(t, repo, "checkout", "--detach", "origin/main")
+	stagePinnedDocChange(t, repo, "detached pin\n")
+
+	if err := ctx.shipPinnedArtifacts("stable", "v0.2.12", tagMap("v0.4.8", "v0.2.17"), tagMap("v0.4.9", "v0.2.17")); err != nil {
+		t.Fatalf("shipPinnedArtifacts returned error: %v", err)
+	}
+
+	if gh.created != 1 || gh.merged != 1 {
+		t.Fatalf("create=%d merge=%d, want 1 and 1", gh.created, gh.merged)
+	}
+	if branch := gitRevParse(t, repo, "--abbrev-ref", "HEAD"); branch != "HEAD" {
+		t.Fatalf("current branch = %q; a detached run must not adopt a branch", branch)
+	}
+	if local, remote := gitRevParse(t, repo, "HEAD"), gitRevParse(t, bare, "main"); local != remote {
+		t.Fatalf("HEAD = %s, merged origin main = %s; the release tag would land on the wrong commit", local, remote)
+	}
+	if _, err := gitOutput(repo, "rev-parse", "--verify", "refs/heads/release-pin/v0.2.12"); err == nil {
+		t.Fatal("local ship branch release-pin/v0.2.12 was not deleted")
+	}
+}
+
+// A worktree branch that is not named main ships the same way and is
+// fast-forwarded onto the merged commit rather than left behind it.
+func TestShipPinnedArtifactsShipsViaPullRequestFromWorktreeBranch(t *testing.T) {
+	repo := initTestRepo(t)
+	bare := addBareOrigin(t, repo)
+	ctx := testRepoContext(t, repo)
+	gh := &fakeGH{t: t, bare: bare, authed: true, canMerge: true}
+	ctx.gh = gh
+
+	runGit(t, repo, "switch", "-c", "release-cut")
+	stagePinnedDocChange(t, repo, "worktree pin\n")
+
+	if err := ctx.shipPinnedArtifacts("stable", "v0.2.12", tagMap("v0.4.8", "v0.2.17"), tagMap("v0.4.9", "v0.2.17")); err != nil {
+		t.Fatalf("shipPinnedArtifacts returned error: %v", err)
+	}
+
+	if gh.created != 1 || gh.merged != 1 {
+		t.Fatalf("create=%d merge=%d, want 1 and 1", gh.created, gh.merged)
+	}
+	if branch := gitRevParse(t, repo, "--abbrev-ref", "HEAD"); branch != "release-cut" {
+		t.Fatalf("current branch = %q, want release-cut", branch)
+	}
+	if local, remote := gitRevParse(t, repo, "HEAD"), gitRevParse(t, bare, "main"); local != remote {
+		t.Fatalf("HEAD = %s, merged origin main = %s; the release tag would land on the wrong commit", local, remote)
+	}
+}
+
 func TestShipViaPullRequestSkipsCreateWhenPROpen(t *testing.T) {
 	repo := initTestRepo(t)
 	bare := addBareOrigin(t, repo)
