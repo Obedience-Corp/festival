@@ -49,19 +49,55 @@ func TestShipBranchName(t *testing.T) {
 
 func TestShipsViaPullRequest(t *testing.T) {
 	tests := []struct {
-		branch string
-		want   bool
+		name  string
+		mode  string
+		state checkoutState
+		want  bool
 	}{
-		{branch: "main", want: true},
-		{branch: "develop", want: false},
-		{branch: "release/v0.3.0", want: false},
-		{branch: "release-pin/v0.2.12", want: false},
+		{
+			name:  "stable on the main branch",
+			mode:  "stable",
+			state: checkoutState{Branch: "main", Head: "abc", OriginBase: "abc"},
+			want:  true,
+		},
+		{
+			name:  "stable detached at origin/main",
+			mode:  "stable",
+			state: checkoutState{Head: "abc", OriginBase: "abc"},
+			want:  true,
+		},
+		{
+			name:  "stable on a worktree branch at origin/main",
+			mode:  "stable",
+			state: checkoutState{Branch: "release-cut", Head: "abc", OriginBase: "abc"},
+			want:  true,
+		},
+		{
+			name:  "dev on develop",
+			mode:  "dev",
+			state: checkoutState{Branch: "develop", Head: "def", OriginBase: "abc"},
+			want:  false,
+		},
+		{
+			// develop can sit on the same commit as origin/main without the
+			// dev release becoming a main release: it still pushes to develop.
+			name:  "dev on develop that happens to be at origin/main",
+			mode:  "dev",
+			state: checkoutState{Branch: "develop", Head: "abc", OriginBase: "abc"},
+			want:  false,
+		},
+		{
+			name:  "rc on a release branch",
+			mode:  "rc",
+			state: checkoutState{Branch: "release/v0.3.0", Head: "def", OriginBase: "abc"},
+			want:  false,
+		},
 	}
 
 	for _, tt := range tests {
-		t.Run(tt.branch, func(t *testing.T) {
-			if got := shipsViaPullRequest(tt.branch); got != tt.want {
-				t.Fatalf("shipsViaPullRequest(%q) = %v, want %v", tt.branch, got, tt.want)
+		t.Run(tt.name, func(t *testing.T) {
+			if got := shipsViaPullRequest(tt.mode, tt.state); got != tt.want {
+				t.Fatalf("shipsViaPullRequest(%q, %v) = %v, want %v", tt.mode, tt.state, got, tt.want)
 			}
 		})
 	}
@@ -101,7 +137,7 @@ func TestShipPinnedArtifactsNoDiffIsNoop(t *testing.T) {
 	ctx := testRepoContext(t, repo)
 
 	before := gitRevParse(t, repo, "HEAD")
-	if err := ctx.shipPinnedArtifacts("v0.2.0", tagMap("v0.4.8", "v0.2.17"), tagMap("v0.4.8", "v0.2.17")); err != nil {
+	if err := ctx.shipPinnedArtifacts("stable", "v0.2.0", tagMap("v0.4.8", "v0.2.17"), tagMap("v0.4.8", "v0.2.17")); err != nil {
 		t.Fatalf("shipPinnedArtifacts returned error: %v", err)
 	}
 	if after := gitRevParse(t, repo, "HEAD"); after != before {
@@ -165,7 +201,7 @@ func TestShipPinnedArtifactsShipsViaPullRequestOnMain(t *testing.T) {
 
 	stagePinnedDocChange(t, repo, "stable pin\n")
 
-	if err := ctx.shipPinnedArtifacts("v0.2.12", tagMap("v0.4.8", "v0.2.17"), tagMap("v0.4.9", "v0.2.17")); err != nil {
+	if err := ctx.shipPinnedArtifacts("stable", "v0.2.12", tagMap("v0.4.8", "v0.2.17"), tagMap("v0.4.9", "v0.2.17")); err != nil {
 		t.Fatalf("shipPinnedArtifacts returned error: %v", err)
 	}
 
@@ -195,7 +231,7 @@ func TestShipViaPullRequestSkipsCreateWhenPROpen(t *testing.T) {
 
 	stagePinnedDocChange(t, repo, "resumed pin\n")
 
-	if err := ctx.shipPinnedArtifacts("v0.2.12", tagMap("v0.4.8", "v0.2.17"), tagMap("v0.4.9", "v0.2.17")); err != nil {
+	if err := ctx.shipPinnedArtifacts("stable", "v0.2.12", tagMap("v0.4.8", "v0.2.17"), tagMap("v0.4.9", "v0.2.17")); err != nil {
 		t.Fatalf("shipPinnedArtifacts returned error: %v", err)
 	}
 	if gh.created != 0 {
@@ -215,7 +251,7 @@ func TestShipViaPullRequestPropagatesOpenPRQueryError(t *testing.T) {
 
 	stagePinnedDocChange(t, repo, "pin\n")
 
-	err := ctx.shipPinnedArtifacts("v0.2.12", tagMap("v0.4.8", "v0.2.17"), tagMap("v0.4.9", "v0.2.17"))
+	err := ctx.shipPinnedArtifacts("stable", "v0.2.12", tagMap("v0.4.8", "v0.2.17"), tagMap("v0.4.9", "v0.2.17"))
 	if err == nil {
 		t.Fatal("expected a transient open-PR query error to propagate, got nil")
 	}
@@ -236,7 +272,7 @@ func TestShipViaPullRequestFailsFastWhenCannotMerge(t *testing.T) {
 
 	stagePinnedDocChange(t, repo, "pin\n")
 
-	err := ctx.shipPinnedArtifacts("v0.2.12", tagMap("v0.4.8", "v0.2.17"), tagMap("v0.4.9", "v0.2.17"))
+	err := ctx.shipPinnedArtifacts("stable", "v0.2.12", tagMap("v0.4.8", "v0.2.17"), tagMap("v0.4.9", "v0.2.17"))
 	if err == nil {
 		t.Fatal("expected an error when the account cannot merge")
 	}
@@ -256,7 +292,7 @@ func TestShipViaPullRequestFailsWhenUnauthenticated(t *testing.T) {
 
 	stagePinnedDocChange(t, repo, "pin\n")
 
-	if err := ctx.shipPinnedArtifacts("v0.2.12", tagMap("v0.4.8", "v0.2.17"), tagMap("v0.4.9", "v0.2.17")); err == nil {
+	if err := ctx.shipPinnedArtifacts("stable", "v0.2.12", tagMap("v0.4.8", "v0.2.17"), tagMap("v0.4.9", "v0.2.17")); err == nil {
 		t.Fatal("expected an error when gh is not authenticated")
 	}
 }
@@ -269,7 +305,7 @@ func TestShipPinnedArtifactsDirectPushOffMain(t *testing.T) {
 	runGit(t, repo, "switch", "-c", "develop")
 	stagePinnedDocChange(t, repo, "dev pin\n")
 
-	if err := ctx.shipPinnedArtifacts("v0.2.0-dev.1", tagMap("v0.4.8", "v0.2.17"), tagMap("v0.4.9-dev.1", "v0.2.17")); err != nil {
+	if err := ctx.shipPinnedArtifacts("dev", "v0.2.0-dev.1", tagMap("v0.4.8", "v0.2.17"), tagMap("v0.4.9-dev.1", "v0.2.17")); err != nil {
 		t.Fatalf("shipPinnedArtifacts returned error: %v", err)
 	}
 
@@ -290,7 +326,7 @@ func TestShipPinnedArtifactsDirectPushOffMain(t *testing.T) {
 	}
 }
 
-func TestPrepareMainForBundleFastForwardsStaleMain(t *testing.T) {
+func TestPrepareForBundleFastForwardsStaleMain(t *testing.T) {
 	repo := initTestRepo(t)
 	addBareOrigin(t, repo)
 	ctx := testRepoContext(t, repo)
@@ -302,24 +338,30 @@ func TestPrepareMainForBundleFastForwardsStaleMain(t *testing.T) {
 	ahead := gitRevParse(t, repo, "HEAD")
 	runGit(t, repo, "reset", "--hard", "HEAD~1")
 
-	if err := ctx.prepareMainForBundle(); err != nil {
-		t.Fatalf("prepareMainForBundle returned error: %v", err)
+	if err := ctx.prepareForBundle(); err != nil {
+		t.Fatalf("prepareForBundle returned error: %v", err)
 	}
 	if head := gitRevParse(t, repo, "HEAD"); head != ahead {
 		t.Fatalf("HEAD = %s, want origin/main %s", head, ahead)
 	}
 }
 
-func TestPrepareMainForBundleLeavesOtherBranchesAlone(t *testing.T) {
+func TestPrepareForBundleLeavesOtherBranchesAlone(t *testing.T) {
 	repo := initTestRepo(t)
 	addBareOrigin(t, repo)
 	ctx := testRepoContext(t, repo)
 
+	// develop carries its own commit, so it is neither named main nor
+	// standing on origin/main: the dev and rc release channels run from
+	// exactly this shape and prepare must not touch it.
 	runGit(t, repo, "switch", "-c", "develop")
+	writeFile(t, filepath.Join(repo, "develop.txt"), "develop\n")
+	runGit(t, repo, "add", "develop.txt")
+	runGit(t, repo, "commit", "-m", "develop work")
 	before := gitRevParse(t, repo, "HEAD")
 
-	if err := ctx.prepareMainForBundle(); err != nil {
-		t.Fatalf("prepareMainForBundle returned error: %v", err)
+	if err := ctx.prepareForBundle(); err != nil {
+		t.Fatalf("prepareForBundle returned error: %v", err)
 	}
 	if branch := gitRevParse(t, repo, "--abbrev-ref", "HEAD"); branch != "develop" {
 		t.Fatalf("current branch = %q, want develop", branch)
@@ -329,7 +371,7 @@ func TestPrepareMainForBundleLeavesOtherBranchesAlone(t *testing.T) {
 	}
 }
 
-func TestPrepareMainForBundleRecoversFromStaleShipBranch(t *testing.T) {
+func TestPrepareForBundleRecoversFromStaleShipBranch(t *testing.T) {
 	repo := initTestRepo(t)
 	addBareOrigin(t, repo)
 	ctx := testRepoContext(t, repo)
@@ -338,8 +380,8 @@ func TestPrepareMainForBundleRecoversFromStaleShipBranch(t *testing.T) {
 	stagePinnedDocChange(t, repo, "abandoned pin\n")
 	runGit(t, repo, "commit", "-m", "Release: pin fest v0.4.9")
 
-	if err := ctx.prepareMainForBundle(); err != nil {
-		t.Fatalf("prepareMainForBundle returned error: %v", err)
+	if err := ctx.prepareForBundle(); err != nil {
+		t.Fatalf("prepareForBundle returned error: %v", err)
 	}
 	if branch := gitRevParse(t, repo, "--abbrev-ref", "HEAD"); branch != "main" {
 		t.Fatalf("current branch = %q, want main", branch)
@@ -349,15 +391,15 @@ func TestPrepareMainForBundleRecoversFromStaleShipBranch(t *testing.T) {
 	}
 }
 
-func TestPrepareMainForBundleRejectsDirtyMain(t *testing.T) {
+func TestPrepareForBundleRejectsDirtyMain(t *testing.T) {
 	repo := initTestRepo(t)
 	addBareOrigin(t, repo)
 	ctx := testRepoContext(t, repo)
 
 	writeFile(t, filepath.Join(repo, "README.md"), "dirty\n")
 
-	if err := ctx.prepareMainForBundle(); err == nil {
-		t.Fatal("expected prepareMainForBundle to fail on a dirty main worktree")
+	if err := ctx.prepareForBundle(); err == nil {
+		t.Fatal("expected prepareForBundle to fail on a dirty main worktree")
 	}
 }
 
@@ -369,6 +411,204 @@ func TestReleasePRBodyMentionsTag(t *testing.T) {
 	if !strings.Contains(body, "Release: pin fest v0.4.9") {
 		t.Fatalf("PR body does not include the release message: %q", body)
 	}
+}
+
+// TestPrepareForBundleAcceptsDetachedAtOriginMain is the case that made this
+// change necessary: the festival repo is worked through git worktrees, git
+// refuses to check out main in two worktrees at once, and a release had to
+// be cut from whichever stale worktree happened to be holding the branch.
+func TestPrepareForBundleAcceptsDetachedAtOriginMain(t *testing.T) {
+	repo := initTestRepo(t)
+	addBareOrigin(t, repo)
+	ctx := testRepoContext(t, repo)
+
+	runGit(t, repo, "checkout", "--detach", "origin/main")
+	before := gitRevParse(t, repo, "HEAD")
+
+	if err := ctx.prepareForBundle(); err != nil {
+		t.Fatalf("prepareForBundle returned error: %v", err)
+	}
+	if head := gitRevParse(t, repo, "HEAD"); head != before {
+		t.Fatalf("HEAD moved from %s to %s; a checkout already at origin/main must be left alone", before, head)
+	}
+	if branch := gitRevParse(t, repo, "--abbrev-ref", "HEAD"); branch != "HEAD" {
+		t.Fatalf("current branch = %q, want a still-detached HEAD", branch)
+	}
+}
+
+func TestPrepareForBundleAcceptsAnyBranchNameAtOriginMain(t *testing.T) {
+	repo := initTestRepo(t)
+	addBareOrigin(t, repo)
+	ctx := testRepoContext(t, repo)
+
+	runGit(t, repo, "switch", "-c", "release-cut")
+	before := gitRevParse(t, repo, "HEAD")
+
+	if err := ctx.prepareForBundle(); err != nil {
+		t.Fatalf("prepareForBundle returned error: %v", err)
+	}
+	if head := gitRevParse(t, repo, "HEAD"); head != before {
+		t.Fatalf("HEAD moved from %s to %s", before, head)
+	}
+	if branch := gitRevParse(t, repo, "--abbrev-ref", "HEAD"); branch != "release-cut" {
+		t.Fatalf("current branch = %q, want release-cut", branch)
+	}
+}
+
+func TestPrepareForBundleRefusesDetachedOffOriginMain(t *testing.T) {
+	repo := initTestRepo(t)
+	addBareOrigin(t, repo)
+	ctx := testRepoContext(t, repo)
+
+	advanceOrigin(t, repo)
+	runGit(t, repo, "checkout", "--detach", "HEAD")
+	before := gitRevParse(t, repo, "HEAD")
+
+	err := ctx.prepareForBundle()
+	if err == nil {
+		t.Fatal("expected prepareForBundle to refuse a detached HEAD that is not origin/main")
+	}
+	if !strings.Contains(err.Error(), "origin/main") {
+		t.Fatalf("error = %q, want it to name origin/main", err)
+	}
+	if head := gitRevParse(t, repo, "HEAD"); head != before {
+		t.Fatalf("HEAD moved from %s to %s; a refusal must not move a detached checkout", before, head)
+	}
+}
+
+// TestRequireReleaseBase covers the state check that replaced the old
+// "the branch must be named main" rule. What a release needs is the commit
+// origin/main points at; the branch's name, and whether there is one, is not
+// part of it.
+func TestRequireReleaseBase(t *testing.T) {
+	tests := []struct {
+		name    string
+		setup   func(t *testing.T, repo string)
+		wantErr string
+	}{
+		{
+			name:  "on main at origin/main",
+			setup: func(t *testing.T, repo string) {},
+		},
+		{
+			name: "detached at origin/main",
+			setup: func(t *testing.T, repo string) {
+				runGit(t, repo, "checkout", "--detach", "origin/main")
+			},
+		},
+		{
+			name: "on another branch at origin/main",
+			setup: func(t *testing.T, repo string) {
+				runGit(t, repo, "switch", "-c", "release-cut")
+			},
+		},
+		{
+			name: "on main behind origin/main",
+			setup: func(t *testing.T, repo string) {
+				advanceOrigin(t, repo)
+			},
+			wantErr: "is behind origin/main",
+		},
+		{
+			name: "detached at a commit that is not on origin/main",
+			setup: func(t *testing.T, repo string) {
+				advanceOrigin(t, repo)
+				runGit(t, repo, "checkout", "--detach", "HEAD")
+				writeFile(t, filepath.Join(repo, "local.txt"), "local\n")
+				runGit(t, repo, "add", "local.txt")
+				runGit(t, repo, "commit", "-m", "local work")
+			},
+			wantErr: "diverged from origin/main",
+		},
+		{
+			name: "ahead of origin/main",
+			setup: func(t *testing.T, repo string) {
+				writeFile(t, filepath.Join(repo, "ahead.txt"), "ahead\n")
+				runGit(t, repo, "add", "ahead.txt")
+				runGit(t, repo, "commit", "-m", "unpushed work")
+			},
+			wantErr: "is ahead of origin/main",
+		},
+		{
+			name: "dirty tree",
+			setup: func(t *testing.T, repo string) {
+				writeFile(t, filepath.Join(repo, "README.md"), "dirty\n")
+			},
+			wantErr: "uncommitted changes",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			repo := initTestRepo(t)
+			addBareOrigin(t, repo)
+			ctx := testRepoContext(t, repo)
+			tt.setup(t, repo)
+
+			state, err := resolveCheckoutState(repo)
+			if err != nil {
+				t.Fatalf("resolveCheckoutState: %v", err)
+			}
+			err = ctx.requireReleaseBase(state)
+			if tt.wantErr == "" {
+				if err != nil {
+					t.Fatalf("requireReleaseBase returned error: %v", err)
+				}
+				return
+			}
+			if err == nil {
+				t.Fatalf("expected a refusal mentioning %q, got nil", tt.wantErr)
+			}
+			if !strings.Contains(err.Error(), tt.wantErr) {
+				t.Fatalf("error = %q, want it to contain %q", err, tt.wantErr)
+			}
+		})
+	}
+}
+
+func TestCheckoutStateStringNamesTheResolvedPosition(t *testing.T) {
+	tests := []struct {
+		name  string
+		state checkoutState
+		want  string
+	}{
+		{
+			name:  "on a branch",
+			state: checkoutState{Branch: "main", Head: "abc", OriginBase: "abc"},
+			want:  "main",
+		},
+		{
+			name:  "detached at origin/main",
+			state: checkoutState{Head: "abc", OriginBase: "abc"},
+			want:  "detached at origin/main",
+		},
+		{
+			name:  "detached elsewhere",
+			state: checkoutState{Head: "0123456789abcdef", OriginBase: "abc"},
+			want:  "detached at 0123456789ab",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := tt.state.String(); got != tt.want {
+				t.Fatalf("String() = %q, want %q", got, tt.want)
+			}
+		})
+	}
+}
+
+// advanceOrigin adds a commit, pushes it to the bare origin, and leaves the
+// local checkout on the commit it started at, so the checkout is one commit
+// behind origin/main.
+func advanceOrigin(t *testing.T, repo string) {
+	t.Helper()
+	start := gitRevParse(t, repo, "HEAD")
+	writeFile(t, filepath.Join(repo, "advance.txt"), "advance\n")
+	runGit(t, repo, "add", "advance.txt")
+	runGit(t, repo, "commit", "-m", "origin advance")
+	runGit(t, repo, "push", "origin", "main")
+	runGit(t, repo, "reset", "--hard", start)
 }
 
 func testRepoContext(t *testing.T, repo string) *repoContext {

@@ -29,7 +29,7 @@ refresh-dev:
 require-stable-publish-credentials:
     go -C tools/release-operator run . require-stable-publish-credentials --repo-root ../..
 
-# Show operator-facing release readiness for current branch and latest tags
+# Show operator-facing release readiness for the current checkout and latest tags
 [no-cd]
 status:
     go -C tools/release-operator run . status --repo-root ../..
@@ -67,7 +67,7 @@ rc fest="latest" camp="latest" festival_installer="latest":
     go -C tools/release-operator run . bundle --repo-root ../.. --fest-tag "{{fest}}" --camp-tag "{{camp}}" --festival-installer-tag "{{festival_installer}}" rc
 
 [no-cd]
-[confirm("This will create a stable festival release on main using the selected fest/camp/festival-installer tags (the pin commit ships through an auto-merged PR because main is PR-only). Run 'just release plan stable <fest> <camp> <festival_installer>' first if you want to see the exact tags (positional selectors: latest, keep, or vX.Y.Z). Continue?")]
+[confirm("This will create a stable festival release from this checkout, which must be at origin/main (any branch name, or a detached HEAD), using the selected fest/camp/festival-installer tags (the pin commit ships through an auto-merged PR because main is PR-only). Run 'just release plan stable <fest> <camp> <festival_installer>' first if you want to see the exact tags (positional selectors: latest, keep, or vX.Y.Z). Continue?")]
 stable fest="latest" camp="latest" festival_installer="latest":
     just test release-operator
     go -C tools/release-operator run . bundle --repo-root ../.. --fest-tag "{{fest}}" --camp-tag "{{camp}}" --festival-installer-tag "{{festival_installer}}" stable
@@ -101,7 +101,7 @@ npm-publish-dry-run version="latest" mode="stable":
 # First stable release bootstrap:
 # - create/push fest + camp stable tags at their current HEAD
 # - pin festival submodules to those tags
-# - commit the submodule pointer update (through an auto-merged PR when on main)
+# - commit the submodule pointer update (through an auto-merged PR against main)
 # - create/push festival stable tag
 [private]
 [no-cd]
@@ -114,7 +114,7 @@ draft-bootstrap version fest_version camp_version festival_installer_version:
 # - mode=rc: latest rc tags (vX.Y.Z-rc.N)
 # - mode=dev: latest dev tags (vX.Y.Z-dev.N)
 # - pin submodules, refresh docs, commit pointer update if needed
-#   (through an auto-merged PR when on main, direct push otherwise)
+#   (through an auto-merged PR for stable, direct push for dev/rc)
 # - create/push festival release tag for the selected channel
 [private]
 [no-cd]

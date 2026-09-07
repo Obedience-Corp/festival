@@ -55,8 +55,20 @@ type ParsedPrerelease struct {
 }
 
 type BundleInput struct {
-	Channel                         string
-	CurrentBranch                   string
+	Channel string
+	// CurrentBranch is the checked-out branch, or "" when HEAD is detached.
+	// dev and rc releases key off it because they genuinely ship from named
+	// branches (develop, release/vX.Y.Z).
+	CurrentBranch string
+	// CheckoutState renders where the checkout stands for release output:
+	// the branch name, or "detached at origin/main".
+	CheckoutState string
+	// AtReleaseBase reports whether HEAD is exactly the commit origin/main
+	// points at. Stable releases require it, and require nothing about the
+	// branch's name: the festival repo is worked through git worktrees, and
+	// git refuses to check out one branch in two worktrees at once, so
+	// demanding a branch named main left only one worktree able to release.
+	AtReleaseBase                   bool
 	SelectedTags                    map[string]string // keyed by component dir
 	CurrentPinned                   map[string]string // keyed by component dir
 	LatestFestivalDev               string
@@ -66,8 +78,9 @@ type BundleInput struct {
 	CurrentCommitTaggedLatestDev    bool
 	CurrentCommitTaggedLatestStable bool
 	CurrentCommitTaggedVersionRC    bool
-	// ReadOnly skips the stable-on-main guard so `just release plan` can
-	// preview a patch bump from a worktree. Mutating bundle still requires main.
+	// ReadOnly skips the release-base guard so `just release plan` can
+	// preview a patch bump from any checkout. A mutating bundle still
+	// requires HEAD to be at origin/main.
 	ReadOnly bool
 }
 
@@ -185,8 +198,8 @@ func planRC(in BundleInput) (BundlePlan, error) {
 }
 
 func planStable(in BundleInput) (BundlePlan, error) {
-	if !in.ReadOnly && in.CurrentBranch != "main" {
-		return BundlePlan{}, fmt.Errorf("stable releases must be created from the main branch")
+	if !in.ReadOnly && !in.AtReleaseBase {
+		return BundlePlan{}, fmt.Errorf("stable releases must be created from a checkout at origin/main (this checkout: %s)", checkoutLabel(in))
 	}
 	if in.LatestFestivalStable == "" {
 		return BundlePlan{}, fmt.Errorf("main does not contain a prior festival stable release; use draft-bootstrap or draft --version")
@@ -209,6 +222,19 @@ func planStable(in BundleInput) (BundlePlan, error) {
 		DraftArgs:   []string{version},
 		Description: fmt.Sprintf("Festival version line: v%s (patch bump from %s on main)", version, in.LatestFestivalStable),
 	}, nil
+}
+
+// checkoutLabel names the checkout for the release-base refusal, falling
+// back to the branch when the caller did not render a state.
+func checkoutLabel(in BundleInput) string {
+	switch {
+	case in.CheckoutState != "":
+		return in.CheckoutState
+	case in.CurrentBranch != "":
+		return in.CurrentBranch
+	default:
+		return "unknown"
+	}
 }
 
 func ParseStableTag(tag string) (Version, error) {

@@ -328,23 +328,26 @@ func shipBranchName(releaseTag string) string {
 	return shipBranchPrefix + releaseTag
 }
 
-func shipsViaPullRequest(branch string) bool {
-	return branch == "main"
+// shipsViaPullRequest reports whether the pin commit has to travel through a
+// pull request. Stable releases land on main, which is branch-protected, so
+// their pin commit always does, whatever the local checkout is called and
+// whether or not it is on a branch at all. dev and rc releases push straight
+// to the branch they run from (develop, release/vX.Y.Z), which stays true
+// even when that branch happens to sit on the same commit as origin/main. A
+// checkout literally on main never direct-pushes, in any mode.
+func shipsViaPullRequest(modeName string, state checkoutState) bool {
+	return modeName == "stable" || state.onBaseBranch()
 }
 
 func releasePRBody(releaseTag, message string) string {
 	return fmt.Sprintf("%s.\n\nCreated by the release operator: main only accepts changes through pull requests, so the pin commit ships through this PR. After the squash merge, the operator tags %s on main to trigger release CI.", message, releaseTag)
 }
 
-func (r *repoContext) currentBranch() (string, error) {
-	return r.git("rev-parse", "--abbrev-ref", "HEAD")
-}
-
 // shipPinnedArtifacts commits and ships the currently-staged submodule
 // pointer and docs changes. current and selected are keyed by Component.Dir;
 // selected holds what each component is now pinned to, current holds what
 // each was pinned to before this run.
-func (r *repoContext) shipPinnedArtifacts(releaseTag string, current, selected map[string]string) error {
+func (r *repoContext) shipPinnedArtifacts(modeName, releaseTag string, current, selected map[string]string) error {
 	diffPaths := append(componentDirs(), "docs/cli-reference")
 	hasDiff, err := r.cachedDiffExists(diffPaths...)
 	if err != nil {
@@ -359,24 +362,31 @@ func (r *repoContext) shipPinnedArtifacts(releaseTag string, current, selected m
 		return nil
 	}
 
-	branch, err := r.currentBranch()
+	// Local refs are enough here: the bundle path already refreshed
+	// origin/main in prepareForBundle, and collectState refreshed it again
+	// before the plan that led to this commit.
+	state, err := readCheckoutState(r.Root)
 	if err != nil {
 		return err
 	}
 	message := releaseCommitMessage(current, selected)
-	if !shipsViaPullRequest(branch) {
+	if !shipsViaPullRequest(modeName, state) {
 		if err := r.runGit("commit", "-m", message); err != nil {
 			return err
 		}
 		return r.runGit("push", "origin", "HEAD")
 	}
-	return r.shipViaPullRequest(branch, releaseTag, message)
+	return r.shipViaPullRequest(state, releaseTag, message)
 }
 
-func (r *repoContext) shipViaPullRequest(baseBranch, releaseTag, message string) error {
+// shipViaPullRequest sends the staged pin commit through a transient
+// release-pin branch and an auto-merged PR against main, then returns the
+// checkout to base at the merged commit so the release tag lands there.
+// base is where the run started, which is what the return lands back on.
+func (r *repoContext) shipViaPullRequest(base checkoutState, releaseTag, message string) error {
 	gh := r.ghClient()
 	if !gh.authenticated() {
-		return fmt.Errorf("%s only accepts changes through pull requests and gh is not authenticated; run 'gh auth login' and retry", baseBranch)
+		return fmt.Errorf("%s only accepts changes through pull requests and gh is not authenticated; run 'gh auth login' and retry", releaseBaseBranch)
 	}
 	// Verify the merge is possible before mutating anything, so a permission
 	// gap fails fast instead of after the branch and PR already exist.
@@ -404,7 +414,7 @@ func (r *repoContext) shipViaPullRequest(baseBranch, releaseTag, message string)
 		return err
 	}
 	if open == "" {
-		if err := gh.createPullRequest(festivalRepoSlug, baseBranch, shipBranch, message, releasePRBody(releaseTag, message)); err != nil {
+		if err := gh.createPullRequest(festivalRepoSlug, releaseBaseBranch, shipBranch, message, releasePRBody(releaseTag, message)); err != nil {
 			return err
 		}
 	}
@@ -412,16 +422,15 @@ func (r *repoContext) shipViaPullRequest(baseBranch, releaseTag, message string)
 		return fmt.Errorf("merge release PR for %s: %w\nThe pin commit is pushed and the PR exists; check the PR for unmet merge requirements (required approvals or status checks), merge it on GitHub, then rerun the same release command to continue tagging", shipBranch, err)
 	}
 
-	if err := r.runGit("switch", baseBranch); err != nil {
+	// Land on the merged pin commit, which is what the release tag is
+	// created at moments later.
+	if err := r.returnToReleaseBase(base.Branch); err != nil {
 		return err
 	}
 	if _, err := r.git("rev-parse", "--verify", "refs/heads/"+shipBranch); err == nil {
 		if err := r.runGit("branch", "-D", shipBranch); err != nil {
 			return err
 		}
-	}
-	if err := r.runGit("pull", "--ff-only", "origin", baseBranch); err != nil {
-		return err
 	}
 	if err := r.runGit("submodule", "update", "--init"); err != nil {
 		return err
@@ -436,29 +445,70 @@ func (r *repoContext) shipViaPullRequest(baseBranch, releaseTag, message string)
 	return nil
 }
 
-func (r *repoContext) prepareMainForBundle() error {
-	branch, err := r.currentBranch()
+// prepareForBundle gets the festival checkout ready to ship a bundled
+// release. A stable release must be cut from the commit origin/main points
+// at; the local branch's name is not part of that requirement, because the
+// festival repo is worked through git worktrees and git will not check out
+// one branch in two worktrees at once.
+//
+// A named branch that is neither main nor at origin/main is a dev or rc
+// checkout (develop, release/vX.Y.Z) and is left exactly as it stands, as
+// this step has always done; planStable is what refuses a stable release
+// from there.
+func (r *repoContext) prepareForBundle() error {
+	state, err := resolveCheckoutState(r.Root)
 	if err != nil {
 		return err
 	}
-	if strings.HasPrefix(branch, shipBranchPrefix) {
-		if err := r.runGit("switch", "main"); err != nil {
+
+	// Resume path: an earlier run failed after creating the transient pin
+	// branch. Return to the release base, drop the leftover branch, then
+	// re-read where that landed.
+	if strings.HasPrefix(state.Branch, shipBranchPrefix) {
+		leftover := state.Branch
+		if err := r.returnToReleaseBase(releaseBaseBranch); err != nil {
 			return err
 		}
-		if err := r.runGit("branch", "-D", branch); err != nil {
+		if err := r.runGit("branch", "-D", leftover); err != nil {
 			return err
 		}
-		branch = "main"
+		if state, err = readCheckoutState(r.Root); err != nil {
+			return err
+		}
 	}
-	if branch != "main" {
+
+	// A named branch that is neither main nor standing on origin/main is a
+	// dev or rc checkout (develop, release/vX.Y.Z), and is left exactly as
+	// it stands, as this step always has. A detached HEAD is never one of
+	// those, so it is held to the release base here rather than left for
+	// planStable to refuse with less to say about it.
+	if state.Branch != "" && !state.onBaseBranch() && !state.atReleaseBase() {
 		return nil
 	}
-	if dirty, err := worktreeDirty(r.Root); err != nil {
-		return err
-	} else if dirty {
+	if state.Dirty {
 		return errors.New("festival repo has uncommitted changes")
 	}
-	if err := r.runGit("pull", "--ff-only", "origin", "main"); err != nil {
+
+	// A local branch named main is fast-forwarded onto origin/main, which is
+	// what this step's `git pull --ff-only origin main` always did. Every
+	// other checkout, a detached one included, has to already be there:
+	// moving a checkout the operator did not create is not its call.
+	if state.onBaseBranch() && !state.atReleaseBase() {
+		behind, err := isAncestor(r.Root, state.Head, state.OriginBase)
+		if err != nil {
+			return err
+		}
+		if behind {
+			if err := r.runGit("merge", "--ff-only", originBaseRef); err != nil {
+				return err
+			}
+			if state, err = readCheckoutState(r.Root); err != nil {
+				return err
+			}
+		}
+	}
+
+	if err := r.requireReleaseBase(state); err != nil {
 		return err
 	}
 	return r.runGit("submodule", "update", "--init")
@@ -831,12 +881,12 @@ func runRequireStablePublishCredentials(ctx *repoContext) error {
 func runStatus(ctx *repoContext) error {
 	_ = ctx.fetchReleaseRefs()
 
-	branch, err := ctx.git("rev-parse", "--abbrev-ref", "HEAD")
+	checkout, err := readCheckoutState(ctx.Root)
 	if err != nil {
 		return err
 	}
 
-	fmt.Printf("festival branch: %s\n\n", branch)
+	fmt.Printf("festival branch: %s\n\n", checkout)
 	fmt.Println("Current submodule pins:")
 	for _, c := range components {
 		sha, err := ctx.gitSubmodule(c.Dir, "rev-parse", "--short", "HEAD")
@@ -1031,7 +1081,7 @@ func runDraftFromLatest(ctx *repoContext, version string, mode releaseMode, iter
 		}
 	}
 
-	if err := ctx.shipPinnedArtifacts(releaseTag, currentPinned, tags); err != nil {
+	if err := ctx.shipPinnedArtifacts(mode.Name, releaseTag, currentPinned, tags); err != nil {
 		return err
 	}
 	if err := runPreflight(ctx, mode); err != nil {
@@ -1134,7 +1184,7 @@ func runDraftBootstrap(ctx *repoContext, festivalVersion string, versions map[st
 	if err := ctx.stageReleaseArtifacts(); err != nil {
 		return err
 	}
-	if err := ctx.shipPinnedArtifacts(releaseTag, map[string]string{}, tags); err != nil {
+	if err := ctx.shipPinnedArtifacts(stable.Name, releaseTag, map[string]string{}, tags); err != nil {
 		return err
 	}
 
@@ -1199,7 +1249,7 @@ func runPlanWithRoot(opts planOptions) error {
 	fmt.Println()
 	fmt.Println("== Release Plan ==")
 	fmt.Printf("  channel: %s\n", opts.Channel)
-	fmt.Printf("  festival branch: %s\n", state.CurrentBranch)
+	fmt.Printf("  festival branch: %s\n", state.CheckoutState)
 	fmt.Printf("  planned release tag: %s\n", plan.ReleaseTag)
 	for _, c := range components {
 		fmt.Printf("  %s: %s -> %s (%s)\n", c.Dir, valueOrNone(state.CurrentPinned[c.Dir]), state.SelectedTags[c.Dir], opts.Selectors[c.Dir])
@@ -1219,7 +1269,7 @@ func runBundleWithRoot(opts bundleOptions) error {
 		return err
 	}
 
-	if err := ctx.prepareMainForBundle(); err != nil {
+	if err := ctx.prepareForBundle(); err != nil {
 		return err
 	}
 
@@ -1239,7 +1289,7 @@ func runBundleWithRoot(opts bundleOptions) error {
 
 	fmt.Println()
 	fmt.Println("== Current State ==")
-	fmt.Printf("  festival branch: %s\n", state.CurrentBranch)
+	fmt.Printf("  festival branch: %s\n", state.CheckoutState)
 	for _, c := range components {
 		fmt.Printf("  %s: %s -> %s (%s)\n", c.Dir, valueOrNone(state.CurrentPinned[c.Dir]), state.SelectedTags[c.Dir], opts.Selectors[c.Dir])
 	}
