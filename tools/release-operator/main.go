@@ -444,6 +444,11 @@ func printHelp(out io.Writer) {
 	fmt.Fprintln(out, "  just release cleanup <tag>")
 	fmt.Fprintln(out)
 	fmt.Fprintln(out, "Stable releases on main:")
+	fmt.Fprintln(out, "  A stable release runs from any checkout whose HEAD is the commit")
+	fmt.Fprintln(out, "  origin/main points at, with a clean tree. The local branch may be")
+	fmt.Fprintln(out, "  named main, named anything else, or be a detached HEAD, so a worktree")
+	fmt.Fprintln(out, "  can cut a release while another worktree holds the main branch.")
+	fmt.Fprintln(out, "  Get there with: git fetch origin main && git checkout --detach origin/main")
 	fmt.Fprintln(out, "  main is PR-only, so the stable pin commit ships through a transient")
 	fmt.Fprintln(out, "  release-pin/<tag> branch that is auto-created and squash-merged.")
 	fmt.Fprintln(out, "  The active gh account needs push access to Obedience-Corp/festival.")
@@ -488,7 +493,11 @@ func collectState(repoRoot, channel string, selectors map[string]string) (operat
 		}
 	}
 
-	branch, err := gitOutput(repoRoot, "rev-parse", "--abbrev-ref", "HEAD")
+	// Resolve the checkout against origin/main rather than against a branch
+	// name: a release ships from the commit origin/main points at, and the
+	// festival repo is normally worked through git worktrees, where the
+	// branch named main is usually held by some other worktree.
+	checkout, err := resolveCheckoutState(repoRoot)
 	if err != nil {
 		return operator.BundleInput{}, err
 	}
@@ -508,7 +517,9 @@ func collectState(repoRoot, channel string, selectors map[string]string) (operat
 
 	state := operator.BundleInput{
 		Channel:       channel,
-		CurrentBranch: branch,
+		CurrentBranch: checkout.Branch,
+		CheckoutState: checkout.String(),
+		AtReleaseBase: checkout.atReleaseBase(),
 		SelectedTags:  selectedTags,
 		CurrentPinned: currentPinned,
 	}
@@ -653,7 +664,14 @@ func tagAncestorOfHead(dir, tag string) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	cmd := exec.Command("git", "merge-base", "--is-ancestor", tagCommit, "HEAD")
+	return isAncestor(dir, tagCommit, "HEAD")
+}
+
+// isAncestor reports whether ancestor is reachable from descendant. Exit
+// code 1 is git's answer for "no", not a failure, so only other exit codes
+// become errors.
+func isAncestor(dir, ancestor, descendant string) (bool, error) {
+	cmd := exec.Command("git", "merge-base", "--is-ancestor", ancestor, descendant)
 	cmd.Dir = dir
 	if err := cmd.Run(); err != nil {
 		if exitErr, ok := err.(*exec.ExitError); ok && exitErr.ExitCode() == 1 {

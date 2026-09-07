@@ -53,6 +53,7 @@ func TestDeriveBundlePlanStableBumpsLatestStablePatch(t *testing.T) {
 	plan, err := DeriveBundlePlan(BundleInput{
 		Channel:              "stable",
 		CurrentBranch:        "main",
+		AtReleaseBase:        true,
 		SelectedTags:         map[string]string{"fest": "v0.2.0", "camp": "v0.2.1"},
 		CurrentPinned:        map[string]string{"fest": "v0.1.9", "camp": "v0.2.1"},
 		LatestFestivalStable: "v0.1.1",
@@ -66,18 +67,62 @@ func TestDeriveBundlePlanStableBumpsLatestStablePatch(t *testing.T) {
 	}
 }
 
-func TestDeriveBundlePlanStableRejectsWrongBranch(t *testing.T) {
+func TestDeriveBundlePlanStableRejectsCheckoutOffOriginMain(t *testing.T) {
 	_, err := DeriveBundlePlan(BundleInput{
 		Channel:              "stable",
 		CurrentBranch:        "feature/hub",
+		CheckoutState:        "feature/hub",
 		SelectedTags:         map[string]string{"fest": "v0.2.0", "camp": "v0.2.1"},
 		LatestFestivalStable: "v0.1.1",
 	})
 	if err == nil {
 		t.Fatal("expected error")
 	}
-	if !strings.Contains(err.Error(), "main branch") {
-		t.Fatalf("error = %q, want main-branch guard", err)
+	if !strings.Contains(err.Error(), "origin/main") {
+		t.Fatalf("error = %q, want the release-base guard", err)
+	}
+	if !strings.Contains(err.Error(), "feature/hub") {
+		t.Fatalf("error = %q, want it to name the checkout it refused", err)
+	}
+}
+
+// TestDeriveBundlePlanStableAcceptsDetachedCheckoutAtOriginMain is the
+// behavior this guard was changed for: a release cut from a worktree that
+// cannot hold the main branch, because another worktree already does.
+func TestDeriveBundlePlanStableAcceptsDetachedCheckoutAtOriginMain(t *testing.T) {
+	plan, err := DeriveBundlePlan(BundleInput{
+		Channel:              "stable",
+		CurrentBranch:        "",
+		CheckoutState:        "detached at origin/main",
+		AtReleaseBase:        true,
+		SelectedTags:         map[string]string{"fest": "v0.2.0", "camp": "v0.2.1"},
+		CurrentPinned:        map[string]string{"fest": "v0.1.9", "camp": "v0.2.1"},
+		LatestFestivalStable: "v0.1.1",
+	})
+	if err != nil {
+		t.Fatalf("DeriveBundlePlan returned error: %v", err)
+	}
+	if got, want := plan.ReleaseTag, "v0.1.2"; got != want {
+		t.Fatalf("ReleaseTag = %q, want %q", got, want)
+	}
+}
+
+// A branch named main that has fallen off origin/main is refused for the
+// same reason any other stale checkout is: the release would not ship the
+// commit main actually holds.
+func TestDeriveBundlePlanStableRejectsMainBranchOffOriginMain(t *testing.T) {
+	_, err := DeriveBundlePlan(BundleInput{
+		Channel:              "stable",
+		CurrentBranch:        "main",
+		CheckoutState:        "main",
+		SelectedTags:         map[string]string{"fest": "v0.2.0", "camp": "v0.2.1"},
+		LatestFestivalStable: "v0.1.1",
+	})
+	if err == nil {
+		t.Fatal("expected error")
+	}
+	if !strings.Contains(err.Error(), "origin/main") {
+		t.Fatalf("error = %q, want the release-base guard", err)
 	}
 }
 
@@ -103,6 +148,7 @@ func TestDeriveBundlePlanStableRejectsWhenMainHasNoStableHistory(t *testing.T) {
 	_, err := DeriveBundlePlan(BundleInput{
 		Channel:       "stable",
 		CurrentBranch: "main",
+		AtReleaseBase: true,
 		SelectedTags:  map[string]string{"fest": "v0.2.0", "camp": "v0.2.1"},
 	})
 	if err == nil {
@@ -114,6 +160,7 @@ func TestDeriveBundlePlanStableRejectsWhenCurrentCommitAlreadyBundlesSelectedTag
 	_, err := DeriveBundlePlan(BundleInput{
 		Channel:                         "stable",
 		CurrentBranch:                   "main",
+		AtReleaseBase:                   true,
 		SelectedTags:                    map[string]string{"fest": "v0.2.0", "camp": "v0.2.1"},
 		CurrentPinned:                   map[string]string{"fest": "v0.2.0", "camp": "v0.2.1"},
 		LatestFestivalStable:            "v0.2.0",
