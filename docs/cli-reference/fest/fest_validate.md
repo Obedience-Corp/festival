@@ -20,14 +20,19 @@ this command validates METHODOLOGY COMPLIANCE:
   • Quality gates are present in implementation sequences
   • Naming conventions are followed
   • Unfilled [REPLACE:]/[FILL:] markers are reported as "markers pending"
-    (they do not fail structure validation or zero the score)
 
 AI agents execute TASK FILES, not goals. If your sequences only have
 SEQUENCE_GOAL.md without task files, agents won't know HOW to execute.
 
-Unfilled template markers after scaffolding are expected. Fill them as you
-write real content: do not paste filler to restore a score. Missing files,
-missing task files, and missing quality gates still fail validation.
+Unfilled markers follow the festival's lifecycle status. Until it is promoted,
+they are expected: root-document markers report as warnings, markers_pending is
+true, valid stays true, and the exit status is 0. Once it is ready or active the
+plan should be written, so root markers report as errors and any unfilled marker
+makes valid false with exit status 1.
+
+Fill markers as you write real content: do not paste filler to restore a score.
+Missing files, missing task files, and missing quality gates fail validation in
+every status.
 
 Use --fix to automatically apply safe fixes (like adding quality gates).
 

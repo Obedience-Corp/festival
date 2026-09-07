@@ -16,9 +16,10 @@ The target argument is optional and defaults to "festival", which updates the wh
 suite. camp and fest are accepted as aliases: they are not published independently, so
 passing either one still updates the whole suite and prints a notice saying so.
 
-A package-manager install (AUR, Homebrew, npm, distro packages) is never replaced with
-~/.obey/installer. update reports whether a newer suite exists and prints the package
-manager upgrade command instead.
+A package-manager install (AUR, Homebrew, npm) is never replaced with ~/.obey/installer.
+When a newer suite exists and stdout is a TTY, update runs the package-manager command
+(for example `yay -Syu festival-bin`) so camp, fest, and this hub upgrade together.
+--json and non-TTY invocations print the command instead of running it.
 
 ```
 festival update [festival|camp|fest] [flags]

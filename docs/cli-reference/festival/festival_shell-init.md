@@ -15,8 +15,10 @@ festival shell-init <zsh|bash|fish> [flags]
 ### Options
 
 ```
-      --check   report whether the managed bin dir is on PATH
-  -h, --help    help for shell-init
+      --append   show the block and offer to append it to your shell rc file
+      --check    report whether the managed bin dir is on PATH
+  -h, --help     help for shell-init
+      --yes      append without asking (requires --append)
 ```
 
 ### SEE ALSO

@@ -14,7 +14,9 @@ Show the ordered steps camp fresh will use, including disabled steps
 and the follow-up commands resolved for a project.
 
 With no project name, the global defaults are shown. Pass a project name to
-include its branch, pruning, and follow-up overrides.
+include its branch, pruning, and follow-up overrides. Use --json for the
+stable machine-readable contract the Festival app and scripts share with
+the configure TUI.
 
 ```
 camp fresh show-workflow [project-name] [flags]
@@ -24,6 +26,7 @@ camp fresh show-workflow [project-name] [flags]
 
 ```
   -h, --help   help for show-workflow
+      --json   emit a structured JSON result
 ```
 
 ### Options inherited from parent commands
