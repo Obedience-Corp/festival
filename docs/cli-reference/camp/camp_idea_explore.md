@@ -27,6 +27,7 @@ ACTIONS
   e             Edit in $EDITOR
   o             Open with system handler
   O             Reveal in file manager
+  y             Copy id to clipboard
   n             New idea
   p             Promote to next status
   a             Archive idea

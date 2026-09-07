@@ -25,8 +25,10 @@ Press enter on a settings step to change it, and a/e/d/K/J on a follow-up to
 add, edit, delete, or reorder it. prune and prune_remote are camp-wide,
 so they are changed under Global defaults rather than under a project.
 
-The subcommands below cover follow-ups only, for scripts and agents; edit the
-other keys in the interactive setup or in fresh.yaml directly.
+The subcommands cover follow-ups and settings for scripts, agents, and the
+Festival app. prune and prune_remote stay camp-wide: configure set refuses
+a project scope for those keys the same way the TUI redirects them to Global
+defaults.
 
 The interactive setup opens on the project you are standing in, resolved the
 same way camp fresh picks its target, so the overrides you edit are the ones
@@ -37,8 +39,12 @@ Examples:
   camp fresh configure
   camp fresh configure --project camp
   camp fresh show-workflow camp
+  camp fresh show-workflow camp --json
   camp fresh configure show
+  camp fresh configure set prune --action off
+  camp fresh configure set branch --action branch --value feat/next --project camp
   camp fresh configure add install --run "npm install"
+  camp fresh configure edit install --run "npm ci"
   camp fresh configure add build --run "go build ./..." --project camp --dir cmd/camp
   camp fresh configure move build --up --project camp
   camp fresh configure remove install
@@ -73,6 +79,8 @@ camp fresh configure [flags]
 
 * [camp fresh](../camp_fresh/)	 - Post-merge branch cycling: sync to default branch and optionally create a new working branch
 * [camp fresh configure add](../camp_fresh_configure_add/)	 - Add a follow-up command workflow step
+* [camp fresh configure edit](../camp_fresh_configure_edit/)	 - Edit a follow-up command workflow step
 * [camp fresh configure move](../camp_fresh_configure_move/)	 - Move a follow-up command workflow step
 * [camp fresh configure remove](../camp_fresh_configure_remove/)	 - Remove a follow-up command workflow step
+* [camp fresh configure set](../camp_fresh_configure_set/)	 - Set a camp fresh workflow setting
 * [camp fresh configure show](../camp_fresh_configure_show/)	 - Show configured follow-up workflows
