@@ -1,0 +1,12 @@
+<article>
+  {{ partial "breadcrumbs.html" . }}
+  {{ if not (findRE `<h1[\s>]` .Content) }}<h1>{{ .Title }}</h1>{{ end }}
+  {{ .Content }}
+  {{ if eq .Section "use-cases" }}
+  <aside class="doc-next-step" aria-label="Try Festival" data-pagefind-ignore>
+    <p class="doc-next-step__title">Try it with a goal from your own work</p>
+    <p>Create a camp, hand the goal to your agent, and review the plan before it starts.</p>
+    <a class="btn btn--primary" href="{{ (site.GetPage "/getting-started/quickstart").RelPermalink }}">Follow the Quick Start &rarr;</a>
+  </aside>
+  {{ end }}
+</article>

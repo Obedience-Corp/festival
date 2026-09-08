@@ -128,6 +128,56 @@ a:hover {
 }
 
 /* Layout */
+.skip-link {
+  position: fixed;
+  top: 0.5rem;
+  left: 1rem;
+  z-index: 200;
+  padding: 0.65rem 1rem;
+  border-radius: 6px;
+  background: #f2721c;
+  color: #17100a !important;
+  transform: translateY(-180%);
+}
+
+.skip-link:focus { transform: translateY(0); }
+
+:where(a, button, summary, input):focus-visible {
+  outline: 2px solid #f2721c;
+  outline-offset: 3px;
+}
+
+.doc-breadcrumbs {
+  margin: 0 0 1.3rem;
+  font-size: 0.8rem;
+  color: var(--festival-500);
+}
+
+.doc-breadcrumbs ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.6rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.doc-breadcrumbs li { margin: 0; }
+.doc-breadcrumbs li + li::before { content: "/"; margin-right: 0.6rem; }
+
+.doc-next-step {
+  margin-top: 2.5rem;
+  padding: 1.5rem;
+  border: 1px solid var(--festival-200);
+  border-radius: 12px;
+  background: var(--surface-raised);
+}
+
+[data-theme="dark"] .doc-next-step { border-color: var(--festival-800); }
+.doc-next-step__title { font-weight: 600; }
+.doc-next-step p { margin: 0 0 0.75rem; }
+.doc-next-step .btn { margin-top: 0.25rem; white-space: normal; }
+
 .site-header {
   position: fixed;
   top: 0;
@@ -432,6 +482,12 @@ a:hover {
 
 [data-theme="dark"] .doc-index__item strong {
   color: var(--festival-100);
+}
+
+[data-theme="dark"] .doc-index__item span,
+[data-theme="dark"] .doc-index__featured p,
+[data-theme="dark"] .doc-index__intro p {
+  color: var(--festival-400);
 }
 
 [data-theme="dark"] .doc-index__item:hover {
@@ -1566,6 +1622,12 @@ summary {
   opacity: 0.7;
 }
 
+.home-install__note a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
 .home-install .home-section__heading,
 .home-install .home-section__lede {
   color: inherit;
@@ -1745,6 +1807,19 @@ summary {
   max-height: 70vh;
   overflow-y: auto;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.search-close {
+  display: block;
+  margin: 0 0 0.75rem auto;
+  padding: 0.35rem 0.65rem;
+  border: 1px solid var(--festival-400);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--accent);
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
 }
 
 [data-theme="dark"] .search-modal {

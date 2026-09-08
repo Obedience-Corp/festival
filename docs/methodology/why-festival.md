@@ -1,83 +1,57 @@
 ---
 title: "Why Festival"
+description: "Hand goals to agents while you focus on other work. Festival keeps the plan, decisions, verification, and next steps available across sessions and projects."
 weight: 20
 ---
 
 # Why Festival
 
-## The Organization Problem
+**AI can generate the pieces. Festival keeps the work coherent.**
 
-If you work on more than a few things at once, staying organized becomes a job of
-its own.
+The useful moment is when you can hand off a goal and turn to something else. Your agent has enough direction to keep working, knows when to ask you, and leaves a result you can review.
 
-Work ends up spread across repositories, documents, chats, notes, bookmarks, TODO
-lists, and AI conversations. Finding where something belongs becomes work.
-Remembering what you were doing becomes work. Switching contexts becomes work. The
-effort you spend keeping track of work starts to rival the effort of doing it.
+Festival gives that work an operating environment: a place for its projects, plans, research, decisions, and progress. It stays with the work as the goal changes, through new sessions and new tools, over months or years.
 
-## AI Makes It Worse
+## Hand off the outcome, then review the result
 
-AI coding tools are genuinely fast. They write code, run research, draft plans, and
-break down tasks faster than most people can keep up with. That speed is real, and it
-is not the problem.
+You might ask for a feature across three repositories, an investigation into a recurring failure, or a recommendation backed by research. Your agent uses Festival to break the goal into steps, record completion criteria, and work through the plan.
 
-The problem is what happens to all of that output. AI generates plans, code,
-research, and tasks faster than you can file them. The bottleneck moves from
-producing work to organizing it. Every new session starts from nothing: no memory of
-the larger goal, no structure for multi-step work, no thread to pick back up. You
-spend your time re-explaining context that an organized workspace would make obvious.
+You review the scope and important decisions. After approval, the agent follows the `fest next` loop and performs the work with its own tools. While it runs, you can work on a different goal. At a gate or blocker, it brings the decision back to you.
 
-## Camps: A Workspace for a Mission
+A review has something concrete to inspect: what changed, which checks ran, what passed, what remains uncertain, and how those results relate to the goal.
 
-Festival is a workspace system built for that reality. It organizes work into
-camps.
+[Walk through your first handoff]({{< ref "/getting-started/quickstart" >}}).
 
-A camp, previously called a campaign, is a workspace for a mission: a high-level purpose like your startup, your
-job, or a hobby you keep coming back to. A mission is not a single task. It is a
-durable area of focus that grows over time, accumulating many projects, plans,
-documents, research, and decisions. A camp keeps all of that in one place, however
-large it gets and however long it runs.
+## Give each part of your work its own camp
 
-Instead of asking:
+You have different camps in life: your job, your side project, your hobbies. Each has its own context, and each may contain several projects.
 
-> "Where should this go?"
+A camp keeps the related repositories, notes, plans, and decisions together. That lets you move between areas of work without mixing their context. Within a camp, a festival records the plan for a particular goal.
 
-You put it in the camp it belongs to.
+You can use a camp before you need a large plan. Link your repositories, use `cgo` to move between them, and use worktrees when changes need separate working directories. After a merge, `camp fresh` handles the next branch cycle.
 
-Instead of asking:
+[See the everyday development workflow]({{< ref "/guides/everyday-development" >}}).
 
-> "What was I working on?"
+## Keep the reasoning with the work
 
-You resume the camp.
+A commit tells you what changed. The plan and task record explain what the change was intended to accomplish and how it was checked.
 
-Both humans and AI agents can enter a camp and immediately understand its
-structure, because every camp uses the same predictable layout. See
-[Camps]({{< ref "/methodology/campaigns" >}}) for the full directory model.
+Festival keeps those records in files you can read, diff, and version with Git. A later agent or human reviewer can inspect the decisions and continue from recorded progress. The quality of that handoff depends on recording what happened, including partial work and failed checks.
 
-## From Organization to Outcomes
+The files belong to the work. You can switch between Claude Code, Codex, Grok Build, Cursor, or another agent that can read them and run the CLI.
 
-Organization is the foundation, not the finish line. Once your work has a home,
-Festival gives every mission three things that turn structure into results:
+## Use the amount of structure the goal needs
 
-1. **Context** - a camp that holds all projects, docs, and research.
-2. **Direction** - structured plans that AI agents can execute, pause, and resume.
-3. **Verification** - work captured in reviewable files you can trace and audit.
+For a known sequence of steps, a standalone workflow can guide an agent through a recurring process. A festival adds a goal, phases, dependencies, and review gates when the work needs a fuller plan.
 
-The planning model that supplies direction and verification is the Festival
-Methodology. Read the [Methodology Overview]({{< ref "/methodology/overview" >}}) to
-see how phases, sequences, and tasks turn a goal into work an agent can keep moving
-through.
+The hierarchy forms a graph of work. `fest next` reads its state and supplies the next actionable step; the agent executes that step and records the result. For work across several projects, the agent can coordinate multiple loops and worktrees.
 
-## Built to Scale
+[Learn about loops and orchestration]({{< ref "/guides/loops-and-orchestration" >}}).
 
-This is not a system for one project. It is how the author of Festival manages 17
-camps and more than 150 projects without losing context between them.
+## Keep the tools you already use
 
-A camp can be a side project with two or three repos, or a mission spanning
-dozens of projects and hundreds of plans. The structure scales in both directions,
-and switching between missions is a single command.
+Your issue tracker can remain the place for team discussion and priorities. Your scripts and justfiles can bring external work into a camp and return a summary or link when it is ready for review.
 
-## Get Started
+Festival provides the local work structure. Your agent, services, and existing tools provide execution, access to external systems, and any scheduled triggers you choose to build.
 
-Create your first camp and run your first festival in about five minutes:
-[Quick Start]({{< ref "/getting-started/quickstart" >}}).
+[Find a use case]({{< ref "/use-cases" >}}), or [start with your own goal]({{< ref "/getting-started/quickstart" >}}).

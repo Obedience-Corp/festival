@@ -1,5 +1,6 @@
 ---
 title: "Overview"
+description: "Understand Festival's goal-based planning: phases, tasks, dependencies, review gates, and durable context for human-agent collaboration."
 weight: 21
 ---
 
@@ -12,12 +13,10 @@ model that thinks in **steps to goals**. Every unit of work is defined by what
 must be accomplished and what completion looks like, not by how long someone
 guesses it will take.
 
-AI-human collaboration operates at a fundamentally different speed than
-traditional teams. When an AI agent executes implementation steps at 30x-100x
-the pace of manual development, duration-based planning becomes noise. Festival
-Methodology strips that noise out. What remains is a clean focus on logical
-steps, dependencies between those steps, opportunities for parallel execution,
-and unambiguous completion criteria.
+Festival focuses the execution plan on logical steps, dependencies,
+opportunities for parallel work, and verifiable completion criteria. Your
+team can still keep deadlines, ownership, and prioritization in its existing
+planning tools. See [using Festival with your issue tracker]({{< ref "/compare/festival-vs-issue-trackers" >}}).
 
 The result is a planning system that works for a solo developer driving an AI
 agent through a complex build, a team coordinating multi-phase projects, or an
@@ -31,7 +30,7 @@ AI agent operating autonomously across long-running sessions.
 2. **Human-AI Collaborative Planning** -- Humans provide goals, requirements, architectural decisions, and validation. AI agents identify steps, structure them, create task specifications, and execute autonomously.
 3. **Requirements-Driven Implementation** -- Implementation sequences can only be created after requirements are defined. No guessing. No premature coding.
 4. **Just-in-Time Sequence Creation** -- Sequences are designed when a phase is ready for execution, not months in advance. Plans stay grounded in current understanding.
-5. **Hyper-Efficient AI Execution** -- The methodology feeds work to AI agents in structured, unambiguous units that maximize autonomous execution at unprecedented speed.
+5. **Scoped Autonomous Execution** -- Agents receive defined tasks with relevant context and checks, so they can work independently within the approved scope.
 6. **Step-Based Progression** -- Progress is measured by completed steps with verified outcomes, not by hours logged or percentage-of-time-elapsed.
 7. **Context Preservation** -- Documentation is read just-in-time. Festival structure preserves context across sessions so agents resume work without re-reading the entire project history.
 8. **Quality Gates** -- Every implementation sequence ends with mandatory quality verification steps (testing, review, iteration). Quality is structural, not optional.
@@ -167,9 +166,9 @@ Festival Methodology is the right fit when:
 
 ## Key Advantages
 
-**No process overhead.** No mandatory ceremonies. No standups, no sprint
-planning, no retrospectives -- unless you decide they add value and create a
-ritual festival for them.
+**Choose your ceremonies.** Festival does not require standups, sprint planning,
+or retrospectives. If a recurring review is useful, you can capture it as a
+ritual festival.
 
 **Clear dependencies.** Sequential directory numbering makes dependencies obvious.
 `001_PLAN` completes before `002_IMPLEMENT`. `01_foundation` completes before

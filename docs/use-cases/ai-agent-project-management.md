@@ -1,90 +1,72 @@
 ---
 title: "AI Agent Project Management"
-description: "Use Festival as a project management layer for AI agents: goals, phases, tasks, context, progress, and verification stored in your workspace."
+description: "Plan and review a cross-repository feature with an AI agent, a Festival work record, and clear human approval points."
 weight: 35
 ---
 
 # AI Agent Project Management
 
-AI agents can write code, investigate bugs, draft plans, and edit docs quickly. The hard part is keeping that work organized once it spans multiple sessions, repositories, decisions, and review steps.
+Use a festival when one outcome crosses more than one repository and needs a
+human-reviewed plan before implementation. An account-deletion flow, for
+example, can require an API change, a web interface, documentation, and a
+verification plan. Plan the repositories, their contract, the checks, and the
+decisions that need review before implementation.
 
-Festival is a project management layer for AI-assisted work. It does not replace your coding agent. It gives the agent a structured workspace it can read and update.
+Start with the [Quick Start]({{< ref "/getting-started/quickstart" >}}) to
+create a camp and bring the repositories into it. Keep each repository in its
+own project directory or worktree. The festival records the shared goal; it does
+not merge the repositories into one checkout.
 
-## The Problem
+## Give the agent an outcome it can plan
 
-Most AI coding work starts in a chat:
+State what should be true when the work is done, the repositories in scope, and
+the review boundary. This example asks for a plan first, rather than asking the
+agent to start changing code.
 
-1. Explain the goal.
-2. Add context about the repo.
-3. Ask for a plan.
-4. Execute part of the plan.
-5. Run out of context or stop for the day.
-6. Re-explain everything in the next session.
+{{< agent-prompt >}}
+In this camp, plan a cross-repository feature: [outcome]. The affected projects
+are [API project], [web project], and [other project or docs location]. Success
+means [observable behavior and verification evidence].
 
-That loop breaks down on real projects. The agent forgets prior decisions, duplicates work, misses verification steps, or implements an old version of the plan.
+Read the camp instructions and inspect the relevant code, tests, interfaces, and
+existing documentation. Create a Festival plan that identifies work by project,
+the API or data contract between projects, migration or compatibility concerns,
+test and documentation changes, and unresolved decisions. Link the festival to
+the primary implementation project or worktree, and identify the working
+directory for each remaining project.
 
-## The Festival Model
+Do not change source code, deploy, contact anyone, or create external tickets.
+Stop after presenting the plan, risks, and verification approach for my review.
+{{< /agent-prompt >}}
 
-Festival turns project work into a filesystem-backed plan:
+The agent can use `fest intro` and `fest understand` while planning. A standard
+festival gives the planning work a place to record findings, decisions, phases,
+and tasks. The plan should make dependency order visible. For instance, an API
+contract decision may need approval before a web task can safely start.
 
-- **Camps** hold related repos, docs, plans, and research.
-- **Festivals** define a goal and the work needed to reach it.
-- **Phases** group work by stage, such as ingest, plan, implement, review, or release.
-- **Sequences** group related tasks.
-- **Tasks** describe executable units of work with acceptance criteria and verification.
+## Review the plan before the changes
 
-The agent does not need a database or proprietary integration. It needs shell access and file access.
+Review the goal against the plan, then check three practical points:
 
-## The Agent Loop
+- Every repository has a named responsibility, rather than a vague "update
+  clients" task.
+- The plan names compatibility, migration, privacy, or rollout questions that
+  could change the implementation.
+- Each implementation task has evidence to produce: tests, a manual check,
+  documentation review, or another agreed check.
 
-The core loop is intentionally small:
+Ask for revisions while the work is still a plan. Once it is approved, tell the
+agent which project or worktree to use first. It should run `fest next` from the
+active festival or from its linked project or worktree. The task output supplies
+the next planned step; it is not a reason to scan every repository or invent a
+new order of work.
 
-```bash
-fest next
-# agent reads the task, edits files, runs checks
-fest task completed
-fest commit -m "implement feature step"
-fest next
-```
+As work reaches another repository, the agent changes to the directory named by
+the plan and performs the scoped task there. Keep review points for contract
+changes and live-system decisions. A festival can record the implementation and
+verification trail, while your repository hosting, deployment tooling, and
+access controls continue to govern code review, releases, and credentials.
 
-`fest next` gives the agent the next incomplete task with surrounding context. `fest status` and `fest progress` show what is done, what is in flight, and what remains.
-
-## Why This Is Different From a Task List
-
-A normal task list says what should happen. Festival also captures the structure around why it should happen and how to verify it:
-
-- the overall goal
-- phase context
-- task acceptance criteria
-- quality gates
-- command-line workflow
-- commit traceability
-- handoff notes and status
-
-That extra structure matters when a different AI session, a different model, or a human reviewer picks up the work later.
-
-## Good Fits
-
-Use Festival for:
-
-- multi-step coding tasks
-- cross-repository changes
-- refactors with staged verification
-- launch readiness work
-- documentation and release workflows
-- agent-led cleanup efforts
-- human-reviewed implementation plans
-
-Do not reach for Festival for every tiny edit. It is most useful when work has enough shape that losing context would be expensive.
-
-## Start With a Camp
-
-```bash
-camp init my-product
-cd my-product
-camp project add https://github.com/you/api
-fest create festival --name auth-system --type standard
-fest next
-```
-
-Next: follow the [Quick Start]({{< ref "/getting-started/quickstart" >}}) or read [Agent Workflows]({{< ref "/guides/agent-workflows" >}}).
+For task execution after approval, see [Agent Workflows]({{< ref
+"/guides/agent-workflows" >}}). For parallel changes in one repository, see
+[Everyday Development]({{< ref "/guides/everyday-development" >}}).

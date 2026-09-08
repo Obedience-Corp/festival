@@ -2,11 +2,12 @@ baseURL: https://docs.fest.build
 title: Festival
 theme: festival
 contentDir: docs
+enableRobotsTXT: true
 
 googleAnalytics: G-BBJ8SY37X5
 
 params:
-  description: "Mission-based AI workspace management for developers using AI coding tools"
+  description: "Plan, run, and review long-running agent work with Festival. Keep projects, decisions, workflows, and progress together in files you own."
   repo: "https://github.com/Obedience-Corp/festival"
 
 markup:
@@ -27,50 +28,34 @@ menu:
     - name: Getting Started
       identifier: getting-started
       weight: 10
-    - name: Installation
-      parent: getting-started
-      url: /getting-started/installation/
-      weight: 11
     - name: Quick Start
       parent: getting-started
       url: /getting-started/quickstart/
-      weight: 12
-    - name: Shell Setup
+      weight: 11
+    - name: Why Festival
       parent: getting-started
-      url: /getting-started/shell-setup/
+      url: /methodology/why-festival/
+      weight: 12
+    - name: Installation
+      parent: getting-started
+      url: /getting-started/installation/
       weight: 13
+    - name: Installer & Plugins
+      parent: getting-started
+      url: /getting-started/festival-manager/
+      weight: 14
     - name: Set up with your agent
       parent: getting-started
       url: /getting-started/agents/
-      weight: 14
-    - name: Claude Code
-      parent: getting-started
-      url: /getting-started/agents/claude-code/
       weight: 15
-    - name: Codex
+    - name: Everyday Development
       parent: getting-started
-      url: /getting-started/agents/codex/
+      url: /guides/everyday-development/
       weight: 16
-    - name: Cursor
+    - name: Shell Setup
       parent: getting-started
-      url: /getting-started/agents/cursor/
+      url: /getting-started/shell-setup/
       weight: 17
-    - name: Gemini CLI
-      parent: getting-started
-      url: /getting-started/agents/gemini/
-      weight: 18
-    - name: Hermes Agent
-      parent: getting-started
-      url: /getting-started/agents/hermes/
-      weight: 19
-    - name: opencode
-      parent: getting-started
-      url: /getting-started/agents/opencode/
-      weight: 20
-    - name: Other agents
-      parent: getting-started
-      url: /getting-started/agents/other-agents/
-      weight: 21
     - name: Videos
       parent: getting-started
       url: /videos/
@@ -82,10 +67,6 @@ menu:
 
     - name: Methodology
       identifier: methodology
-      weight: 20
-    - name: Why Festival
-      parent: methodology
-      url: /methodology/why-festival/
       weight: 20
     - name: Overview
       parent: methodology
@@ -142,7 +123,11 @@ menu:
 
     - name: Use Cases
       identifier: use-cases
-      weight: 35
+      weight: 18
+    - name: Find Your Use Case
+      parent: use-cases
+      url: /use-cases/
+      weight: 30
     - name: AI Agent Project Management
       parent: use-cases
       url: /use-cases/ai-agent-project-management/
@@ -159,11 +144,27 @@ menu:
       parent: use-cases
       url: /use-cases/ai-agent-handoff/
       weight: 38
+    - name: Incident Investigation
+      parent: use-cases
+      url: /use-cases/incident-investigation/
+      weight: 39
+    - name: Research & Analysis
+      parent: use-cases
+      url: /use-cases/research-and-analysis/
+      weight: 40
+    - name: Support Escalation
+      parent: use-cases
+      url: /use-cases/support-escalation/
+      weight: 41
+    - name: Infrastructure & Recovery
+      parent: use-cases
+      url: /use-cases/infrastructure-changes/
+      weight: 42
 
     - name: Compare
       identifier: compare
       weight: 39
-    - name: Festival vs Issue Trackers
+    - name: Festival & Issue Trackers
       parent: compare
       url: /compare/festival-vs-issue-trackers/
       weight: 39

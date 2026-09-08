@@ -1,54 +1,53 @@
 ---
 title: "Use Cases"
-description: "Practical ways to use Festival for AI agent project management, long-running coding sessions, handoffs, and structured AI-assisted software work."
+description: "Use Festival for cross-repo development, long-running agent work, incident investigation, research, support escalation, and infrastructure changes."
 weight: 35
+hideChildList: true
 ---
 
-Festival is for AI-assisted software work that needs more structure than a chat thread, a task list, or a one-off prompt.
+Give your agent a goal you can review, then let it work while you focus elsewhere. Festival keeps the plan, decisions, checks, and progress together so the next session can continue the work.
 
-These pages describe the common situations where Festival helps: keeping agent sessions coherent, handing work between tools, tracking progress across repos, and turning broad goals into executable steps.
+Start with the kind of result you need.
 
 <div class="doc-index__list">
   <a class="doc-index__item" href="{{< ref "/use-cases/ai-agent-project-management" >}}">
-    <strong>AI Agent Project Management</strong>
-    <span>Plan, execute, and resume AI-assisted work without losing project state.</span>
+    <strong>Ship a change across repositories</strong>
+    <span>Coordinate implementation, tests, documentation, and review around one goal.</span>
   </a>
   <a class="doc-index__item" href="{{< ref "/use-cases/long-running-ai-coding-sessions" >}}">
-    <strong>Long-Running AI Coding Sessions</strong>
-    <span>Keep multi-day or multi-week coding work coherent across context windows.</span>
+    <strong>Keep long-running work moving</strong>
+    <span>Hand off execution and resume from the saved plan when a session ends.</span>
   </a>
-  <a class="doc-index__item" href="{{< ref "/use-cases/claude-code-project-management" >}}">
-    <strong>Claude Code Project Management</strong>
-    <span>Use Festival with Claude Code while keeping plans, tasks, and commits traceable.</span>
+  <a class="doc-index__item" href="{{< ref "/use-cases/incident-investigation" >}}">
+    <strong>Investigate an incident</strong>
+    <span>Build an evidence trail, test explanations, and turn findings into follow-up work.</span>
   </a>
-  <a class="doc-index__item" href="{{< ref "/use-cases/ai-agent-handoff" >}}">
-    <strong>AI Agent Handoff</strong>
-    <span>Let a new agent session pick up the next task without reconstructing the whole project.</span>
+  <a class="doc-index__item" href="{{< ref "/use-cases/research-and-analysis" >}}">
+    <strong>Research a decision or analyze data</strong>
+    <span>Keep sources, scripts, assumptions, and the recommendation in the same work record.</span>
+  </a>
+  <a class="doc-index__item" href="{{< ref "/use-cases/support-escalation" >}}">
+    <strong>Take a support case through to a fix</strong>
+    <span>Connect reproduction, investigation, implementation, and a reviewed response.</span>
+  </a>
+  <a class="doc-index__item" href="{{< ref "/use-cases/infrastructure-changes" >}}">
+    <strong>Plan infrastructure changes and recovery</strong>
+    <span>Keep the change plan, rehearsal, rollback criteria, and verification connected.</span>
   </a>
 </div>
 
-## When Festival Fits
+## Pick up work across sessions and tools
 
-Festival fits best when the work has more than one step and correctness depends on remembering decisions:
+[Agent handoff]({{< ref "/use-cases/ai-agent-handoff" >}}) covers what to save before a session ends and how the next agent resumes. For a Claude Code-specific path, see [Claude Code project management]({{< ref "/use-cases/claude-code-project-management" >}}).
 
-- a feature that touches multiple files or repos
-- a refactor that needs planning, staged execution, and verification
-- a launch checklist with docs, release, and follow-up tasks
-- a codebase cleanup that should not be rediscovered every session
-- a research or design effort that needs to become implementation work
+These are workflows you can build with Festival and your existing tools. The agent runs commands and calls external services through the access you provide. Festival records the plan and progress; monitoring, credentials, data access, and scheduling stay with your chosen tools.
 
-If the task is a single prompt or a quick edit, you may not need Festival. If the work will outlive one chat window, Festival gives it a durable home.
+## Get value from the camp every day
 
-## Start Here
+A camp is also useful for ordinary development: jump between repositories with `cgo`, give parallel changes separate worktrees, and prepare for the next branch after a merge with `camp fresh`.
 
-Install Festival, create a camp, then create your first festival:
+[Explore everyday development]({{< ref "/guides/everyday-development" >}}) and [the installer and plugin manager]({{< ref "/getting-started/festival-manager" >}}).
 
-```bash
-brew install --cask Obedience-Corp/tap/festival
-camp init my-project
-cd my-project
-fest create festival --name first-feature --type standard
-fest next
-```
+## Start with one outcome
 
-For the full path, read the [Quick Start]({{< ref "/getting-started/quickstart" >}}).
+Choose something whose result you can check. In the [Quick Start]({{< ref "/getting-started/quickstart" >}}), you create a camp, bring in a project, and give your agent a goal. It plans the work for your review before implementation starts.

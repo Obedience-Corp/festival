@@ -1,0 +1,8 @@
+<nav class="doc-breadcrumbs" aria-label="Breadcrumb" data-pagefind-ignore>
+  <ol>
+    {{ range .Ancestors.Reverse }}
+      <li><a href="{{ .RelPermalink }}">{{ if .IsHome }}Docs{{ else }}{{ .LinkTitle }}{{ end }}</a></li>
+    {{ end }}
+    <li aria-current="page">{{ .LinkTitle }}</li>
+  </ol>
+</nav>

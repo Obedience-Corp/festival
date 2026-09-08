@@ -2,7 +2,7 @@
 {{ with .CurrentSection }}
   {{ $sidebarScope = .RelPermalink }}
 {{ end }}
-<nav class="sidebar" data-sidebar-scope="{{ $sidebarScope }}">
+<nav id="docs-navigation" class="sidebar" aria-label="Documentation" data-sidebar-scope="{{ $sidebarScope }}">
   {{ $currentURL := .RelPermalink }}
   {{ range .Site.Menus.docs }}
     {{ if .HasChildren }}
@@ -10,9 +10,9 @@
         <div class="sidebar__section-title">{{ .Name }}</div>
         {{ range .Children }}
           {{ $href := .URL | relURL }}
-          {{ $isActive := or (eq $currentURL $href) (and (ne $href "/" ) (strings.HasPrefix $currentURL $href)) }}
+          {{ $isActive := eq $currentURL $href }}
           <a href="{{ $href }}"
-             class="sidebar__link{{ if $isActive }} sidebar__link--active{{ end }}">
+             class="sidebar__link{{ if $isActive }} sidebar__link--active{{ end }}"{{ if $isActive }} aria-current="page"{{ end }}>
             {{ .Name }}
           </a>
         {{ end }}
