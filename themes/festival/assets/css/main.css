@@ -344,6 +344,12 @@ a:hover {
   margin-left: 0;
 }
 
+@media (min-width: 1281px) {
+  .content-area--with-toc {
+    margin-right: calc(var(--toc-width) + 4rem);
+  }
+}
+
 .content {
   max-width: var(--content-max-width);
   width: 100%;
@@ -353,6 +359,10 @@ a:hover {
 .content-area--home .content {
   max-width: 100%;
   padding: 0;
+}
+
+.site-body--docs .content :is(h2, h3, h4)[id] {
+  scroll-margin-top: calc(var(--header-height) + 1.5rem);
 }
 
 .doc-index__featured {
@@ -586,7 +596,7 @@ pre code {
   margin-left: auto;
   font-family: 'Berkeley Mono', 'SF Mono', monospace;
   font-size: 0.65rem;
-  color: rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.7);
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
@@ -597,7 +607,7 @@ pre code {
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 5px;
-  color: rgba(255, 255, 255, 0.35);
+  color: rgba(255, 255, 255, 0.75);
   padding: 0.2rem 0.5rem;
   font-family: 'Berkeley Mono', 'SF Mono', monospace;
   font-size: 0.65rem;
@@ -615,6 +625,17 @@ pre code {
 .copy-btn.copied {
   color: #50fa7b;
   border-color: rgba(80, 250, 123, 0.3);
+}
+
+.content code[data-lang="agent-prompt"] {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.copy-btn:focus-visible,
+.terminal-recording__toggle:focus-visible {
+  outline: 2px solid #ffb77c;
+  outline-offset: 3px;
 }
 
 /* Tables */
@@ -1395,6 +1416,43 @@ summary {
   height: auto;
 }
 
+.terminal-recording .terminal-demo {
+  border-radius: 12px;
+}
+
+.site-body--docs .content .terminal-recording img {
+  border-radius: 0;
+}
+
+.terminal-recording .terminal-demo__bar {
+  padding: 0.65rem 1rem;
+}
+
+.terminal-recording .terminal-demo__title {
+  color: #b9b9c2;
+}
+
+.terminal-recording__toggle {
+  flex-shrink: 0;
+  margin-left: auto;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid #55555e;
+  border-radius: 5px;
+  background: transparent;
+  color: #e4e4e7;
+  font: inherit;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.terminal-recording__toggle:hover {
+  background: #303036;
+}
+
+.terminal-recording__toggle:disabled {
+  cursor: default;
+}
+
 /* Gallery of terminal-native command demos on the landing page. */
 .demo-gallery {
   display: grid;
@@ -1792,6 +1850,10 @@ summary {
 }
 
 @media (max-width: 768px) {
+  .terminal-recording .terminal-demo__dots {
+    display: none;
+  }
+
   .sidebar {
     position: fixed;
     transform: translateX(-100%);

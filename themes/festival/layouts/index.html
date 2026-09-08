@@ -9,8 +9,8 @@
       </p>
 
       <div class="home-hero__actions">
-        {{ with site.GetPage "/getting-started/installation" }}
-          <a href="{{ .RelPermalink }}" class="btn btn--primary">Install Festival</a>
+        {{ with site.GetPage "/getting-started/quickstart" }}
+          <a href="{{ .RelPermalink }}" class="btn btn--primary">Start with the guide</a>
         {{ end }}
         <a href="#how-it-works" class="btn btn--secondary">See how it works</a>
         {{ with site.Params.repo }}
@@ -42,11 +42,11 @@
             <span class="terminal-demo__dot terminal-demo__dot--yellow"></span>
             <span class="terminal-demo__dot terminal-demo__dot--green"></span>
           </div>
-          <span class="terminal-demo__title">fest show</span>
+          <span class="terminal-demo__title">Camp Hardening: progress replay</span>
         </div>
-        <img src="/images/fest-show.gif" alt="fest show on a finished festival: four phases at 100 percent, then the task tree with every sequence and quality gate checked off" style="display:block;width:100%;height:auto;" loading="lazy">
+        <img src="/images/fest-show.gif" alt="A historical replay of recorded progress from the Camp Hardening festival, showing phases, tasks, and quality gates reaching completion" style="display:block;width:100%;height:auto;" loading="lazy">
       </div>
-      <p class="home-hero__visual-caption"><code>fest show</code> on a real festival, finished end to end. fest is the planning system that breaks a long-running, complex, or highly specific goal into structured work and drives it to completion.</p>
+      <p class="home-hero__visual-caption">A historical replay of the Camp Hardening festival's recorded progress. Festival turns a long-running goal into structured work, with a record you can return to and review.</p>
     </div>
   </section>
 
@@ -62,8 +62,8 @@
           <div class="howto__meta"><span class="howto__num">01</span><span class="howto__label">Set up</span></div>
           <h3>Create your workspace</h3>
           <p>One command scaffolds a campaign that holds every project, plan, and doc in one place. Add your repositories, create your first festival, and the workspace is ready. That is the whole setup.</p>
-          {{ with site.GetPage "/tutorials/campaign-setup" }}
-            <a href="{{ .RelPermalink }}" class="howto__link">Campaign setup &rarr;</a>
+          {{ with site.GetPage "/getting-started/quickstart" }}
+            <a href="{{ .RelPermalink }}#create-a-camp" class="howto__link">Create your camp &rarr;</a>
           {{ end }}
         </div>
         <div class="howto__visual">
@@ -72,7 +72,7 @@
               <div class="terminal-demo__dots"><span class="terminal-demo__dot terminal-demo__dot--red"></span><span class="terminal-demo__dot terminal-demo__dot--yellow"></span><span class="terminal-demo__dot terminal-demo__dot--green"></span></div>
               <span class="terminal-demo__title">camp init</span>
             </div>
-            <img src="/images/demos/tui-setup.gif" class="terminal-demo__gif" alt="camp init scaffolds a campaign, camp project add brings a repository in as a submodule, and fest create festival writes the first plan" data-poster="/images/demos/tui-setup-poster.png" loading="lazy">
+            <img src="/images/demos/tui-setup.gif" class="terminal-demo__gif" alt="camp init scaffolds a campaign, camp project add --local adds a local project, and fest create festival scaffolds the first festival" data-poster="/images/demos/tui-setup-poster.png" loading="lazy">
           </div>
         </div>
       </div>
@@ -82,8 +82,8 @@
           <div class="howto__meta"><span class="howto__num">02</span><span class="howto__label">Delegate</span></div>
           <h3>Describe the work to your agent</h3>
           <p>Open your agent of choice, Claude Code, Codex, or Grok, and describe what you want in a sentence. It creates the design, scaffolds a festival, and plans the whole thing out into phases, sequences, and tasks. You do not touch the <code>fest</code> CLI.</p>
-          {{ with site.GetPage "/guides/intent-design-festival" }}
-            <a href="{{ .RelPermalink }}" class="howto__link">Intent, design, festival &rarr;</a>
+          {{ with site.GetPage "/getting-started/quickstart" }}
+            <a href="{{ .RelPermalink }}#hand-off-a-goal" class="howto__link">Try your first handoff &rarr;</a>
           {{ end }}
         </div>
         <div class="howto__visual">
@@ -101,9 +101,9 @@
         <div class="howto__copy">
           <div class="howto__meta"><span class="howto__num">03</span><span class="howto__label">Watch</span></div>
           <h3>Watch the plan get built</h3>
-          <p>Your agent works the <code>fest next</code> loop on its own, and you watch progress climb in real time as tasks complete and commit with tracking. Any session picks up exactly where the last one stopped.</p>
-          {{ with site.GetPage "/guides/agent-workflows" }}
-            <a href="{{ .RelPermalink }}" class="howto__link">Agent workflows &rarr;</a>
+          <p>Your agent follows the <code>fest next</code> loop while you focus on other work. Check progress when you need to, review the results, and continue from the saved work record in your next session.</p>
+          {{ with site.GetPage "/getting-started/quickstart" }}
+            <a href="{{ .RelPermalink }}#run-review-and-resume" class="howto__link">Run and review the work &rarr;</a>
           {{ end }}
         </div>
         <div class="howto__visual">
@@ -112,7 +112,7 @@
               <div class="terminal-demo__dots"><span class="terminal-demo__dot terminal-demo__dot--red"></span><span class="terminal-demo__dot terminal-demo__dot--yellow"></span><span class="terminal-demo__dot terminal-demo__dot--green"></span></div>
               <span class="terminal-demo__title">fest watch</span>
             </div>
-            <img src="/images/demos/tui-fest-watch.gif" class="terminal-demo__gif" alt="fest watch: a festival's progress bar and task icons climbing live as the agent works" data-poster="/images/demos/tui-fest-watch-poster.png" loading="lazy">
+            <img src="/images/demos/tui-fest-watch.gif" class="terminal-demo__gif" alt="fest watch: a festival's progress bar and task icons updating with scripted sample task progress" data-poster="/images/demos/tui-fest-watch-poster.png" loading="lazy">
           </div>
         </div>
       </div>
@@ -132,7 +132,7 @@
               <div class="terminal-demo__dots"><span class="terminal-demo__dot terminal-demo__dot--red"></span><span class="terminal-demo__dot terminal-demo__dot--yellow"></span><span class="terminal-demo__dot terminal-demo__dot--green"></span></div>
               <span class="terminal-demo__title">camp wi</span>
             </div>
-            <img src="/images/demos/tui-workitems.gif" class="terminal-demo__gif" alt="camp wi dashboard: every festival, intent, design, and project in one unified list" data-poster="/images/demos/tui-workitems-poster.png" loading="lazy">
+            <img src="/images/demos/tui-workitems.gif" class="terminal-demo__gif" alt="camp wi dashboard: browse and preview sample intents, designs, explores, and festivals, then narrow the list with search" data-poster="/images/demos/tui-workitems-poster.png" loading="lazy">
           </div>
         </div>
       </div>

@@ -2,10 +2,21 @@
 {{- $title := .Get "title" -}}
 {{- $alt := .Get "alt" -}}
 {{- $max := .Get "max" | default "600" -}}
+{{- $poster := .Get "poster" -}}
+{{- $id := printf "terminal-recording-%d" .Ordinal -}}
+{{ if $poster }}
+<figure class="terminal-recording" style="max-width:{{ $max }}px;" data-demo-src="{{ $src }}" data-demo-poster="{{ $poster }}" data-demo-title="{{ $title }}">
+{{ end }}
 <div class="terminal-demo terminal-demo--embed" style="max-width:{{ $max }}px;">
   <div class="terminal-demo__bar">
-    <div class="terminal-demo__dots"><span class="terminal-demo__dot terminal-demo__dot--red"></span><span class="terminal-demo__dot terminal-demo__dot--yellow"></span><span class="terminal-demo__dot terminal-demo__dot--green"></span></div>
+    <div class="terminal-demo__dots" aria-hidden="true"><span class="terminal-demo__dot terminal-demo__dot--red"></span><span class="terminal-demo__dot terminal-demo__dot--yellow"></span><span class="terminal-demo__dot terminal-demo__dot--green"></span></div>
     <span class="terminal-demo__title">{{ $title }}</span>
+    {{ if $poster }}<button type="button" class="terminal-recording__toggle" data-demo-toggle aria-controls="{{ $id }}" hidden>Play animation</button>{{ end }}
   </div>
-  <img src="{{ $src }}" alt="{{ $alt }}" class="terminal-demo__gif" style="display:block;width:100%;height:auto;" loading="lazy">
+  <img {{ if $poster }}id="{{ $id }}"{{ end }} src="{{ if $poster }}{{ $poster }}{{ else }}{{ $src }}{{ end }}" alt="{{ $alt }}" class="terminal-demo__gif" {{ with .Get "width" }}width="{{ . }}"{{ end }} {{ with .Get "height" }}height="{{ . }}"{{ end }} loading="lazy" decoding="async">
 </div>
+{{ if $poster }}
+  {{ with .Get "caption" }}<figcaption>{{ . }}</figcaption>{{ end }}
+  <noscript><p><a href="{{ $src }}">Open the animated recording: {{ $title }}</a></p></noscript>
+</figure>
+{{ end }}
