@@ -1,167 +1,124 @@
 ---
 title: "Quick Start"
+description: "Create a camp, hand a goal to your agent, and review the work as it progresses. A video-led first run with Festival."
 weight: 12
 ---
 
 # Quick Start
 
-**Your files. Any agent.**
+**Hand off a goal. Keep working on what matters to you.**
 
-Festival is the planning and verification layer for long-running agent work. The camp is files you own. The harness is whatever you already run. The next session starts from `fest next`, not from a vendor brief.
+Festival gives your agent a plan to follow and a lasting record of the work. You set the goal and review the important decisions. Your agent plans, executes, and checks the work while you focus elsewhere.
 
-Create your first camp and festival in under 5 minutes.
+This guide takes you from a fresh install to your first handoff. The recordings show what to look for along the way.
 
-## Common Questions
+1. [Install the tools](#install)
+2. [Create a camp](#create-a-camp)
+3. [Hand off a goal](#hand-off-a-goal)
+4. [Run, review, and resume](#run-review-and-resume)
 
-**Is this a coding agent?**
+## 1. Install the tools {#install}
 
-No. Keep Claude Code, Codex, Grok, or whatever you use. Festival is the work system those agents read and write.
+Choose one method. Both install `camp`, `fest`, and the `festival` suite manager.
 
-**Where does the memory live?**
-
-In your camp: phases, sequences, tasks, intents, and git history, as plain files on your disk. You can copy it, diff it, and leave with it.
-
-**What happens when a session ends?**
-
-The next actionable task is still on disk. `fest next` is the resume, in the same agent or a different one.
-
-**How do you know the work is done?**
-
-Each task carries completion criteria, `fest validate` checks the plan against the methodology, quality gates run at the end of an implementation sequence, and `fest commit` ties the change back to the task it came from. That trail is the proof of work.
-
-**Why not a hosted agent workspace?**
-
-A hosted workspace keeps your continuity in someone else's account and usually replaces the coding agent you already run. Festival sits beside the harness you already pay for and keeps the record on your disk.
-
-{{< terminal-demo src="/images/demos/proof-loop.gif" title="fest next" alt="One sentence of intent scaffolds a festival, an agent runs the next task, the session is interrupted, fest next resumes it, then fest validate and fest commit close it out" max="700" >}}
-
-*One sentence of intent. A scaffolded festival. The agent runs the next task, the session is interrupted, and `fest next` picks it back up. Validate, commit, done.*
-
-## Prerequisites
-
-`fest` and `camp` should already be installed. If not, see the [Installation]({{< ref "/getting-started/installation" >}}) guide.
-
-## 1. Set Up Shell Integration
+**Homebrew on macOS**
 
 ```bash
-# Linux packages (AUR festival-bin, deb/rpm/apk obedience-festival)
-source /usr/share/festival/shell/festival.zsh
-
-# Add to ~/.zshrc when installed with install.sh
-source ~/.local/share/festival/shell/festival.zsh
-
-# Homebrew
-source "$(brew --prefix)/share/festival/shell/festival.zsh"
-
-# Or, if no helper file is installed:
-eval "$(camp shell-init zsh)"
-eval "$(fest shell-init zsh)"
-
-# Restart your shell or source the file
-source ~/.zshrc
+brew install --cask Obedience-Corp/tap/festival
 ```
 
-This gives you `cgo` for camp navigation and `fgo` for festival shortcuts.
-
-## 2. Create a Camp
+**npm with Node.js installed**
 
 ```bash
-camp init my-project
-cd my-project
+npm install -g @obedience-corp/festival
 ```
 
-This creates the camp directory structure with `projects/`, `festivals/`, `docs/`, and the `.campaign/` workspace config.
+For Linux packages, other install methods, or troubleshooting, see [Installation]({{< ref "/getting-started/installation" >}}).
 
-## 3. Navigate the Camp
+Check that the tools are available:
 
 ```bash
-cgo              # Jump to camp root
-cgo p            # Jump to projects/
-cgo f            # Jump to festivals/
-csw              # Interactive camp picker -- switch between camps
-csw my-project   # Switch directly by name
+festival doctor
 ```
 
-Single-letter shortcuts make navigation instant. `cgo p api` fuzzy-matches project names so you never type full paths. `csw` switches between camps -- use it when you're managing more than one.
+Then choose an [agent setup guide]({{< ref "/getting-started/agents" >}}) for your existing coding agent. Claude Code, Codex, Cursor, Grok Build, and other agents that can read files and run commands can use Festival. Agent-specific skills are optional; the CLI includes guidance your agent can read.
 
-## 4. Add a Project (Optional)
+**Ready when:** the tools are installed and your agent can run `camp` and `fest` in its terminal.
+
+## 2. Create a camp {#create-a-camp}
+
+A **camp** holds the context for one part of your life: your job, a side project, or a hobby. Each camp can contain several projects, with shared plans, research, and decisions. Start with one.
+
+From a directory where you keep your work:
 
 ```bash
-camp project add https://github.com/you/your-repo
+camp init my-camp
+cd my-camp
 ```
 
-Projects are added as git submodules under `projects/`.
+This creates `projects/`, `festivals/`, `docs/`, and instructions for your agent in `AGENTS.md`.
 
-## 5. Create Your First Festival
+Bring in a repository you already work on. Replace the example path with its full local path:
 
 ```bash
-fest create festival --name "my-first-feature" --type standard
+camp project link /path/to/your-existing-repo
 ```
 
-Use `standard` for the beginner path. It scaffolds the ingest and planning phases you need before implementation. Use `implementation` only when requirements are already defined and you want to skip that planning structure.
+This links the project into the camp without moving it, and adds a `.camp` attachment file to the project. To clone a repository into the camp instead, use [`camp project add`]({{< ref "/cli-reference/camp/camp_project_add" >}}).
 
-If you are not sure whether this work should start as an intent, a design doc, or a festival, read [Intent vs Design vs Festival]({{< ref "/guides/intent-design-festival" >}}) before creating more planning artifacts.
+{{< terminal-demo src="/images/demos/tui-setup.gif" poster="/images/demos/tui-setup-poster.png" title="Camp setup" alt="A terminal session initializes a camp, adds a local project, and scaffolds a standard festival." width="860" height="500" max="760" caption="Watch a sample camp take shape. The recording uses camp project add --local; the command above links an existing repository. Your agent will create your own festival in the next step." >}}
 
-## 6. Fill Required Markers
+**Ready when:** your project is accessible under `projects/`. Open your agent at the camp root, `my-camp/`, so it can read both the camp instructions and the project.
 
-Open the generated festival files and replace the required `REPLACE` markers with real content. Do not skip this step.
+## 3. Hand off a goal {#hand-off-a-goal}
 
-## 7. Validate the Festival
+A **festival** is the structured plan and work record for a goal. Choose a real outcome you can review, such as adding a feature with tests or investigating a problem and delivering a recommendation.
+
+Tell your agent what you want, which project to use, and what a good result looks like. Replace the bracketed text in this starter prompt:
+
+{{< agent-prompt >}}
+Read AGENTS.md and run fest intro to learn this camp's workflow.
+
+In [project name], I want [specific outcome].
+Success means [what I should be able to verify].
+Constraints: [scope, compatibility, or other requirements].
+
+Use the fest CLI to create and plan a standard festival for this goal. Ask me about missing requirements, follow the planning workflow, and stop at approval gates. Fill required markers, validate the plan, and link the festival to the project or worktree where you will implement it.
+
+Show me the plan and its location before starting implementation.
+{{< /agent-prompt >}}
+
+{{< terminal-demo src="/images/demos/tui-delegate.gif" poster="/images/demos/tui-delegate-poster.png" title="Planning with Grok Build" alt="Grok Build receives a goal, reads Festival guidance, and creates a design work item and an eight-phase festival plan." width="860" height="556" max="760" caption="A real Grok Build session planning a sample app feature. Your agent's interface and the size of your plan will vary with the goal." >}}
+
+**Review before execution:** does the plan describe the outcome you want, stay within scope, and include checks that will demonstrate it works? Ask for changes here, then approve the plan when you are ready.
+
+## 4. Run, review, and resume {#run-review-and-resume}
+
+After reviewing the plan, give your agent the go-ahead:
+
+{{< agent-prompt >}}
+The plan is approved. Work on this festival from its linked project or worktree. Run fest next, follow the instructions it returns, record progress, and repeat. Run the planned checks and review the results before marking work complete.
+
+Continue until the goal is complete or you reach an approval gate, a blocker, or a decision that needs me. Ask me at those points. Finish with a summary of what changed, the verification results, and anything I should review.
+{{< /agent-prompt >}}
+
+`fest next` supplies the next step and its context. Your agent runs the loop; you can work on something else and return at a review point. Keep the agent's own permission settings appropriate for the work you have authorized.
+
+To check progress yourself, open another terminal in the festival directory your agent showed you:
 
 ```bash
-fest validate
+fest watch
 ```
 
-Validation catches unfinished markers and structure issues before execution. Keep running it until the new festival passes cleanly.
+{{< terminal-demo src="/images/demos/tui-fest-watch.gif" poster="/images/demos/tui-fest-watch-poster.png" title="Progress with fest watch" alt="The fest watch terminal interface updates a festival tree as sample task progress advances." width="860" height="513" max="760" caption="The progress view you can open alongside your agent. This recording demonstrates fest watch with scripted progress updates in a sample festival." >}}
 
-## 8. Write a Task
+**If the session ends:** open your agent in the same camp and point it to the saved festival. Ask it to read the current state and continue the `fest next` loop from the linked project. The plan, recorded progress, and decisions stay in files between sessions.
 
-When `standard` scaffolding is valid, your first useful work starts in `001_INGEST/`. Implementation tasks later live directly inside the sequence directory, not under a `tasks/` subdirectory:
+**Your first handoff is complete when:** you have reviewed the result against your success criteria, checked the verification evidence, and can find the plan and work record in the camp. That gives the next session a starting point for whatever comes next.
 
-```
-01_setup-database/
-  01_create-schema.md
-  02_write-migrations.md
-  03_seed-test-data.md
-```
+## Keep going
 
-If you later create implementation sequences manually, add the standard quality gates explicitly:
-
-```bash
-fest gates apply --approve
-```
-
-## 9. Start Working
-
-```bash
-fest next                              # Get the next task with full context
-```
-
-On a first-run `standard` festival, `fest next` should take you into the ingest workflow after marker fill and validation. Once you reach implementation tasks later, do the work described and then:
-
-```bash
-fest task completed                     # Mark the current task done
-fest commit -m "implement user model"  # Commit with festival tracking
-```
-
-`fest commit` wraps git commit with metadata that ties changes back to the active task. Always prefer it over raw `git commit` when working inside a festival.
-
-## 10. Track Progress
-
-```bash
-fest status        # View overall festival progress
-fest progress      # Detailed execution progress with phase/sequence breakdown
-```
-
-`fest status` gives a high-level view. `fest progress` shows exactly where you are in the phase-sequence-task hierarchy.
-
-To see every festival in the camp at once, grouped by status, use `fest list`:
-
-{{< terminal-demo src="/images/demos/tui-fest-list.gif" title="fest list" alt="fest list showing festivals grouped by status: active, ready, and planning" max="600" >}}
-
-## What's Next?
-
-- [Methodology Overview]({{< ref "/methodology/overview" >}}) -- Understand the full phase-sequence-task system
-- [First Festival Tutorial]({{< ref "/tutorials/first-festival" >}}) -- Detailed end-to-end tutorial with real examples
-- [Agent Workflows]({{< ref "/guides/agent-workflows" >}}) -- Using Festival with AI coding tools
-- [Best Practices]({{< ref "/guides/best-practices" >}}) -- Patterns for effective planning and execution
+- [Shell integration]({{< ref "/getting-started/shell-setup" >}}): add `cgo` and `fgo` navigation shortcuts.
+- [First Festival tutorial]({{< ref "/tutorials/first-festival" >}}): walk through the scaffolding and task structure yourself.
+- [Loops & Orchestration]({{< ref "/guides/loops-and-orchestration" >}}): build repeatable loops and coordinate work across projects.
+- [Work items]({{< ref "/cli-reference/camp/camp_workitem" >}}): find your intents, designs, and festivals as the camp grows.

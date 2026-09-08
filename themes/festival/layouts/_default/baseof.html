@@ -20,7 +20,7 @@
       {{ partial "sidebar.html" . }}
     {{ end }}
 
-    <main class="content-area{{ if .IsHome }} content-area--home{{ end }}">
+    <main class="content-area{{ if .IsHome }} content-area--home{{ else if .TableOfContents }} content-area--with-toc{{ end }}">
       <div class="content">
         {{ block "main" . }}{{ end }}
       </div>
@@ -55,6 +55,10 @@
   </footer>
 
   <script src="{{ "pagefind/pagefind-ui.js" | relURL }}"></script>
+  {{ if .HasShortcode "terminal-demo" }}
+    {{ $recordings := resources.Get "js/terminal-recordings.js" | minify | fingerprint }}
+    <script src="{{ $recordings.RelPermalink }}" defer></script>
+  {{ end }}
   <script>
   // Theme toggle
   (function() {
@@ -223,24 +227,43 @@
       if (lang) {
         var langLabel = document.createElement('span');
         langLabel.className = 'code-block__lang';
-        langLabel.textContent = lang;
+        langLabel.textContent = lang === 'agent-prompt' ? 'Agent prompt' : lang;
+        if (lang === 'agent-prompt') wrapper.classList.add('code-block--prompt');
         header.appendChild(langLabel);
       }
 
       // Copy button
       var btn = document.createElement('button');
+      btn.type = 'button';
       btn.className = 'copy-btn';
       btn.textContent = 'Copy';
+      btn.setAttribute('aria-live', 'polite');
       btn.addEventListener('click', function() {
         var code = pre.querySelector('code') || pre;
-        navigator.clipboard.writeText(code.textContent).then(function() {
-          btn.textContent = 'Copied!';
-          btn.classList.add('copied');
+        function resetLabel() {
           setTimeout(function() {
             btn.textContent = 'Copy';
             btn.classList.remove('copied');
           }, 2000);
-        });
+        }
+        function selectForCopy() {
+          var selection = window.getSelection();
+          var range = document.createRange();
+          range.selectNodeContents(code);
+          selection.removeAllRanges();
+          selection.addRange(range);
+          btn.textContent = 'Selected: copy manually';
+          resetLabel();
+        }
+        if (!navigator.clipboard || !navigator.clipboard.writeText) {
+          selectForCopy();
+          return;
+        }
+        navigator.clipboard.writeText(code.textContent).then(function() {
+          btn.textContent = 'Copied!';
+          btn.classList.add('copied');
+          resetLabel();
+        }).catch(selectForCopy);
       });
       header.appendChild(btn);
 
