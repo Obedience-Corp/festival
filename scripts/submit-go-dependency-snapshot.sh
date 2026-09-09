@@ -1,10 +1,19 @@
 #!/usr/bin/env bash
-# Submit a Go module graph to GitHub's dependency submission API.
+# Submit the Go modules a component actually builds to GitHub's dependency
+# submission API.
 #
-# actions/go-dependency-submission names the manifest after go-build-target
-# (default "all"). For gitlink go.mod files, Dependabot alerts stay attached to
-# paths like fest/go.mod, so the snapshot must use that path as the manifest
-# name/source_location or stale alerts never auto-resolve.
+# The manifest is named after the gitlink go.mod path (fest/go.mod, camp/go.mod)
+# because Dependabot alerts stay attached to that path; a snapshot under any
+# other name never resolves them.
+#
+# Modules come from `go list -deps -test ./...`, not `go list -m all`. The module
+# graph carries requirements that contribute no package to any build (for example
+# google.golang.org/grpc pulled in by containerd/errdefs/pkg), and reporting those
+# raises Dependabot alerts for code that is never compiled. Modules reached only
+# through tests (including SNAPSHOT_TEST_TAGS builds, default "integration") are
+# submitted with development scope.
+#
+# Set SNAPSHOT_DRY_RUN=1 to print the snapshot instead of submitting it.
 set -euo pipefail
 
 if [[ $# -ne 1 ]]; then
@@ -19,6 +28,15 @@ if [[ "$(basename "$go_mod_path")" != "go.mod" || ! -f "$go_mod_path" ]]; then
 fi
 
 go_mod_dir="$(dirname "$go_mod_path")"
+dry_run="${SNAPSHOT_DRY_RUN:-0}"
+test_tags="${SNAPSHOT_TEST_TAGS:-integration}"
+
+if [[ "$dry_run" == "1" ]]; then
+  : "${GITHUB_REPOSITORY:=Obedience-Corp/festival}"
+  : "${GITHUB_SHA:=$(git rev-parse HEAD 2>/dev/null || echo 0000000000000000000000000000000000000000)}"
+  : "${GITHUB_REF:=refs/heads/dry-run}"
+  : "${GITHUB_TOKEN:=dry-run}"
+fi
 : "${GITHUB_REPOSITORY:?GITHUB_REPOSITORY is required}"
 : "${GITHUB_SHA:?GITHUB_SHA is required}"
 : "${GITHUB_REF:?GITHUB_REF is required}"
@@ -28,37 +46,47 @@ go_mod_dir="$(dirname "$go_mod_path")"
 : "${GITHUB_JOB:=submit}"
 export GITHUB_REPOSITORY GITHUB_SHA GITHUB_REF GITHUB_TOKEN GITHUB_RUN_ID GITHUB_WORKFLOW GITHUB_JOB
 
-tmp="$(mktemp)"
-trap 'rm -f "$tmp"' EXIT
+runtime_modules="$(mktemp)"
+all_modules="$(mktemp)"
+trap 'rm -f "$runtime_modules" "$all_modules"' EXIT
 
-GOWORK=off go -C "$go_mod_dir" list -m -json all >"$tmp"
+module_format='{{with .Module}}{{if not .Main}}{{.Path}} {{.Version}} {{.Indirect}}{{with .Replace}} {{.Path}} {{.Version}}{{end}}{{println}}{{end}}{{end}}'
+GOWORK=off go -C "$go_mod_dir" list -deps -f "$module_format" ./... | sort -u >"$runtime_modules"
+GOWORK=off go -C "$go_mod_dir" list -tags "$test_tags" -deps -test -f "$module_format" ./... | sort -u >"$all_modules"
 
-snapshot="$(GOWORK=off python3 - "$go_mod_path" "$tmp" <<'PY'
+snapshot="$(python3 - "$go_mod_path" "$runtime_modules" "$all_modules" <<'PY'
 import json, os, sys, datetime
 from pathlib import Path
 
 go_mod_path = sys.argv[1]
-modules_path = Path(sys.argv[2])
+runtime_path = Path(sys.argv[2])
+all_path = Path(sys.argv[3])
 
-mods = []
-buf = []
-for line in modules_path.read_text().splitlines(True):
-    buf.append(line)
-    if line.strip() == "}":
-        mods.append(json.loads("".join(buf)))
-        buf = []
+
+def read_modules(path):
+    modules = {}
+    for line in path.read_text().splitlines():
+        fields = line.split()
+        if len(fields) < 3:
+            continue
+        module_path, version, indirect = fields[0], fields[1], fields[2] == "true"
+        if len(fields) >= 5:
+            module_path, version = fields[3], fields[4]
+        if not version:
+            continue
+        modules[f"pkg:golang/{module_path}@{version}"] = indirect
+    return modules
+
+
+runtime = read_modules(runtime_path)
+everything = read_modules(all_path)
 
 resolved = {}
-for mod in mods:
-    path = mod.get("Path")
-    version = mod.get("Version")
-    if not path or not version:
-        continue
-    purl = f"pkg:golang/{path}@{version}"
+for purl, indirect in everything.items():
     resolved[purl] = {
         "package_url": purl,
-        "relationship": "indirect" if mod.get("Indirect") else "direct",
-        "scope": "runtime",
+        "relationship": "indirect" if indirect else "direct",
+        "scope": "runtime" if purl in runtime else "development",
         "dependencies": [],
     }
 
@@ -73,7 +101,7 @@ snapshot = {
     },
     "detector": {
         "name": "festival-submit-go-dependency-snapshot",
-        "version": "1.0.0",
+        "version": "2.0.0",
         "url": "https://github.com/Obedience-Corp/festival",
     },
     "scanned": now,
@@ -89,17 +117,26 @@ print(json.dumps(snapshot))
 PY
 )"
 
-owner="${GITHUB_REPOSITORY%/*}"
-repo="${GITHUB_REPOSITORY#*/}"
-
-package_count="$(
+summary="$(
   SNAPSHOT_JSON="$snapshot" GO_MOD_PATH="$go_mod_path" python3 - <<'PY'
 import json, os
 snapshot = json.loads(os.environ["SNAPSHOT_JSON"])
-print(len(snapshot["manifests"][os.environ["GO_MOD_PATH"]]["resolved"]))
+resolved = snapshot["manifests"][os.environ["GO_MOD_PATH"]]["resolved"].values()
+runtime = sum(1 for entry in resolved if entry["scope"] == "runtime")
+print(f"{len(resolved)} modules: {runtime} runtime, {len(resolved) - runtime} development")
 PY
 )"
-echo "Submitting dependency snapshot for ${go_mod_path} (${package_count} packages)"
+
+if [[ "$dry_run" == "1" ]]; then
+  echo "Dry run: dependency snapshot for ${go_mod_path} (${summary})" >&2
+  printf '%s\n' "$snapshot"
+  exit 0
+fi
+
+echo "Submitting dependency snapshot for ${go_mod_path} (${summary})"
+
+owner="${GITHUB_REPOSITORY%/*}"
+repo="${GITHUB_REPOSITORY#*/}"
 
 response="$(
   curl -fsSL \
