@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} - {{ .Site.Title }}{{ end }}</title>
-  <meta name="description" content="{{ with .Description }}{{ . }}{{ else }}{{ .Site.Params.description }}{{ end }}">
+  {{ partial "seo.html" . }}
   {{ $css := resources.Get "css/main.css" | minify | fingerprint }}
   <link rel="stylesheet" href="{{ $css.RelPermalink }}">
   <link href="{{ "pagefind/pagefind-ui.css" | relURL }}" rel="stylesheet">
-  {{ template "_internal/google_analytics.html" . }}
+  {{ if eq hugo.Environment "production" }}{{ template "_internal/google_analytics.html" . }}{{ end }}
 </head>
 <body class="{{ if .IsHome }}site-body--home{{ else }}site-body--docs{{ end }}">
+  <a class="skip-link" href="#main-content">Skip to content</a>
   {{ partial "header.html" . }}
 
   <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
@@ -20,7 +20,7 @@
       {{ partial "sidebar.html" . }}
     {{ end }}
 
-    <main class="content-area{{ if .IsHome }} content-area--home{{ else if .TableOfContents }} content-area--with-toc{{ end }}">
+    <main id="main-content" tabindex="-1" data-pagefind-body class="content-area{{ if .IsHome }} content-area--home{{ else if .TableOfContents }} content-area--with-toc{{ end }}">
       <div class="content">
         {{ block "main" . }}{{ end }}
       </div>
@@ -148,12 +148,37 @@
   });
 
   // Mobile sidebar
-  function toggleSidebar() {
+  function setSidebarOpen(open) {
     var sidebar = document.querySelector('.sidebar');
     var overlay = document.querySelector('.sidebar-overlay');
-    if (sidebar) sidebar.classList.toggle('open');
-    if (overlay) overlay.classList.toggle('open');
+    var button = document.querySelector('.sidebar-toggle');
+    if (!sidebar) return;
+    sidebar.classList.toggle('open', open);
+    sidebar.inert = window.matchMedia('(max-width: 768px)').matches && !open;
+    if (overlay) overlay.classList.toggle('open', open);
+    if (button) button.setAttribute('aria-expanded', String(open));
   }
+
+  function toggleSidebar() {
+    var sidebar = document.querySelector('.sidebar');
+    if (sidebar) setSidebarOpen(!sidebar.classList.contains('open'));
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    setSidebarOpen(false);
+    var sidebar = document.querySelector('.sidebar');
+    if (!sidebar) return;
+    sidebar.querySelectorAll('a').forEach(function(link) {
+      link.addEventListener('click', function() { setSidebarOpen(false); });
+    });
+    window.matchMedia('(max-width: 768px)').addEventListener('change', function() { setSidebarOpen(false); });
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape' && sidebar.classList.contains('open')) {
+        setSidebarOpen(false);
+        document.querySelector('.sidebar-toggle').focus();
+      }
+    });
+  });
 
   function syncHeaderState() {
     var header = document.querySelector('.site-header--home');
@@ -300,15 +325,32 @@
       showImages: false
     });
 
+    var searchOpener = null;
+
     function openSearch() {
+      if (overlay.classList.contains('open')) return;
+      searchOpener = document.activeElement;
       overlay.classList.add('open');
       var input = overlay.querySelector('.pagefind-ui__search-input');
       if (input) setTimeout(function() { input.focus(); }, 50);
     }
 
     function closeSearch() {
+      if (!overlay.classList.contains('open')) return;
       overlay.classList.remove('open');
+      if (searchOpener && searchOpener.isConnected) searchOpener.focus();
     }
+
+    overlay.querySelector('.search-close').addEventListener('click', closeSearch);
+
+    overlay.addEventListener('keydown', function(e) {
+      if (e.key !== 'Tab') return;
+      var controls = Array.from(overlay.querySelectorAll('a[href], button, input, [tabindex="0"]')).filter(function(el) { return !el.disabled && el.getClientRects().length; });
+      var first = controls[0];
+      var last = controls[controls.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    });
 
     document.querySelectorAll('.search-trigger').forEach(function(btn) {
       btn.addEventListener('click', openSearch);
@@ -329,7 +371,8 @@
   </script>
 
   <div id="search-overlay" class="search-overlay">
-    <div class="search-modal">
+    <div class="search-modal" role="dialog" aria-modal="true" aria-label="Search documentation">
+      <button type="button" class="search-close">Close search</button>
       <div id="search-container"></div>
     </div>
   </div>

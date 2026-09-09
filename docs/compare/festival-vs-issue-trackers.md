@@ -1,78 +1,51 @@
 ---
-title: "Festival vs Issue Trackers"
-description: "Compare Festival with GitHub Issues, Linear, Jira, and task lists for AI-assisted software work."
+title: "Using Festival with Your Issue Tracker"
+linkTitle: "Festival & Issue Trackers"
+description: "Keep GitHub Issues, Linear, or Jira for team coordination. Use Festival for agent execution plans, review gates, and context, connected through scripts or justfiles."
 weight: 39
 ---
 
-# Festival vs Issue Trackers
+# Using Festival with Your Issue Tracker
 
-Issue trackers are good at recording what a team intends to do. Festival is built for turning a goal into executable work that an AI agent can pick up, verify, commit, and resume.
+Keep the issue where your team already discusses it. Use Festival to organize the work your agent needs to do to resolve it.
 
-You may still use GitHub Issues, Linear, Jira, or a task list. Festival fills a different gap.
+An issue might request a new permission model. Delivering it may require decisions, changes to several repositories, migration checks, documentation, and review. A festival connects those steps to the outcome. The issue remains the place to agree on priority and communicate the result.
 
-## Short Version
+## Connect the request to the work
 
-Use an issue tracker for prioritization, discussion, assignment, and team visibility.
+A useful handoff keeps both records linked:
 
-Use Festival when the work needs structured execution:
+| Record | What to keep there |
+| --- | --- |
+| Issue or ticket | Request, discussion, priority, owner, and links to the result |
+| Camp intent or research | Source URL, initial questions, evidence, and constraints |
+| Festival | Approved plan, task criteria, dependencies, review gates, and progress |
+| Pull request | Implementation diff, verification summary, and links back to the issue and festival |
 
-- project-local context
-- phase and task hierarchy
-- agent-readable next steps
-- acceptance criteria
-- quality gates
-- handoff notes
-- commit traceability
+For a small fix, you may need only the issue and a branch. A festival becomes useful when the work needs decomposition, a lasting decision record, or coordination across projects.
 
-## Comparison
+## Bring an issue into a camp
 
-| Need | Issue tracker | Festival |
-|---|---|---|
-| Team backlog | Strong | Not the primary job |
-| Project discussion | Strong | Supported through docs, but not a comment system |
-| AI agent next task | Usually ambiguous | `fest next` returns the next executable task |
-| Context across sessions | Often scattered | Stored in the workspace |
-| Multi-step execution | Manual coordination | Phases, sequences, and tasks |
-| Verification | Usually checklist text | Task criteria plus gates and commands |
-| Commit traceability | Manual conventions | `fest commit` ties work to the plan |
-| Works without a hosted service | Usually no | Yes, filesystem plus git |
+Ask your agent to read the issue through the tracker CLI or API you already use. It can capture the source URL and relevant requirements in an intent, research work item, or festival plan.
 
-## Where Issue Trackers Break Down For Agents
+For repeated use, put that step in a script or justfile. Decide what to copy, where it belongs, and how to recognize an issue that has already been imported. Keep credentials in your existing credential system and include only the data the work needs.
 
-An issue often describes a desired outcome, but an agent still needs to infer:
+Festival stores work in files, so the integration can use your preferred language and tooling. The tracker adapter is a script or integration you supply; Festival does not include native synchronization with every tracker.
 
-- which files matter
-- what order to do the work in
-- what prior decisions constrain the implementation
-- how to verify each step
-- what to do after the first subtask is complete
+## Give the agent a bounded goal
 
-That inference burns context and creates risk. Festival makes the execution plan explicit.
+{{< agent-prompt >}}
+Read [issue URL] using the configured tracker tool. Capture its source link, requirements, and open questions in this camp.
 
-## How They Work Together
+Plan the work in [project] with Festival, including acceptance criteria and verification. Ask me about missing requirements and show the plan before implementation.
 
-A practical setup is:
+Keep the issue's discussion and priority in the tracker. When the work is ready, prepare a summary with the pull request and verification results for me to review before posting it.
+{{< /agent-prompt >}}
 
-1. Use GitHub Issues, Linear, or Jira for product backlog and team discussion.
-2. Promote selected work into a Festival when it becomes AI-executable.
-3. Use Festival to plan phases, sequences, tasks, gates, and verification.
-4. Link commits and PRs back to the issue if needed.
+If your team wants automated updates, define the allowed fields and posting rules in the script. A local task completing does not necessarily mean an issue should close: there may still be a deployment, review, or customer confirmation to do.
 
-The issue remains the team-level artifact. The festival becomes the execution artifact.
+## Return a useful result
 
-## When Festival Is Overkill
+At review time, ask for the implementation, checks run, unresolved concerns, and links back to the work record. Your agent can prepare those from the festival and repository.
 
-Do not create a festival for every tiny task. A one-line typo fix or a small isolated edit does not need the full structure.
-
-Festival pays for itself when the work is large enough that losing context would cost more than writing the plan.
-
-## Try It
-
-```bash
-camp init my-workspace
-cd my-workspace
-fest create festival --name issue-123-auth-refactor --type standard
-fest next
-```
-
-Next: read [AI Agent Project Management]({{< ref "/use-cases/ai-agent-project-management" >}}) or start with the [Quick Start]({{< ref "/getting-started/quickstart" >}}).
+That leaves the team with its familiar issue workflow and gives the next agent session a specific place to continue. Follow the [Quick Start]({{< ref "/getting-started/quickstart" >}}) to try one issue, or read [Loops & Orchestration]({{< ref "/guides/loops-and-orchestration" >}}) for recurring intake.

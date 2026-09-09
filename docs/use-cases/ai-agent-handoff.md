@@ -1,6 +1,6 @@
 ---
 title: "AI Agent Handoff"
-description: "Use Festival to hand off AI coding work between sessions, tools, and humans without losing plan context or next actions."
+description: "Hand off agent work with a recorded goal, decisions, checks, blockers, and next task so another session or reviewer can continue."
 weight: 38
 ---
 
@@ -33,14 +33,14 @@ Festival keeps handoff state in the workspace:
 - commits preserve traceability.
 - context notes capture decisions and open questions.
 
-The next agent can start with:
+From the active festival directory or a project linked to it, the next agent can start with:
 
 ```bash
 fest status
 fest next
 ```
 
-That is enough to understand where the work stands and what to do next.
+These commands provide the recorded status and next step. The agent still needs to read relevant project instructions, source files, and handoff notes before changing anything.
 
 ## What To Capture Before Ending A Session
 
@@ -54,7 +54,13 @@ Before stopping a long-running session, capture:
 - unresolved questions
 - the exact next task if it is not already represented
 
-Put that context in the festival files instead of only in chat. The next session can then resume without a verbal briefing.
+Put that context in the festival files, including failed checks and unfinished changes. A handoff is only as useful as the record left behind.
+
+{{< agent-prompt >}}
+Resume the festival at [path]. Read the goal, latest context notes, and project instructions, then run fest status and fest next from the festival directory.
+
+Check the working tree before making changes. Summarize the current step, completed checks, blockers, and any mismatch between the notes and the files. Continue only within the already-approved scope; ask before changing the plan or overwriting unfinished work.
+{{< /agent-prompt >}}
 
 ## Handoff Between Tools
 
@@ -86,4 +92,4 @@ Then make sure the task state matches reality:
 - record blockers in the task or context notes
 - commit finished work with `fest commit`
 
-Next: read [Agent Workflows]({{< ref "/guides/agent-workflows" >}}) and [Workflows & Gates]({{< ref "/methodology/workflows-and-gates" >}}).
+The reviewer should be able to connect each claimed result to a file, check, or commit. Read [Agent Workflows]({{< ref "/guides/agent-workflows" >}}) for the execution loop and [Workflows & Gates]({{< ref "/methodology/workflows-and-gates" >}}) for approval points.

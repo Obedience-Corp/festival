@@ -21,7 +21,7 @@
       <div class="home-hero__stats">
         <div class="home-stat">
           <div class="home-stat__value">Multi-project</div>
-          <div class="home-stat__label">Build anything at any scale</div>
+          <div class="home-stat__label">Related repos and work in one camp</div>
         </div>
         <div class="home-stat">
           <div class="home-stat__value">Loops</div>
@@ -53,15 +53,15 @@
   <section class="home-section" id="how-it-works">
     <div class="home-section__intro">
       <h2 class="home-section__heading home-section__heading--centered">How it works</h2>
-      <p class="home-section__lede">Toolsuite made for human AI collaboration at any scale.</p>
+      <p class="home-section__lede">Create a camp, hand off a goal, and review the work as it progresses.</p>
     </div>
 
     <div class="howto">
       <div class="howto__row">
         <div class="howto__copy">
           <div class="howto__meta"><span class="howto__num">01</span><span class="howto__label">Set up</span></div>
-          <h3>Create your workspace</h3>
-          <p>One command scaffolds a campaign that holds every project, plan, and doc in one place. Add your repositories, create your first festival, and the workspace is ready. That is the whole setup.</p>
+          <h3>Create a camp for your work</h3>
+          <p>A camp holds the projects, plans, and context for one part of your life: a job, a side project, or a hobby. Create the camp, add your repositories, and give your agent a place to keep the work.</p>
           {{ with site.GetPage "/getting-started/quickstart" }}
             <a href="{{ .RelPermalink }}#create-a-camp" class="howto__link">Create your camp &rarr;</a>
           {{ end }}
@@ -81,7 +81,7 @@
         <div class="howto__copy">
           <div class="howto__meta"><span class="howto__num">02</span><span class="howto__label">Delegate</span></div>
           <h3>Describe the work to your agent</h3>
-          <p>Open your agent of choice, Claude Code, Codex, or Grok, and describe what you want in a sentence. It creates the design, scaffolds a festival, and plans the whole thing out into phases, sequences, and tasks. You do not touch the <code>fest</code> CLI.</p>
+          <p>Open your agent of choice, such as Claude Code, Codex, or Grok build. Describe the outcome and ask it to prepare a Festival plan. Review the scope and checkpoints before execution. Your agent handles the <code>fest</code> commands.</p>
           {{ with site.GetPage "/getting-started/quickstart" }}
             <a href="{{ .RelPermalink }}#hand-off-a-goal" class="howto__link">Try your first handoff &rarr;</a>
           {{ end }}
@@ -122,8 +122,8 @@
           <div class="howto__meta"><span class="howto__num">04</span><span class="howto__label">Track</span></div>
           <h3>Track everything in one place</h3>
           <p>Every festival, intent, design, and project across the campaign in one dashboard. Run many in parallel with different agents, and switch between them without losing the thread.</p>
-          {{ with site.GetPage "/getting-started/quickstart" }}
-            <a href="{{ .RelPermalink }}" class="howto__link">Quick start &rarr;</a>
+          {{ with site.GetPage "/guides/everyday-development" }}
+            <a href="{{ .RelPermalink }}" class="howto__link">Navigate your daily work &rarr;</a>
           {{ end }}
         </div>
         <div class="howto__visual">
@@ -154,7 +154,7 @@
           </div>
           <img src="/images/demos/cgo-navigation.gif" class="terminal-demo__gif" alt="cgo jumping between projects, festivals, and design directories, plus csw to switch campaigns" loading="lazy">
         </div>
-        <figcaption class="demo-gallery__caption">Jump anywhere in the workspace</figcaption>
+        <figcaption class="demo-gallery__caption"><a href="/guides/everyday-development/">Navigate projects with cgo</a></figcaption>
       </figure>
 
       <figure class="demo-gallery__item">
@@ -249,31 +249,29 @@
 
   <section class="home-section home-section--problem">
     <div class="home-section__intro">
-      <h2 class="home-section__heading home-section__heading--centered">Festival is for AI-assisted work that has to stay coherent for months or years</h2>
+      <h2 class="home-section__heading home-section__heading--centered">An operating environment for the life of the work</h2>
       <p class="home-section__lede">
-        Not one prompt. Not one chat. Not one coding session. Long-running work has changing
-        goals, decisions, artifacts, reviews, next actions, and context. AI can generate pieces
-        of the work, but it does not preserve the structure needed to finish the whole thing.
-        Festival keeps that structure intact.
+        Goals evolve over months and years. Keep the plans, decisions, research, and progress
+        with the work itself, so agents and people can return to it, understand it, and continue.
       </p>
     </div>
 
     <div class="cards cards--problem">
       <div class="card">
-        <div class="card__title">Ambitious builds fall apart without a plan</div>
-        <div class="card__description">Festival breaks complex goals into phases, sequences, and tasks. Every step is structured and scoped for AI execution.</div>
+        <div class="card__title">A goal becomes a plan</div>
+        <div class="card__description">Phases, sequences, and tasks turn a goal into a graph of work, with dependencies and checks attached.</div>
       </div>
       <div class="card">
-        <div class="card__title">Multi-project coordination is chaos</div>
-        <div class="card__description">Campaigns give you one workspace for all your repos, docs, and plans. cgo navigates instantly. Nothing bleeds between projects.</div>
+        <div class="card__title">Context stays with the camp</div>
+        <div class="card__description">Related repositories, research, and decisions share a home. Separate camps keep different parts of your life distinct.</div>
       </div>
       <div class="card">
-        <div class="card__title">Agents lose context between sessions</div>
-        <div class="card__description">All state lives in the filesystem. fest next gives any agent the full picture, any time, no re-explaining.</div>
+        <div class="card__title">Sessions can pick up the work</div>
+        <div class="card__description">Saved plans and progress give the next agent a starting point. fest next provides the next step and its planning context.</div>
       </div>
       <div class="card">
-        <div class="card__title">Scaling past one feature at a time</div>
-        <div class="card__description">Run multiple festivals in parallel across projects. Track progress, enforce quality gates, and ship at scale.</div>
+        <div class="card__title">You have room for other work</div>
+        <div class="card__description">Let agents execute approved work in separate festivals and worktrees. Return for decisions, review, and the results.</div>
       </div>
     </div>
   </section>
@@ -290,7 +288,6 @@
       <a href="/getting-started/agents/hermes/">Hermes</a>
       <a href="/getting-started/agents/other-agents/#aider">Aider</a>
       <a href="/getting-started/agents/cursor/">Cursor Agents</a>
-      <a href="/getting-started/agents/gemini/">Gemini CLI</a>
       <a href="/getting-started/agents/other-agents/#custom-tooling">Custom tooling</a>
     </div>
     <p class="home-tools__note">Any agent that can run shell commands and read files.</p>
@@ -298,40 +295,40 @@
 
   <section class="home-section home-section--next-steps">
     <div class="home-section__intro">
-      <h2 class="home-section__heading home-section__heading--centered">Use Festival where AI work loses context</h2>
+      <h2 class="home-section__heading home-section__heading--centered">Start with work you need to finish</h2>
       <p class="home-section__lede">
-        Start with the workflow problem you are trying to solve, then move into the installation
-        and command reference once the fit is clear.
+        A cross-repo feature, an investigation, a recurring analysis, or a difficult support
+        case. See what the agent can prepare and what you should review.
       </p>
     </div>
 
     <div class="cards">
       {{ with site.GetPage "/use-cases/ai-agent-project-management" }}
         <a href="{{ .RelPermalink }}" class="card">
-          <div class="card__title">AI agent project management</div>
-          <div class="card__description">Give agents goals, phases, tasks, status, and verification they can read from the workspace.</div>
+          <div class="card__title">Deliver a cross-repo change</div>
+          <div class="card__description">Keep the API, client, tests, and release checks connected to the same goal.</div>
           <span class="card__arrow">Read the use case &rarr;</span>
         </a>
       {{ end }}
-      {{ with site.GetPage "/use-cases/long-running-ai-coding-sessions" }}
+      {{ with site.GetPage "/use-cases/incident-investigation" }}
         <a href="{{ .RelPermalink }}" class="card">
-          <div class="card__title">Long-running AI coding sessions</div>
-          <div class="card__description">Keep multi-day or multi-week implementation work coherent across context windows and interruptions.</div>
+          <div class="card__title">Investigate an incident</div>
+          <div class="card__description">Build a timeline, test explanations, and prepare a postmortem with evidence.</div>
           <span class="card__arrow">Read the use case &rarr;</span>
         </a>
       {{ end }}
-      {{ with site.GetPage "/use-cases/ai-agent-handoff" }}
+      {{ with site.GetPage "/use-cases/research-and-analysis" }}
         <a href="{{ .RelPermalink }}" class="card">
-          <div class="card__title">AI agent handoff</div>
-          <div class="card__description">Let a new agent, model, or human reviewer resume from the actual next step.</div>
+          <div class="card__title">Make research repeatable</div>
+          <div class="card__description">Keep sources, scripts, assumptions, and findings together for the next review.</div>
           <span class="card__arrow">Read the use case &rarr;</span>
         </a>
       {{ end }}
-      {{ with site.GetPage "/compare/festival-vs-issue-trackers" }}
+      {{ with site.GetPage "/use-cases" }}
         <a href="{{ .RelPermalink }}" class="card">
-          <div class="card__title">Festival vs issue trackers</div>
-          <div class="card__description">Use backlog tools for team coordination and Festival for executable AI work plans.</div>
-          <span class="card__arrow">Compare the workflow &rarr;</span>
+          <div class="card__title">Find your use case</div>
+          <div class="card__description">Explore support, infrastructure, long-running work, and handoffs between agents.</div>
+          <span class="card__arrow">Browse the use cases &rarr;</span>
         </a>
       {{ end }}
     </div>
@@ -339,7 +336,7 @@
 
   <section class="home-section home-section--install">
     <div class="home-install home-install--center">
-      <h2 class="home-section__heading">Structure the ambition. Let AI ship it.</h2>
+      <h2 class="home-section__heading">Give your next goal a place to run.</h2>
       <div class="home-install__terminals">
         <div class="home-install__terminal">
           <span class="home-install__prompt">$</span>
@@ -358,7 +355,7 @@
           <a href="{{ .RelPermalink }}" class="btn btn--ghost-light">Quick Start Guide</a>
         {{ end }}
       </div>
-      <p class="home-install__note">Free to use. Works in 30 seconds.</p>
+      <p class="home-install__note">Free to use. Manage the suite and discover plugins with the <a href="/getting-started/festival-manager/">festival installer</a>.</p>
     </div>
   </section>
 </div>

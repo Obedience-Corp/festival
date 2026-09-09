@@ -19,17 +19,17 @@ Festival helps Claude Code sessions answer four questions quickly:
 - What is the next task?
 - How do we know this task is complete?
 
-Without that structure, each new session has to infer the plan from files, commits, and conversation history. That is slow and error-prone.
+Keep those answers in the work record so a later session can check them against the repository and continue the approved plan.
 
 ## Add Festival To The Session Instructions
 
-In a repo that uses Festival, tell Claude Code to start with the Festival loop:
+Follow the [Claude Code setup guide]({{< ref "/getting-started/agents/claude-code" >}}) first. In a repo with an approved festival, give the agent its location and operating boundaries:
 
-```text
-Run fest intro on first contact. Use fest next to get the next task.
-Follow the task acceptance criteria. When complete, run the requested checks,
-mark the task completed, and commit with fest commit.
-```
+{{< agent-prompt >}}
+Work on the approved festival at [path]. Run fest intro on first contact. From that festival or its linked project, use fest next to get the next task.
+
+Read the referenced files and follow the acceptance criteria. Run the requested checks, record their results, and mark only finished tasks complete. Use fest commit for scoped festival changes. Stop at approval gates or when continuing needs new access, spending, deployment, or a change in scope.
+{{< /agent-prompt >}}
 
 That instruction gives the agent a repeatable operating model.
 
@@ -55,17 +55,17 @@ Festival commits tie changes back to the plan, which makes review and status tra
 
 ## Recommended Claude Code Flow
 
-1. Start the session in the camp or project workspace.
+1. Start the session in the active festival directory or its linked project.
 2. Run `fest intro` if this is the first Festival session.
 3. Run `fest next`.
-4. Let Claude Code execute the task.
+4. Let Claude Code execute the approved task while you focus on other work.
 5. Run the task's validation commands.
 6. Mark the task complete.
 7. Commit with `fest commit`.
-8. Run `fest next` again.
+8. Run `fest next` again, stopping at approval gates and recording blockers when work cannot continue.
 
 ## Use Festival With Other Agents Too
 
-This pattern is not Claude-specific. Festival works with any agent that can run shell commands and read files. That makes it useful when you switch between Claude Code, Codex, OpenCode, Crush, Cursor Agents, or custom automation.
+This pattern is not Claude-specific. Festival works with agents that can run shell commands and read files, including Grok build, Codex, OpenCode, Crush, Cursor Agents, and custom automation. Each tool still has its own permissions, runtime, and session limits. Festival keeps the work record available across those sessions; it does not host the agent process.
 
 Next: read [Agent Workflows]({{< ref "/guides/agent-workflows" >}}) or start with the [Quick Start]({{< ref "/getting-started/quickstart" >}}).

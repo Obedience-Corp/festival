@@ -1,5 +1,6 @@
 ---
 title: "Agent Workflows"
+description: "Give an agent a goal, run the fest next loop, verify its work, and preserve decisions for the next session or tool."
 weight: 31
 ---
 
@@ -11,16 +12,16 @@ How to use Festival Methodology with AI agents for autonomous development sessio
 
 ## Why Festival for AI Agents
 
-AI coding agents are powerful but stateless. Every session starts from zero - the agent doesn't know what was planned, what's already done, or what comes next. Without structure, you get duplicated work, missed steps, and sessions that spend half their context window figuring out where they are.
+Hand off an approved goal, let the agent work, and return to a result you can inspect. Festival keeps the plan, decisions, progress, and checks alongside the work, so that handoff can extend across sessions and tools.
 
-Festival solves this by putting all project state in the filesystem. Plans, progress, and context are markdown files that any agent can read. There is no external database, no API, and no proprietary format. An agent that can run bash commands and read files can use Festival immediately.
+Plans and context are Markdown files; the CLI records progress in the workspace. An agent with shell and file access can use that record without a Festival API integration. For a first handoff, follow the [Quick Start]({{< ref "/getting-started/quickstart" >}}).
 
 The key properties that make this work:
 
-- **Context management** - Work is broken into tasks sized to fit within agent context windows. No task requires loading the entire project state.
-- **Resumable sessions** - `fest next` tells any new agent exactly what to do next, with full context included inline.
+- **Context management** - Break work into scoped tasks with relevant instructions and references.
+- **Resumable sessions** - `fest next` supplies the next recorded step and its planning context.
 - **Just-in-time context** - Agents load only what they need for the current task. Phase goals, sequence context, and task documents are served on demand.
-- **Progress tracking** - `fest status` shows what's done, what's in flight, and what remains. No guessing.
+- **Progress tracking** - `fest status` shows recorded completion and remaining work. Keep it aligned with the actual results.
 - **Methodology on demand** - `fest intro` and `fest understand` teach agents the system without upfront context dumps. The agent learns what it needs, when it needs it.
 
 ---
@@ -29,20 +30,19 @@ The key properties that make this work:
 
 The typical agent workflow is a tight loop:
 
+```text
+fest next → agent reads and executes → checks and review → record progress → repeat
 ```
-fest intro   → Agent learns the methodology (first session only)
-fest next    → Gets next task with full context, executes it (repeat)
-```
 
-`fest next` is the entire loop. It returns the next task with full inline context, and the task document itself tells the agent what commands to run when done -- `fest task completed`, `fest commit`, quality gates, whatever the task requires. The agent reads the task, does the work, follows the completion steps, and runs `fest next` again.
+Run this loop from the active festival directory or a project linked to it. `fest next` supplies guidance; your agent and its tools execute the work. The task document describes the deliverable and checks. The agent reads the relevant files, completes the work, follows the completion instructions, records progress, and requests the next step.
 
-On first contact, run `fest intro` once. After that, an agent can run `fest next` indefinitely across multiple sessions without losing state.
+On first contact, run `fest intro`. Review the plan and permissions before execution, and stop at approval gates or when scope changes. Agent runtime limits, credentials, and background execution belong to the agent tool, not `fest next`.
 
-Watch the work advance in real time with `fest watch` -- the progress bar and task icons update live as each step completes:
+Use `fest watch` to see recorded task progress. This CLI recording demonstrates the display with scripted sample progress:
 
-{{< terminal-demo src="/images/demos/tui-fest-watch.gif" title="fest watch" alt="fest watch showing a festival's progress bar and task icons updating live as work completes" max="640" >}}
+{{< terminal-demo src="/images/demos/tui-fest-watch.gif" poster="/images/demos/tui-fest-watch-poster.png" title="fest watch" alt="The fest watch TUI updating as scripted sample tasks are marked complete" max="640" >}}
 
-That is one festival. The same loop runs independently per festival, so you can leave several going in the background (different agents, different tools, different worktrees) and watch them with `fest show`. See [Loops & Orchestration]({{< ref "/guides/loops-and-orchestration" >}}).
+Separate agent sessions can work on different festivals and worktrees in parallel. Use `fest show` to inspect the work graph. See [Loops & Orchestration]({{< ref "/guides/loops-and-orchestration" >}}) for the agent's outer loop, recurring workflows, and review gates.
 
 ---
 
@@ -61,23 +61,23 @@ These are the commands agents use most. They are designed to return agent-readab
 | `fest task completed` | Mark the current task as done. |
 | `fest commit -m "msg"` | Git commit with festival metadata for traceability. |
 
-`fest next` is the most important command. Its output includes everything an agent needs to start working - the task document content, the phase it belongs to, and the overall festival goal. No additional file reads required.
+`fest next` brings the task and surrounding goals into the agent's context. The agent still reads referenced code, project instructions, evidence, and other files needed to do the task correctly.
 
 ---
 
 ## Working with Claude Code
 
-Claude Code is the primary development environment for Festival workflows. These patterns have been tested extensively.
+The [Claude Code setup guide]({{< ref "/getting-started/agents/claude-code" >}}) covers integration. Once configured:
 
-**Add festival instructions to CLAUDE.md.** Include a line telling the agent to run `fest intro` at the start of sessions and use `fest next` for task assignment. This eliminates the "what should I work on?" problem.
+**Add festival instructions to CLAUDE.md.** Tell the agent where the festival is, to run `fest intro` on first contact, and to use `fest next` for task guidance. Include the review and permission boundaries.
 
 **Use `fest next` output directly.** The output is structured markdown designed for agent consumption. It includes the task document, acceptance criteria, and surrounding context. Paste it into the conversation or let the agent run the command itself.
 
-**Use `fest commit` instead of raw `git commit`.** Festival commits include metadata that traces changes back to specific tasks and sequences. This makes progress tracking and review significantly easier. `fest commit -m "message"` handles staging and syncing automatically.
+**Use `fest commit` for festival work.** Its metadata ties the change to the plan. Inspect the diff and stage only the intended files; use the [commit options]({{< ref "/cli-reference/fest/fest_commit" >}}) to control staging and synchronization in a shared working tree.
 
-**Use `fest understand` instead of reading source docs.** Agents don't need to load methodology documentation files. `fest understand workflow` or `fest understand tasks` delivers exactly what the agent needs, formatted for consumption, without burning context on full documents.
+**Use `fest understand` for focused guidance.** Commands such as `fest understand workflow` or `fest understand tasks` explain the relevant methodology without requiring the whole manual.
 
-**Capture session state in CONTEXT.md.** When ending a session, write decisions, open questions, and partial progress into the festival's CONTEXT.md file. The next session picks this up and continues without re-deriving context.
+**Capture session state in CONTEXT.md.** Before ending a session, record decisions, open questions, failed checks, and partial progress. Tell the next session where to find those notes.
 
 ---
 
@@ -93,7 +93,7 @@ There is no API integration required. Everything is bash commands and markdown f
 
 The filesystem IS the state. Task documents are markdown files. Progress is tracked by file location and status markers. An agent reads task documents, writes code, and records completion - all through standard file operations and CLI commands.
 
-This means Festival works the same way regardless of which AI tool is driving the session. Switch tools mid-festival and nothing breaks. The state is in the files, not in any tool's memory.
+The shared work record stays available when you switch tools. The receiving agent still needs compatible file access, project instructions, and permission to run the required checks. See [agent setup]({{< ref "/getting-started/agents" >}}) for the supported integration paths.
 
 ---
 
@@ -101,15 +101,15 @@ This means Festival works the same way regardless of which AI tool is driving th
 
 The hardest problem in agent workflows is handoff - when one session ends and another begins. Festival makes this explicit rather than hoping context survives.
 
-**`fest status`** shows exactly where work stands. Which phases are complete, which sequences are in progress, which tasks remain. A new agent reads this and knows the full picture in seconds.
+**`fest status`** reports phase, sequence, and task progress. Check that the recorded status matches the working tree and latest verification results.
 
-**`fest next`** picks up the next incomplete task automatically. No manual searching through directories or reading status files. The agent gets a task with full context and starts working immediately.
+**`fest next`** identifies the next incomplete step and supplies its planning context. Read the task and referenced files before continuing.
 
 **`fest context`** provides full context for the current location. If an agent needs to understand where it is in the festival hierarchy - what phase, what sequence, what the goals are - this command delivers it.
 
 **CONTEXT.md files** capture decisions and rationale across sessions. Why was this approach chosen? What alternatives were considered? What gotchas were discovered? This is the institutional memory that prevents the next session from re-learning hard-won lessons.
 
-Nothing is lost between sessions. The plan is in the filesystem. The progress is in the filesystem. The context is in the filesystem. A new agent session with `fest next` is fully operational in under 30 seconds.
+Festival preserves what you record. Leave incomplete work marked incomplete, capture blockers, and note the next action before stopping. The [handoff checklist]({{< ref "/use-cases/ai-agent-handoff" >}}) is a useful final check for both the outgoing agent and the reviewer.
 
 ---
 

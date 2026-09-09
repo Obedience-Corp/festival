@@ -1,6 +1,7 @@
 {{ define "main" }}
   {{ $isCliLeaf := and (strings.HasPrefix .RelPermalink "/cli-reference/") (ne .RelPermalink "/cli-reference/") }}
   <article>
+    {{ partial "breadcrumbs.html" . }}
     <h1>{{ .Title }}</h1>
     {{ .Content }}
 
@@ -28,7 +29,7 @@
           </div>
         </section>
       {{ end }}
-    {{ else }}
+    {{ else if not .Params.hideChildList }}
       {{ range .Pages }}
         <div style="margin-bottom: 0.5rem;">
           <a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>

@@ -1,0 +1,34 @@
+{{- $title := printf "%s | Festival Docs" .Title -}}
+{{- if .IsHome }}{{ $title = "Festival Docs | Plan, run, and review agent work" }}{{ end -}}
+{{- $description := .Description -}}
+{{- if not $description -}}
+  {{- $description = .Summary | plainify | htmlUnescape | replaceRE `\s+` " " | strings.TrimSpace | truncate 160 -}}
+{{- end -}}
+{{- if not $description }}{{ $description = .Site.Params.description }}{{ end -}}
+<title>{{ $title }}</title>
+<meta name="description" content="{{ $description }}">
+<link rel="canonical" href="{{ .Permalink }}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Festival Docs">
+<meta property="og:title" content="{{ $title }}">
+<meta property="og:description" content="{{ $description }}">
+<meta property="og:url" content="{{ .Permalink }}">
+<meta property="og:image" content="https://fest.build/opengraph-image">
+<meta property="og:image:alt" content="Festival flame logo. AI can generate the pieces. Festival keeps the work coherent.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ $title }}">
+<meta name="twitter:description" content="{{ $description }}">
+<meta name="twitter:image" content="https://fest.build/opengraph-image">
+{{ if ne hugo.Environment "production" }}<meta name="robots" content="noindex, nofollow">{{ end }}
+{{- $schema := slice (dict "@type" "WebPage" "@id" .Permalink "url" .Permalink "name" $title "description" $description "isPartOf" (dict "@type" "WebSite" "name" "Festival Docs" "url" site.Home.Permalink)) -}}
+{{- if not .IsHome -}}
+  {{- $items := slice -}}
+  {{- range .Ancestors.Reverse -}}
+    {{- $name := .LinkTitle -}}
+    {{- if .IsHome }}{{ $name = "Docs" }}{{ end -}}
+    {{- $items = $items | append (dict "@type" "ListItem" "position" (add (len $items) 1) "name" $name "item" .Permalink) -}}
+  {{- end -}}
+  {{- $items = $items | append (dict "@type" "ListItem" "position" (add (len $items) 1) "name" .LinkTitle "item" .Permalink) -}}
+  {{- $schema = $schema | append (dict "@type" "BreadcrumbList" "itemListElement" $items) -}}
+{{- end -}}
+<script type="application/ld+json">{{ dict "@context" "https://schema.org" "@graph" $schema | jsonify | safeJS }}</script>

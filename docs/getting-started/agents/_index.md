@@ -1,5 +1,7 @@
 ---
 title: "Set up with your agent"
+description: "Choose your agent's Festival setup guide, install the relevant skills, and connect the agent to a camp and an approved work plan."
+hideChildList: true
 weight: 14
 ---
 
