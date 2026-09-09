@@ -2,559 +2,280 @@
 
 ![Festival Banner](docs/images/festival_banner.png)
 
-<p align="center"><a href="https://github.com/Obedience-Corp/festival/stargazers"><img src="https://img.shields.io/github/stars/Obedience-Corp/festival?style=social" alt="Star Festival on GitHub"></a></p>
+<p align="center"><a href="https://github.com/Obedience-Corp/festival"><img src="https://img.shields.io/github/stars/Obedience-Corp/festival?style=social" alt="Star Festival on GitHub"></a></p>
 
-<p align="center"><strong>Scale your agent workflows without losing control.</strong></p>
+**AI can generate the pieces.<br>Festival keeps the work coherent.**
 
-**A standardized workspace and workflow for solving complex, ambiguous problems with AI.**
+Hand off a goal, approve the plan, and focus on other work while your agent runs. Come back to results you can trace through the plan, decisions, checks, and commits that produced them.
 
-To use AI to solve hard problems you need three things: **context**, **direction**, and **verification**. Festival provides a structured layer for each, resulting in dramatically fewer tokens and less time spent getting to the outcome you want.
+Festival is an operating environment for long-running agent work. It keeps the context and progress in files and Git, so the work can continue across sessions, agents, and months or years of development.
 
-Use festival to group context/workflows/designs/plans into camps, like your job, your side projects, your home projects, etc... and keep all the projects related to that camp in a version controlled workspace so that the context and workflows related compound over time and increase your productivity for future work.  The 2 core systems in festival are version controlled AI workspaces and festival methodology plans for long running autonomous goals.
+Use it with Claude Code, Codex, Grok Build, Cursor, OpenCode, or another agent that can read files and run commands. Your agent calls `fest next` for its next step, does the work, and records the result.
 
-With AI advancing rapidly being tied to a particular provider or tool puts you at risk of falling behind, festival is designed with that in mind, everything lives as files or git history on your local hardware or hosted server, it works with any tool that can access your files or git history.  It exist to make things easier and more efficient while ensuring you have full control over your own data and workflows. The included workflows are recursive state machines designed to keep the user in a flow state, context up to date and make orchestrating agents easy and consistent and they can be extended, customized or replaced to work with anything you need the system to do.
+[Get started](#get-started) · [Explore the demos](#explore-the-tools) · [Video quick start](https://docs.fest.build/getting-started/quickstart/) · [Website](https://fest.build/) · [简体中文](README.zh-CN.md)
 
-> [Get started](https://docs.fest.build/getting-started/quickstart) (takes ~5 minutes).
+## Four days of agent work, alongside everything else
 
-<p align="center">
-  <img src="docs/images/demos/tui-delegate.gif" alt="An agent TUI planning a full festival from one sentence of direction, ending in fest show" width="700">
-</p>
+In the camp-hardening festival, agents worked on safeguards against data loss in the Camp CLI over four days while the operator did other work in parallel. The saved plan and progress let the next agent continue the same work after a tool change. The resulting [safeguards for project removal and worktree cleanup were reviewed and merged](https://github.com/Obedience-Corp/camp/pull/324).
 
-<p align="center"><em>Describe the work in a sentence. Your agent scaffolds the design and plans the whole festival: phases, sequences, and tasks. Then the <code>fest next</code> loop executes it.</em></p>
-
-<p align="center"><strong>Battle-tested daily:</strong> Obedience Corp plans and ships its own products with Festival.</p>
-
-## Common Questions
-
-**Is this a coding agent?**
-
-No. Keep Claude Code, Codex, Grok, or whatever you already run. Festival is the work system those agents read and write.
-
-**Where does the memory live?**
-
-In your camp: phases, sequences, tasks, intents, and git history, as plain files in directories you own. You can copy it, diff it, and leave with it.
-
-**What happens when a session ends?**
-
-The next actionable task is still on disk. `fest next` is the resume, in the same harness or a different one.
-
-**How do you know the work is done?**
-
-Each task carries completion criteria, `fest validate` checks the plan against the methodology, quality gates run at the end of a sequence, and `fest commit` ties the change back to the task it came from. That trail is the proof of work.
-
-**Do I need an account or a hosted service?**
-
-No. `camp`, `fest`, and `festival` are local binaries. Everything they write is a file in your workspace, and nothing is routed through Obedience Corp. Bring your own models and your own agent. See [how Festival compares](https://docs.fest.build/compare/) to hosted agent workspaces.
+**Drafted by Fathom. Execution started with Grok, finished with Codex.**
 
 <p align="center">
-  <img src="docs/images/demos/proof-loop.gif" alt="One sentence of intent scaffolds a festival, an agent runs the next task, the session is interrupted, fest next resumes it, then fest validate and fest commit close it out" width="700">
+  <img src="docs/images/fest-show.gif" alt="Historical progress replay of the camp-hardening festival: phases and tasks change status as the work advances." width="440">
 </p>
-<p align="center"><em>One sentence of intent. A scaffolded festival. The agent runs the next task, the session is interrupted, and <code>fest next</code> picks it back up. Validate, commit, done.</em></p>
 
-## Install
+This is a replay of the festival's recorded progress, not a CLI recording. [Read the actual plan and work record](https://github.com/Festival-Examples/example-camp-hardening-festival).
 
-Every method below installs three binaries: `camp`, `fest`, and `festival`.
-`festival` installs, updates, and launches the other two; it verifies signed
-package metadata against a compiled-in key and refuses unsigned content by
-default.
+[Try your own handoff](#get-started), or star this repository to keep it handy.
 
-```bash
-festival install festival  # install the suite (camp, fest, and festival)
-festival update            # keep camp, fest, and festival in sync
-festival browse            # see what is available
-festival doctor            # check the install
-```
+## What would you hand off?
 
-**npm / pnpm / bun:**
+Start with a real outcome that you can review. For example:
 
-```bash
-npm install -g @obedience-corp/festival
-```
+- **A feature across repositories:** “Add account deletion to the API and web app. Cover it with tests and document how existing users are affected.”
+- **An investigation before a build:** “Investigate why this service slows down under load. Save the evidence, compare the options, and bring me a recommendation before changing production.”
+- **A recurring review:** “Review this week's dependency changes, flag compatibility risks, and prepare the updates for my approval.”
 
-**macOS:**
+The goal, constraints, and success criteria come from you. Your agent works through the plan and returns when it reaches a review point or a decision that needs you.
+
+[Explore the use cases](https://docs.fest.build/use-cases/) · [See example camps and festivals](https://github.com/Obedience-Corp/examples)
+
+## Get started
+
+### 1. Install
+
+Choose one method. Both install `camp`, `fest`, and the `festival` manager. Git is required.
+
+**macOS with Homebrew**
 
 ```bash
 brew install --cask Obedience-Corp/tap/festival
 ```
 
-**Arch Linux:**
+**macOS or Linux with Node.js**
 
 ```bash
-yay -S festival-bin
+npm install -g @obedience-corp/festival
 ```
 
-**Debian/Ubuntu:** Download `obedience-festival_*.deb` from [releases](https://github.com/Obedience-Corp/festival/releases/latest)
-
-**Windows:** Stable Windows packages are temporarily paused while support is being hardened.
-For now, use WSL2 and the Linux install method above.
-
-## Requirements
-
-- `git` is required. `camp` and `fest` use git internally for camp init, project management, template sync, and commit-aware workflows.
-- `scc` is recommended but optional. Without it, `camp leverage` features will not work.
-
-## Quick Start
+Then check the install:
 
 ```bash
-# Shell integration (add one setup path to ~/.zshrc)
-
-# Linux packages (AUR festival-bin, deb/rpm/apk obedience-festival)
-source /usr/share/festival/shell/festival.zsh
-
-# Preferred when installed with install.sh:
-source ~/.local/share/festival/shell/festival.zsh
-
-# Homebrew
-source "$(brew --prefix)/share/festival/shell/festival.zsh"
-
-# Or, if no helper file is installed:
-eval "$(camp shell-init zsh)"
-eval "$(fest shell-init zsh)"
-
-# Finding the installed binaries:
-# After shell-init, `camp` and `fest` are shell functions so they can `cd`.
-# Plain `which camp` / `which fest` prints the function, not a path.
-# Use:  whence -p camp   # zsh external binary
-#       whence -p fest
-#       type -P camp     # bash
-#       type -a camp     # function + every PATH binary
-#       realpath "$(whence -p camp)"
-# Or run the binary directly: command camp version
-
-# Create a camp
-camp init my-project && cd my-project
-
-# Add a project
-camp project add https://github.com/you/your-repo
-
-# Create your first festival
-fest create festival --name "my-first-feature" --type standard
-
-# Fill the generated REPLACE markers in the new festival files
-# Then validate before execution
-fest validate
-
-# Start working
-fest next
+festival doctor
 ```
 
-After installing, see the [quick start guide](https://docs.fest.build/getting-started/quickstart/) for shell setup and first steps.
+[Linux packages, WSL2, and other install methods](https://docs.fest.build/getting-started/installation/). Native Windows support is being hardened; use WSL2 for now.
 
-## See It in Action
+### 2. Make a camp for your work
 
-`camp` and `fest` are terminal-native. Here is what the core commands actually look like.
+A **camp** holds the context for one part of your life: your job, a side project, or a hobby. It can contain several projects, along with their research, plans, and decisions.
 
-<table>
-  <tr>
-    <td align="center" width="33%">
-      <img src="docs/images/demos/cgo-navigation.gif" alt="cgo jumping between projects, festivals, and design directories, plus csw to switch camps"><br>
-      <sub><b><code>cgo</code></b><br>Jump anywhere in the workspace</sub>
-    </td>
-    <td align="center" width="33%">
-      <img src="docs/images/demos/tui-workitems.gif" alt="The camp wi dashboard: intents, designs, explores, and festivals in one unified list, narrowed by search"><br>
-      <sub><b><code>camp wi</code></b><br>One queue for every kind of work</sub>
-    </td>
-    <td align="center" width="33%">
-      <img src="docs/images/demos/tui-intent-add.gif" alt="The camp intent add capture form: title, type, concept, and description, then saved to the inbox"><br>
-      <sub><b><code>camp intent add</code></b><br>Capture an idea in seconds</sub>
-    </td>
-  </tr>
-  <tr>
-    <td align="center" width="33%">
-      <img src="docs/images/demos/tui-intent-explore.gif" alt="The camp intent explore TUI: intents grouped by status with a live preview pane and fuzzy search"><br>
-      <sub><b><code>camp intent explore</code></b><br>Browse and triage the inbox</sub>
-    </td>
-    <td align="center" width="33%">
-      <img src="docs/images/demos/tui-fest-list.gif" alt="fest list showing festivals grouped by status: active, ready, and planning"><br>
-      <sub><b><code>fest list</code></b><br>Every festival, grouped by status</sub>
-    </td>
-    <td align="center" width="33%">
-      <img src="docs/images/demos/tui-fest-show.gif" alt="fest show rendering a festival's phase, sequence, and task tree, cycling between festivals with the arrow keys"><br>
-      <sub><b><code>fest show</code></b><br>Read a plan's full structure</sub>
-    </td>
-  </tr>
-  <tr>
-    <td align="center" width="33%">
-      <img src="docs/images/demos/tui-fest-watch.gif" alt="fest watch showing a festival's progress bar and task icons updating live as work completes"><br>
-      <sub><b><code>fest watch</code></b><br>Watch progress update live</sub>
-    </td>
-    <td align="center" width="33%">
-      <img src="docs/images/demos/tui-fest-gates-apply.gif" alt="fest gates apply showing a dry-run of the quality gates it would add to each sequence, then applying them with --approve"><br>
-      <sub><b><code>fest gates apply</code></b><br>Add quality gates in one command</sub>
-    </td>
-    <td align="center" width="33%">
-      <img src="docs/images/demos/tui-dungeon-crawl.gif" alt="camp dungeon crawl triaging stale items into the dungeon: move to archived, keep, or skip, ending in a committed summary"><br>
-      <sub><b><code>camp dungeon crawl</code></b><br>Triage stale work into the dungeon</sub>
-    </td>
-  </tr>
-</table>
+Run this from the directory where you keep your work, then answer the prompts for the camp's description and mission:
 
-<p align="center"><strong>A 4-day festival, planned and built across three AI tools</strong></p>
-<p align="center"><em>Planned in Claude Code (Fathom), promoted to active, then the <code>fest next</code> loop ran in grok-build, stopped 2 days in, and finished in Codex.</em></p>
+```bash
+camp init my-camp
+cd my-camp
+```
+
+Link a repository you already use. Replace the path with its full local path:
+
+```bash
+camp project link /path/to/your-existing-repo
+```
+
+Your repository stays where it is. Camp links it under `projects/` and adds a `.camp` attachment file to the repository. You can also [clone a project into the camp](https://docs.fest.build/cli-reference/camp/camp_project_add/).
+
+Open your coding agent at the camp root, `my-camp/`. The [agent setup guides](https://docs.fest.build/getting-started/agents/) cover skills and integrations for your tool. Skills are optional; the CLI can teach your agent the workflow.
 
 <p align="center">
-  <img src="docs/images/fest-show.gif" alt="Animated fest watch tree for the camp-hardening CH0001 festival" width="400">
+  <img src="docs/images/demos/tui-setup.gif" alt="A terminal session creates a camp, adds a local project, and scaffolds a festival." width="700">
 </p>
 
-<p align="center"><em><a href="https://github.com/Festival-Examples/example-camp-hardening-festival">See the festival behind this demo &rarr;</a></em></p>
+Watch a camp take shape. This recording uses `camp project add --local`; the instructions above link an existing repository without moving it.
 
-## Run them in parallel
+### 3. Give your agent a goal
 
-A festival is an autonomous loop, not a session you have to sit in. Point an agent at `fest next` and it keeps going: next task, do the work, commit, repeat. The plan and progress live on disk, so you can start several at once (different agents, different tools, different worktrees) and leave them running in the background.
+A **festival** is the structured plan and work record for a goal. For your first run, pick one repository and a bounded change, such as fixing a bug and adding a regression test.
+
+You describe the result; your agent handles the planning commands. Replace the bracketed text and give it this prompt:
+
+> In [project name], I want [specific outcome]. Success means [what I should be able to verify]. Constraints: [scope, compatibility, or other requirements].
+>
+> Read AGENTS.md and run `fest intro`. Use the fest CLI to plan this as a standard festival. Follow its planning and validation guidance, and link the plan to the project or worktree where you'll do the work.
+>
+> Ask about missing requirements. Show me the plan, its location, and how you will verify the result. Wait for my approval before implementation, and stop at approval gates as the work progresses.
 
 <p align="center">
-  <img src="docs/images/parallel-festivals.png" alt="Four live fest show panes watching independent festivals run in parallel, including a 1,184-task intent backlog" width="100%">
+  <img src="docs/images/demos/tui-delegate.gif" alt="Grok Build receives a goal, reads Festival guidance, and creates a design work item and festival plan." width="700">
 </p>
-<p align="center"><em>Four festivals, four agent sessions, one terminal grid. The rightmost pane is a 1,184-task festival still running on its own. Each pane is a live <code>fest watch</code> of an independent loop.</em></p>
 
-How to run that pattern: **[Loops & Orchestration](https://docs.fest.build/guides/loops-and-orchestration/)**.
+A real Grok Build session planning a sample app feature. The agent handles the planning commands; you review the proposed work.
 
-## The Problem
+### 4. Run, review, and resume
 
-If you work on more than a few things at once, staying organized becomes a job of its own.
+Review the scope and the checks that will demonstrate success. When you approve the plan, tell your agent:
 
-Your work spreads across repositories, documents, chats, notes, bookmarks, and AI conversations. Finding where something belongs becomes work. Remembering what you were doing becomes work. Switching between efforts becomes work.
+> The plan is approved. Work from the festival's linked project or worktree. Run `fest next`, follow its instructions, record progress, and repeat. Run the planned checks before marking work complete.
+>
+> Continue until the goal is complete, or stop for an approval gate, a blocker, or a decision that needs me. Finish with the changes, verification results, and anything I should review.
 
-AI makes this harder, not easier. It generates plans, code, research, and tasks faster than you can file them. The bottleneck moves from producing work to organizing it.
-
-So every new AI session starts from zero. No memory of the larger goal, no structure for multi-step work, no way to pick up where you left off. You re-explain the same context, get inconsistent results, and lose coherence across sessions.
-
-Festival is the organizational layer for work done with AI. Instead of asking "where should this go?" you put it in the camp it belongs to. Instead of asking "what was I working on?" you resume the camp. To turn that organization into outcomes, Festival gives every mission three things:
-
-1. **Context**: a workspace that holds all projects, docs, and planning for a mission in one place
-2. **Direction**: structured plans that AI agents can pick up, execute, and resume without losing the thread
-3. **Verification**: completion criteria and reviewable output baked into the workflow, not bolted on after
-
-## What Festival Does
-
-Festival ships as a three-binary suite (`camp`, `fest`, and `festival`) that solves the three problems above.
-
-**`camp`** manages camps: isolated workspaces that hold all the projects, docs, research, and planning for a single mission, a high-level purpose like your startup, your job, or a hobby. A camp was previously called a campaign. A mission grows over time, and the camp grows with it. It gives you instant navigation across everything in the workspace, project lifecycle management, and shell shortcuts that make `cd` obsolete.
-
-Work items are the camp-level work queue. `camp workitem` surfaces intents, design docs, explore notes, festivals, and custom tracked work through one dashboard. It can mark current work, link work to projects or festivals, and commit changes scoped to the resolved work item.
-
-**`fest`** manages festivals: structured plans that break work into phases, sequences, and tasks. The hierarchy is designed for AI agents to execute autonomously, pause, and resume without context loss. Run `fest next` and the agent gets its next task with full surrounding context. Run `fest commit` and every commit traces back to the plan.
-
-**`festival`** installs, updates, and launches `camp` and `fest` as a matched pair. `festival browse` shows what is available across registered marketplaces, `festival update` moves all three binaries together, and `festival doctor` reports the installer's view of your PATH, sources, and receipts. It verifies signed package metadata against a compiled-in key and refuses unsigned content by default.
-
-### Where Festival Fits
-
-Festival is a **planning and context layer**, not a runtime orchestrator. It doesn't spawn agents or manage their processes. It gives them the structure, context, and goals they need to work autonomously. Runtime orchestrators tell agents what to do next. Festival tells agents *why* they're doing it, what success looks like, and where they are in a larger mission.
-
-The context model is persistent and filesystem-based. Plans survive across sessions, days, and weeks, not just a single agent run. Festival is agent-agnostic: it works with Claude Code, Codex, Aider, OpenCode, or any CLI tool that can read files and run commands. Use an orchestrator to manage parallel agents, and Festival to give each agent the plan and context it needs.
-
-### How Festival Compares
-
-Most tools in this space are spec generators (spec-kit), task managers (Task Master), persona workflow packs (BMAD), or static instruction files (CLAUDE.md / AGENTS.md). Festival overlaps all of them but operates a level up: at the mission, not the feature.
-
-| | Scope | What persists between sessions |
-|---|---|---|
-| **Festival** | A mission: many features, many repos | The whole workspace: plans, context, decisions, and an audit trail in git |
-| **Spec-driven tools** | One feature spec at a time | The spec and its task list |
-| **Task managers** | One PRD broken into tasks | Task list state |
-| **Instruction files** | Static per-repo guidance | Instructions only, no execution state |
-
-The practical differences: festivals survive across sessions, days, and tools (plan in Claude Code, execute in Codex, finish somewhere else), every step lands in git as a traceable commit, and quality gates plus approval judges are part of the plan rather than bolted on afterward. If the work fits in one prompt or one feature spec, simpler tools are the right call. Festival is for when the work is bigger than a session.
-
-### Festival Methodology
-
-Festival is built around Festival Methodology: a hierarchical, goal-based planning system for human-directed AI execution. It preserves both agent context and operator context, uses ingest and planning phases to reduce chat iteration up front, and leaves a durable pre- and post-execution audit trail so you can scale difficult knowledge work without micromanaging every decision. Read the full methodology guide in the [`fest` repo](https://github.com/Obedience-Corp/fest/blob/main/methodology/README.md).
-
-### Real Example
-
-Here's what `obey-campaign` looks like, a real camp that orchestrates Obedience Corp's internal platform and product stack:
-
-```
-obey-campaign/
-├── projects/                     # 32 project submodules
-│   ├── camp/                     # Camp CLI
-│   ├── fest/                     # Festival planning CLI
-│   ├── festival/                 # Distribution repo (this one)
-│   ├── obey-platform-monorepo/   # Core platform
-│   ├── obey-chat/                # Chat client
-│   ├── guild-core/               # Reference implementation
-│   ├── obediencecorp.com/        # Company website
-│   ├── prototypes/               # Experiment sandbox
-│   └── ...                       # 24 more projects
-├── festivals/                    # Festival lifecycle workspace
-│   ├── planning/                 # Festivals being designed
-│   ├── active/                   # Currently executing
-│   ├── ready/                    # Prepared, awaiting execution
-│   ├── ritual/                   # Recurring processes
-│   ├── chains/                   # Linked festival workflows
-│   └── dungeon/                  # completed/ | archived/ | someday/
-├── .campaign/                    # Camp metadata and work queue
-│   ├── intents/                  # Captured ideas, bugs, and future work
-│   ├── quests/                   # Long-lived working contexts
-│   └── workitems/                # Tracked work-item metadata
-├── workflow/                     # Design docs, explore notes, code reviews, pipelines
-├── ai_docs/                      # AI research and documentation
-├── docs/                         # Human-authored documentation
-└── CLAUDE.md                     # Agent instructions
-```
-
-Every project, every plan, every piece of context for this mission lives here. `cgo p fest` jumps to the fest project. `fgo` toggles between a festival and its linked project. Everything is navigable by both humans and AI agents.
-
-## Agentic Loops
-
-Festival is built to be run as a loop: you point an agent at a plan, and it works the plan one step at a time, committing as it goes, until the work is done. The same loop scales from a single checklist to an orchestration across many projects.
-
-```mermaid
-graph LR
-    A[fest next] --> B[Do the work]
-    B --> C[fest task completed]
-    C --> D[fest commit]
-    D --> A
-```
-
-`fest next` is the entry point: it resolves the next task with context from every level of the hierarchy, the agent does the work, `fest commit` records it, and the loop repeats until the festival is complete.
-
-You start a loop with a prompt that points the agent at the work and tells it to run the loop:
-
-> Navigate to `<linked project or worktree>` and run the fest next loop.
-
-> Navigate to `<festival path>`, run `fest go` to jump to its linked working directory, then run the fest next loop there.
-
-> Open `<path to a standalone WORKFLOW.md>` and run the fest next loop.
-
-The same machinery runs at three scales, smallest first:
-
-- **A standalone `WORKFLOW.md`** drives an ordered, repeatable process (a review, a release checklist) step by step with `fest next`.
-- **A festival** drives complex, multi-step work through phases, sequences, and tasks with quality gates. Plan it from the festival directory; implement it from the festival's linked project or worktree (`fest go` toggles between the two).
-- **An agent orchestration loop** reads the `camp workitem` queue and fans work out across projects, spinning up subagents and worktrees per item. Here the agent is the loop, not `fest next`:
-
-> List the ready work items with `camp workitem --json`, and for each one create a worktree, dispatch a subagent to implement it, and open a PR.
-
-Full guide: **[Loops & Orchestration](https://docs.fest.build/guides/loops-and-orchestration/)**. See a complete worked festival, plan to execution, in the [examples](https://github.com/Obedience-Corp/examples).
-
-## Navigation
-
-Shell integration gives you shorthand functions that make navigating a camp instant. Package installs include helper files that load `camp` and `fest` shell functions plus tab completion for all three binaries:
-
-```bash
-# install.sh default location
-source ~/.local/share/festival/shell/festival.zsh
-
-# Homebrew
-source "$(brew --prefix)/share/festival/shell/festival.zsh"
-
-# Linux packages
-source /usr/share/festival/shell/festival.zsh
-```
-
-For bash, use `festival.bash`; for fish, use `festival.fish`. If no helper file is installed, use the dynamic fallback:
-
-```bash
-eval "$(camp shell-init zsh)"   # gives you: cgo, cr, csw, cint
-eval "$(fest shell-init zsh)"   # gives you: fgo, fls
-```
-
-Replace `zsh` with `bash` or `sh`, or pipe the `fish` output to `source`. Use
-`sh` for dash, busybox ash, and any other Bourne shell that is neither bash nor
-zsh; the helpers work there, only tab completion is unavailable.
-
-### Finding the installed binaries
-
-Shell integration defines `camp` and `fest` as **shell functions** so navigation
-commands can `cd` in your current shell. Because of that, plain `which camp` /
-`which fest` usually prints the function body, not a filesystem path.
-
-```bash
-# zsh: path of the external binary (skips shell functions)
-whence -p camp
-whence -p fest
-# or: which -p camp / which -p fest
-
-# bash
-type -P camp
-type -P fest
-
-# show the function plus every binary on PATH
-type -a camp
-type -a fest
-
-# resolve symlinks to the real install
-realpath "$(whence -p camp)"   # zsh
-realpath "$(type -P camp)"     # bash
-```
-
-To run a binary without the wrapper (scripts, debugging): `command camp version`
-or `command fest version`.
-
-### cgo: jump anywhere in your workspace
-
-`cgo` wraps `camp go` with real `cd` behavior. It's the fastest way to move around:
-
-```bash
-cgo                   # Toggle between camp root and last location
-cgo p                 # Jump to projects/
-cgo p api             # Fuzzy-find "api" in projects/ (matches api-server, api-gateway, etc.)
-cgo f                 # Jump to festivals/
-cgo w                 # Jump to workflow/
-cgo wt api@feat       # Jump to a worktree branch
-```
-
-Category shortcuts (`p`, `f`, `w`, `a`, `d`, `i`, `wt`, `du`, `cr`, `de`) map to common camp locations (`i` jumps to `.campaign/intents/`, `de` to `workflow/design/`, and so on). After the category, any additional argument is a fuzzy search. `cgo p mono` lands you in `obey-platform-monorepo/`. Tab completion works at every level.
-
-You can also run a command without leaving your current directory:
-
-```bash
-cgo -c p api ls       # Run ls inside projects/api-* without cd'ing
-cr just build         # Run "just build" from camp root
-```
-
-### fgo: toggle between a festival and its linked project
-
-`fgo` wraps `fest go`. Its standout feature is bidirectional toggling:
-
-```bash
-fgo                   # From a festival -> jump to its linked project
-                      # From a linked project -> jump back to the festival
-
-fgo 2                 # Jump to phase 002
-fgo 2/1               # Jump to phase 2, sequence 1
-fgo active            # Jump to festivals/active/
-fgo active my-fest    # Jump to a specific active festival
-```
-
-Link a festival to a project once (`fgo link`) and `fgo` with no args toggles between them forever. Named shortcuts work too: `fest go map n` bookmarks the current directory, then `fgo -n` jumps there.
-
-### Other shorthands
-
-| Shorthand | Expands to | What it does |
-|-----------|------------|--------------|
-| `csw`     | `camp switch` | Switch between camps (fuzzy match + interactive picker) |
-| `cint`    | `camp intent add` | Quick-capture an idea to the intent inbox |
-| `cr`      | `camp run` | Run a command from camp root |
-| `fls`     | `fest list` | List festivals by status |
-
-### Concept shortcuts
-
-`camp` supports shorthand for subcommands too. `camp p` expands to `camp project`, so these are identical:
-
-```bash
-camp p commit -m "fix bug"    # Same as: camp project commit -m "fix bug"
-camp p add <url>              # Same as: camp project add <url>
-camp p list                   # Same as: camp project list
-```
-
-## CLI Overview
-
-Full reference: [fest CLI](https://docs.fest.build/cli-reference/fest/) | [camp CLI](https://docs.fest.build/cli-reference/camp/) | [festival CLI](https://docs.fest.build/cli-reference/festival/)
-
-### camp: workspace management
-
-```bash
-camp init my-startup             # Create a camp
-camp project add <url>           # Add a project as submodule
-camp p commit -m "fix auth"      # Commit in a project (auto-stages all changes)
-camp workitem                    # Dashboard across intents, designs, explore docs, festivals
-camp workitem current my-feature # Mark the current work item
-camp workitem commit -m "msg"    # Commit changes scoped to the resolved work item
-camp status all                  # Dashboard of all project statuses
-camp doctor                      # Health check the workspace
-camp intent add "idea"           # Capture an idea to the inbox
-camp leverage                    # Measure productivity leverage across projects
-```
-
-### fest: planning and execution
-
-```bash
-fest create festival --name "my-feature" --type standard  # Scaffold the beginner path
-fest next                        # Get the next task with layered context (festival -> phase -> sequence -> task)
-fest task completed              # Mark the current task done
-fest workflow advance            # Complete a workflow step and move to the next
-fest status                      # View progress across all levels
-fest commit -m "implement auth"  # Git commit with automatic festival/task reference
-fest understand                  # Teach an AI agent the full methodology
-```
-
-`fest next` is the entry point for agents: it resolves the next task with context from every level of the hierarchy and respects workflow ordering and completion criteria. See [Agentic Loops](#agentic-loops) for how it drives execution end to end.
-
-### festival: suite installer and updater
-
-```bash
-festival install festival  # install the suite (camp, fest, and festival)
-festival update            # keep camp, fest, and festival in sync
-festival browse            # see what is available across marketplaces
-festival doctor            # report PATH, sources, and receipts
-festival which camp        # resolve the real binary path for a suite tool
-festival version           # print the festival manager version
-```
-
-`festival` is not part of the day-to-day agentic loop; `fest` and `camp` are. It exists to get those two installed correctly and keep them current.
-
-## Claude Code Plugin
-
-Install the Festival plugin for Claude Code to get `fest` and `camp` CLI tools, slash commands, methodology skills, and specialized agents in one step:
-
-```bash
-claude plugin add --source git-subdir --url Obedience-Corp/festival --path claude-plugin
-```
-
-If `fest` and `camp` aren't already installed, the plugin installs them automatically on first session. It also checks for updates once per day and notifies you when a new release is available.
-
-Building a Camp or Fest plugin? See the [plugin authoring guide](docs/guides/plugin-authoring.md).
-The basic model is the same as Git plugins: put a `camp-<name>` or `fest-<name>`
-executable on your `PATH`.
-
-### What you get
-
-| Component | Examples |
-|-----------|---------|
-| **Slash commands** | `/fest-next`, `/fest-create`, `/fest-commit`, `/fest-validate`, `/fest-status`, `/camp-intent`, `/camp-init` |
-| **Skills** | Auto-activating methodology knowledge, execution workflows, planning guidance |
-| **Agents** | `fest-planner` for designing festivals, `fest-executor` for working through tasks |
-
-## Updating Templates After Upgrades
-
-Festival releases may include updated methodology files, agents, examples, and templates. Upgrading the `fest` binary does not automatically rewrite those files because users often customize their `.festival/` methodology directory and template files.
-
-When a release includes template changes, update in two explicit steps:
-
-```bash
-# Refresh the local system template cache
-fest system sync
-
-# Preview camp methodology/template changes before applying them
-fest system update --dry-run
-
-# Apply interactively, or create backups before updating
-fest system update
-fest system update --backup
-```
-
-Use `fest system update --force` only when you intentionally want to overwrite local changes. The manual update flow protects customized templates from accidental replacement.
-
-## Documentation
-
-Full documentation at **[docs.fest.build](https://docs.fest.build)**:
-
-- [Methodology Overview](https://docs.fest.build/methodology/overview/): core principles and concepts
-- [Agent Workflows](https://docs.fest.build/guides/agent-workflows/): using Festival with AI coding tools
-- [Work Items](https://docs.fest.build/methodology/work-items/): camp-level work discovery, current work, links, and scoped commits
-- [First Festival Tutorial](https://docs.fest.build/tutorials/first-festival/): end-to-end walkthrough
-- [CI Integration](https://docs.fest.build/tutorials/ci-integration/): release smoke ownership and launch-path verification
-
-Repository entry points:
-
-- [README.zh-CN.md](README.zh-CN.md): Simplified Chinese overview for Chinese developers
-- [Example camps & festivals](https://github.com/Obedience-Corp/examples): real, cloneable example camps and festivals to read and run
-- [Examples](examples/): before/after shapes for resumable AI coding work
-- [Templates](templates/): reusable planning scaffolds for AI-assisted feature work
-
-### Watch
+Your agent runs that loop within its own permissions. You can do other work and return at a review point. Open another terminal in the festival directory and run `fest watch` whenever you want to check progress.
 
 <p align="center">
-  <a href="https://youtu.be/FY6vm74oa8o?si=ZFg87vA7u9G_79bX"><img src="docs/images/demo_video_thumb.jpg" alt="Watch the demo" width="720"></a>
+  <img src="docs/images/demos/tui-fest-watch.gif" alt="The fest watch terminal view updates a festival tree as scripted sample tasks advance." width="700">
 </p>
 
-<p align="center"><em><a href="https://docs.fest.build/videos/">More walkthroughs, demos, and speed runs &rarr;</a></em></p>
+The progress view you can open alongside your agent. This recording demonstrates the real `fest watch` interface with scripted progress updates in a sample festival.
 
-<p align="center"><strong>Find Festival useful?</strong> <a href="https://github.com/Obedience-Corp/festival">Star the repo</a> so others can find it.</p>
+**If the session ends:** point your next agent at the saved festival and ask it to continue from the linked project. The recorded plan, progress, and decisions give it a starting point.
 
-## License
+[Follow the video quick start](https://docs.fest.build/getting-started/quickstart/) to see setup, planning with Grok Build, and the progress view.
 
-[Apache License 2.0](LICENSE)
+## How the work stays coherent
 
-Built by [Obedience Corp](https://obediencecorp.com). AI that does what you want, the way you want it done.
+A festival is a **graph of work**, organized into phases, sequences, and tasks. Each task has context and completion criteria. Your agent uses `fest next` to find the next actionable step, does the work, checks the result, and records progress before continuing.
+
+That is the basis for **loop engineering** with Festival: repeatable planning, execution, review, and handoff loops. You can start with a lightweight `WORKFLOW.md`, build a full festival for a larger goal, or run separate festivals with agents in separate worktrees.
+
+The camp holds the context around those goals over the life of the work. Research can inform a design; that design can become a festival; its results and decisions remain available for the next goal.
+
+Quality gates provide places to test and review. `fest validate` checks plan structure, and `fest commit` links commits to festival tasks. You review the actual output and verification evidence before accepting the result.
+
+[Loops & orchestration](https://docs.fest.build/guides/loops-and-orchestration/) · [Festival methodology](https://docs.fest.build/methodology/overview/) · [Work items](https://docs.fest.build/methodology/work-items/)
+
+### Three tools, one work system
+
+| Tool | What it handles |
+| --- | --- |
+| [camp](https://github.com/Obedience-Corp/camp) | Projects, context, navigation, and the work queue across your camp. |
+| [fest](https://github.com/Obedience-Corp/fest) | Goal-based plans, the next-step loop, progress, and review checkpoints. |
+| `festival` | Installing and updating the suite, browsing CLI plugins, and checking your installation. |
+
+Run `festival browse` to explore available CLI plugins. See [suite and plugin management](https://docs.fest.build/getting-started/festival-manager/) for installation, updates, and how CLI plugins differ from agent integrations.
+
+## Useful between the big goals, too
+
+- **Jump straight to the work.** `cgo p api` finds a matching project; `cgo f` takes you to festivals. Add the [shell integration](https://docs.fest.build/getting-started/shell-setup/) to enable these shortcuts.
+- **Find the next thing to pick up.** `camp workitem` brings intents, research, designs, and festivals into one work queue.
+- **Start fresh after a merged PR.** `camp fresh` syncs a project to its default branch and prunes merged branches. Preview with `camp fresh --dry-run` from that project first, including any configured branch creation or follow-up commands.
+
+[Everyday development with cgo and camp fresh](https://docs.fest.build/guides/everyday-development/)
+
+## Explore the tools
+
+Open a section to see the commands in use. The recordings stay on this page, at a readable size.
+
+<details>
+<summary>Move between projects, plans, and camps</summary>
+
+`cgo` jumps to a project or planning directory; `csw` switches camps.
+
+<p align="center">
+  <img src="docs/images/demos/cgo-navigation.gif" alt="cgo jumps between projects, festivals, and design directories, then csw switches camps." width="700">
+</p>
+
+</details>
+
+<details>
+<summary>Find work, capture an idea, and sort the inbox</summary>
+
+**Find work across the camp.** `camp workitem` brings intents, research, designs, and festivals into one searchable list.
+
+<p align="center">
+  <img src="docs/images/demos/tui-workitems.gif" alt="The camp workitem dashboard shows work across the camp, with search and a preview pane." width="700">
+</p>
+
+**Capture an idea.** `camp intent add` saves it to the inbox for later.
+
+<p align="center">
+  <img src="docs/images/demos/tui-intent-add.gif" alt="The camp intent add form captures an idea and saves it to the inbox." width="700">
+</p>
+
+**Sort the inbox.** `camp intent explore` lets you browse intents by status and read their details.
+
+<p align="center">
+  <img src="docs/images/demos/tui-intent-explore.gif" alt="The camp intent explore interface groups intents by status with fuzzy search and a live preview." width="700">
+</p>
+
+</details>
+
+<details>
+<summary>See which festivals are active and inspect a plan</summary>
+
+`fest list` groups festivals by status, so you can see what's active, ready, or still being planned.
+
+<p align="center">
+  <img src="docs/images/demos/tui-fest-list.gif" alt="fest list groups festivals into active, ready, and planning states." width="700">
+</p>
+
+`fest show` opens the structure of a plan, from its phases down to individual tasks.
+
+<p align="center">
+  <img src="docs/images/demos/tui-fest-show.gif" alt="fest show displays a festival's phase, sequence, and task tree and switches between plans." width="700">
+</p>
+
+</details>
+
+<details>
+<summary>Add testing and review gates to a plan</summary>
+
+`fest gates apply` previews the quality gates it will add before applying them with approval.
+
+<p align="center">
+  <img src="docs/images/demos/tui-fest-gates-apply.gif" alt="fest gates apply previews quality gates for the plan's sequences, then applies them with approval." width="700">
+</p>
+
+</details>
+
+<details>
+<summary>Review old work and clear space for what's next</summary>
+
+`camp dungeon crawl` walks through stale work so you can choose what to keep or archive.
+
+<p align="center">
+  <img src="docs/images/demos/tui-dungeon-crawl.gif" alt="camp dungeon crawl offers keep, archive, and skip choices for stale work, then records the result." width="700">
+</p>
+
+</details>
+
+<details>
+<summary>Watch a longer Festival session</summary>
+
+An earlier Festival workflow recording at 16× playback speed. Use the setup instructions above for the current first-run path.
+
+<p align="center">
+  <a href="https://youtu.be/FY6vm74oa8o"><img src="docs/images/demo_video_thumb.jpg" alt="Watch a longer Festival workflow session on YouTube." width="700"></a>
+</p>
+
+</details>
+
+[More video walkthroughs and demos](https://docs.fest.build/videos/)
+
+## Fits the tools you already use
+
+**Can I keep my issue tracker?**
+
+Yes. Keep issues where your team coordinates, and use Festival for the agent's plan and work record. Intents and other work items live in files, so scripts or justfiles can connect them to an external service's API. Ask your agent to help build the connection you need. [See the workflow](https://docs.fest.build/compare/festival-vs-issue-trackers/).
+
+**Can I change agents partway through?**
+
+Yes. The next agent can read the same saved plan, decisions, and progress. Give it the festival location and access to the linked project. [Agent handoff guide](https://docs.fest.build/use-cases/ai-agent-handoff/).
+
+**Do I need a Festival account?**
+
+The CLI tools are free to use and run locally without a Festival account. Your agent's account, model costs, and permissions remain with the provider you choose.
+
+## Keep going
+
+- [Documentation](https://docs.fest.build/): guides, use cases, and CLI reference.
+- [First festival tutorial](https://docs.fest.build/tutorials/first-festival/): a hands-on walkthrough of the plan structure.
+- [Examples](examples/) and [templates](templates/): work you can inspect and adapt.
+- [Plugin authoring](https://docs.fest.build/guides/plugin-authoring/): extend `camp` and `fest` with your own commands.
+- [Report a bug or request a feature](https://github.com/Obedience-Corp/festival/issues): tell us what happened or what would help.
+- [Give feedback](https://fest.build/feedback/) or [read the blog](https://fest.build/blog/).
+
+**Festival App is in development.** The CLI tools are available now. [See what's coming](https://fest.build/#app).
+
+If Festival is useful to you, **star this repository** to help other developers discover it. A bug report, a workflow you share, or an example of work you've handed off helps us improve it.
+
+[Apache License 2.0](LICENSE) · Built by [Obedience Corp](https://obediencecorp.com/).
