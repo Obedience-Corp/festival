@@ -95,15 +95,9 @@ Watch a camp take shape. This recording uses `camp project add --local`; the ins
 
 ### 3. Give your agent a goal
 
-A **festival** is the structured plan and work record for a goal. For your first run, pick one repository and a bounded change, such as fixing a bug and adding a regression test.
+A **festival** is the structured plan and work record for a goal. Tell your agent what you want done and ask it to create a festival for the work:
 
-You describe the result; your agent handles the planning commands. Replace the bracketed text and give it this prompt:
-
-> In [project name], I want [specific outcome]. Success means [what I should be able to verify]. Constraints: [scope, compatibility, or other requirements].
->
-> Read AGENTS.md and run `fest intro`. Use the fest CLI to plan this as a standard festival. Follow its planning and validation guidance, and link the plan to the project or worktree where you'll do the work.
->
-> Ask about missing requirements. Show me the plan, its location, and how you will verify the result. Wait for my approval before implementation, and stop at approval gates as the work progresses.
+> I want [what you want done]. Create a festival for it and run the `fest next` loop.
 
 <p align="center">
   <img src="docs/images/demos/tui-delegate.gif" alt="Grok Build receives a goal, reads Festival guidance, and creates a design work item and festival plan." width="700">
@@ -111,15 +105,11 @@ You describe the result; your agent handles the planning commands. Replace the b
 
 A real Grok Build session planning a sample app feature. The agent handles the planning commands; you review the proposed work.
 
-### 4. Run, review, and resume
+### 4. Follow progress and review the result
 
-Review the scope and the checks that will demonstrate success. When you approve the plan, tell your agent:
+Your agent handles planning and execution, asking you when it reaches an approval point or needs a decision. You can focus on other work and review the results when they're ready.
 
-> The plan is approved. Work from the festival's linked project or worktree. Run `fest next`, follow its instructions, record progress, and repeat. Run the planned checks before marking work complete.
->
-> Continue until the goal is complete, or stop for an approval gate, a blocker, or a decision that needs me. Finish with the changes, verification results, and anything I should review.
-
-Your agent runs that loop within its own permissions. You can do other work and return at a review point. Open another terminal in the festival directory and run `fest watch` whenever you want to check progress.
+To check progress along the way, open another terminal in the festival directory and run `fest watch`.
 
 <p align="center">
   <img src="docs/images/demos/tui-fest-watch.gif" alt="The fest watch terminal view updates a festival tree as scripted sample tasks advance." width="700">
