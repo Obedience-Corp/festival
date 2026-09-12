@@ -59,6 +59,7 @@ Run 'fest understand' to learn the methodology before executing tasks.
 * [fest deps](../fest_deps/)	 - Show task dependencies
 * [fest feedback](../fest_feedback/)	 - Manage structured feedback collection
 * [fest gates](../fest_gates/)	 - Manage quality gates - validation steps at sequence end
+* [fest gif](../fest_gif/)	 - Render a festival's execution as an animated GIF
 * [fest go](../fest_go/)	 - Navigate to festivals/ - use 'fgo' after shell-init setup
 * [fest hooks](../fest_hooks/)	 - Inspect resolved lifecycle hooks
 * [fest id](../fest_id/)	 - Show the festival ID for the current context
