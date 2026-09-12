@@ -55,11 +55,15 @@ Auto approval:
   hooks.definitions.approval_judge hook in .festival/config.yaml. If neither is
   set, --auto fails closed and leaves the checkpoint unchanged.
 
+  Install the reference judge, then declare it in festivals/.festival/config.yaml
+  (swap claude for grok, codex, or fx):
+
+      go install github.com/Obedience-Corp/judge-agent/cmd/judge-agent@latest
+
       hooks:
         definitions:
           approval_judge:
-            command: ob judge
-            timeout: 0
+            command: judge-agent --agent claude
 
   By default --auto launches the judge in the background and returns
   immediately; the checkpoint stays blocked until the verdict lands, and
