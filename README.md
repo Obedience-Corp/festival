@@ -121,6 +121,22 @@ The progress view you can open alongside your agent. This recording demonstrates
 
 [Follow the video quick start](https://docs.fest.build/getting-started/quickstart/) to see setup, planning with Grok Build, and the progress view.
 
+## Share a festival replay
+
+`fest gif` turns recorded festival progress into a GIF you can send and share:
+
+```bash
+fest gif my-festival -o replay.gif
+fest gif --festival MF0001 --speed 2
+```
+
+When a festival moves to completed, Fest creates `festival-replay.gif` and embeds
+it in `FESTIVAL_OVERVIEW.md`, with both files included in the completion commit.
+Use `fest gif --embed` to refresh it or add a replay to an older festival.
+
+See the [replay guide](https://docs.fest.build/guides/festival-replays/) for
+examples, sharing, and recovery.
+
 ## How the work stays coherent
 
 A festival is a **graph of work**, organized into phases, sequences, and tasks. Each task has context and completion criteria. Your agent uses `fest next` to find the next actionable step, does the work, checks the result, and records progress before continuing.
