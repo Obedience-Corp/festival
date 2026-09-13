@@ -12,7 +12,7 @@ Festival is an operating environment for long-running agent work. It keeps the c
 
 Use it with Claude Code, Codex, Grok Build, Cursor, OpenCode, or another agent that can read files and run commands. Your agent calls `fest next` for its next step, does the work, and records the result.
 
-[Get started](#get-started) · [Explore the demos](#explore-the-tools) · [Video quick start](https://docs.fest.build/getting-started/quickstart/) · [Website](https://fest.build/) · [简体中文](README.zh-CN.md)
+[Get started](#get-started) · [Explore the demos](#explore-the-tools) · [Video quick start](https://docs.fest.build/getting-started/quickstart/) · [Website](https://fest.build/) · [Discord](https://discord.gg/Rt7dDY6VqD) · [简体中文](README.zh-CN.md)
 
 ## Four days of agent work, alongside everything else
 
@@ -273,6 +273,7 @@ The CLI tools are free to use and run locally without a Festival account. Your a
 
 ## Keep going
 
+- [Join the Obedience Corp Discord](https://discord.gg/Rt7dDY6VqD): get help with Festival, compare workflows, and share what you build.
 - [Documentation](https://docs.fest.build/): guides, use cases, and CLI reference.
 - [First festival tutorial](https://docs.fest.build/tutorials/first-festival/): a hands-on walkthrough of the plan structure.
 - [Examples](examples/) and [templates](templates/): work you can inspect and adapt.
