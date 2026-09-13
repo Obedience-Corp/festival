@@ -11,7 +11,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from discord_content_feed import clean_text, content_length, is_stable_release, load_state, main, meaningful_pr, post, save_state, select_weekly_content, spotlight_message
+from discord_content_feed import clean_text, content_length, is_stable_release, load_state, main, meaningful_pr, post, release_message, save_state, select_weekly_content, spotlight_message
 
 
 class FeedRulesTest(unittest.TestCase):
@@ -44,6 +44,19 @@ class FeedRulesTest(unittest.TestCase):
         cleaned = clean_text("feat: [click](https://evil.example) *surprise*")
         self.assertIn(r"\[click\]", cleaned)
         self.assertNotIn("[click]", cleaned.replace(r"\[click\]", ""))
+
+    def test_project_links_are_suppressed_but_spotlight_image_stays_bare(self):
+        _, release = release_message("Obedience-Corp/festival", {"id": 1, "tag_name": "v1", "name": "v1", "html_url": "https://github.com/Obedience-Corp/festival/releases/tag/v1"})
+        self.assertIn("<https://github.com/Obedience-Corp/festival/releases/tag/v1>", release)
+        with tempfile.TemporaryDirectory() as directory:
+            manifest = Path(directory) / "spotlights.json"
+            manifest.write_text(json.dumps([{"id": "demo", "title": "Demo", "caption": "Caption",
+                "source_url": "https://docs.fest.build/methodology/work-items/",
+                "image_url": "https://fest.build/images/fest-show.gif"}]))
+            rendered = spotlight_message(manifest, {})
+            self.assertIn("https://fest.build/images/fest-show.gif", rendered)
+            self.assertNotIn("<https://fest.build/images/fest-show.gif>", rendered)
+            self.assertIn("Source: <https://docs.fest.build/methodology/work-items/>", rendered)
 
     def test_release_filter_rejects_draft_and_prerelease(self):
         self.assertTrue(is_stable_release({"tag_name": "v1", "id": 1}))

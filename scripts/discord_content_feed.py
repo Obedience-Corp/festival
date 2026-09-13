@@ -116,7 +116,7 @@ def release_message(repo: str, release: dict[str, Any]) -> tuple[str, str] | Non
     key = f"release:{repo}:{release['id']}"
     name = clean_text(release.get("name") or release.get("tag_name", "release"))
     url = release.get("html_url") or f"https://github.com/{repo}/releases/tag/{release['tag_name']}"
-    return key, f"📦 **{repo.split('/', 1)[1]} {name}**\n{url}"
+    return key, f"📦 **{repo.split('/', 1)[1]} {name}**\n<{url}>"
 
 
 def weekly_candidates(client: GitHub, repositories: list[str], state: dict[str, Any], now: datetime, days: int) -> list[tuple[str, str]]:
@@ -135,7 +135,7 @@ def weekly_candidates(client: GitHub, repositories: list[str], state: dict[str, 
             if key in seen:
                 continue
             title = clean_text(pr.get("title", "untitled"))
-            candidates.append((key, f"• **{repo.split('/', 1)[1]}:** {title} — {pr['html_url']}"))
+            candidates.append((key, f"• **{repo.split('/', 1)[1]}:** {title} — <{pr['html_url']}>"))
             seen.add(key)
     return candidates
 
@@ -155,7 +155,7 @@ def spotlight_message(path: Path, state: dict[str, Any]) -> str | None:
         if item["id"] in seen or not all(public_spotlight_url(str(item[field])) for field in ("source_url", "image_url")):
             continue
         state["spotlights"] = sorted(seen | {item["id"]})[-100:]
-        return f"🎞️ **Visual spotlight: {clean_text(str(item['title']))}**\n{clean_text(str(item['caption']), 240)}\n{item['image_url']}\nSource: {item['source_url']}"
+        return f"🎞️ **Visual spotlight: {clean_text(str(item['title']))}**\n{clean_text(str(item['caption']), 240)}\n{item['image_url']}\nSource: <{item['source_url']}>"
     return None
 
 
