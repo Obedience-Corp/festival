@@ -8,6 +8,14 @@ description: "Create and share animated GIF replays, automatically embedded when
 workflow steps, gates, judge verdicts, and hook runs appear in the order they
 were recorded. The final frame matches the current festival tree.
 
+At the default speed, related task changes are grouped within their sequence
+and each displayed update holds for at least 2 seconds. Row backgrounds stay
+steady while you read. Replays target about a minute; distinct sequences and
+important outcomes can extend that. Rejections get extra dwell and hook
+results hold for at least 3 seconds. Changes from different sequences are
+kept separate so the affected tasks remain visible.
+Use `--speed 2` for faster playback or `--speed 0.5` for more reading time.
+
 ## Completed festivals
 
 When a festival moves to completed through `fest promote`,
