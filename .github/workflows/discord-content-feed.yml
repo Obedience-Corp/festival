@@ -1,0 +1,87 @@
+name: Discord project feed
+
+on:
+  release:
+    types: [published]
+  schedule:
+    - cron: "17 16 * * 1"
+  workflow_dispatch:
+    inputs:
+      send:
+        description: "Send to Discord (requires DISCORD_FEED_ENABLED=true and the webhook secret)"
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+
+concurrency:
+  group: discord-content-feed
+  cancel-in-progress: false
+
+jobs:
+  feed:
+    runs-on: ubuntu-latest
+    env:
+      DISCORD_FEED_ENABLED: ${{ vars.DISCORD_FEED_ENABLED || 'false' }}
+      DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_PROJECT_FEED_WEBHOOK }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Restore dedupe state
+        run: |
+          if git fetch origin refs/heads/discord-feed-state:refs/remotes/origin/discord-feed-state; then
+            git show origin/discord-feed-state:.discord-feed-state.json > .discord-feed-state.json || {
+              echo "state branch exists but its state file cannot be read" >&2
+              exit 1
+            }
+          else
+            state_ref="$(git ls-remote origin refs/heads/discord-feed-state)" || {
+              echo "could not determine whether the dedupe state branch exists" >&2
+              exit 1
+            }
+            if [ -n "$state_ref" ]; then
+              echo "state branch exists but could not be fetched; refusing to reset dedupe state" >&2
+              exit 1
+            fi
+            printf '%s\n' '{"seen": [], "weekly": [], "spotlights": []}' > .discord-feed-state.json
+          fi
+      - name: Publish feed
+        id: publish
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          FEED_MODE: ${{ github.event_name == 'release' && 'release' || 'weekly' }}
+          RELEASE_REPO: ${{ github.event.repository.full_name }}
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+          FEED_SEND: ${{ github.event_name != 'workflow_dispatch' || inputs.send == true }}
+        run: |
+          args=(--mode "$FEED_MODE" --state-file .discord-feed-state.json --spotlight-manifest docs/discord-spotlights.json)
+          if [ "$FEED_MODE" = release ]; then
+            args+=(--repo "$RELEASE_REPO" --tag "$RELEASE_TAG")
+          fi
+          if [ "$FEED_SEND" = true ]; then
+            args+=(--send)
+          fi
+          output="$(python3 scripts/discord_content_feed.py "${args[@]}")" || status=$?
+          printf '%s\n' "$output"
+          if printf '%s\n' "$output" | grep -q '^SENT '; then
+            printf '%s\n' 'delivered=true' >> "$GITHUB_OUTPUT"
+          fi
+          exit "${status:-0}"
+      - name: Persist dedupe state
+        if: steps.publish.outputs.delivered == 'true'
+        run: |
+          mv .discord-feed-state.json "$RUNNER_TEMP/discord-feed-state.json"
+          if git show origin/discord-feed-state:.discord-feed-state.json >/dev/null 2>&1; then
+            git switch --detach origin/discord-feed-state
+          else
+            git switch --orphan discord-feed-state
+            git rm -rf . >/dev/null 2>&1 || true
+          fi
+          cp "$RUNNER_TEMP/discord-feed-state.json" .discord-feed-state.json
+          git add .discord-feed-state.json
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'chore: update Discord feed state'
+          git push origin HEAD:discord-feed-state

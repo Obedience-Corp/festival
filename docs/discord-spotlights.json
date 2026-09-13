@@ -1,0 +1,16 @@
+[
+  {
+    "id": "camp-workitems-2026-01",
+    "title": "Work items in Camp",
+    "caption": "See how a work item carries context from intent through execution.",
+    "source_url": "https://fest.build/docs/camp/work-items/",
+    "image_url": "https://fest.build/images/demos/tui-workitems.gif"
+  },
+  {
+    "id": "festival-show-2026-01",
+    "title": "Historical Festival run",
+    "caption": "A recorded run makes the plan and evidence visible as work moves.",
+    "source_url": "https://fest.build/images/fest-show.gif",
+    "image_url": "https://fest.build/images/fest-show.gif"
+  }
+]
