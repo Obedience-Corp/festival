@@ -14,7 +14,8 @@ PRs are omitted. Releases include only a short name/tag and source URL; release
 bodies are never forwarded. Output neutralizes Discord mentions and does not
 use mass mentions. Each weekly post contains at most five repository items and
 one visual spotlight, and is kept below Discord's 2,000-character content
-limit.
+limit. GitHub source links are wrapped to suppress noisy unfurls; only the
+curated spotlight image URL is left bare for a visual preview.
 
 Set the repository variable `DISCORD_FEED_RELEASES_ONLY=true` to omit PRs and
 spotlights from the weekly scan. Locally, use `--releases-only` with `--mode weekly`.
