@@ -1,0 +1,28 @@
+name: Check Discord project feed
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/discord-content-feed*.yml'
+      - 'scripts/*discord_content_feed.py'
+      - 'docs/discord-spotlights.json'
+      - '.justfiles/community.just'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/*discord_content_feed.py'
+      - 'docs/discord-spotlights.json'
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python3 -m unittest discover -s scripts -p 'test_discord_content_feed.py'

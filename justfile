@@ -25,6 +25,9 @@ mod git '.justfiles/git.just'
 [doc('Claude Code plugin')]
 mod plugin '.justfiles/plugin.just'
 
+[doc('Discord community feed checks and previews')]
+mod community '.justfiles/community.just'
+
 
 [private]
 default:
