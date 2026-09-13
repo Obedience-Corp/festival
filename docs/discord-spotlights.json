@@ -2,15 +2,15 @@
   {
     "id": "camp-workitems-2026-01",
     "title": "Work items in Camp",
-    "caption": "See how a work item carries context from intent through execution.",
-    "source_url": "https://fest.build/docs/camp/work-items/",
+    "caption": "Use camp wi to browse festivals, intents, designs, and projects in one terminal view. This recording uses demo data.",
+    "source_url": "https://docs.fest.build/methodology/work-items/",
     "image_url": "https://fest.build/images/demos/tui-workitems.gif"
   },
   {
     "id": "festival-show-2026-01",
     "title": "Historical Festival run",
-    "caption": "A recorded run makes the plan and evidence visible as work moves.",
-    "source_url": "https://fest.build/images/fest-show.gif",
+    "caption": "A historical camp-hardening execution replay, rendered from fest show and its event history. Browse the goal and task files in the public example.",
+    "source_url": "https://github.com/Festival-Examples/example-camp-hardening-festival",
     "image_url": "https://fest.build/images/fest-show.gif"
   }
 ]

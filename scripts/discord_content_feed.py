@@ -58,7 +58,7 @@ class GitHub:
             with self.opener(request, timeout=20) as response:
                 return json.loads(response.read().decode("utf-8"))
         except urllib.error.HTTPError as exc:
-            if exc.code in (403, 404):
+            if exc.code == 404:
                 return None
             raise RuntimeError(f"GitHub API request failed ({exc.code})") from exc
         except (urllib.error.URLError, json.JSONDecodeError) as exc:
@@ -82,13 +82,21 @@ def meaningful_pr(pr: dict[str, Any]) -> bool:
     if "dependencies" in labels or "dependency" in labels:
         return False
     title = str(pr.get("title", ""))
+    if re.match(r"^\w+\((?:deps|deps-dev|dependencies)\)!?:", title, re.IGNORECASE):
+        return False
     return bool(MEANINGFUL_TITLE.match(title) or "community" in labels)
 
 
 def load_state(path: Path) -> dict[str, Any]:
     try:
         state = json.loads(path.read_text(encoding="utf-8"))
-        return state if isinstance(state, dict) else {}
+        if not isinstance(state, dict) or any(
+            not isinstance(state.get(key, []), list) or
+            any(not isinstance(item, str) for item in state.get(key, []))
+            for key in ("seen", "weekly", "spotlights")
+        ):
+            raise RuntimeError(f"invalid state file: {path}")
+        return state
     except FileNotFoundError:
         return {}
     except json.JSONDecodeError as exc:
@@ -144,11 +152,29 @@ def spotlight_message(path: Path, state: dict[str, Any]) -> str | None:
     for item in catalog if isinstance(catalog, list) else []:
         if not isinstance(item, dict) or not all(item.get(field) for field in ("id", "title", "caption", "source_url", "image_url")):
             continue
-        if item["id"] in seen or not all(str(item[field]).startswith("https://") for field in ("source_url", "image_url")):
+        if item["id"] in seen or not all(public_spotlight_url(str(item[field])) for field in ("source_url", "image_url")):
             continue
         state["spotlights"] = sorted(seen | {item["id"]})[-100:]
         return f"🎞️ **Visual spotlight: {clean_text(str(item['title']))}**\n{clean_text(str(item['caption']), 240)}\n{item['image_url']}\nSource: {item['source_url']}"
     return None
+
+
+def public_spotlight_url(value: str) -> bool:
+    """Keep the reviewed catalog on the project's public documentation/assets."""
+    parsed = urllib.parse.urlsplit(value)
+    if parsed.scheme != "https" or parsed.username or parsed.password or parsed.query or parsed.fragment:
+        return False
+    if parsed.netloc in ("fest.build", "docs.fest.build"):
+        return True
+    if parsed.netloc == "github.com":
+        path = parsed.path.strip("/").split("/")
+        return "/".join(path[:2]) in (*ALLOWLIST, "Festival-Examples/example-camp-hardening-festival")
+    return False
+
+
+def content_length(value: str) -> int:
+    # Count astral emoji conservatively as two characters.
+    return len(value.encode("utf-16-le")) // 2
 
 
 def recent_release_candidates(client: GitHub, repositories: list[str], state: dict[str, Any], now: datetime, days: int) -> list[tuple[str, str]]:
@@ -171,29 +197,35 @@ def recent_release_candidates(client: GitHub, repositories: list[str], state: di
     return candidates
 
 
-def select_weekly_content(client: GitHub, repositories: list[str], state: dict[str, Any], now: datetime, days: int, manifest: Path) -> tuple[list[str], dict[str, Any]]:
+def select_weekly_content(client: GitHub, repositories: list[str], state: dict[str, Any], now: datetime, days: int, manifest: Path, releases_only: bool = False) -> tuple[list[str], dict[str, Any]]:
     week_key = now.strftime("%G-W%V")
     if week_key in set(state.get("weekly", [])):
         return [], state
     candidates = recent_release_candidates(client, repositories, state, now, days)
-    candidates += weekly_candidates(client, repositories, state, now, days)
+    if not releases_only:
+        candidates += weekly_candidates(client, repositories, state, now, days)
     working = dict(state)
+    spotlight_state = dict(state)
+    spotlight = None if releases_only else spotlight_message(manifest, spotlight_state)
+    header = "🧭 **Weekly project feed**\n"
+    if spotlight and content_length(header + spotlight) > 1900:
+        spotlight = None
     seen = set(working.get("seen", []))
     parts: list[str] = []
     selected_keys: list[str] = []
     for key, message in candidates:
         if len(parts) >= 5:
             break
-        draft = "🧭 **Weekly project feed**\n" + "\n".join(parts + [message])
-        if len(draft) > 1900:
+        draft = header + "\n".join(parts + [message] + ([spotlight] if spotlight else []))
+        if content_length(draft) > 1900:
             continue
         parts.append(message)
         selected_keys.append(key)
     seen.update(selected_keys)
-    spotlight = spotlight_message(manifest, working)
     if spotlight:
         parts.append(spotlight)
-    content = "🧭 **Weekly project feed**\n" + "\n".join(parts)
+        working["spotlights"] = spotlight_state["spotlights"]
+    content = header + "\n".join(parts)
     if len(parts) < 1:
         return [], state
     working["seen"] = sorted(seen)[-500:]
@@ -202,7 +234,11 @@ def select_weekly_content(client: GitHub, repositories: list[str], state: dict[s
 
 
 def post(webhook: str, content: str) -> None:
+    if content_length(content) > 2000:
+        raise RuntimeError("Discord content exceeds 2000 characters")
     parsed = urllib.parse.urlsplit(webhook)
+    if parsed.scheme != "https" or parsed.netloc != "discord.com" or not re.fullmatch(r"/api(?:/v\d+)?/webhooks/\d+/[A-Za-z0-9_.-]+", parsed.path):
+        raise RuntimeError("Expected a Discord incoming webhook URL")
     query = urllib.parse.parse_qsl(parsed.query, keep_blank_values=True)
     query = [(key, value) for key, value in query if key != "wait"] + [("wait", "true")]
     webhook = urllib.parse.urlunsplit(parsed._replace(query=urllib.parse.urlencode(query)))
@@ -231,6 +267,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--state-file", type=Path, default=Path(".discord-feed-state.json"))
     parser.add_argument("--spotlight-manifest", type=Path, default=Path("docs/discord-spotlights.json"))
     parser.add_argument("--since-days", type=int, default=7)
+    parser.add_argument("--releases-only", action="store_true", help="omit merged PRs and visual spotlights from the weekly scan")
     parser.add_argument("--send", action="store_true", help="send only when DISCORD_FEED_ENABLED=true and a webhook is set")
     args = parser.parse_args(argv)
     if args.mode == "release" and (args.repo not in ALLOWLIST or not args.tag):
@@ -254,7 +291,7 @@ def main(argv: list[str] | None = None) -> int:
                     messages = [message]
                     working["seen"] = sorted(set(working.get("seen", [])) | {key})[-500:]
     else:
-        messages, working = select_weekly_content(client, repositories, working, now, args.since_days, args.spotlight_manifest)
+        messages, working = select_weekly_content(client, repositories, working, now, args.since_days, args.spotlight_manifest, args.releases_only)
     if not messages:
         print("NO_MESSAGES")
         return 0

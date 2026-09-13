@@ -14,7 +14,7 @@ on:
         type: boolean
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: discord-content-feed
@@ -23,9 +23,11 @@ concurrency:
 jobs:
   feed:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write # Persist delivery history on discord-feed-state.
     env:
       DISCORD_FEED_ENABLED: ${{ vars.DISCORD_FEED_ENABLED || 'false' }}
-      DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_PROJECT_FEED_WEBHOOK }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -53,6 +55,8 @@ jobs:
         id: publish
         env:
           GITHUB_TOKEN: ${{ github.token }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_PROJECT_FEED_WEBHOOK }}
+          FEED_RELEASES_ONLY: ${{ vars.DISCORD_FEED_RELEASES_ONLY || 'false' }}
           FEED_MODE: ${{ github.event_name == 'release' && 'release' || 'weekly' }}
           RELEASE_REPO: ${{ github.event.repository.full_name }}
           RELEASE_TAG: ${{ github.event.release.tag_name }}
@@ -64,6 +68,9 @@ jobs:
           fi
           if [ "$FEED_SEND" = true ]; then
             args+=(--send)
+          fi
+          if [ "$FEED_RELEASES_ONLY" = true ]; then
+            args+=(--releases-only)
           fi
           output="$(python3 scripts/discord_content_feed.py "${args[@]}")" || status=$?
           printf '%s\n' "$output"
