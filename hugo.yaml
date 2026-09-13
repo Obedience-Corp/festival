@@ -120,6 +120,10 @@ menu:
       parent: guides
       url: /guides/loops-and-orchestration/
       weight: 34
+    - name: Festival Replays
+      parent: guides
+      url: /guides/festival-replays/
+      weight: 35
 
     - name: Use Cases
       identifier: use-cases
