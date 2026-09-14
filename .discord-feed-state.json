@@ -1,15 +1,22 @@
 {
   "seen": [
+    "pr:Obedience-Corp/fest:415",
     "pr:Obedience-Corp/fest:417",
     "pr:Obedience-Corp/festival:187",
+    "pr:Obedience-Corp/festival:188",
     "release:Obedience-Corp/camp:387703712",
+    "release:Obedience-Corp/camp:388074771",
     "release:Obedience-Corp/fest:387685145",
+    "release:Obedience-Corp/fest:388074387",
+    "release:Obedience-Corp/festival:384452138",
     "release:Obedience-Corp/festival:387718546"
   ],
   "spotlights": [
-    "camp-workitems-2026-01"
+    "camp-workitems-2026-01",
+    "festival-show-2026-01"
   ],
   "weekly": [
-    "2026-W37"
+    "2026-W37",
+    "2026-W38"
   ]
 }
