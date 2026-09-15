@@ -22,6 +22,9 @@ appropriate level based on your current directory:
   Task directory → Shows hint (task status requires explicit --task flag)
 
 For festivals, this will move the directory between status folders.
+Setting a festival to completed also creates festival-replay.gif and embeds
+it in FESTIVAL_OVERVIEW.md before auto-committing. Replay failures are reported
+without undoing completion; retry with fest gif --embed inside the festival.
 If not inside a festival, an interactive selector will be shown.
 
 EXPLICIT TARGETING:

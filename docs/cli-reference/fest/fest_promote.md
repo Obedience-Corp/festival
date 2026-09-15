@@ -12,6 +12,10 @@ Promote a festival to the next lifecycle status
 
 Promote moves a festival through the lifecycle: planning → ready → active → completed.
 
+On completion, fest creates festival-replay.gif and embeds it in
+FESTIVAL_OVERVIEW.md before auto-committing. Replay failures are reported
+without undoing completion; retry with fest gif --embed inside the festival.
+
 Each transition validates readiness:
   planning → ready:    Festival goal must be defined
   ready → active:      Festival is ready to begin execution
