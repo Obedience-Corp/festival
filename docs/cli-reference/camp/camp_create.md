@@ -10,7 +10,7 @@ Create a new camp at the default camps directory
 
 ### Synopsis
 
-Create a new camp at <campaigns_dir>/<name>/, using the same scaffolding as 'camp init'. The default camps directory is ~/campaigns/ and can be configured via 'camp settings' or by editing the campaigns_dir field in ~/.obey/campaign/config.json.
+Create a new camp at <campaigns_dir>/<name>/, using the same scaffolding as 'camp init', and records the scaffold as the workspace's first commit. The default camps directory is ~/campaigns/ and can be configured via 'camp settings' or by editing the campaigns_dir field in ~/.obey/campaign/config.json.
 
 ```
 camp create <name> [flags]

@@ -19,7 +19,10 @@ Shows:
   - Checkpoint status if applicable
 
 Use --json for a stable machine-readable snapshot (schema fest.workflow.status/v1)
-that consumers can read without parsing the human-readable output.
+that consumers can read without parsing the human-readable output. Each step in
+the snapshot also carries the judge's followups, the complete recorded verdict
+(finished at, confidence, evidence status), and the most recent hook runs the
+festival ledger holds for that step.
 
 ```
 fest workflow status [flags]
