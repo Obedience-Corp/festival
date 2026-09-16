@@ -12,7 +12,7 @@ List ideas in the camp
 
 List ideas with filtering, sorting, and output format options.
 
-By default, lists ideas in inbox, active, and ready status.
+By default, lists ideas in inbox, ready, and active status.
 Use --all to include dungeon ideas.
 
 OUTPUT FORMATS:
