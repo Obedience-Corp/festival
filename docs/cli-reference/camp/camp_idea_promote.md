@@ -14,15 +14,16 @@ Promote an idea to the next pipeline stage.
 
 TARGETS:
   ready      Move from inbox to ready (reviewed/enriched)
-  festival   Move from ready to active + create festival (default)
-  design     Move from ready to active + create design doc
+  festival   Move from ready or active to active + create festival (default)
+  design     Move from ready or active to active + create design doc
 
-The idea moves to active status when promoted to festival or design,
-because work is just beginning. Use --force to bypass status checks.
+The idea stays in or moves to active status when promoted to festival or
+design, because work is just beginning. Use --force to bypass status
+checks or re-promote an idea that already has promoted_to set.
 
 Examples:
   camp idea promote add-dark                       Promote ready → festival
-  camp idea promote add-dark --target design       Promote ready → design doc
+  camp idea promote add-dark --target design       Promote ready or active → design doc
   camp idea promote add-dark --target ready         Promote inbox → ready
   camp idea promote add-dark --force                Force promote from any status
 
