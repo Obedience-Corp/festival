@@ -29,10 +29,11 @@ cannot be combined.
 Promoting or setting a festival to completed does this automatically before
 the status change is committed. Use --embed to refresh or retry that replay.
 
-At default speed, related task changes are grouped by sequence and each
-update holds for at least 2 seconds. Row backgrounds stay steady. Replays
-target about a minute; distinct sequences and important outcomes can extend
-that. Rejections and hook results get extra reading time.
+Every recorded change gets its own beat, in the order fest recorded it.
+Nothing is merged or skipped. At default speed a beat holds 2 seconds,
+shrinking to no less than 1 second once a festival has many changes, so a
+long festival makes a long replay instead of losing steps. Row backgrounds
+stay steady. Rejections and hook results get extra reading time.
 Use --speed to play it faster or slower.
 
 ```
