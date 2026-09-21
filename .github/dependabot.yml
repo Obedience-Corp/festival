@@ -1,0 +1,9 @@
+# GitHub Actions only. Go module alerts are submitted by
+# .github/workflows/dependency-submission.yaml, which names the real
+# camp, fest, and festival-installer go.mod paths.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
