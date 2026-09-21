@@ -4,7 +4,7 @@ Festival ships `camp`, `fest`, and `festival`. Security reports are taken seriou
 
 ## Reporting a vulnerability
 
-Email **security@obediencecorp.com**. Please do not open a public issue for a
+Email **contact@obediencecorp.com**. Please do not open a public issue for a
 suspected vulnerability.
 
 Include what you found, the affected version or commit, and, if you have
