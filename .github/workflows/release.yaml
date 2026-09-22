@@ -105,7 +105,7 @@ jobs:
           if [ "${missing}" -ne 0 ]; then
             exit "${missing}"
           fi
-          push_ok="$(GH_TOKEN="${MARKETPLACE_PUBLISH_TOKEN}" gh api repos/Obedience-Corp/marketplace --jq '.permissions.push')"
+          push_ok="$(GH_TOKEN=$MARKETPLACE_PUBLISH_TOKEN gh api repos/Obedience-Corp/marketplace --jq '.permissions.push')"
           if [ "${push_ok}" != "true" ]; then
             echo "::error::MARKETPLACE_PUBLISH_TOKEN cannot push to Obedience-Corp/marketplace (needed to open the marketplace entry pull request)"
             exit 1

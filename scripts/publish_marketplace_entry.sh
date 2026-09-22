@@ -21,7 +21,10 @@ fi
 
 # gh authenticates from GH_TOKEN. Reuse the marketplace publish token so the
 # git push and the gh pr create below share one credential.
-export GH_TOKEN="${MARKETPLACE_PUBLISH_TOKEN:-${GH_TOKEN:-}}"
+if [ -n "${MARKETPLACE_PUBLISH_TOKEN:-}" ]; then
+  GH_TOKEN=$MARKETPLACE_PUBLISH_TOKEN
+  export GH_TOKEN
+fi
 
 repo_url="${MARKETPLACE_REPO_URL:-}"
 if [ -z "${repo_url}" ]; then
