@@ -194,10 +194,10 @@ download_and_install() {
 parse_local_fest_version() {
     local short="${1-}"
     local full="${2-}"
-    local token
-    token="$(printf '%s\n' "$short" | awk 'NR==1 {print $1; exit}')"
-    if [ -n "$token" ]; then
-        printf '%s' "$token"
+    local short_version
+    short_version="$(printf '%s\n' "$short" | awk 'NR==1 {print $1; exit}')"
+    if [ -n "$short_version" ]; then
+        printf '%s' "$short_version"
         return 0
     fi
     printf '%s\n' "$full" | awk 'NR==1 {print $2; exit}'
