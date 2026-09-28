@@ -1,14 +1,19 @@
 {
   "seen": [
+    "pr:Obedience-Corp/camp:712",
+    "pr:Obedience-Corp/camp:715",
     "pr:Obedience-Corp/fest:415",
     "pr:Obedience-Corp/fest:417",
     "pr:Obedience-Corp/fest:418",
     "pr:Obedience-Corp/fest:420",
     "pr:Obedience-Corp/festival:187",
     "pr:Obedience-Corp/festival:188",
+    "pr:Obedience-Corp/festival:192",
+    "pr:Obedience-Corp/festival:198",
     "release:Obedience-Corp/camp:387703712",
     "release:Obedience-Corp/camp:388074771",
     "release:Obedience-Corp/camp:389714906",
+    "release:Obedience-Corp/camp:395948070",
     "release:Obedience-Corp/fest:387685145",
     "release:Obedience-Corp/fest:388074387",
     "release:Obedience-Corp/fest:390939833",
@@ -23,6 +28,7 @@
   "weekly": [
     "2026-W37",
     "2026-W38",
-    "2026-W39"
+    "2026-W39",
+    "2026-W40"
   ]
 }
