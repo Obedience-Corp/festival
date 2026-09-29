@@ -300,6 +300,8 @@ homebrew_casks:
           ]
 
     caveats: |
+      Run festival setup to create your first camp. Existing camps are preserved.
+
       Homebrew installs static fest, camp, and festival completions. This cask does not
       edit your shell rc. To activate navigation helpers (cgo, cr, csw, cint, fgo, fls),
       add one line to your shell config:

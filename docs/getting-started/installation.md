@@ -291,3 +291,17 @@ completion.
 
 See [Shell Setup]({{< ref "/getting-started/shell-setup" >}}) for details.
 Then continue with the [Quick Start]({{< ref "/getting-started/quickstart" >}}) to follow the validated beginner path through first `fest next`.
+
+## Your first camp
+
+The shell and npm installers create a camp named `festival` when you have no
+registered camps. It lives at `~/campaigns/festival`, or under the camps directory
+you configured in Camp. Existing camps keep their names and paths.
+
+After installing with Homebrew or a system package manager, run `festival setup`
+as your regular user. This also retries a setup step that could not finish.
+`festival update` checks starter setup even when your tools are already current.
+Once setup succeeds, deleting the starter does not cause it to be recreated.
+
+If the destination contains unrelated files, setup leaves them in place and
+explains how to retry. A setup problem does not undo a successful tool install.

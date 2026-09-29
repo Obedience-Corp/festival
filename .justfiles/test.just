@@ -107,3 +107,8 @@ release-notes:
 [no-cd]
 plugin:
     just plugin check
+
+# Verify starter setup entry points in an isolated filesystem, without downloads.
+[no-cd]
+starter-setup:
+    docker run --rm -v "{{justfile_directory()}}:/src:ro" node:24-bookworm bash -c 'cp -a /src /work && cd /work && bash scripts/test_starter_setup.sh && bash scripts/test_install_shell.sh'
