@@ -24,12 +24,19 @@ branches whose remote tracking branch has been deleted.
 By default, nested submodules (e.g. inside monorepos) are included.
 Use --no-recurse to only pull top-level submodules.
 
+The camp root pulls first, then submodules pull concurrently (8 at a
+time by default; set with --parallel N). Results print in .gitmodules
+order. In a terminal, a live area below the results shows the repos
+pulling right now and overall progress; piped output prints one plain
+line per repo.
+
 Examples:
   camp pull all                      # Pull all repos
   camp pull all --rebase             # Pull all repos with rebase
   camp pull all --ff-only            # Fast-forward only for all repos
   camp pull all --no-recurse         # Only top-level submodules
   camp pull all --default-branch     # Checkout default branch first
+  camp pull all --parallel 2         # Pull at most 2 submodules at once
 
 ```
 camp pull all [git pull flags] [flags]
