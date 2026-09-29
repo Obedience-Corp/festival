@@ -95,6 +95,7 @@ camp [flags]
 * [camp root](../camp_root/)	 - Print the current camp root
 * [camp run](../camp_run/)	 - Execute command from camp root, or just recipe in a project
 * [camp settings](../camp_settings/)	 - Manage camp configuration
+* [camp setup](../camp_setup/)	 - Create your first festival camp once
 * [camp shell-init](../camp_shell-init/)	 - Output shell initialization code
 * [camp shortcuts](../camp_shortcuts/)	 - List all available shortcuts
 * [camp skills](../camp_skills/)	 - Manage camp skill directory links

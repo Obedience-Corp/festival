@@ -12,9 +12,18 @@ Mark a task as blocked
 
 Mark a task as blocked, pausing work and notifying the user.
 
+Repeat --tried for each unblock attempt that failed. The operator sees these
+when deciding whether to defer the blocker, and a block with no recorded
+attempts is likely to be sent back.
+
 By default a confirmation prompt is shown; pass --yes to skip it for
 non-interactive or agent use. --json emits a structured result and requires
 --yes.
+
+--list reports the festival's blockers instead of reporting one. It takes no
+task and no --reason, writes nothing, and never prompts. Open blockers are
+listed before deferred ones; --open and --deferred narrow the list to one of
+them.
 
 ```
 fest task blocked [task] [flags]
@@ -23,10 +32,14 @@ fest task blocked [task] [flags]
 ### Options
 
 ```
-  -h, --help            help for blocked
-      --json            output as JSON (requires --yes)
-      --reason string   reason for the blocker (required)
-  -y, --yes             skip the interactive confirmation prompt
+      --deferred            with --list, show only deferred blockers
+  -h, --help                help for blocked
+      --json                output as JSON (requires --yes)
+      --list                list the festival's blockers instead of reporting one
+      --open                with --list, show only blockers no operator has deferred
+      --reason string       reason for the blocker (required)
+      --tried stringArray   an unblock attempt that failed; repeat for each attempt
+  -y, --yes                 skip the interactive confirmation prompt
 ```
 
 ### Options inherited from parent commands
