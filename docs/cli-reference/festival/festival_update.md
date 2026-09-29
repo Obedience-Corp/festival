@@ -21,8 +21,14 @@ When a newer suite exists and stdout is a TTY, update runs the package-manager c
 (for example `yay -Syu festival-bin`) so camp, fest, and this hub upgrade together.
 --json and non-TTY invocations print the command instead of running it.
 
+--no-restart applies to obey only. An obey restart marks every live session failed, so a
+caller with running sessions installs the new binaries and defers the restart; the result
+reports service.deferred and names the restart command. A daemon that was not running is
+started on the new version instead of restarted, and nothing is deferred. The flag is
+accepted and ignored for festival, camp, and fest.
+
 ```
-festival update [festival|camp|fest] [flags]
+festival update [festival|camp|fest|obey] [flags]
 ```
 
 ### Options
@@ -33,6 +39,7 @@ festival update [festival|camp|fest] [flags]
       --force              update/install a hub copy even when a package-manager suite is already on PATH
   -h, --help               help for update
       --json               emit JSON output
+      --no-restart         install the new obey binaries without restarting the running daemon
 ```
 
 ### SEE ALSO

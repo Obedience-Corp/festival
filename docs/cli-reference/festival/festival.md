@@ -40,8 +40,11 @@ festival [flags]
 * [festival install](../festival_install/)	 - Install the festival suite (camp, fest, and festival)
 * [festival list](../festival_list/)	 - List installed packages
 * [festival marketplace](../festival_marketplace/)	 - Manage marketplaces
+* [festival resolve](../festival_resolve/)	 - Print the absolute path the hub would run a tool from
+* [festival setup](../festival_setup/)	 - Create your first festival camp once
 * [festival shell-init](../festival_shell-init/)	 - Print shell code to put the installer-managed bin dir on PATH
-* [festival uninstall](../festival_uninstall/)	 - Remove the installer-managed festival suite (receipt-owned files only)
+* [festival status](../festival_status/)	 - Report where every suite tool resolves and what version it is
+* [festival uninstall](../festival_uninstall/)	 - Remove an installer-managed package (receipt-owned files only)
 * [festival update](../festival_update/)	 - Update the installed festival suite to the channel-latest release
 * [festival version](../festival_version/)	 - Print the festival manager version
 * [festival which](../festival_which/)	 - Resolve the real binary path for a suite tool
