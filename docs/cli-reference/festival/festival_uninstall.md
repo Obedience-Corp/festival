@@ -1,15 +1,15 @@
 ---
 title: "festival uninstall"
 linkTitle: "festival uninstall"
-description: "Remove the installer-managed festival suite (receipt-owned files only)"
+description: "Remove an installer-managed package (receipt-owned files only)"
 ---
 
 ## festival uninstall
 
-Remove the installer-managed festival suite (receipt-owned files only)
+Remove an installer-managed package (receipt-owned files only)
 
 ```
-festival uninstall <festival|camp|fest> [flags]
+festival uninstall <festival|camp|fest|obey> [flags]
 ```
 
 ### Options

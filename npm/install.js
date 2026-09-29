@@ -285,6 +285,16 @@ async function install(options = {}) {
 async function main() {
   try {
     await install({ force: false });
+    // Postinstall runs this step; lazy binary recovery in lib/run does not.
+    if (process.getuid?.() === 0) {
+      console.log("Run festival setup as your regular user to create your first camp.");
+    } else {
+      const env = { ...process.env, CAMP_ROOT: "", PATH: `${path.dirname(binaryPath("camp"))}${path.delimiter}${process.env.PATH || ""}` };
+      const setup = spawnSync(binaryPath("camp"), ["setup"], { env, stdio: "inherit", timeout: 120000 });
+      if (setup.error || setup.status !== 0) {
+        console.warn("Festival is installed; starter camp setup is pending. Run festival setup to retry.");
+      }
+    }
   } catch (err) {
     console.error(`Failed to install Festival: ${err.message}`);
     process.exit(1);

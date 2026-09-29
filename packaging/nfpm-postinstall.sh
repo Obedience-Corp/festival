@@ -8,3 +8,4 @@ echo "Upgrade: reinstall the latest obedience-festival_*.deb (or .rpm / .apk) fr
 echo "Do not run festival install (that plants a second copy under ~/.obey/installer)."
 echo "If you still have an older GitHub .deb named festival: sudo dpkg -r festival"
 echo "then install obedience-festival."
+echo "Run festival setup as your regular user to create your first camp."

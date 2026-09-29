@@ -602,6 +602,17 @@ print_shell_setup_hint() {
     echo "  case \":\$PATH:\" in *\":${INSTALL_DIR}:\"*) ;; *) export PATH=\"${INSTALL_DIR}:\$PATH\" ;; esac"
 }
 
+# Run only from the explicit installer, never from shell-init or version probes.
+setup_starter_camp() {
+    if [ "$(id -u)" -eq 0 ]; then
+        info "Run festival setup as your regular user to create your first camp."
+        return 0
+    fi
+    if ! (unset CAMP_ROOT; PATH="${INSTALL_DIR}:$PATH" "${INSTALL_DIR}/camp" setup); then
+        warning "Festival is installed; starter camp setup is pending. Run festival setup to retry."
+    fi
+}
+
 main() {
     local os arch version archive_name download_url release_metadata tmp_dir="" helper_dir completions_dir shell_configured=0
 
@@ -682,6 +693,8 @@ main() {
         print_shell_setup_hint "$helper_dir"
         echo ""
     fi
+
+    setup_starter_camp
 
     success "Installation complete"
 }
