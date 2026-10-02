@@ -14,17 +14,33 @@ Use it with Claude Code, Codex, Grok Build, Cursor, OpenCode, or another agent t
 
 [Get started](#get-started) · [Explore the demos](#explore-the-tools) · [Video quick start](https://docs.fest.build/getting-started/quickstart/) · [Website](https://fest.build/) · [Discord](https://discord.gg/Rt7dDY6VqD) · [简体中文](README.zh-CN.md)
 
-## Four days of agent work, alongside everything else
+## From a goal to a working practice app
 
-In the camp-hardening festival, agents worked on safeguards against data loss in the Camp CLI over four days while the operator did other work in parallel. The saved plan and progress let the next agent continue the same work after a tool change. The resulting [safeguards for project removal and worktree cleanup were reviewed and merged](https://github.com/Obedience-Corp/camp/pull/324).
-
-**Drafted by Fathom. Execution started with Grok, finished with Codex.**
+The [CodeSignal Practice Simulator](https://github.com/Festival-Examples/codesignal-practice-simulator) is a local coding practice app
+built with Festival. It has a browser IDE, timed four-level exercises, test and
+submit controls, and saved attempts you can review and retry.
 
 <p align="center">
-  <img src="docs/images/fest-show.gif" alt="Historical progress replay of the camp-hardening festival: phases and tasks change status as the work advances." width="440">
+  <a href="https://github.com/Festival-Examples/codesignal-practice-simulator"><img src="https://raw.githubusercontent.com/Festival-Examples/codesignal-practice-simulator/main/docs/assets/practice-simulator.png" alt="The finished practice app: assessment prompt, code editor, timer, and test controls." width="700"></a>
 </p>
 
-This is a replay of the festival's recorded progress, not a CLI recording. [Read the actual plan and work record](https://github.com/Festival-Examples/example-camp-hardening-festival).
+Three completed festivals show how the project grew:
+
+- [CP0001: Python simulator](https://github.com/Festival-Examples/codesignal-practice-simulator/tree/main/festivals/codesignal-practice-simulator-CP0001) built the CLI, attempt lifecycle, and scoring engine.
+- [CB0001: Browser IDE](https://github.com/Festival-Examples/codesignal-practice-simulator/tree/main/festivals/codesignal-browser-assessment-simulator-CB0001) added the local browser app on the same engine.
+- [CP0002: Practice library](https://github.com/Festival-Examples/codesignal-practice-simulator/tree/main/festivals/codesignal-practice-library-CP0002) added original exercises, fresh attempts, history, and submission review.
+
+The agents followed the `fest next` loop, with testing and review gates feeding
+findings back into fixes. The repository includes the requirements, decisions,
+tasks, review findings, and verification evidence behind the working app.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/Festival-Examples/codesignal-practice-simulator/main/festivals/codesignal-browser-assessment-simulator-CB0001/codesignal-browser-assessment-simulator-CB0001.gif" alt="CB0001 recorded build progress: six phases advance to completion." width="440">
+</p>
+
+This is a replay of recorded festival progress. [See all three build replays](https://github.com/Festival-Examples/codesignal-practice-simulator#how-this-was-built),
+[inspect the plans and results](https://github.com/Festival-Examples/codesignal-practice-simulator/tree/main/festivals), or
+[run the app locally](https://github.com/Festival-Examples/codesignal-practice-simulator#quick-start).
 
 [Try your own handoff](#get-started), or star this repository to keep it handy.
 
