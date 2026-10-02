@@ -17,18 +17,26 @@ and ordinary camp-owned directories tracked by the camp repository.
 Dirty project checkouts and linked worktrees are preserved. Destination
 collisions and unmanaged directories are rejected before mutation.
 
+In a terminal, with neither --json nor --yes, the command opens a review
+before it writes. Choose the project, type the new name, and confirm the
+plan. Pass both names with --yes, or run the command without a terminal,
+to apply immediately. --json keeps the scripted plan and result.
+
 Camp never guesses that an upstream repository was renamed. Pass --remote-url
-to change origin explicitly as part of the same transaction.
+to change origin explicitly as part of the same transaction. Inside the
+review, u edits that URL before you confirm.
 
 Examples:
+  camp project rename
   camp project rename api-old api
+  camp project rename api-old api --yes
   camp project mv api-old api
   camp project rename obey-installer festival-installer \
     --remote-url git@github.com:Obedience-Corp/festival-installer.git
   camp project rename api-old api --dry-run --json
 
 ```
-camp project rename <current> <new> [flags]
+camp project rename [current] [new] [flags]
 ```
 
 ### Options
@@ -37,10 +45,12 @@ camp project rename <current> <new> [flags]
   -c, --campaign string     Target camp by name or ID; omit value to pick interactively
       --dry-run             Print the complete plan without writing
   -h, --help                help for rename
+  -i, --interactive         Open the review screen
       --json                Output a versioned JSON plan or result
       --no-commit           Apply the rename without a camp commit
       --no-verify           Skip remote connectivity verification
       --remote-url string   Explicitly update the project's origin URL
+      --yes                 Apply immediately without the review screen
 ```
 
 ### Options inherited from parent commands

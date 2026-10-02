@@ -24,7 +24,8 @@ to run a command inside a project from anywhere in the camp.
 Examples:
   camp project list                    List all projects
   camp project add git@github.com:org/repo.git  Add a new project
-  camp project link ~/code/my-project  Link an existing local workspace
+  camp project link                    Paste a path or browse, then confirm
+  camp project link ~/code/my-project  Review that folder before linking it
   camp project run -p fest -- just build  Run a command inside a project
   camp project commit -p fest -m "fix"  Commit changes in a project submodule
   camp project rename api-old api        Rename a managed project
