@@ -14,17 +14,20 @@ Use it with Claude Code, Codex, Grok Build, Cursor, OpenCode, or another agent t
 
 [Get started](#get-started) · [Explore the demos](#explore-the-tools) · [Video quick start](https://docs.fest.build/getting-started/quickstart/) · [Website](https://fest.build/) · [Discord](https://discord.gg/Rt7dDY6VqD) · [简体中文](README.zh-CN.md)
 
-## Four days of agent work, alongside everything else
+## See Festival in action
 
-In the camp-hardening festival, agents worked on safeguards against data loss in the Camp CLI over four days while the operator did other work in parallel. The saved plan and progress let the next agent continue the same work after a tool change. The resulting [safeguards for project removal and worktree cleanup were reviewed and merged](https://github.com/Obedience-Corp/camp/pull/324).
-
-**Drafted by Fathom. Execution started with Grok, finished with Codex.**
+Three completed festivals built the [CodeSignal Practice Simulator](https://github.com/Festival-Examples/codesignal-practice-simulator).
+Agents followed the `fest next` loop, with testing and review gates feeding
+findings back into fixes. The demo repository includes the plans, tasks,
+review findings, and verification evidence for each build.
 
 <p align="center">
-  <img src="docs/images/fest-show.gif" alt="Historical progress replay of the camp-hardening festival: phases and tasks change status as the work advances." width="440">
+  <a href="https://github.com/Festival-Examples/codesignal-practice-simulator/tree/main/festivals/codesignal-browser-assessment-simulator-CB0001"><img src="https://raw.githubusercontent.com/Festival-Examples/codesignal-practice-simulator/main/festivals/codesignal-browser-assessment-simulator-CB0001/codesignal-browser-assessment-simulator-CB0001.gif" alt="Festival execution replay: six phases advance to completion." width="440"></a>
 </p>
 
-This is a replay of the festival's recorded progress, not a CLI recording. [Read the actual plan and work record](https://github.com/Festival-Examples/example-camp-hardening-festival).
+[Explore the demo](https://github.com/Festival-Examples/codesignal-practice-simulator) ·
+[Inspect the three festivals](https://github.com/Festival-Examples/codesignal-practice-simulator/tree/main/festivals) ·
+[Watch all three replays](https://github.com/Festival-Examples/codesignal-practice-simulator#how-this-was-built)
 
 [Try your own handoff](#get-started), or star this repository to keep it handy.
 
