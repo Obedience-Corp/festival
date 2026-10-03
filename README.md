@@ -14,33 +14,20 @@ Use it with Claude Code, Codex, Grok Build, Cursor, OpenCode, or another agent t
 
 [Get started](#get-started) · [Explore the demos](#explore-the-tools) · [Video quick start](https://docs.fest.build/getting-started/quickstart/) · [Website](https://fest.build/) · [Discord](https://discord.gg/Rt7dDY6VqD) · [简体中文](README.zh-CN.md)
 
-## From a goal to a working practice app
+## See Festival in action
 
-The [CodeSignal Practice Simulator](https://github.com/Festival-Examples/codesignal-practice-simulator) is a local coding practice app
-built with Festival. It has a browser IDE, timed four-level exercises, test and
-submit controls, and saved attempts you can review and retry.
-
-<p align="center">
-  <a href="https://github.com/Festival-Examples/codesignal-practice-simulator"><img src="https://raw.githubusercontent.com/Festival-Examples/codesignal-practice-simulator/main/docs/assets/practice-simulator.png" alt="The finished practice app: assessment prompt, code editor, timer, and test controls." width="700"></a>
-</p>
-
-Three completed festivals show how the project grew:
-
-- [CP0001: Python simulator](https://github.com/Festival-Examples/codesignal-practice-simulator/tree/main/festivals/codesignal-practice-simulator-CP0001) built the CLI, attempt lifecycle, and scoring engine.
-- [CB0001: Browser IDE](https://github.com/Festival-Examples/codesignal-practice-simulator/tree/main/festivals/codesignal-browser-assessment-simulator-CB0001) added the local browser app on the same engine.
-- [CP0002: Practice library](https://github.com/Festival-Examples/codesignal-practice-simulator/tree/main/festivals/codesignal-practice-library-CP0002) added original exercises, fresh attempts, history, and submission review.
-
-The agents followed the `fest next` loop, with testing and review gates feeding
-findings back into fixes. The repository includes the requirements, decisions,
-tasks, review findings, and verification evidence behind the working app.
+Three completed festivals built the [CodeSignal Practice Simulator](https://github.com/Festival-Examples/codesignal-practice-simulator).
+Agents followed the `fest next` loop, with testing and review gates feeding
+findings back into fixes. The demo repository includes the plans, tasks,
+review findings, and verification evidence for each build.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/Festival-Examples/codesignal-practice-simulator/main/festivals/codesignal-browser-assessment-simulator-CB0001/codesignal-browser-assessment-simulator-CB0001.gif" alt="CB0001 recorded build progress: six phases advance to completion." width="440">
+  <a href="https://github.com/Festival-Examples/codesignal-practice-simulator/tree/main/festivals/codesignal-browser-assessment-simulator-CB0001"><img src="https://raw.githubusercontent.com/Festival-Examples/codesignal-practice-simulator/main/festivals/codesignal-browser-assessment-simulator-CB0001/codesignal-browser-assessment-simulator-CB0001.gif" alt="Festival execution replay: six phases advance to completion." width="440"></a>
 </p>
 
-This is a replay of recorded festival progress. [See all three build replays](https://github.com/Festival-Examples/codesignal-practice-simulator#how-this-was-built),
-[inspect the plans and results](https://github.com/Festival-Examples/codesignal-practice-simulator/tree/main/festivals), or
-[run the app locally](https://github.com/Festival-Examples/codesignal-practice-simulator#quick-start).
+[Explore the demo](https://github.com/Festival-Examples/codesignal-practice-simulator) ·
+[Inspect the three festivals](https://github.com/Festival-Examples/codesignal-practice-simulator/tree/main/festivals) ·
+[Watch all three replays](https://github.com/Festival-Examples/codesignal-practice-simulator#how-this-was-built)
 
 [Try your own handoff](#get-started), or star this repository to keep it handy.
 
