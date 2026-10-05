@@ -73,26 +73,24 @@ festival doctor
 
 A **camp** holds the context for one part of your life: your job, a side project, or a hobby. It can contain several projects, along with their research, plans, and decisions.
 
-After installing, create your first camp:
+After installing, create a camp:
 
 ```bash
-festival setup
-cd ~/campaigns/festival
+camp create my-camp
+cd ~/campaigns/my-camp
 ```
 
-That creates a camp named `festival` at `~/campaigns/festival` when you do not have one yet. Homebrew and system packages leave this step to you. The npm and shell installers run it during install. Camps you already have stay as they are.
+`camp create` puts the camp in `~/campaigns/` and asks for a description and mission.
 
 <p align="center">
-  <img src="docs/images/demos/tui-festival-setup.gif" alt="festival setup creates a camp named festival, then the shell enters it and lists the workspace." width="700">
+  <img src="docs/images/demos/tui-camp-create.gif" alt="camp create asks for a description and mission, creates the camp, then the shell enters it and lists the workspace." width="700">
 </p>
 
-Recorded with `festival setup` in a fresh demo home. On your machine the camp is at `~/campaigns/festival`.
+Recorded in a fresh demo home. On your machine the camp is at `~/campaigns/my-camp`.
 
 To move between camps you already have, run `camp switch`. With shell integration, `csw` is the shorthand: `csw` opens the picker, and `csw my-camp` jumps by name.
 
 Open your coding agent at that camp root. The [agent setup guides](https://docs.fest.build/getting-started/agents/) cover skills and integrations for your tool. Skills are optional; the CLI can teach your agent the workflow.
-
-To make another camp with its own name, run `camp init my-camp` and answer the prompts for its description and mission.
 
 Link a repository you already use. Replace the path with its full local path:
 
@@ -101,12 +99,6 @@ camp project link /path/to/your-existing-repo
 ```
 
 Your repository stays where it is. Camp links it under `projects/` and adds a `.camp` attachment file to the repository. You can also [clone a project into the camp](https://docs.fest.build/cli-reference/camp/camp_project_add/).
-
-<p align="center">
-  <img src="docs/images/demos/tui-setup.gif" alt="A terminal session creates a named camp, adds a local project, and scaffolds a festival." width="700">
-</p>
-
-A named camp, from `camp init` through a local project. This recording uses `camp project add --local`; the instructions above link an existing repository without moving it.
 
 ### 3. Give your agent a goal
 
