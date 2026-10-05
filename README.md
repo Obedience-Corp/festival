@@ -90,6 +90,18 @@ csw work
 
 One recording, in a fresh demo home. On your machine the camps are at `~/campaigns/my-camp` and `~/campaigns/work`.
 
+If an agent is already open, paste this. It installs Festival when `camp` is missing and creates the camp. Run `csw` in your own terminal to enter it.
+
+```text
+If `camp` is missing, install Festival, then run `festival doctor`. On macOS with Homebrew, use `brew install --cask Obedience-Corp/tap/festival`. On macOS or Linux with Node.js, use `npm install -g @obedience-corp/festival`.
+
+Ask me for a camp name, a one-line description, and a mission. Create the camp with `camp create <name> -d "<description>" -m "<mission>"`. The camp is at `~/campaigns/<name>`. Read `camp create --help` before adding flags. Use `camp create` for this. Do not run `camp init` or `festival setup`.
+
+Show me the shell integration for my shell from https://docs.fest.build/getting-started/shell-setup/ and wait. I will add it and run `csw <name>` in my own terminal. Ask before you edit my shell config. You can keep working in `~/campaigns/<name>`.
+
+Skills are optional. The CLI can teach you the workflow.
+```
+
 Open your coding agent at that camp root. The [agent setup guides](https://docs.fest.build/getting-started/agents/) cover skills and integrations for your tool. Skills are optional; the CLI can teach your agent the workflow.
 
 Link a repository you already use. Replace the path with its full local path:
