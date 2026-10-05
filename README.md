@@ -90,14 +90,14 @@ csw work
 
 One recording, in a fresh demo home. On your machine the camps are at `~/campaigns/my-camp` and `~/campaigns/work`.
 
-If an agent is already open, paste this. It installs Festival when `camp` is missing and creates the camp. Run `csw` in your own terminal to enter it.
+If an agent is already open, paste this. It installs Festival when `camp` is missing, creates the camp, and adds the shell hook. Open a new terminal and run `csw <name>` to enter the camp.
 
 ```text
 If `camp` is missing, install Festival, then run `festival doctor`. On macOS with Homebrew, use `brew install --cask Obedience-Corp/tap/festival`. On macOS or Linux with Node.js, use `npm install -g @obedience-corp/festival`.
 
 Ask me for a camp name, a one-line description, and a mission. Create the camp with `camp create <name> -d "<description>" -m "<mission>"`. The camp is at `~/campaigns/<name>`. Read `camp create --help` before adding flags. Use `camp create` for this. Do not run `camp init` or `festival setup`.
 
-Show me the shell integration for my shell from https://docs.fest.build/getting-started/shell-setup/ and wait. I will add it and run `csw <name>` in my own terminal. Ask before you edit my shell config. You can keep working in `~/campaigns/<name>`.
+Add the shell hook to my shell rc file. Source the installed helper: `festival.zsh` from `~/.zshrc`, `festival.bash` from `~/.bashrc`, or `festival.fish` from `~/.config/fish/config.fish`. Homebrew's helper directory is `"$(brew --prefix)/share/festival/shell"`. npm's is `"$(npm root -g)/@obedience-corp/festival/share/festival/shell"`. The shell installer uses `~/.local/share/festival/shell`. Linux packages use `/usr/share/festival/shell`. Wrap the source line in `# >>> festival shell integration >>>` and `# <<< festival shell integration <<<`, and skip the edit when those markers are already present. Do not use `festival shell-init` for this hook. When no helper file exists, add `eval "$(camp shell-init <shell>)"` and `eval "$(fest shell-init <shell>)"` inside those markers instead. For dash or another POSIX sh, use `sh` and `~/.profile`. Then tell me to open a new terminal and run `csw <name>`. You can keep working in `~/campaigns/<name>`.
 
 Skills are optional. The CLI can teach you the workflow.
 ```
