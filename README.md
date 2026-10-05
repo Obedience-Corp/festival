@@ -73,12 +73,26 @@ festival doctor
 
 A **camp** holds the context for one part of your life: your job, a side project, or a hobby. It can contain several projects, along with their research, plans, and decisions.
 
-Run this from the directory where you keep your work, then answer the prompts for the camp's description and mission:
+After installing, create your first camp:
 
 ```bash
-camp init my-camp
-cd my-camp
+festival setup
+cd ~/campaigns/festival
 ```
+
+That creates a camp named `festival` at `~/campaigns/festival` when you do not have one yet. Homebrew and system packages leave this step to you. The npm and shell installers run it during install. Camps you already have stay as they are.
+
+<p align="center">
+  <img src="docs/images/demos/tui-festival-setup.gif" alt="festival setup creates a camp named festival, then the shell enters it and lists the workspace." width="700">
+</p>
+
+Recorded with `festival setup` in a fresh demo home. On your machine the camp is at `~/campaigns/festival`.
+
+To move between camps you already have, run `camp switch`. With shell integration, `csw` is the shorthand: `csw` opens the picker, and `csw my-camp` jumps by name.
+
+Open your coding agent at that camp root. The [agent setup guides](https://docs.fest.build/getting-started/agents/) cover skills and integrations for your tool. Skills are optional; the CLI can teach your agent the workflow.
+
+To make another camp with its own name, run `camp init my-camp` and answer the prompts for its description and mission.
 
 Link a repository you already use. Replace the path with its full local path:
 
@@ -88,13 +102,11 @@ camp project link /path/to/your-existing-repo
 
 Your repository stays where it is. Camp links it under `projects/` and adds a `.camp` attachment file to the repository. You can also [clone a project into the camp](https://docs.fest.build/cli-reference/camp/camp_project_add/).
 
-Open your coding agent at the camp root, `my-camp/`. The [agent setup guides](https://docs.fest.build/getting-started/agents/) cover skills and integrations for your tool. Skills are optional; the CLI can teach your agent the workflow.
-
 <p align="center">
-  <img src="docs/images/demos/tui-setup.gif" alt="A terminal session creates a camp, adds a local project, and scaffolds a festival." width="700">
+  <img src="docs/images/demos/tui-setup.gif" alt="A terminal session creates a named camp, adds a local project, and scaffolds a festival." width="700">
 </p>
 
-Watch a camp take shape. This recording uses `camp project add --local`; the instructions above link an existing repository without moving it.
+A named camp, from `camp init` through a local project. This recording uses `camp project add --local`; the instructions above link an existing repository without moving it.
 
 ### 3. Give your agent a goal
 
@@ -165,6 +177,7 @@ Run `festival browse` to explore available CLI plugins. See [suite and plugin ma
 ## Useful between the big goals, too
 
 - **Jump straight to the work.** `cgo p api` finds a matching project; `cgo f` takes you to festivals. Add the [shell integration](https://docs.fest.build/getting-started/shell-setup/) to enable these shortcuts.
+- **Switch camps.** `camp switch` moves between registered camps. `csw` is the shorthand.
 - **Find the next thing to pick up.** `camp workitem` brings intents, research, designs, and festivals into one work queue.
 - **Start fresh after a merged PR.** `camp fresh` syncs a project to its default branch and prunes merged branches. Preview with `camp fresh --dry-run` from that project first, including any configured branch creation or follow-up commands.
 
@@ -177,10 +190,10 @@ The GIFs play on this page at a readable size.
 <details open>
 <summary>Move between projects, plans, and camps</summary>
 
-`cgo` jumps to a project or planning directory; `csw` switches camps.
+`cgo` jumps to a project or planning directory. `camp switch` moves between camps, and `csw` is the shorthand.
 
 <p align="center">
-  <img src="docs/images/demos/cgo-navigation.gif" alt="cgo jumps between projects, festivals, and design directories, then csw switches camps." width="700">
+  <img src="docs/images/demos/cgo-navigation.gif" alt="cgo jumps between projects, festivals, and design directories, then csw, the shorthand for camp switch, changes camps." width="700">
 </p>
 
 </details>
