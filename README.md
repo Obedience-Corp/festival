@@ -172,10 +172,10 @@ Run `festival browse` to explore available CLI plugins. See [suite and plugin ma
 
 ## Explore the tools
 
-Open a section to see the commands in use. The recordings stay on this page, at a readable size.
+**Click a demo below to expand it.** The GIFs play on this page at a readable size.
 
 <details>
-<summary>Move between projects, plans, and camps</summary>
+<summary>Move between projects, plans, and camps <strong>(click to expand demo)</strong></summary>
 
 `cgo` jumps to a project or planning directory; `csw` switches camps.
 
@@ -186,7 +186,7 @@ Open a section to see the commands in use. The recordings stay on this page, at 
 </details>
 
 <details>
-<summary>Find work, capture an idea, and sort the inbox</summary>
+<summary>Find work, capture an idea, and sort the inbox <strong>(click to expand demos)</strong></summary>
 
 **Find work across the camp.** `camp workitem` brings intents, research, designs, and festivals into one searchable list.
 
@@ -209,7 +209,7 @@ Open a section to see the commands in use. The recordings stay on this page, at 
 </details>
 
 <details>
-<summary>See which festivals are active and inspect a plan</summary>
+<summary>See which festivals are active and inspect a plan <strong>(click to expand demos)</strong></summary>
 
 `fest list` groups festivals by status, so you can see what's active, ready, or still being planned.
 
@@ -226,7 +226,7 @@ Open a section to see the commands in use. The recordings stay on this page, at 
 </details>
 
 <details>
-<summary>Add testing and review gates to a plan</summary>
+<summary>Add testing and review gates to a plan <strong>(click to expand demo)</strong></summary>
 
 `fest gates apply` previews the quality gates it will add before applying them with approval.
 
@@ -237,7 +237,7 @@ Open a section to see the commands in use. The recordings stay on this page, at 
 </details>
 
 <details>
-<summary>Review old work and clear space for what's next</summary>
+<summary>Review old work and clear space for what's next <strong>(click to expand demo)</strong></summary>
 
 `camp dungeon crawl` walks through stale work so you can choose what to keep or archive.
 
@@ -248,7 +248,7 @@ Open a section to see the commands in use. The recordings stay on this page, at 
 </details>
 
 <details>
-<summary>Watch a longer Festival session</summary>
+<summary>Watch a longer Festival session <strong>(click to expand video preview)</strong></summary>
 
 An earlier Festival workflow recording at 16× playback speed. Use the setup instructions above for the current first-run path.
 
