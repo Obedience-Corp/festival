@@ -14,6 +14,8 @@ List all camps registered in the global registry.
 
 Camps are registered when created with 'camp init' or manually
 with 'camp register'. The registry lives at ~/.obey/campaign/registry.json.
+Verification keeps registrations when their paths or configs are unavailable.
+Use 'camp registry prune' or 'camp unregister' to remove unwanted entries.
 
 In a terminal, 'camp list' (with no flags) opens an interactive browser where you
 can deactivate/reactivate camps (cycle lifecycle status), reassign their org,
