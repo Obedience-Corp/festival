@@ -77,18 +77,16 @@ After installing, create a camp:
 
 ```bash
 camp create my-camp
-cd ~/campaigns/my-camp
+csw my-camp
 ```
 
-`camp create` puts the camp in `~/campaigns/` and asks for a description and mission.
+`camp create` puts the camp in `~/campaigns/` and asks for a description and mission. `csw` switches your shell into it. `csw` is the shorthand for `camp switch`; add the [shell integration](https://docs.fest.build/getting-started/shell-setup/) so the shorthand exists. With no name, `csw` opens the picker.
 
 <p align="center">
-  <img src="docs/images/demos/tui-camp-create.gif" alt="camp create asks for a description and mission, creates the camp, then the shell enters it and lists the workspace." width="700">
+  <img src="docs/images/demos/tui-camp-create.gif" alt="camp create asks for a description and mission, then csw switches the shell into the new camp and lists the workspace." width="700">
 </p>
 
 Recorded in a fresh demo home. On your machine the camp is at `~/campaigns/my-camp`.
-
-To move between camps you already have, run `camp switch`. With shell integration, `csw` is the shorthand: `csw` opens the picker, and `csw my-camp` jumps by name.
 
 Open your coding agent at that camp root. The [agent setup guides](https://docs.fest.build/getting-started/agents/) cover skills and integrations for your tool. Skills are optional; the CLI can teach your agent the workflow.
 
