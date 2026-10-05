@@ -172,10 +172,10 @@ Run `festival browse` to explore available CLI plugins. See [suite and plugin ma
 
 ## Explore the tools
 
-**Click a demo below to expand it.** The GIFs play on this page at a readable size.
+The GIFs play on this page at a readable size.
 
-<details>
-<summary>Move between projects, plans, and camps <strong>(click to expand demo)</strong></summary>
+<details open>
+<summary>Move between projects, plans, and camps</summary>
 
 `cgo` jumps to a project or planning directory; `csw` switches camps.
 
@@ -185,8 +185,25 @@ Run `festival browse` to explore available CLI plugins. See [suite and plugin ma
 
 </details>
 
-<details>
-<summary>Find work, capture an idea, and sort the inbox <strong>(click to expand demos)</strong></summary>
+<details open>
+<summary>See your camps and the projects inside one</summary>
+
+`camp list` browses registered camps by org. Move through them, change a camp's status, and filter down to the active ones.
+
+<p align="center">
+  <img src="docs/images/demos/tui-camp-list.gif" alt="camp list groups camps by org, marks one inactive, then filters to active camps." width="700">
+</p>
+
+`camp project list` browses the projects in the current camp, grouped by type.
+
+<p align="center">
+  <img src="docs/images/demos/tui-project-list.gif" alt="camp project list shows projects grouped by type, with search and a jump into the selected project." width="700">
+</p>
+
+</details>
+
+<details open>
+<summary>Find work, capture an idea, and sort the inbox</summary>
 
 **Find work across the camp.** `camp workitem` brings intents, research, designs, and festivals into one searchable list.
 
@@ -208,8 +225,8 @@ Run `festival browse` to explore available CLI plugins. See [suite and plugin ma
 
 </details>
 
-<details>
-<summary>See which festivals are active and inspect a plan <strong>(click to expand demos)</strong></summary>
+<details open>
+<summary>See which festivals are active and inspect a plan</summary>
 
 `fest list` groups festivals by status, so you can see what's active, ready, or still being planned.
 
@@ -225,8 +242,25 @@ Run `festival browse` to explore available CLI plugins. See [suite and plugin ma
 
 </details>
 
-<details>
-<summary>Add testing and review gates to a plan <strong>(click to expand demo)</strong></summary>
+<details open>
+<summary>Start fresh after a merged change</summary>
+
+`camp fresh configure` sets the follow-up commands that run after a project syncs.
+
+<p align="center">
+  <img src="docs/images/demos/tui-fresh-configure.gif" alt="camp fresh configure adds a follow-up command for one project, including what happens if that command fails." width="700">
+</p>
+
+`camp fresh` checks out the default branch, pulls, prunes merged branches, and runs those follow-ups.
+
+<p align="center">
+  <img src="docs/images/demos/tui-fresh.gif" alt="camp fresh syncs main, deletes merged branches, runs a follow-up, and reports a work item it left in place." width="700">
+</p>
+
+</details>
+
+<details open>
+<summary>Add testing and review gates to a plan</summary>
 
 `fest gates apply` previews the quality gates it will add before applying them with approval.
 
@@ -236,13 +270,35 @@ Run `festival browse` to explore available CLI plugins. See [suite and plugin ma
 
 </details>
 
-<details>
-<summary>Review old work and clear space for what's next <strong>(click to expand demo)</strong></summary>
+<details open>
+<summary>Review old work and clear space for what's next</summary>
 
 `camp dungeon crawl` walks through stale work so you can choose what to keep or archive.
 
 <p align="center">
   <img src="docs/images/demos/tui-dungeon-crawl.gif" alt="camp dungeon crawl offers keep, archive, and skip choices for stale work, then records the result." width="700">
+</p>
+
+</details>
+
+<details open>
+<summary>Reach a camp on another machine</summary>
+
+`camp machine` lists computers camp can hop to, and can add one from your Tailscale network.
+
+<p align="center">
+  <img src="docs/images/demos/tui-machine.gif" alt="camp machine explains hops, then picks a computer from the Tailscale network to add." width="700">
+</p>
+
+</details>
+
+<details open>
+<summary>Open the Festival installer</summary>
+
+`festival` opens the suite manager: install the tools, check the setup, and launch camp and fest.
+
+<p align="center">
+  <img src="docs/images/demos/tui-festival.gif" alt="The festival installer home, with setup steps and menus for install, doctor, and the camp and fest launchpad." width="700">
 </p>
 
 </details>
