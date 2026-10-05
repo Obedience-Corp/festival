@@ -95,7 +95,7 @@ If an agent is already open, paste this. It installs Festival when `camp` is mis
 ```text
 If `camp` is missing, install Festival, then run `festival doctor`. On macOS with Homebrew, use `brew install --cask Obedience-Corp/tap/festival`. On macOS or Linux with Node.js, use `npm install -g @obedience-corp/festival`.
 
-To update camp, fest, and festival together, run `festival update`. If it reports an update and tells you to use the package manager, upgrade with the method that installed it. Homebrew: `brew update`, then `brew upgrade --cask festival`. npm: `npm install -g @obedience-corp/festival@latest`. A non-interactive `festival update` does not run those upgrades itself. Do not pass `--force`. Do not run `festival install` over a Homebrew or npm install.
+To update camp, fest, and festival together, run `festival update`. Do not pass `--force`.
 
 Ask me for a camp name, a one-line description, and a mission. Create the camp with `camp create <name> -d "<description>" -m "<mission>"`. The camp is at `~/campaigns/<name>`. Read `camp create --help` before adding flags. Use `camp create` for this. Do not run `camp init` or `festival setup`.
 
