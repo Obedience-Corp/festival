@@ -14,6 +14,7 @@ declare module 'claude-code' {
   interface PluginState {
     'festival': {
       band: string | null
+      focus: string[] | null
       show: FestShow | null
       isOpen: boolean
     }

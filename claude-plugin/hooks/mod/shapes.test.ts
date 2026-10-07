@@ -1,6 +1,6 @@
 import { expect, test } from 'claude-code/testing'
 
-import { bandOf, coalesce, currentRow, progressOf, rowsOf, windowStart } from './fest'
+import { bandOf, coalesce, currentRow, focusOf, progressOf, rowsOf, windowStart } from './fest'
 import { NEXT_FESTIVAL, NEXT_STANDALONE, SHOW } from './fixtures'
 import { rootedPath } from './camp'
 
@@ -30,9 +30,40 @@ test('tree rows expand only the current branch', () => {
   expect(text).not.toContain('Step 1:')
 })
 
-test('the current row is the first unfinished task, not an unfinished ancestor', () => {
-  const rows = rowsOf(SHOW.view.tree)
+test('the current row is the task fest next names, not an unfinished ancestor', () => {
+  const rows = rowsOf(SHOW.view.tree, focusOf(NEXT_FESTIVAL))
   expect(rows[currentRow(rows)]!.text).toBe('[ ] 01_todo_model')
+  expect(rows[currentRow(rows)]!.isFocus).toBe(true)
+})
+
+const task = (name: string, status: string) => ({ name: `${name}.md`, status, node_type: 'task' })
+const PARALLEL = {
+  name: 'demo', status: 'in_progress', node_type: 'festival',
+  children: [{ name: '001_BUILD', status: 'in_progress', node_type: 'phase', children: [
+    { name: '01_api', status: 'pending', node_type: 'sequence', children: Array.from({ length: 12 }, (_, i) => task(`${String(i + 1).padStart(2, '0')}_api`, 'pending')) },
+    { name: '02_ui', status: 'in_progress', node_type: 'sequence', children: [task('01_layout', 'completed'), task('02_forms', 'in_progress'), task('03_polish', 'pending')] },
+  ] }],
+}
+
+test('with parallel sequences the window follows the task fest next names, in a later branch', () => {
+  const focus = focusOf({ task: { name: '02_forms', phase_name: '001_BUILD', sequence_name: '02_ui' } })
+  const rows = rowsOf(PARALLEL as any, focus)
+  expect(rows.map(r => r.text)).toContain('[ ] 01_api')
+  expect(rows.some(r => r.depth === 3 && r.text.includes('_api'))).toBe(false)
+  const room = 5
+  const start = windowStart(rows, room)
+  expect(rows.slice(start, start + room).map(r => r.text)).toContain('[~] 02_forms')
+})
+
+test('without a focus an in-progress task wins over an earlier pending one', () => {
+  const rows = rowsOf(PARALLEL as any)
+  expect(rows[currentRow(rows)]!.text).toBe('[~] 02_forms')
+})
+
+test('focusOf needs the full phase, sequence, and task path and ignores .md', () => {
+  expect(focusOf({ task: { name: '02_forms.md', phase_name: '001_BUILD', sequence_name: '02_ui' } })).toEqual(['001_BUILD', '02_ui', '02_forms'])
+  expect(focusOf({ task: { name: '02_forms' } })).toBeNull()
+  expect(focusOf({ festival_complete: true })).toBeNull()
 })
 
 test('the window keeps the current task visible past a long run of finished tasks', () => {

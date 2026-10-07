@@ -35,24 +35,40 @@ export function bandOf(json: any): string | null {
   return null
 }
 
-export type Row = { depth: number; text: string; status: string }
+export type Row = { depth: number; text: string; status: string; isFocus: boolean }
 
-export function rowsOf(node: FestNode, depth = 0, expand = true): Row[] {
+const bare = (name: string) => name.replace(/\.md$/, '')
+
+export function focusOf(json: any): string[] | null {
+  const t = json?.task
+  if (!t || typeof t.name !== 'string') return null
+  const path = [t.phase_name, t.sequence_name, t.name]
+  return path.every(p => typeof p === 'string' && p) ? path.map(bare) : null
+}
+
+export function rowsOf(node: FestNode, focus: string[] | null = null, depth = 0, expand = true, onPath = true): Row[] {
   const mark = MARKS[node.status] ?? '[?]'
-  const rows: Row[] = [{ depth, text: `${mark} ${node.name.replace(/\.md$/, '')}`, status: node.status }]
+  const isFocus = onPath && focus !== null && depth === focus.length
+  const rows: Row[] = [{ depth, text: `${mark} ${bare(node.name)}`, status: node.status, isFocus }]
   const kids = node.children ?? []
   if (!expand) return rows
-  const current = kids.findIndex(k => k.status !== 'completed')
+  const first = kids.findIndex(k => k.status !== 'completed')
   kids.forEach((k, i) => {
-    rows.push(...rowsOf(k, depth + 1, k.status === 'in_progress' || i === current))
+    const kidOnPath = onPath && focus !== null && depth < focus.length && bare(k.name) === focus[depth]
+    const open = kidOnPath || k.status === 'in_progress' || (focus === null && i === first)
+    rows.push(...rowsOf(k, focus, depth + 1, open, kidOnPath))
   })
   return rows
 }
 
 export function currentRow(rows: Row[]): number {
   const isLeaf = (i: number) => i + 1 >= rows.length || rows[i + 1]!.depth <= rows[i]!.depth
-  const i = rows.findIndex((r, idx) => r.status !== 'completed' && isLeaf(idx))
-  return i === -1 ? 0 : i
+  const focused = rows.findIndex(r => r.isFocus)
+  if (focused !== -1) return focused
+  const active = rows.findIndex((r, i) => r.status === 'in_progress' && isLeaf(i))
+  if (active !== -1) return active
+  const open = rows.findIndex((r, i) => r.status !== 'completed' && isLeaf(i))
+  return open === -1 ? 0 : open
 }
 
 export function windowStart(rows: Row[], room: number): number {

@@ -2,11 +2,12 @@ import { atom, read, update } from 'claude-code'
 import type { Register } from 'claude-code'
 
 import { rootedPath, campRoot } from './camp'
-import { STATUS_COLOR, bandOf, coalesce, progressOf, rowsOf, windowStart } from './fest'
+import { STATUS_COLOR, bandOf, coalesce, focusOf, progressOf, rowsOf, windowStart } from './fest'
 
 const PANE = 'fest-watch'
 const band = atom({ plugin: 'festival', key: 'band' } as const, null)
 const show = atom({ plugin: 'festival', key: 'show' } as const, null)
+const focus = atom({ plugin: 'festival', key: 'focus' } as const, null)
 const isOpen = atom({ plugin: 'festival', key: 'isOpen' } as const, false)
 
 const COMMANDS = [
@@ -36,8 +37,11 @@ async function runJson($: any, argv: string[]) {
 
 async function refresh($: any) {
   if ((await $.session.surfaces()).length === 0) return
-  const next = bandOf(await runJson($, ['fest', 'next', '--json']))
-  await update($, band, () => next)
+  const nextJson = await runJson($, ['fest', 'next', '--json'])
+  const text = bandOf(nextJson)
+  const path = focusOf(nextJson)
+  await update($, band, () => text)
+  await update($, focus, () => path)
   if (await read($, isOpen)) {
     const json = await runJson($, ['fest', 'show', '--json'])
     await update($, show, () => json?.view?.tree ? json : null)
@@ -155,13 +159,13 @@ export const register: Register = (on, options) => {
     const data = await read($, show)
     if (!data) return <Text dimColor>No festival here (fest show failed).</Text>
     const room = Math.max(3, (e.viewport?.rows ?? 24) - 6)
-    const rows = rowsOf(data.view.tree)
+    const rows = rowsOf(data.view.tree, await read($, focus))
     const start = windowStart(rows, room)
     return (
       <Box flexDirection="column">
         <Text color="claude" bold>{progressOf(data)}</Text>
         {rows.slice(start, start + room).map(r => (
-          <Text color={STATUS_COLOR[r.status] ?? 'text'} bold={r.status === 'in_progress'}>
+          <Text color={STATUS_COLOR[r.status] ?? 'text'} bold={r.isFocus || r.status === 'in_progress'}>
             {'  '.repeat(r.depth)}{r.text}
           </Text>
         ))}
