@@ -5,13 +5,14 @@ weight: 14
 
 # Videos
 
-Walkthroughs, demos, and speed runs of Festival in real use. New videos land on the [LKRBuilds YouTube channel](https://www.youtube.com/@LKRBuilds) — subscribe there for the latest.
+Walkthroughs, demos, and speed runs of Festival in real use. Find new videos on [LKRBuilds on YouTube](https://www.youtube.com/@LKRBuilds) and [@lkrbuilds on TikTok](https://www.tiktok.com/@lkrbuilds).
 
 <style>
 .video-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.25rem;margin:1.5rem 0 2.25rem;}
 .video-card{display:block;text-decoration:none;color:inherit;border:1px solid rgba(128,128,128,.25);border-radius:10px;overflow:hidden;transition:transform .12s ease,box-shadow .12s ease;}
 .video-card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.18);}
 .video-card img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;background:#000;}
+.video-card--portrait img{object-fit:contain;}
 .video-card .video-card__title{padding:.7rem .85rem;font-weight:600;line-height:1.3;font-size:.95rem;}
 </style>
 
@@ -25,6 +26,8 @@ Walkthroughs, demos, and speed runs of Festival in real use. New videos land on 
 ## Workflows in Action
 
 <div class="video-grid">
+<a class="video-card video-card--portrait" href="https://www.tiktok.com/@lkrbuilds/video/7693646199563291935"><img loading="lazy" src="/images/videos/tiktok-7693646199563291935.png" alt="Using fest.build to Work Through My Entire Backlog Autonomously (TikTok by @lkrbuilds)"><div class="video-card__title">Using fest.build to Work Through My Entire Backlog Autonomously</div></a>
+<a class="video-card video-card--portrait" href="https://www.tiktok.com/@lkrbuilds/video/7684772362750856478"><img loading="lazy" src="/images/videos/tiktok-7684772362750856478.jpg" alt="4-Day Agent Loop with fest.build (TikTok by @lkrbuilds)"><div class="video-card__title">4-Day Agent Loop with fest.build</div></a>
 <a class="video-card" href="https://youtu.be/-TCQnN39WSU"><img loading="lazy" src="https://i.ytimg.com/vi/-TCQnN39WSU/hqdefault.jpg" alt="Building 9 systems in parallel with fest.build, ghostty, claude code and codex"><div class="video-card__title">Building 9 Systems in Parallel with fest.build, Ghostty, Claude Code and Codex</div></a>
 <a class="video-card" href="https://youtu.be/VylG6X4eKSU"><img loading="lazy" src="https://i.ytimg.com/vi/VylG6X4eKSU/hqdefault.jpg" alt="Camp Dungeon Crawl Workflow"><div class="video-card__title">Camp Dungeon Crawl Workflow</div></a>
 <a class="video-card" href="https://www.tiktok.com/@ethanplusai/video/7619154198227143967"><img loading="lazy" src="/images/videos/tiktok-7619154198227143967.jpg" alt="How I Maximize Claude Usage to Speed Up Production (TikTok by @ethanplusai)"><div class="video-card__title">How I Maximize Claude Usage to Speed Up Production</div></a>
