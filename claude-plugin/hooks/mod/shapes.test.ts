@@ -1,6 +1,6 @@
 import { expect, test } from 'claude-code/testing'
 
-import { rootedPath } from './camp'
+import { festivalRoot, rootedPath } from './camp'
 import { bandOf, coalesce, currentRow, headerOf, rowsOf, rowsOfView, versionAtLeast, viewOf, windowStart } from './fest'
 import { SHOW, SHOW_STANDALONE } from './fixtures'
 
@@ -145,4 +145,12 @@ test('versionAtLeast compares the release number and treats unknown output as to
   expect(versionAtLeast('v0.9.1', '0.9.2')).toBe(false)
   expect(versionAtLeast('v0.9.1-12-gb37066a4', '0.9.2')).toBe(false)
   expect(versionAtLeast('dev', '0.9.2')).toBe(false)
+})
+
+test('festivalRoot finds the nearest fest.yaml and stops at the camp root', async () => {
+  const files = new Set(['/camp/.campaign', '/camp/festivals/active/f/fest.yaml'])
+  const exists = async (p: string) => files.has(p)
+  expect(await festivalRoot(exists, '/camp/festivals/active/f/001_A/01_s')).toBe('/camp/festivals/active/f')
+  expect(await festivalRoot(exists, '/camp/projects/demo')).toBeNull()
+  expect(await festivalRoot(exists, '/tmp/elsewhere')).toBeNull()
 })

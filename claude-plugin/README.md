@@ -157,9 +157,11 @@ What the module reads and runs, and nothing else: `fest show --json` for the
 band and pane, `fest version --short` once per session, `fest next` and
 `fest progress` only when you run `/fest-task` or `/fest-progress`, and file
 existence checks for @-mentions. It never polls `fest next`, which can write
-workflow state. With fest older than 0.9.2, `fest show` can rewrite a standalone
-workflow's cached summary, so in a standalone workflow directory the band and
-pane stay empty until fest is updated. It makes no network calls and never asks
+workflow state. Before fest 0.9.3, `fest show` itself can write: it rewrites a
+standalone workflow's cached summary and migrates a festival's legacy
+`.fest/progress.yaml` or `.fest/workflow_state.yaml`. So with an older fest the
+band and pane only run inside a festival directory that has neither legacy
+file, and elsewhere stay empty with a note to update fest. It makes no network calls and never asks
 you a question. Every process it starts has a timeout (5 seconds for JSON and
 the version check, 10 seconds for text). Every hook that can refuse something
 has a `.catch` that lets the original action through, so a fault in the module

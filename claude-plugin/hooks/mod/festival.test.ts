@@ -33,12 +33,13 @@ const world = (on: any, surfaces: string[], cwd = '/work') => {
 const run = (command: string) => ({ command, args: '', origin: { kind: 'user' } as any, presentation: {} as any })
 
 const ok = (stdout: string) => ({ exitCode: 0, stdout, stderr: '', isStdoutTruncated: false, isStderrTruncated: false })
+const fest = (show: string, version = 'v0.9.3') => (_$: any, e: any) => ({ value: ok(e.argv.includes('version') ? `${version}\n` : show) })
 
 test('band draws from fest show json and polling never runs fest next', async ($, on) => {
   world(on, ['terminal'])
   on('fs.exists', () => ({ value: false }))
   const ran: string[][] = []
-  on('process.run', (_$, e: any) => { ran.push(e.argv); return { value: ok(SHOW_JSON) } })
+  on('process.run', (_$, e: any) => { ran.push(e.argv); return fest(SHOW_JSON)(_$, e) })
   on('ui.open', () => ({ value: { isPlaced: true } }) as any)
   on('clock.every', () => ({ value: undefined }) as any)
   on('clock.after', () => ({ value: undefined }) as any)
@@ -162,7 +163,7 @@ test('a failed camp lookup at startup still draws the band and leaves takeover o
   on('session.cwd', () => { throw new Error('cwd unavailable') })
   on('command.register', () => ({ value: undefined }) as any)
   on('fs.exists', () => ({ value: false }))
-  on('process.run', (_$, e: any) => ({ value: ok(e.argv.includes('version') ? 'v0.9.2\n' : SHOW_JSON) }))
+  on('process.run', fest(SHOW_JSON) as any)
   on('tool.call', () => ({ result: 'entered' }) as any)
   await $.session.start(START)
   expect(textOf(await $.ui.render(BAND as any))).toContain('19/35 (54%)')
@@ -173,7 +174,7 @@ test('a failed camp lookup at startup still draws the band and leaves takeover o
 test('the pane opens again after the command closed it', async ($, on) => {
   world(on, ['terminal'])
   on('fs.exists', () => ({ value: false }) as any)
-  on('process.run', () => ({ value: ok(SHOW_JSON) }) as any)
+  on('process.run', fest(SHOW_JSON) as any)
   on('ui.open', () => ({ value: { isPlaced: true } }) as any)
   on('ui.close', () => ({ value: undefined }) as any)
   let timers = 0
@@ -188,7 +189,7 @@ test('the pane opens again after the command closed it', async ($, on) => {
 test('a pane that fails to open does not leave the module thinking it is open', async ($, on) => {
   world(on, ['terminal'])
   on('fs.exists', () => ({ value: false }) as any)
-  on('process.run', () => ({ value: ok(SHOW_JSON) }) as any)
+  on('process.run', fest(SHOW_JSON) as any)
   let opens = 0
   on('ui.open', (() => { opens += 1; if (opens === 1) throw new Error('no room'); return { value: { isPlaced: true } } }) as any)
   on('clock.every', () => ({ value: undefined }) as any)
@@ -229,7 +230,7 @@ const standaloneWorld = (on: any, version: string, ran: string[][]) => {
   })
 }
 
-test('with fest older than 0.9.2 a standalone workflow is never polled', async ($, on) => {
+test('with fest older than 0.9.3 a standalone workflow is never polled', async ($, on) => {
   const ran: string[][] = []
   standaloneWorld(on, 'v0.9.1', ran)
   on('ui.render', ($, e: any) => $.ui.resolve(e).Text({ children: 'ENGINE-OWN' }) as any)
@@ -238,9 +239,9 @@ test('with fest older than 0.9.2 a standalone workflow is never polled', async (
   expect(ran.some(argv => argv.join(' ') === 'fest show --json')).toBe(false)
 })
 
-test('with fest 0.9.2 a standalone workflow shows its step', async ($, on) => {
+test('with fest 0.9.3 a standalone workflow shows its step', async ($, on) => {
   const ran: string[][] = []
-  standaloneWorld(on, 'v0.9.2', ran)
+  standaloneWorld(on, 'v0.9.3', ran)
   await $.session.start({ ...SESSION, cwd: '/camp/workflow/explore/todo-sync-options' })
   expect(textOf(await $.ui.render(BAND as any))).toContain('step 2/5: COMPARE')
 })
@@ -248,10 +249,51 @@ test('with fest 0.9.2 a standalone workflow shows its step', async ($, on) => {
 test('after a module reload with the pane still open, polling resumes', async ($, on) => {
   world(on, ['terminal'])
   on('fs.exists', () => ({ value: false }) as any)
-  on('process.run', () => ({ value: ok(SHOW_JSON) }) as any)
+  on('process.run', fest(SHOW_JSON) as any)
   on('ui.panes', () => ({ value: [{ id: 'fest-watch', title: 'Festival' }] }) as any)
   let timers = 0
   on('clock.every', (() => { timers += 1; return { value: undefined } }) as any)
   await $.session.start(SESSION)
   expect(timers).toBe(1)
+})
+
+const oldFestWorld = (on: any, cwd: string, files: string[], ran: string[][]) => {
+  world(on, ['terminal'], cwd)
+  on('fs.exists', (_$: any, e: any) => ({ value: files.includes(e.path) }) as any)
+  on('process.run', (_$: any, e: any) => { ran.push(e.argv); return fest(SHOW_JSON, 'v0.9.2')(_$, e) })
+  on('ui.render', ($: any, e: any) => $.ui.resolve(e).Text({ children: 'ENGINE-OWN' }) as any)
+}
+
+test('with fest older than 0.9.3 the band still works inside a festival with no legacy progress files', async ($, on) => {
+  const ran: string[][] = []
+  const root = '/camp/festivals/active/build-todo-app-BT0001'
+  oldFestWorld(on, `${root}/003_IMPLEMENT`, [`${root}/fest.yaml`], ran)
+  await $.session.start({ ...SESSION, cwd: `${root}/003_IMPLEMENT` })
+  expect(textOf(await $.ui.render(BAND as any))).toContain(BAND_TEXT)
+})
+
+test('with fest older than 0.9.3 a festival with a legacy progress.yaml is never polled', async ($, on) => {
+  const ran: string[][] = []
+  const root = '/camp/festivals/active/old-festival'
+  oldFestWorld(on, root, [`${root}/fest.yaml`, `${root}/.fest/progress.yaml`], ran)
+  await $.session.start({ ...SESSION, cwd: root })
+  expect(textOf(await $.ui.render(BAND as any))).toBe('ENGINE-OWN')
+  expect(ran.some(argv => argv.join(' ') === 'fest show --json')).toBe(false)
+})
+
+test('with fest older than 0.9.3 a festival with a legacy workflow_state.yaml is never polled', async ($, on) => {
+  const ran: string[][] = []
+  const root = '/camp/festivals/active/old-festival'
+  oldFestWorld(on, root, [`${root}/fest.yaml`, `${root}/.fest/workflow_state.yaml`], ran)
+  await $.session.start({ ...SESSION, cwd: root })
+  expect(textOf(await $.ui.render(BAND as any))).toBe('ENGINE-OWN')
+  expect(ran.some(argv => argv.join(' ') === 'fest show --json')).toBe(false)
+})
+
+test('with fest older than 0.9.3 a linked project directory is never polled', async ($, on) => {
+  const ran: string[][] = []
+  oldFestWorld(on, '/camp/projects/demo', ['/camp/.campaign'], ran)
+  await $.session.start({ ...SESSION, cwd: '/camp/projects/demo' })
+  expect(textOf(await $.ui.render(BAND as any))).toBe('ENGINE-OWN')
+  expect(ran.some(argv => argv.join(' ') === 'fest show --json')).toBe(false)
 })

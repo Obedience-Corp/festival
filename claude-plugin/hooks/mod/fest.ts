@@ -102,7 +102,8 @@ export function bandOf(view: FestView | null): string | null {
   return `workflow ${view.name} | step ${step.number}/${view.steps.length}: ${step.name}${flag} | ${count}`
 }
 
-export const READ_ONLY_STANDALONE_FEST = '0.9.2'
+export const READ_ONLY_FEST = '0.9.3'
+export const LEGACY_PROGRESS_FILES = ['progress.yaml', 'workflow_state.yaml']
 
 export function versionAtLeast(text: string, want: string): boolean {
   const have = /v?(\d+)\.(\d+)\.(\d+)/.exec(text)

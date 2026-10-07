@@ -1,8 +1,8 @@
 import { atom, read, update } from 'claude-code'
 import type { Register } from 'claude-code'
 
-import { rootedPath, campRoot } from './camp'
-import { READ_ONLY_STANDALONE_FEST, STATUS_COLOR, bandOf, coalesce, currentRow, headerOf, rowsOfView, versionAtLeast, viewOf, windowStart } from './fest'
+import { campRoot, festivalRoot, rootedPath } from './camp'
+import { LEGACY_PROGRESS_FILES, READ_ONLY_FEST, STATUS_COLOR, bandOf, coalesce, currentRow, headerOf, rowsOfView, versionAtLeast, viewOf, windowStart } from './fest'
 
 const PANE = 'fest-watch'
 const band = atom({ plugin: 'festival', key: 'band' } as const, null)
@@ -39,28 +39,37 @@ async function runJson($: any, argv: string[]) {
 async function festShowIsReadOnly($: any): Promise<boolean> {
   try {
     const r = await $.process.run(['fest', 'version', '--short'], { timeoutMs: 5000 })
-    return r.exitCode === 0 && versionAtLeast(r.stdout, READ_ONLY_STANDALONE_FEST)
+    return r.exitCode === 0 && versionAtLeast(r.stdout, READ_ONLY_FEST)
   } catch {
     return false
   }
 }
 
-async function inStandaloneWorkflow($: any): Promise<boolean> {
+const NEEDS_NEWER_FEST = `This view needs fest ${READ_ONLY_FEST} or newer here.`
+
+async function pollBlocker($: any): Promise<string | null> {
+  showIsReadOnly ??= festShowIsReadOnly($)
+  if (await showIsReadOnly) return null
   try {
-    const cwd = (await $.session.cwd()).replace(/\/+$/, '')
-    return await $.fs.exists(`${cwd}/.workflow/workflow.yaml`)
+    const exists = (p: string) => $.fs.exists(p)
+    const root = await festivalRoot(exists, await $.session.cwd())
+    if (root === null) return NEEDS_NEWER_FEST
+    for (const file of LEGACY_PROGRESS_FILES) {
+      if (await exists(`${root}/.fest/${file}`)) return NEEDS_NEWER_FEST
+    }
+    return null
   } catch {
-    return true
+    return NEEDS_NEWER_FEST
   }
 }
 
 async function refresh($: any) {
   if ((await $.session.surfaces()).length === 0) return
-  showIsReadOnly ??= festShowIsReadOnly($)
-  if (!(await showIsReadOnly) && (await inStandaloneWorkflow($))) {
+  const blocker = await pollBlocker($)
+  if (blocker !== null) {
     await update($, view, () => null)
     await update($, band, () => null)
-    await update($, notice, () => `Standalone workflows need fest ${READ_ONLY_STANDALONE_FEST} or newer here.`)
+    await update($, notice, () => blocker)
     $.ui.invalidate('ui.render')
     return
   }

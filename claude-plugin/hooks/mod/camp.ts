@@ -22,3 +22,16 @@ export async function rootedPath(
   const candidate = `${root === '/' ? '' : root}/${rel}`
   return (await exists(candidate)) ? candidate : null
 }
+
+export async function festivalRoot(
+  exists: (path: string) => Promise<boolean>,
+  cwd: string,
+): Promise<string | null> {
+  let dir = cwd.replace(/\/+$/, '')
+  while (dir !== '') {
+    if (await exists(`${dir}/fest.yaml`)) return dir
+    if (await exists(`${dir}/.campaign`)) return null
+    dir = dir.slice(0, dir.lastIndexOf('/'))
+  }
+  return null
+}
