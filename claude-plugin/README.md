@@ -110,11 +110,16 @@ What it draws:
 
 - A one-line band above the prompt with the current position, for example
   `festival FA0031 | 003_SIDECAR > 01_release > 01_baseline | 19/103 (18%)`,
-  or the current step of a standalone workflow. It refreshes at session start,
-  after each turn, and after any Bash call that runs `fest` or `camp`.
+  or the current step of a standalone workflow. It refreshes at session start
+  (awaited), then again after each turn and after any Bash call that runs
+  `fest` or `camp`, without waiting for those refreshes to finish.
 - A pane that shows the festival tree with finished branches collapsed and the
   current branch expanded, headed by the task count and percentage. It
   refreshes every five seconds while open.
+
+On a narrow terminal the pane sits inline above the prompt instead of docked
+beside the transcript, and the engine leaves no rows for the AbovePrompt band
+while that inline pane is open (see `AbovePrompt` `maxRows` in the mod types).
 
 When the session has no interactive surface the module does no band or pane
 work. When `fest` is missing, exits non-zero, or prints something it cannot

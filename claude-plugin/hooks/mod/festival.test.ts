@@ -53,6 +53,7 @@ test('band draws nothing when fest exits nonzero', async ($, on) => {
 })
 
 const run = (command: string) => ({ command, args: '', origin: { kind: 'user' } as any, presentation: {} as any })
+const tool = (name: string) => ({ tool: name, origin: { kind: 'user' } as any })
 
 test('/fest-task returns the stubbed fest next text', async ($, on) => {
   world(on, [])
@@ -103,12 +104,15 @@ test('mention passes through when the local path exists', async ($, on) => {
   expect(seen).toBe('/camp/projects/demo/x.md')
 })
 
-test('mention fails open when fs.exists throws', async ($, on) => {
+test('mention passes through unchanged when the camp lookup throws', async ($, on) => {
+  world(on, [], '/camp/projects/demo')
   on('fs.exists', () => { throw new Error('disk gone') })
   let seen = ''
   on('prompt.mention', (_$, e) => { seen = e.path; return { type: 'file' } })
-  await $.prompt.mention({ mention: 'x.md', path: '/camp/projects/demo/x.md' })
-  expect(seen).toBe('/camp/projects/demo/x.md')
+  await $.session.start({ ...SESSION, cwd: '/camp/projects/demo' })
+  const path = '/camp/projects/demo/notes/a.md'
+  await $.prompt.mention({ mention: 'notes/a.md', path })
+  expect(seen).toBe(path)
 })
 
 const inCamp = (on: any) => {
@@ -121,11 +125,11 @@ const START = { ...SESSION, cwd: '/camp/projects/demo' }
 test('takeover denies plan mode and todo tools inside a camp', { options: { planningTakeover: true } }, async ($, on) => {
   inCamp(on)
   await $.session.start(START)
-  const plan: any = await $.tool.call({ tool: 'EnterPlanMode' } as any)
+  const plan: any = await $.tool.call(tool('EnterPlanMode') as any)
   expect(String(plan.deny)).toContain('plans with Festival')
-  const todo: any = await $.tool.call({ tool: 'TodoWrite' } as any)
+  const todo: any = await $.tool.call(tool('TodoWrite') as any)
   expect(String(todo.deny)).toContain('tracks tasks with Festival')
-  const task: any = await $.tool.call({ tool: 'TaskCreate' } as any)
+  const task: any = await $.tool.call(tool('TaskCreate') as any)
   expect(String(task.deny)).toContain('tracks tasks with Festival')
 })
 
@@ -134,13 +138,13 @@ test('takeover is inert outside a camp even when enabled', { options: { planning
   on('fs.exists', () => ({ value: false }))
   on('tool.call', () => ({ result: 'entered' }) as any)
   await $.session.start(SESSION)
-  const out: any = await $.tool.call({ tool: 'EnterPlanMode' } as any)
+  const out: any = await $.tool.call(tool('EnterPlanMode') as any)
   expect(out.result).toBe('entered')
 })
 
 test('takeover stays off by default inside a camp', async ($, on) => {
   inCamp(on)
   await $.session.start(START)
-  const out: any = await $.tool.call({ tool: 'EnterPlanMode' } as any)
+  const out: any = await $.tool.call(tool('EnterPlanMode') as any)
   expect(out.result).toBe('entered')
 })

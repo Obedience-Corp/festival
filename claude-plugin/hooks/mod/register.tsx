@@ -16,6 +16,8 @@ const COMMANDS = [
 ] as const
 
 let timer: { cancel: () => void } | null = null
+let refreshBusy: Promise<void> | null = null
+let refreshAgain = false
 let isTakeover = false
 
 const PLAN_DENY =
@@ -44,6 +46,23 @@ async function refresh($: any) {
   $.ui.invalidate('ui.render')
 }
 
+function scheduleRefresh($: any) {
+  if (refreshBusy) {
+    refreshAgain = true
+    return
+  }
+  refreshBusy = (async () => {
+    try {
+      do {
+        refreshAgain = false
+        await refresh($)
+      } while (refreshAgain)
+    } finally {
+      refreshBusy = null
+    }
+  })()
+}
+
 async function plain($: any, argv: string[]) {
   try {
     const r = await $.process.run(argv, { timeoutMs: 10000 })
@@ -69,13 +88,13 @@ export const register: Register = (on, options) => {
 
   on('turn.complete', async ($, e, next) => {
     const done = await next(e)
-    await refresh($)
+    $.clock.after(0, () => scheduleRefresh($))
     return done
   }).catch(($, e, next) => next(e))
 
   on('tool.call', { tool: 'Bash' }, async ($, e, next) => {
     const ran = await next(e)
-    if (/\b(fest|camp) /.test(e.command)) await refresh($)
+    if (/\b(fest|camp) /.test(e.command)) $.clock.after(0, () => scheduleRefresh($))
     return ran
   }).catch(($, e, next) => next(e))
 

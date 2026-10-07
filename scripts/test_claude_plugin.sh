@@ -902,7 +902,12 @@ mod_check() {
     claude plugin test "$plugin_dir"
 
     if [ ! -f "$types_dir/tsconfig.json" ]; then
-        (cd "$repo_root" && claude -p "/fest-task" --plugin-dir "$plugin_dir" >/dev/null 2>&1) || true
+        types_cache="$(mktemp -d "${TMPDIR:-/tmp}/festival-plugin-types.XXXXXX")"
+        (
+            export FESTIVAL_CACHE_DIR="$types_cache"
+            cd "$repo_root" && claude -p "/fest-task" --plugin-dir "$plugin_dir" >/dev/null 2>&1
+        ) || true
+        rm -rf "$types_cache"
     fi
     if [ -f "$types_dir/tsconfig.json" ]; then
         (cd "$repo_root" && npx -y -p typescript tsc -p "$plugin_dir")
