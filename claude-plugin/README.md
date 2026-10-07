@@ -109,13 +109,14 @@ else in this plugin working.
 What it draws:
 
 - A one-line band above the prompt with the current position, for example
-  `festival FA0031 | 003_SIDECAR > 01_release > 01_baseline | 19/103 (18%)`,
+  `festival build-todo-app-BT0001 | 003_IMPLEMENT > 01_app_core > 01_todo_model | 19/35 (54%)`,
   or the current step of a standalone workflow. It refreshes at session start
   (awaited), then again after each turn and after any Bash call that runs
   `fest` or `camp`, without waiting for those refreshes to finish.
 - A pane that shows the festival tree with finished branches collapsed and the
-  current branch expanded, headed by the task count and percentage. It
-  refreshes every five seconds while open.
+  current branch expanded, headed by the task count and percentage. When the
+  tree is taller than the pane, the view follows the current task so it stays
+  on screen. It refreshes every five seconds while open.
 
 On a narrow terminal the pane sits inline above the prompt instead of docked
 beside the transcript, and the engine leaves no rows for the AbovePrompt band

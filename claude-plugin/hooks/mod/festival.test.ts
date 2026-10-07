@@ -11,7 +11,7 @@ const BAND = {
 
 const NEXT = JSON.stringify({
   task: { name: '01_baseline', phase_name: '003_SIDECAR', sequence_name: '01_release' },
-  location: { festival_path: '/camp/festivals/active/fest-FA0031' },
+  location: { festival_path: '/camp/festivals/active/build-todo-app-BT0001' },
   progress: { completed_tasks: 19, total_tasks: 103, percentage: 18 },
 })
 
@@ -39,7 +39,7 @@ test('band draws from stubbed fest next json', async ($, on) => {
   on('process.run', () => ({ value: ok(NEXT) }))
   await $.session.start(SESSION)
   const drawn = textOf(await $.ui.render(BAND as any))
-  expect(drawn).toContain('fest-FA0031 | 003_SIDECAR > 01_release > 01_baseline | 19/103 (18%)')
+  expect(drawn).toContain('build-todo-app-BT0001 | 003_SIDECAR > 01_release > 01_baseline | 19/103 (18%)')
 })
 
 test('band draws nothing when fest exits nonzero', async ($, on) => {

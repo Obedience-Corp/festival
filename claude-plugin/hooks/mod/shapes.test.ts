@@ -1,17 +1,17 @@
 import { expect, test } from 'claude-code/testing'
 
-import { bandOf, progressOf, rowsOf } from './fest'
+import { bandOf, currentRow, progressOf, rowsOf, windowStart } from './fest'
 import { NEXT_FESTIVAL, NEXT_STANDALONE, SHOW } from './fixtures'
 
 test('bandOf handles the festival shape', () => {
   expect(bandOf(NEXT_FESTIVAL)).toBe(
-    'festival festival-activity-in-festival-app-FA0031 | 003_ENGINE_SIDECAR > 01_engine_release > 01_baseline_and_worktree | 19/103 (18%)',
+    'festival build-todo-app-BT0001 | 003_IMPLEMENT > 01_app_core > 01_todo_model | 19/35 (54%)',
   )
 })
 
 test('bandOf handles the standalone shape', () => {
   expect(bandOf(NEXT_STANDALONE)).toBe(
-    'workflow camp-dvc-support-2026-07-25 | step 2/7: Name the concrete payload',
+    'workflow todo-sync-options | step 2/5: Compare storage backends',
   )
 })
 
@@ -23,8 +23,37 @@ test('bandOf rejects junk', () => {
 test('tree rows expand only the current branch', () => {
   const rows = rowsOf(SHOW.view.tree)
   const text = rows.map(r => '  '.repeat(r.depth) + r.text).join('\n')
-  expect(rows[0]!.text).toContain('festival-activity-in-festival-app-FA0031')
+  expect(rows[0]!.text).toContain('build-todo-app-BT0001')
   expect(text).toContain('[x] 001_INGEST')
-  expect(text).toContain('01_baseline_and_worktree')
-  expect(text).not.toContain('Step 1: READ')
+  expect(text).toContain('01_todo_model')
+  expect(text).not.toContain('Step 1:')
+})
+
+test('the current row is the first unfinished task, not an unfinished ancestor', () => {
+  const rows = rowsOf(SHOW.view.tree)
+  expect(rows[currentRow(rows)]!.text).toBe('[ ] 01_todo_model')
+})
+
+test('the window keeps the current task visible past a long run of finished tasks', () => {
+  const tasks = Array.from({ length: 40 }, (_, i) => ({
+    name: `${String(i + 1).padStart(2, '0')}_task`,
+    status: i < 25 ? 'completed' : 'pending',
+    node_type: 'task',
+  }))
+  const tree = {
+    name: 'demo', status: 'in_progress', node_type: 'festival',
+    children: [{ name: '001_BUILD', status: 'in_progress', node_type: 'phase',
+      children: [{ name: '01_core', status: 'in_progress', node_type: 'sequence', children: tasks }] }],
+  }
+  const rows = rowsOf(tree as any)
+  const room = 8
+  const start = windowStart(rows, room)
+  const visible = rows.slice(start, start + room).map(r => r.text)
+  expect(visible).toContain('[ ] 26_task')
+  expect(visible.indexOf('[ ] 26_task')).toBe(Math.floor(room / 3))
+})
+
+test('the window starts at the top when everything fits', () => {
+  const rows = rowsOf(SHOW.view.tree)
+  expect(windowStart(rows, rows.length + 5)).toBe(0)
 })

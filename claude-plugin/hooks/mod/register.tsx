@@ -2,7 +2,7 @@ import { atom, read, update } from 'claude-code'
 import type { Register } from 'claude-code'
 
 import { rootedPath, campRoot } from './camp'
-import { STATUS_COLOR, bandOf, progressOf, rowsOf } from './fest'
+import { STATUS_COLOR, bandOf, progressOf, rowsOf, windowStart } from './fest'
 
 const PANE = 'fest-watch'
 const band = atom({ plugin: 'festival', key: 'band' } as const, null)
@@ -162,8 +162,7 @@ export const register: Register = (on, options) => {
     if (!data) return <Text dimColor>No festival here (fest show failed).</Text>
     const room = Math.max(3, (e.viewport?.rows ?? 24) - 6)
     const rows = rowsOf(data.view.tree)
-    const first = rows.findIndex(r => r.text.startsWith('[~]') || r.text.startsWith('[ ]'))
-    const start = Math.max(0, Math.min(first - 2, rows.length - room))
+    const start = windowStart(rows, room)
     return (
       <Box flexDirection="column">
         <Text color="claude" bold>{progressOf(data)}</Text>

@@ -42,6 +42,17 @@ export function rowsOf(node: FestNode, depth = 0, expand = true): Row[] {
   return rows
 }
 
+export function currentRow(rows: Row[]): number {
+  const isLeaf = (i: number) => i + 1 >= rows.length || rows[i + 1]!.depth <= rows[i]!.depth
+  const i = rows.findIndex((r, idx) => r.status !== 'completed' && isLeaf(idx))
+  return i === -1 ? 0 : i
+}
+
+export function windowStart(rows: Row[], room: number): number {
+  const lead = Math.floor(room / 3)
+  return Math.max(0, Math.min(currentRow(rows) - lead, rows.length - room))
+}
+
 export function progressOf(show: FestShow): string {
   const t = show.stats.tasks
   return `tasks ${t.completed}/${t.total} (${show.stats.progress}%)`
