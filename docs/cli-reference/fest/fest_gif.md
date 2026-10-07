@@ -1,12 +1,12 @@
 ---
 title: "fest gif"
 linkTitle: "fest gif"
-description: "Render a festival's execution as an animated GIF"
+description: "Render a festival's execution as a GIF or MP4"
 ---
 
 ## fest gif
 
-Render a festival's execution as an animated GIF
+Render a festival's execution as a GIF or MP4
 
 ### Synopsis
 
@@ -25,6 +25,12 @@ Use --embed to save festival-replay.gif inside the festival and add a relative
 image link to FESTIVAL_OVERVIEW.md (creating the overview if needed). Repeating
 --embed refreshes the replay without duplicating the link. --embed and --out
 cannot be combined.
+
+Use --mp4 to write an H.264 video for a vertical feed instead of a GIF. The
+picture is fitted inside 1080x1920 and padded with the replay background, at
+30 fps, with a silent audio track. This encodes the replay frames directly
+and needs ffmpeg on PATH. -o with a .mp4 name selects the same export.
+--mp4 cannot be combined with --embed. Completion still writes the GIF.
 
 Promoting or setting a festival to completed does this automatically before
 the status change is committed. Use --embed to refresh or retry that replay.
@@ -48,6 +54,8 @@ fest gif [festival] [flags]
   fest gif festivals/.dungeon/completed/2026-01-01/my-festival   # by path
   fest gif --festival DM0001        # by selector
   fest gif -o docs/replay.gif       # choose the output file
+  fest gif --mp4                    # 1080x1920 H.264 video (needs ffmpeg)
+  fest gif -o docs/replay.mp4       # same export, chosen by file name
   fest gif --embed                  # save and embed the replay in the overview
   fest gif --speed 2                # twice as fast
   fest gif --speed 0.5              # half speed, easier to follow
@@ -59,7 +67,8 @@ fest gif [festival] [flags]
       --embed             save festival-replay.gif in the festival and embed it in FESTIVAL_OVERVIEW.md
       --festival string   festival selector (name or ID) from within a camp
   -h, --help              help for gif
-  -o, --out string        output file (default ./<festival>.gif)
+      --mp4               write a 1080x1920 H.264 MP4 for a vertical feed (needs ffmpeg)
+  -o, --out string        output file (default ./<festival>.gif, or .mp4 with --mp4)
       --speed float       playback speed: 2 is twice as fast, 0.5 is half speed (default 1)
 ```
 
