@@ -24,9 +24,9 @@ A review has something concrete to inspect: what changed, which checks ran, what
 
 ## Give each part of your work its own camp
 
-Everything lives in a workspace called a camp: the skills, planning documents, one-off scripts, and projects for a related context. That context might be your job, a side project, or a hobby.
+Everything lives in a workspace called a camp: the skills, planning documents, one-off scripts, and projects for one context. That context might be your job, a side project, or a hobby.
 
-A festival is an ambitious goal inside that camp. Structured specs, other workflows, and ideas you intend to execute are tracked as workitems.
+A festival is an ambitious goal inside that camp. Specs, smaller workflows, and ideas you intend to execute are tracked as work items.
 
 You can create as many camps as you need and specialize each with its own skills, workflows, and processes. As you refine them over time, agents work differently in each camp. Switch between camps with `camp switch` (`csw`) to pick up that workspace's context and way of working.
 
@@ -48,7 +48,9 @@ For a known sequence of steps, a standalone workflow can guide an agent through 
 
 The hierarchy forms a graph of work. `fest next` reads its state and supplies the next actionable step; the agent executes that step and records the result. For work across several projects, the agent can coordinate multiple loops and worktrees.
 
-With workflows tracked and everything organized, you can orchestrate parallel loops across many projects. Over time, camps function more like custom agents, where small seeds of your intentions trigger hundreds or thousands of individual actions.
+You can work on many projects at once. Over time, camps function more like custom agents, where small seeds of your intentions trigger hundreds or thousands of individual actions.
+
+Each camp has its own context and workflows, so switching camps changes how your agents work.
 
 [Learn about loops and orchestration]({{< ref "/guides/loops-and-orchestration" >}}).
 

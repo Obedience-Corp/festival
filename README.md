@@ -8,7 +8,7 @@
 
 It uses the filesystem and Git. You configure it to your workflows and processes. When it plans and executes, the work is done the way you want it done.
 
-Everything lives in a workspace called a camp: the skills, planning documents, one-off scripts, and projects for a related context. A festival is an ambitious goal inside that camp. Structured specs, other workflows, and ideas you intend to execute are tracked as workitems.
+Everything lives in a workspace called a camp: the skills, planning documents, one-off scripts, and projects for one context. A festival is an ambitious goal inside that camp. Specs, smaller workflows, and ideas you intend to execute are tracked as work items.
 
 You can create as many camps as you need and specialize each with its own skills, workflows, and processes. As you refine them over time, agents work differently in each camp. Switch between camps with `camp switch` (`csw`) to pick up that workspace's context and way of working.
 
@@ -174,7 +174,9 @@ That is the basis for **loop engineering** with Festival: repeatable planning, e
 
 The camp holds the context around those goals over the life of the work. Research can inform a design; that design can become a festival; its results and decisions remain available for the next goal.
 
-With workflows tracked and everything organized, you can orchestrate parallel loops across many projects. Over time, camps function more like custom agents, where small seeds of your intentions trigger hundreds or thousands of individual actions.
+You can work on many projects at once. Over time, camps function more like custom agents, where small seeds of your intentions trigger hundreds or thousands of individual actions.
+
+Each camp has its own context and workflows, so switching camps changes how your agents work.
 
 Quality gates provide places to test and review. `fest validate` checks plan structure, and `fest commit` links commits to festival tasks. You review the actual output and verification evidence before accepting the result.
 
