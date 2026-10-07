@@ -1,6 +1,6 @@
 import { expect, test } from 'claude-code/testing'
 
-import { SHOW } from './fixtures'
+import { SHOW, SHOW_STANDALONE } from './fixtures'
 
 const SESSION = { surface: 'terminal', isInteractive: true, cwd: '/work' } as const
 const BAND = {
@@ -46,7 +46,8 @@ test('band draws from fest show json and polling never runs fest next', async ($
   expect(textOf(await $.ui.render(BAND as any))).toContain(BAND_TEXT)
   await $.command.run(run('fest-watch') as any)
   expect(ran.length).toBeGreaterThan(0)
-  expect(ran.every(argv => argv.join(' ') === 'fest show --json')).toBe(true)
+  expect(ran.every(argv => ['fest show --json', 'fest version --short'].includes(argv.join(' ')))).toBe(true)
+  expect(ran.some(argv => argv.join(' ') === 'fest show --json')).toBe(true)
 })
 
 test('band draws nothing when fest exits nonzero', async ($, on) => {
@@ -161,7 +162,7 @@ test('a failed camp lookup at startup still draws the band and leaves takeover o
   on('session.cwd', () => { throw new Error('cwd unavailable') })
   on('command.register', () => ({ value: undefined }) as any)
   on('fs.exists', () => ({ value: false }))
-  on('process.run', () => ({ value: ok(SHOW_JSON) }))
+  on('process.run', (_$, e: any) => ({ value: ok(e.argv.includes('version') ? 'v0.9.2\n' : SHOW_JSON) }))
   on('tool.call', () => ({ result: 'entered' }) as any)
   await $.session.start(START)
   expect(textOf(await $.ui.render(BAND as any))).toContain('19/35 (54%)')
@@ -217,4 +218,40 @@ test('takeover also drops the task reminder', { options: { planningTakeover: tru
   const tasks: any = await $.prompt.attachment({ type: 'task_reminder', detail: {} } as any)
   expect(todo.text).toBeNull()
   expect(tasks.text).toBeNull()
+})
+
+const standaloneWorld = (on: any, version: string, ran: string[][]) => {
+  world(on, ['terminal'], '/camp/workflow/explore/todo-sync-options')
+  on('fs.exists', (_$: any, e: any) => ({ value: e.path === '/camp/workflow/explore/todo-sync-options/.workflow/workflow.yaml' }) as any)
+  on('process.run', (_$: any, e: any) => {
+    ran.push(e.argv)
+    return { value: ok(e.argv.includes('version') ? `${version}\n` : JSON.stringify(SHOW_STANDALONE)) }
+  })
+}
+
+test('with fest older than 0.9.2 a standalone workflow is never polled', async ($, on) => {
+  const ran: string[][] = []
+  standaloneWorld(on, 'v0.9.1', ran)
+  on('ui.render', ($, e: any) => $.ui.resolve(e).Text({ children: 'ENGINE-OWN' }) as any)
+  await $.session.start({ ...SESSION, cwd: '/camp/workflow/explore/todo-sync-options' })
+  expect(textOf(await $.ui.render(BAND as any))).toBe('ENGINE-OWN')
+  expect(ran.some(argv => argv.join(' ') === 'fest show --json')).toBe(false)
+})
+
+test('with fest 0.9.2 a standalone workflow shows its step', async ($, on) => {
+  const ran: string[][] = []
+  standaloneWorld(on, 'v0.9.2', ran)
+  await $.session.start({ ...SESSION, cwd: '/camp/workflow/explore/todo-sync-options' })
+  expect(textOf(await $.ui.render(BAND as any))).toContain('step 2/5: COMPARE')
+})
+
+test('after a module reload with the pane still open, polling resumes', async ($, on) => {
+  world(on, ['terminal'])
+  on('fs.exists', () => ({ value: false }) as any)
+  on('process.run', () => ({ value: ok(SHOW_JSON) }) as any)
+  on('ui.panes', () => ({ value: [{ id: 'fest-watch', title: 'Festival' }] }) as any)
+  let timers = 0
+  on('clock.every', (() => { timers += 1; return { value: undefined } }) as any)
+  await $.session.start(SESSION)
+  expect(timers).toBe(1)
 })

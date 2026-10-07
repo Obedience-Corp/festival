@@ -102,6 +102,19 @@ export function bandOf(view: FestView | null): string | null {
   return `workflow ${view.name} | step ${step.number}/${view.steps.length}: ${step.name}${flag} | ${count}`
 }
 
+export const READ_ONLY_STANDALONE_FEST = '0.9.2'
+
+export function versionAtLeast(text: string, want: string): boolean {
+  const have = /v?(\d+)\.(\d+)\.(\d+)/.exec(text)
+  if (!have) return false
+  const w = want.split('.').map(Number)
+  for (let i = 0; i < 3; i++) {
+    const h = Number(have[i + 1])
+    if (h !== w[i]) return h > w[i]!
+  }
+  return true
+}
+
 export function coalesce(): (run: () => Promise<void>) => Promise<void> {
   let busy: Promise<void> | null = null
   let pending: (() => Promise<void>) | null = null

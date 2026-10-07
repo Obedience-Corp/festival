@@ -1,7 +1,7 @@
 import { expect, test } from 'claude-code/testing'
 
 import { rootedPath } from './camp'
-import { bandOf, coalesce, currentRow, headerOf, rowsOf, rowsOfView, viewOf, windowStart } from './fest'
+import { bandOf, coalesce, currentRow, headerOf, rowsOf, rowsOfView, versionAtLeast, viewOf, windowStart } from './fest'
 import { SHOW, SHOW_STANDALONE } from './fixtures'
 
 const workflow = (steps: Array<[string, string]>, runStatus = 'active') =>
@@ -136,4 +136,13 @@ test('camp-root mentions never leave the camp', async () => {
   expect(await rootedPath(exists, '/camp/projects/demo', '../etc/hosts')).toBeNull()
   expect(await rootedPath(exists, '/camp/projects/demo', 'notes/../../etc/hosts')).toBeNull()
   expect(await rootedPath(exists, '/camp/projects/demo', '/etc/hosts')).toBeNull()
+})
+
+test('versionAtLeast compares the release number and treats unknown output as too old', () => {
+  expect(versionAtLeast('v0.9.2', '0.9.2')).toBe(true)
+  expect(versionAtLeast('0.10.0', '0.9.2')).toBe(true)
+  expect(versionAtLeast('v1.0.0\n', '0.9.2')).toBe(true)
+  expect(versionAtLeast('v0.9.1', '0.9.2')).toBe(false)
+  expect(versionAtLeast('v0.9.1-12-gb37066a4', '0.9.2')).toBe(false)
+  expect(versionAtLeast('dev', '0.9.2')).toBe(false)
 })

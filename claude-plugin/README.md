@@ -103,10 +103,9 @@ fails open. Set `CAMP_ALLOW_RAW_GIT=1` to override deliberately for one command.
 
 The plugin ships an in-process hooks module, `hooks/mod/register.tsx`, that
 Claude Code loads from the `modules` key in `hooks/hooks.json`. It needs Claude
-Code 2.1.290 or newer. Versions before 2.1.287 ignore the `modules` key; 2.1.287
-to 2.1.289 report that the module failed to load. Either way the rest of this
-plugin (skills, commands, agents, the install hook, and the commit guard) keeps
-working.
+Code 2.1.290 or newer. Older versions either ignore the module or report that
+it failed to load. Either way the rest of this plugin (skills, commands,
+agents, the install hook, and the commit guard) keeps working.
 
 What it draws:
 
@@ -155,13 +154,16 @@ through Festival.
 Outside a camp the option does nothing.
 
 What the module reads and runs, and nothing else: `fest show --json` for the
-band and pane (it never polls `fest next`, which can write workflow state),
-`fest next` and `fest progress` only when you run `/fest-task` or
-`/fest-progress`, and file existence checks for @-mentions. It makes no network
-calls and never asks you a question. Every process it
-starts has a timeout (5 seconds for JSON, 10 seconds for text). Every hook that
-can refuse something has a `.catch` that lets the original action through, so a
-fault in the module cannot block a tool call or a mention.
+band and pane, `fest version --short` once per session, `fest next` and
+`fest progress` only when you run `/fest-task` or `/fest-progress`, and file
+existence checks for @-mentions. It never polls `fest next`, which can write
+workflow state. With fest older than 0.9.2, `fest show` can rewrite a standalone
+workflow's cached summary, so in a standalone workflow directory the band and
+pane stay empty until fest is updated. It makes no network calls and never asks
+you a question. Every process it starts has a timeout (5 seconds for JSON and
+the version check, 10 seconds for text). Every hook that can refuse something
+has a `.catch` that lets the original action through, so a fault in the module
+cannot block a tool call or a mention.
 
 `claude plugin validate claude-plugin` lists the module's hooks and the `$`
 calls it makes, so you can audit it without reading the source.

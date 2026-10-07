@@ -31,6 +31,7 @@ declare module 'claude-code' {
       band: string | null
       view: FestView | null
       isOpen: boolean
+      notice: string | null
     }
   }
 }

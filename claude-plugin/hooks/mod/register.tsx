@@ -2,12 +2,13 @@ import { atom, read, update } from 'claude-code'
 import type { Register } from 'claude-code'
 
 import { rootedPath, campRoot } from './camp'
-import { STATUS_COLOR, bandOf, coalesce, currentRow, headerOf, rowsOfView, viewOf, windowStart } from './fest'
+import { READ_ONLY_STANDALONE_FEST, STATUS_COLOR, bandOf, coalesce, currentRow, headerOf, rowsOfView, versionAtLeast, viewOf, windowStart } from './fest'
 
 const PANE = 'fest-watch'
 const band = atom({ plugin: 'festival', key: 'band' } as const, null)
 const view = atom({ plugin: 'festival', key: 'view' } as const, null)
 const isOpen = atom({ plugin: 'festival', key: 'isOpen' } as const, false)
+const notice = atom({ plugin: 'festival', key: 'notice' } as const, null)
 
 const COMMANDS = [
   { name: 'fest-watch', description: 'Toggle the live Festival pane' },
@@ -18,6 +19,7 @@ const COMMANDS = [
 let timer: { cancel: () => void } | null = null
 const runRefresh = coalesce()
 let isTakeover = false
+let showIsReadOnly: Promise<boolean> | null = null
 
 const PLAN_DENY =
   'This camp plans with Festival, so plan mode is off here. Do not retry it. Size the work as one session, a standalone workflow (`fest create workflow`), or a festival, then run `fest next` and follow what it prints.'
@@ -34,9 +36,36 @@ async function runJson($: any, argv: string[]) {
   }
 }
 
+async function festShowIsReadOnly($: any): Promise<boolean> {
+  try {
+    const r = await $.process.run(['fest', 'version', '--short'], { timeoutMs: 5000 })
+    return r.exitCode === 0 && versionAtLeast(r.stdout, READ_ONLY_STANDALONE_FEST)
+  } catch {
+    return false
+  }
+}
+
+async function inStandaloneWorkflow($: any): Promise<boolean> {
+  try {
+    const cwd = (await $.session.cwd()).replace(/\/+$/, '')
+    return await $.fs.exists(`${cwd}/.workflow/workflow.yaml`)
+  } catch {
+    return true
+  }
+}
+
 async function refresh($: any) {
   if ((await $.session.surfaces()).length === 0) return
+  showIsReadOnly ??= festShowIsReadOnly($)
+  if (!(await showIsReadOnly) && (await inStandaloneWorkflow($))) {
+    await update($, view, () => null)
+    await update($, band, () => null)
+    await update($, notice, () => `Standalone workflows need fest ${READ_ONLY_STANDALONE_FEST} or newer here.`)
+    $.ui.invalidate('ui.render')
+    return
+  }
   const next = viewOf(await runJson($, ['fest', 'show', '--json']))
+  await update($, notice, () => null)
   await update($, view, () => next)
   await update($, band, () => bandOf(next))
   $.ui.invalidate('ui.render')
@@ -78,6 +107,11 @@ export const register: Register = (on, options) => {
     try {
       const panes = await $.ui.panes()
       if (!panes.some((p: { id: string }) => p.id === PANE)) await stopWatching($)
+      else {
+        await update($, isOpen, () => true)
+        timer?.cancel()
+        timer = $.clock.every(5000, () => void scheduleRefresh($))
+      }
     } catch {
       await stopWatching($)
     }
@@ -159,7 +193,7 @@ export const register: Register = (on, options) => {
   on('ui.render', { component: 'Pane', requestId: PANE }, async ($, e) => {
     const { Box, Text } = $.ui.resolve(e)
     const data = await read($, view)
-    if (!data) return <Text dimColor>No festival or workflow here.</Text>
+    if (!data) return <Text dimColor>{(await read($, notice)) ?? 'No festival or workflow here.'}</Text>
     const body = e.props.scroll?.bodyRows ?? (e.viewport?.rows ?? 24) - 6
     const room = Math.max(3, body - 1)
     const rows = rowsOfView(data)
