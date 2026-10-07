@@ -6,9 +6,11 @@
 
 **Festival is a vibe engineering framework.**
 
-It is vibe coding for production software. You describe the goal in a sentence. Your agent plans it, and `fest next` runs it. The plan, the checks, and the commits stay in files and Git when the session ends.
+You configure it to your specific workflows and processes. When it plans and executes, the work is done the way you want it done.
 
-A camp is the workspace. A festival is one long goal inside it. Use it with Claude Code, Codex, Grok Build, Cursor, OpenCode, or another agent that can read files and run commands.
+You describe a goal in a sentence. Your agent plans that goal inside the workflows you set up, and `fest next` runs the next step. The plan, the checks, and the commits stay in files and Git when the session ends.
+
+A camp is where that configuration lives. A festival is one long goal inside it. Use it with Claude Code, Codex, Grok Build, Cursor, OpenCode, or another agent that can read files and run commands.
 
 [Get started](#get-started) · [Explore the demos](#explore-the-tools) · [Video quick start](https://docs.fest.build/getting-started/quickstart/) · [Website](https://fest.build/) · [Discord](https://discord.gg/Rt7dDY6VqD) · [简体中文](README.zh-CN.md)
 
