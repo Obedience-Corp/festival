@@ -26,7 +26,7 @@ fest chain complete [chain-id] [flags]
 ### Options
 
 ```
-      --force          complete even if not all festivals are done
+      --force          complete even if festivals are not done, the chain has none, or it is still planning
   -h, --help           help for complete
       --notes string   completion notes for the status history
 ```

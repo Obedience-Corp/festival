@@ -10,7 +10,7 @@ Create a new festival chain
 
 ### Synopsis
 
-Create a new chain YAML definition file in festivals/chains/.
+Create a new, empty chain YAML definition file in festivals/chains/.
 
 ```
 fest chain create [flags]
@@ -21,6 +21,7 @@ fest chain create [flags]
 ```
       --goal string   chain goal description
   -h, --help          help for create
+      --json          emit structured JSON result
       --name string   chain name (required)
 ```
 
