@@ -1,6 +1,6 @@
 import { expect, test } from 'claude-code/testing'
 
-import { bandOf, currentRow, progressOf, rowsOf, windowStart } from './fest'
+import { bandOf, coalesce, currentRow, progressOf, rowsOf, windowStart } from './fest'
 import { NEXT_FESTIVAL, NEXT_STANDALONE, SHOW } from './fixtures'
 
 test('bandOf handles the festival shape', () => {
@@ -56,4 +56,47 @@ test('the window keeps the current task visible past a long run of finished task
 test('the window starts at the top when everything fits', () => {
   const rows = rowsOf(SHOW.view.tree)
   expect(windowStart(rows, rows.length + 5)).toBe(0)
+})
+
+const tick = async () => {
+  for (let i = 0; i < 10; i++) await Promise.resolve()
+}
+
+test('coalesce never runs two refreshes at once and keeps only the latest pending one', async () => {
+  const schedule = coalesce()
+  let running = 0
+  let peak = 0
+  const ran: string[] = []
+  const gates: Array<() => void> = []
+  const job = (name: string) => async () => {
+    running += 1
+    peak = Math.max(peak, running)
+    await new Promise<void>(resolve => gates.push(resolve))
+    ran.push(name)
+    running -= 1
+  }
+  const first = schedule(job('a'))
+  void schedule(job('b'))
+  const last = schedule(job('c'))
+  expect(last).toBe(first)
+  while (gates.length) {
+    gates.shift()!()
+    await tick()
+  }
+  await last
+  expect(peak).toBe(1)
+  expect(ran).toEqual(['a', 'c'])
+})
+
+test('coalesce keeps going after a refresh throws', async () => {
+  const schedule = coalesce()
+  const ran: string[] = []
+  const busy = schedule(async () => {
+    await tick()
+    throw new Error('fest hung')
+  })
+  void schedule(async () => { ran.push('next') })
+  await busy
+  await schedule(async () => { ran.push('after') })
+  expect(ran).toEqual(['next', 'after'])
 })

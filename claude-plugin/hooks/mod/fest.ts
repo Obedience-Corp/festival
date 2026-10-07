@@ -64,3 +64,29 @@ export const STATUS_COLOR: Record<string, string> = {
   blocked: 'error',
   pending: 'inactive',
 }
+
+export function coalesce(): (run: () => Promise<void>) => Promise<void> {
+  let busy: Promise<void> | null = null
+  let pending: (() => Promise<void>) | null = null
+  return run => {
+    if (busy) {
+      pending = run
+      return busy
+    }
+    busy = (async () => {
+      let current: (() => Promise<void>) | null = run
+      try {
+        while (current) {
+          pending = null
+          try {
+            await current()
+          } catch {}
+          current = pending
+        }
+      } finally {
+        busy = null
+      }
+    })()
+    return busy
+  }
+}

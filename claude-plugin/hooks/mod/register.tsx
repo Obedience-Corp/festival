@@ -2,7 +2,7 @@ import { atom, read, update } from 'claude-code'
 import type { Register } from 'claude-code'
 
 import { rootedPath, campRoot } from './camp'
-import { STATUS_COLOR, bandOf, progressOf, rowsOf, windowStart } from './fest'
+import { STATUS_COLOR, bandOf, coalesce, progressOf, rowsOf, windowStart } from './fest'
 
 const PANE = 'fest-watch'
 const band = atom({ plugin: 'festival', key: 'band' } as const, null)
@@ -16,8 +16,7 @@ const COMMANDS = [
 ] as const
 
 let timer: { cancel: () => void } | null = null
-let refreshBusy: Promise<void> | null = null
-let refreshAgain = false
+const runRefresh = coalesce()
 let isTakeover = false
 
 const PLAN_DENY =
@@ -46,21 +45,8 @@ async function refresh($: any) {
   $.ui.invalidate('ui.render')
 }
 
-function scheduleRefresh($: any) {
-  if (refreshBusy) {
-    refreshAgain = true
-    return
-  }
-  refreshBusy = (async () => {
-    try {
-      do {
-        refreshAgain = false
-        await refresh($)
-      } while (refreshAgain)
-    } finally {
-      refreshBusy = null
-    }
-  })()
+function scheduleRefresh($: any): Promise<void> {
+  return runRefresh(() => refresh($))
 }
 
 async function plain($: any, argv: string[]) {
@@ -81,20 +67,24 @@ export const register: Register = (on, options) => {
         await $.command.register(spec)
       } catch {}
     }
-    isTakeover = wantsTakeover && (await campRoot(p => $.fs.exists(p), await $.session.cwd())) !== null
-    await refresh($)
+    try {
+      isTakeover = wantsTakeover && (await campRoot(p => $.fs.exists(p), await $.session.cwd())) !== null
+    } catch {
+      isTakeover = false
+    }
+    await scheduleRefresh($)
     return next(e)
-  })
+  }).catch(($, e, next) => next(e))
 
   on('turn.complete', async ($, e, next) => {
     const done = await next(e)
-    $.clock.after(0, () => scheduleRefresh($))
+    $.clock.after(0, () => void scheduleRefresh($))
     return done
   }).catch(($, e, next) => next(e))
 
   on('tool.call', { tool: 'Bash' }, async ($, e, next) => {
     const ran = await next(e)
-    if (/\b(fest|camp) /.test(e.command)) $.clock.after(0, () => scheduleRefresh($))
+    if (/\b(fest|camp) /.test(e.command)) $.clock.after(0, () => void scheduleRefresh($))
     return ran
   }).catch(($, e, next) => next(e))
 
@@ -124,9 +114,9 @@ export const register: Register = (on, options) => {
     }
     await update($, isOpen, () => true)
     await $.ui.open({ id: PANE, title: 'Festival' })
-    await refresh($)
+    await scheduleRefresh($)
     timer?.cancel()
-    timer = $.clock.every(5000, () => void refresh($))
+    timer = $.clock.every(5000, () => void scheduleRefresh($))
     return { text: 'Festival pane opened.' }
   }).catch(() => ({ text: 'The Festival pane could not be toggled.' }))
 

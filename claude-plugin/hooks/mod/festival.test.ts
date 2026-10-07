@@ -148,3 +148,17 @@ test('takeover stays off by default inside a camp', async ($, on) => {
   const out: any = await $.tool.call(tool('EnterPlanMode') as any)
   expect(out.result).toBe('entered')
 })
+
+test('a failed camp lookup at startup still draws the band and leaves takeover off', { options: { planningTakeover: true } }, async ($, on) => {
+  on('session.start', () => ({ cwd: '/camp/projects/demo' }))
+  on('session.surfaces', () => ({ value: ['terminal'] }))
+  on('session.cwd', () => { throw new Error('cwd unavailable') })
+  on('command.register', () => ({ value: undefined }) as any)
+  on('fs.exists', () => ({ value: false }))
+  on('process.run', () => ({ value: ok(NEXT) }))
+  on('tool.call', () => ({ result: 'entered' }) as any)
+  await $.session.start(START)
+  expect(textOf(await $.ui.render(BAND as any))).toContain('19/103 (18%)')
+  const out: any = await $.tool.call(tool('EnterPlanMode') as any)
+  expect(out.result).toBe('entered')
+})
