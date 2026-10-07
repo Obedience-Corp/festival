@@ -1,7 +1,7 @@
 ---
 name: campaign-structure
 description: Orient within a camp's directory structure. Use when deciding where work belongs (intents vs festivals vs design vs docs vs dungeon), especially when a task is not yet planned or folder ownership is unclear.
-version: "1.3.1"
+version: "1.4.0"
 author: Obedience Corp
 license: Apache-2.0
 metadata:

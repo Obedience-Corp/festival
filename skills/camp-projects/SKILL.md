@@ -1,7 +1,7 @@
 ---
 name: camp-projects
 description: Manage a camp's projects. Use when committing inside `projects/*`, deciding status/pull/push scope (root vs submodule vs all), or creating/removing project worktrees.
-version: "1.3.1"
+version: "1.4.0"
 author: Obedience Corp
 license: Apache-2.0
 metadata:

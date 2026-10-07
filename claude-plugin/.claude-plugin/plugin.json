@@ -1,6 +1,6 @@
 {
   "name": "festival",
-  "version": "1.3.1",
+  "version": "1.4.0",
   "description": "Festival Methodology: goal-oriented project management for human-AI development workflows. Provides fest and camp CLI integration, automatic installation, and methodology guidance.",
   "author": {
     "name": "Obedience Corp",
@@ -16,5 +16,14 @@
     "fest",
     "camp",
     "methodology"
-  ]
+  ],
+  "types": "./types/index.d.ts",
+  "userConfig": {
+    "planningTakeover": {
+      "type": "boolean",
+      "title": "Festival planning takeover",
+      "description": "Inside a camp, hide the Plan agent and deny plan mode and the session todo list so planning goes through Festival.",
+      "default": false
+    }
+  }
 }
