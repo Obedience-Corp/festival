@@ -161,9 +161,12 @@ From the festival repo root:
 - `just plugin check` runs `scripts/test_claude_plugin.sh`: JSON parse of both
   manifests, plugin semver and metadata, component frontmatter, in-bundle hook
   references, the CLI sync-check, the install-hook smoke test, and the mod
-  check: `claude plugin validate`, `claude plugin test`, and a `tsc` type-check
-  against the typings the engine writes to `.claude-plugin/types/` (git-ignored;
-  the gate produces them with one `claude -p` load when absent).
+  check. The mod check always verifies the module's manifest wiring. When the
+  `claude` CLI is installed it also runs `claude plugin validate`,
+  `claude plugin test`, and a `tsc` type-check against the typings the engine
+  writes to `.claude-plugin/types/` (git-ignored; the gate produces them with
+  one `claude -p` load when absent). Without `claude` those three steps are
+  skipped with a notice, so the gate and the release never require Claude Code.
 - `just plugin list` lists the bundled commands, skills, and agents.
 - `just plugin bump <version>` rewrites the `version` in `plugin.json` and
   `marketplace.json` together and rejects a non-semver argument.

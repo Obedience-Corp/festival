@@ -28,11 +28,11 @@ export function bandOf(json: any): string | null {
   return null
 }
 
-export type Row = { depth: number; text: string }
+export type Row = { depth: number; text: string; status: string }
 
 export function rowsOf(node: FestNode, depth = 0, expand = true): Row[] {
   const mark = MARKS[node.status] ?? '[?]'
-  const rows: Row[] = [{ depth, text: `${mark} ${node.name.replace(/\.md$/, '')}` }]
+  const rows: Row[] = [{ depth, text: `${mark} ${node.name.replace(/\.md$/, '')}`, status: node.status }]
   const kids = node.children ?? []
   if (!expand) return rows
   const current = kids.findIndex(k => k.status !== 'completed')
@@ -45,4 +45,11 @@ export function rowsOf(node: FestNode, depth = 0, expand = true): Row[] {
 export function progressOf(show: FestShow): string {
   const t = show.stats.tasks
   return `tasks ${t.completed}/${t.total} (${show.stats.progress}%)`
+}
+
+export const STATUS_COLOR: Record<string, string> = {
+  completed: 'success',
+  in_progress: 'warning',
+  blocked: 'error',
+  pending: 'inactive',
 }

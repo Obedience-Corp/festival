@@ -2,7 +2,7 @@ import { atom, read, update } from 'claude-code'
 import type { Register } from 'claude-code'
 
 import { rootedPath, campRoot } from './camp'
-import { bandOf, progressOf, rowsOf } from './fest'
+import { STATUS_COLOR, bandOf, progressOf, rowsOf } from './fest'
 
 const PANE = 'fest-watch'
 const band = atom({ plugin: 'festival', key: 'band' } as const, null)
@@ -143,9 +143,15 @@ export const register: Register = (on, options) => {
     const text = await read($, band)
     if (!text || e.props.hasSurvey) return next(e)
     const { Box, Text } = $.ui.resolve(e)
+    const [head, ...rest] = text.split(' | ')
+    const tail = rest.length > 1 ? rest.pop() : undefined
     return (
       <Box>
-        <Text dimColor>{text}</Text>
+        <Text>
+          <Text color="claude" bold>{head}</Text>
+          {rest.map(part => <Text dimColor>{' | '}{part}</Text>)}
+          {tail ? <Text color="success">{' | '}{tail}</Text> : null}
+        </Text>
       </Box>
     )
   })
@@ -160,9 +166,11 @@ export const register: Register = (on, options) => {
     const start = Math.max(0, Math.min(first - 2, rows.length - room))
     return (
       <Box flexDirection="column">
-        <Text bold>{progressOf(data)}</Text>
+        <Text color="claude" bold>{progressOf(data)}</Text>
         {rows.slice(start, start + room).map(r => (
-          <Text>{'  '.repeat(r.depth)}{r.text}</Text>
+          <Text color={STATUS_COLOR[r.status] ?? 'text'} bold={r.status === 'in_progress'}>
+            {'  '.repeat(r.depth)}{r.text}
+          </Text>
         ))}
       </Box>
     )

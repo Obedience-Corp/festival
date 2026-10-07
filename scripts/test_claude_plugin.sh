@@ -881,8 +881,31 @@ EOF_JSON
     assert_no_update_notice "$tmp/crlf-current/log" "a CRLF bundle line matching the latest tag"
 }
 
+mod_manifest_check() {
+    node -e '
+const fs = require("fs");
+const path = require("path");
+const dir = process.argv[1];
+const hooks = JSON.parse(fs.readFileSync(path.join(dir, "hooks", "hooks.json"), "utf8"));
+const plugin = JSON.parse(fs.readFileSync(path.join(dir, ".claude-plugin", "plugin.json"), "utf8"));
+const mods = hooks.modules ?? [];
+if (mods.length !== 1) throw new Error(`hooks.json must name exactly one hooks module, found ${mods.length}`);
+const mod = path.join(dir, "hooks", mods[0]);
+if (!fs.existsSync(mod)) throw new Error(`hooks module missing: ${mod}`);
+if (plugin.types && !fs.existsSync(path.join(dir, plugin.types))) throw new Error(`plugin types missing: ${plugin.types}`);
+const opt = plugin.userConfig?.planningTakeover;
+if (!opt || opt.type !== "boolean" || opt.default !== false) throw new Error("userConfig.planningTakeover must be a boolean defaulting to false");
+' "$plugin_dir"
+}
+
 mod_check() {
     local out types_dir="$plugin_dir/.claude-plugin/types"
+
+    mod_manifest_check
+    if ! command -v claude >/dev/null 2>&1; then
+        echo "NOTICE: claude not found; skipping the Claude Code mod checks (validate, test, type-check). They need Claude Code 2.1.290 or newer; nothing else in Festival does." >&2
+        return 0
+    fi
 
     out="$(claude plugin validate "$plugin_dir" 2>&1)" || {
         printf '%s\n' "$out" >&2
@@ -917,7 +940,6 @@ mod_check() {
 }
 
 require_command node
-require_command claude
 require_command tar
 require_command bash
 
