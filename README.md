@@ -6,11 +6,15 @@
 
 **Festival is a vibe engineering framework.**
 
-You configure it to your specific workflows and processes. When it plans and executes, the work is done the way you want it done.
+It uses the filesystem and Git. You configure it to your workflows and processes. When agents plan and executes, the work is done the way you want it done.
+
+Everything lives in a camp workspace: your skills, planning documents, one-off scripts, and projects. A festival is an ambitious goal inside that camp. Specs, smaller workflows, and ideas you intend to execute are tracked as work items.
+
+You can create as many camps as you need and specialize each with its own skills, workflows, and processes. As you refine them over time, agents work differently in each camp. Switch between camps with `camp switch` (`csw`) to pick up that workspace's context and way of working.
 
 You describe a goal in a sentence. Your agent plans that goal inside the workflows you set up, and `fest next` runs the next step. The plan, the checks, and the commits stay in files and Git when the session ends.
 
-A camp is where that configuration lives. A festival is one long goal inside it. Use it with Claude Code, Codex, Grok Build, Cursor, OpenCode, or another agent that can read files and run commands.
+Use it with Claude Code, Codex, Grok Build, Cursor, OpenCode, or another agent that can read files and run commands.
 
 [Get started](#get-started) · [Explore the demos](#explore-the-tools) · [Video quick start](https://docs.fest.build/getting-started/quickstart/) · [Website](https://fest.build/) · [Discord](https://discord.gg/Rt7dDY6VqD) · [简体中文](README.zh-CN.md)
 
@@ -158,6 +162,10 @@ Use `fest gif --embed` to refresh it or add a replay to an older festival.
 See the [replay guide](https://docs.fest.build/guides/festival-replays/) for
 examples, sharing, and recovery.
 
+## Why I built Festival
+
+I was working with agents at scale, and the bottleneck moved from doing the work to reviewing, understanding, and tracking it. That was draining the time I wanted for thinking about the right thing to do.
+
 ## How the work stays coherent
 
 A festival is a **graph of work**, organized into phases, sequences, and tasks. Each task has context and completion criteria. Your agent uses `fest next` to find the next actionable step, does the work, checks the result, and records progress before continuing.
@@ -165,6 +173,10 @@ A festival is a **graph of work**, organized into phases, sequences, and tasks. 
 That is the basis for **loop engineering** with Festival: repeatable planning, execution, review, and handoff loops. You can start with a lightweight `WORKFLOW.md`, build a full festival for a larger goal, or run separate festivals with agents in separate worktrees.
 
 The camp holds the context around those goals over the life of the work. Research can inform a design; that design can become a festival; its results and decisions remain available for the next goal.
+
+You can work on many projects at once. Over time, camps function more like custom agents, where small seeds of your intentions trigger hundreds or thousands of individual actions.
+
+Each camp has its own context and workflows, so switching camps changes how your agents work.
 
 Quality gates provide places to test and review. `fest validate` checks plan structure, and `fest commit` links commits to festival tasks. You review the actual output and verification evidence before accepting the result.
 

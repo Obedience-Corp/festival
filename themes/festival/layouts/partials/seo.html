@@ -1,5 +1,5 @@
 {{- $title := printf "%s | Festival Docs" .Title -}}
-{{- if .IsHome }}{{ $title = "Festival Docs | Plan, run, and review agent work" }}{{ end -}}
+{{- if .IsHome }}{{ $title = "Festival Docs | A vibe engineering framework" }}{{ end -}}
 {{- $description := .Description -}}
 {{- if not $description -}}
   {{- $description = .Summary | plainify | htmlUnescape | replaceRE `\s+` " " | strings.TrimSpace | truncate 160 -}}
@@ -14,7 +14,7 @@
 <meta property="og:description" content="{{ $description }}">
 <meta property="og:url" content="{{ .Permalink }}">
 <meta property="og:image" content="https://fest.build/opengraph-image">
-<meta property="og:image:alt" content="Festival flame logo. AI can generate the pieces. Festival keeps the work coherent.">
+<meta property="og:image:alt" content="Festival flame logo. A vibe engineering framework.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{{ $title }}">
 <meta name="twitter:description" content="{{ $description }}">

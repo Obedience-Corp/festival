@@ -1,6 +1,6 @@
 ---
 title: "Festival Documentation"
-description: "Hand goals to your agents and keep the work coherent. Learn Festival through real recordings, practical use cases, developer workflows, and CLI guides."
+description: "Festival is a vibe engineering framework. It uses the filesystem and Git. Configure it to your workflows and processes, and organize related work in camps."
 ---
 
-Learn how to plan, execute, review, and resume agent work with Festival.
+Festival is a vibe engineering framework. It uses the filesystem and Git. You configure it to your workflows and processes. When it plans and executes, the work is done the way you want it done.
