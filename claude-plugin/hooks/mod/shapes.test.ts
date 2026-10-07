@@ -2,6 +2,7 @@ import { expect, test } from 'claude-code/testing'
 
 import { bandOf, coalesce, currentRow, progressOf, rowsOf, windowStart } from './fest'
 import { NEXT_FESTIVAL, NEXT_STANDALONE, SHOW } from './fixtures'
+import { rootedPath } from './camp'
 
 test('bandOf handles the festival shape', () => {
   expect(bandOf(NEXT_FESTIVAL)).toBe(
@@ -99,4 +100,13 @@ test('coalesce keeps going after a refresh throws', async () => {
   await busy
   await schedule(async () => { ran.push('after') })
   expect(ran).toEqual(['next', 'after'])
+})
+
+test('camp-root mentions never leave the camp', async () => {
+  const files = new Set(['/camp/.campaign', '/camp/notes/a.md', '/etc/hosts'])
+  const exists = async (p: string) => files.has(p)
+  expect(await rootedPath(exists, '/camp/projects/demo', 'notes/a.md#L3')).toBe('/camp/notes/a.md')
+  expect(await rootedPath(exists, '/camp/projects/demo', '../etc/hosts')).toBeNull()
+  expect(await rootedPath(exists, '/camp/projects/demo', 'notes/../../etc/hosts')).toBeNull()
+  expect(await rootedPath(exists, '/camp/projects/demo', '/etc/hosts')).toBeNull()
 })

@@ -16,7 +16,7 @@ export async function rootedPath(
   mention: string,
 ): Promise<string | null> {
   const rel = mention.replace(/#.*$/, '').replace(/^\.\//, '')
-  if (rel === '' || rel.startsWith('/')) return null
+  if (rel === '' || rel.startsWith('/') || rel.split('/').includes('..')) return null
   const root = await campRoot(exists, cwd)
   if (root === null) return null
   const candidate = `${root === '/' ? '' : root}/${rel}`
