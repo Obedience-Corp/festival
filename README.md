@@ -8,7 +8,7 @@
 
 It uses the filesystem and Git. You configure it to your workflows and processes. When agents plan and executes, the work is done the way you want it done.
 
-Everything lives in a workspace called a camp: the skills, planning documents, one-off scripts, and projects for one context. A festival is an ambitious goal inside that camp. Specs, smaller workflows, and ideas you intend to execute are tracked as work items.
+Everything lives in a camp workspace: your skills, planning documents, one-off scripts, and projects. A festival is an ambitious goal inside that camp. Specs, smaller workflows, and ideas you intend to execute are tracked as work items.
 
 You can create as many camps as you need and specialize each with its own skills, workflows, and processes. As you refine them over time, agents work differently in each camp. Switch between camps with `camp switch` (`csw`) to pick up that workspace's context and way of working.
 
