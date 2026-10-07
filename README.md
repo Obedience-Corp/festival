@@ -4,13 +4,13 @@
 
 <p align="center"><a href="https://github.com/Obedience-Corp/festival"><img src="https://img.shields.io/github/stars/Obedience-Corp/festival?style=social" alt="Star Festival on GitHub"></a></p>
 
-**AI can generate the pieces.<br>Festival keeps the work coherent.**
+**Festival is a vibe engineering framework.**
 
-Hand off a goal, approve the plan, and focus on other work while your agent runs. Come back to results you can trace through the plan, decisions, checks, and commits that produced them.
+You configure it to your specific workflows and processes. When it plans and executes, the work is done the way you want it done.
 
-Festival is an operating environment for long-running agent work. It keeps the context and progress in files and Git, so the work can continue across sessions, agents, and months or years of development.
+You describe a goal in a sentence. Your agent plans that goal inside the workflows you set up, and `fest next` runs the next step. The plan, the checks, and the commits stay in files and Git when the session ends.
 
-Use it with Claude Code, Codex, Grok Build, Cursor, OpenCode, or another agent that can read files and run commands. Your agent calls `fest next` for its next step, does the work, and records the result.
+A camp is where that configuration lives. A festival is one long goal inside it. Use it with Claude Code, Codex, Grok Build, Cursor, OpenCode, or another agent that can read files and run commands.
 
 [Get started](#get-started) · [Explore the demos](#explore-the-tools) · [Video quick start](https://docs.fest.build/getting-started/quickstart/) · [Website](https://fest.build/) · [Discord](https://discord.gg/Rt7dDY6VqD) · [简体中文](README.zh-CN.md)
 
