@@ -6,11 +6,11 @@ weight: 20
 
 # Why Festival
 
-**AI can generate the pieces. Festival keeps the work coherent.**
+**Festival is a vibe engineering framework.**
 
-The useful moment is when you can hand off a goal and turn to something else. Your agent has enough direction to keep working, knows when to ask you, and leaves a result you can review.
+When you work with agents at scale, the bottleneck moves from doing the work to reviewing, understanding, and tracking it. That takes time away from thinking about the right thing to do.
 
-Festival gives that work an operating environment: a place for its projects, plans, research, decisions, and progress. It stays with the work as the goal changes, through new sessions and new tools, over months or years.
+Festival uses the filesystem and Git. You configure it to your workflows and processes. When it plans and executes, the work is done the way you want it done.
 
 ## Hand off the outcome, then review the result
 
@@ -24,9 +24,9 @@ A review has something concrete to inspect: what changed, which checks ran, what
 
 ## Give each part of your work its own camp
 
-You have different camps in life: your job, your side project, your hobbies. Each has its own context, and each may contain several projects.
+Everything lives in a workspace called a camp: the skills, planning documents, one-off scripts, and projects for a related context. That context might be your job, a side project, or a hobby.
 
-A camp keeps the related repositories, notes, plans, and decisions together. That lets you move between areas of work without mixing their context. Within a camp, a festival records the plan for a particular goal.
+A festival is an ambitious goal inside that camp. Structured specs, other workflows, and ideas you intend to execute are tracked as workitems. That lets you move between areas of work without mixing their context.
 
 You can use a camp before you need a large plan. Link your repositories, use `cgo` to move between them, and use worktrees when changes need separate working directories. After a merge, `camp fresh` handles the next branch cycle.
 
@@ -45,6 +45,8 @@ The files belong to the work. You can switch between Claude Code, Codex, Grok Bu
 For a known sequence of steps, a standalone workflow can guide an agent through a recurring process. A festival adds a goal, phases, dependencies, and review gates when the work needs a fuller plan.
 
 The hierarchy forms a graph of work. `fest next` reads its state and supplies the next actionable step; the agent executes that step and records the result. For work across several projects, the agent can coordinate multiple loops and worktrees.
+
+With workflows tracked and everything organized, you can orchestrate parallel loops across many projects. Over time, camps function more like custom agents, where small seeds of your intentions trigger hundreds or thousands of individual actions.
 
 [Learn about loops and orchestration]({{< ref "/guides/loops-and-orchestration" >}}).
 

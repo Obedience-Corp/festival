@@ -7,7 +7,7 @@ enableRobotsTXT: true
 googleAnalytics: G-BBJ8SY37X5
 
 params:
-  description: "Plan, run, and review long-running agent work with Festival. Keep projects, decisions, workflows, and progress together in files you own."
+  description: "Festival is a vibe engineering framework. It uses the filesystem and Git. Configure it to your workflows and processes, and organize related work in camps."
   repo: "https://github.com/Obedience-Corp/festival"
 
 markup:
