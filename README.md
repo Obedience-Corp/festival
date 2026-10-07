@@ -6,7 +6,7 @@
 
 **Festival is a vibe engineering framework.**
 
-It uses the filesystem and Git. You configure it to your workflows and processes. When it plans and executes, the work is done the way you want it done.
+It uses the filesystem and Git. You configure it to your workflows and processes. When agents plan and executes, the work is done the way you want it done.
 
 Everything lives in a workspace called a camp: the skills, planning documents, one-off scripts, and projects for one context. A festival is an ambitious goal inside that camp. Specs, smaller workflows, and ideas you intend to execute are tracked as work items.
 
