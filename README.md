@@ -10,6 +10,8 @@ It uses the filesystem and Git. You configure it to your workflows and processes
 
 Everything lives in a workspace called a camp: the skills, planning documents, one-off scripts, and projects for a related context. A festival is an ambitious goal inside that camp. Structured specs, other workflows, and ideas you intend to execute are tracked as workitems.
 
+You can create as many camps as you need and specialize each with its own skills, workflows, and processes. As you refine them over time, agents work differently in each camp. Switch between camps with `camp switch` (`csw`) to pick up that workspace's context and way of working.
+
 You describe a goal in a sentence. Your agent plans that goal inside the workflows you set up, and `fest next` runs the next step. The plan, the checks, and the commits stay in files and Git when the session ends.
 
 Use it with Claude Code, Codex, Grok Build, Cursor, OpenCode, or another agent that can read files and run commands.

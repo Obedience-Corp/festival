@@ -26,7 +26,9 @@ A review has something concrete to inspect: what changed, which checks ran, what
 
 Everything lives in a workspace called a camp: the skills, planning documents, one-off scripts, and projects for a related context. That context might be your job, a side project, or a hobby.
 
-A festival is an ambitious goal inside that camp. Structured specs, other workflows, and ideas you intend to execute are tracked as workitems. That lets you move between areas of work without mixing their context.
+A festival is an ambitious goal inside that camp. Structured specs, other workflows, and ideas you intend to execute are tracked as workitems.
+
+You can create as many camps as you need and specialize each with its own skills, workflows, and processes. As you refine them over time, agents work differently in each camp. Switch between camps with `camp switch` (`csw`) to pick up that workspace's context and way of working.
 
 You can use a camp before you need a large plan. Link your repositories, use `cgo` to move between them, and use worktrees when changes need separate working directories. After a merge, `camp fresh` handles the next branch cycle.
 
