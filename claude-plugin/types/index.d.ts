@@ -5,17 +5,31 @@ export type FestNode = {
   children?: FestNode[]
 }
 
-export type FestShow = {
-  stats: { tasks: { total: number; completed: number }; progress: number }
-  view: { tree: FestNode }
+export type WorkflowStep = {
+  number: number
+  name: string
+  status: string
 }
+
+export type FestView =
+  | {
+      kind: 'festival'
+      name: string
+      tree: FestNode
+      stats: { tasks: { total: number; completed: number }; progress: number }
+    }
+  | {
+      kind: 'workflow'
+      name: string
+      runStatus: string
+      steps: WorkflowStep[]
+    }
 
 declare module 'claude-code' {
   interface PluginState {
     'festival': {
       band: string | null
-      focus: string[] | null
-      show: FestShow | null
+      view: FestView | null
       isOpen: boolean
     }
   }

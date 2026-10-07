@@ -103,34 +103,42 @@ fails open. Set `CAMP_ALLOW_RAW_GIT=1` to override deliberately for one command.
 
 The plugin ships an in-process hooks module, `hooks/mod/register.tsx`, that
 Claude Code loads from the `modules` key in `hooks/hooks.json`. It needs Claude
-Code 2.1.290 or newer. Older versions ignore the module and keep everything
-else in this plugin working.
+Code 2.1.290 or newer. Versions before 2.1.287 ignore the `modules` key; 2.1.287
+to 2.1.289 report that the module failed to load. Either way the rest of this
+plugin (skills, commands, agents, the install hook, and the commit guard) keeps
+working.
 
 What it draws:
 
 - A one-line band above the prompt with the current position, for example
-  `festival build-todo-app-BT0001 | 003_IMPLEMENT > 01_app_core > 01_todo_model | 19/35 (54%)`,
-  or the current step of a standalone workflow. It refreshes at session start
-  (awaited), then again after each turn and after any Bash call that runs
-  `fest` or `camp`, without waiting for those refreshes to finish.
+  `festival build-todo-app-BT0001 | 003_IMPLEMENT > 01_app_core > 01_todo_model | 19/35 (54%)`.
+  In a workflow phase it names the current step, a blocked task or step is
+  marked `(blocked)`, a finished festival says `complete`, and in a standalone
+  workflow it shows `step N/M` with the step name. The current position is the
+  task or step in progress, or else the first unfinished one. It refreshes at
+  session start (awaited), then after each turn and after any Bash call that
+  runs `fest` or `camp`, without waiting for those refreshes to finish.
 - A pane that shows the festival tree with finished branches collapsed and the
-  current branch expanded, headed by the task count and percentage. When the
-  tree is taller than the pane, the view follows the current task so it stays
-  on screen. It refreshes every five seconds while open.
+  current branch expanded, headed by the task count and percentage, or a
+  standalone workflow's steps. When the tree is taller than the pane, the view
+  follows the current task so it stays on screen. It refreshes every five
+  seconds while open.
 
 On a narrow terminal the pane sits inline above the prompt instead of docked
 beside the transcript, and the engine leaves no rows for the AbovePrompt band
 while that inline pane is open (see `AbovePrompt` `maxRows` in the mod types).
 
-When the session has no interactive surface the module does no band or pane
-work. When `fest` is missing, exits non-zero, or prints something it cannot
+When the session has no interactive surface (for example `claude -p`) the
+module does no band or pane work, and `/fest-watch` says it needs an
+interactive session. When `fest` is missing, exits non-zero, or prints something it cannot
 read, the module draws nothing and leaves the normal screen alone.
 
 Commands the module registers (the markdown commands `fest-next` and
 `fest-status` are separate and unchanged):
 
 - `/fest-watch` opens or closes the pane.
-- `/fest-task` prints the text of `fest next`.
+- `/fest-task` prints the text of `fest next`. It runs `fest next` exactly as a
+  terminal would, so it can record workflow progress the same way.
 - `/fest-progress` prints the text of `fest progress`.
 
 Camp-root mentions: inside a camp, an `@path` mention that does not exist
@@ -142,12 +150,15 @@ Planning takeover is an option, `planningTakeover`, set when you enable the
 plugin. It is off by default. When on, and only when the session directory is
 inside a camp (a `.campaign` directory in it or an ancestor), the module hides
 the `Plan` agent, denies `EnterPlanMode`, denies `TodoWrite` and `TaskCreate`,
-and drops todo reminders, so planning and task tracking go through Festival.
+and drops the todo and task reminders, so planning and task tracking go
+through Festival.
 Outside a camp the option does nothing.
 
-What the module reads and runs, and nothing else: `fest next --json`,
-`fest show --json`, `fest progress`, and file existence checks for @-mentions.
-It makes no network calls and never asks you a question. Every process it
+What the module reads and runs, and nothing else: `fest show --json` for the
+band and pane (it never polls `fest next`, which can write workflow state),
+`fest next` and `fest progress` only when you run `/fest-task` or
+`/fest-progress`, and file existence checks for @-mentions. It makes no network
+calls and never asks you a question. Every process it
 starts has a timeout (5 seconds for JSON, 10 seconds for text). Every hook that
 can refuse something has a `.catch` that lets the original action through, so a
 fault in the module cannot block a tool call or a mention.

@@ -1,5 +1,7 @@
 import { expect, test } from 'claude-code/testing'
 
+import { SHOW } from './fixtures'
+
 const SESSION = { surface: 'terminal', isInteractive: true, cwd: '/work' } as const
 const BAND = {
   component: 'AbovePrompt',
@@ -9,11 +11,8 @@ const BAND = {
   props: { hasSurvey: false, isWorking: false, maxRows: 3, bodyColumns: 118, scroll: { offset: 0, bodyRows: 3 } },
 } as const
 
-const NEXT = JSON.stringify({
-  task: { name: '01_baseline', phase_name: '003_SIDECAR', sequence_name: '01_release' },
-  location: { festival_path: '/camp/festivals/active/build-todo-app-BT0001' },
-  progress: { completed_tasks: 19, total_tasks: 103, percentage: 18 },
-})
+const SHOW_JSON = JSON.stringify(SHOW)
+const BAND_TEXT = 'build-todo-app-BT0001 | 003_IMPLEMENT > 01_app_core > 01_todo_model | 19/35 (54%)'
 
 const textOf = (t: unknown): string =>
   typeof t === 'string' || typeof t === 'number'
@@ -31,15 +30,23 @@ const world = (on: any, surfaces: string[], cwd = '/work') => {
   on('command.register', () => ({ value: undefined }))
 }
 
+const run = (command: string) => ({ command, args: '', origin: { kind: 'user' } as any, presentation: {} as any })
+
 const ok = (stdout: string) => ({ exitCode: 0, stdout, stderr: '', isStdoutTruncated: false, isStderrTruncated: false })
 
-test('band draws from stubbed fest next json', async ($, on) => {
+test('band draws from fest show json and polling never runs fest next', async ($, on) => {
   world(on, ['terminal'])
   on('fs.exists', () => ({ value: false }))
-  on('process.run', () => ({ value: ok(NEXT) }))
+  const ran: string[][] = []
+  on('process.run', (_$, e: any) => { ran.push(e.argv); return { value: ok(SHOW_JSON) } })
+  on('ui.open', () => ({ value: { isPlaced: true } }) as any)
+  on('clock.every', () => ({ value: undefined }) as any)
+  on('clock.after', () => ({ value: undefined }) as any)
   await $.session.start(SESSION)
-  const drawn = textOf(await $.ui.render(BAND as any))
-  expect(drawn).toContain('build-todo-app-BT0001 | 003_SIDECAR > 01_release > 01_baseline | 19/103 (18%)')
+  expect(textOf(await $.ui.render(BAND as any))).toContain(BAND_TEXT)
+  await $.command.run(run('fest-watch') as any)
+  expect(ran.length).toBeGreaterThan(0)
+  expect(ran.every(argv => argv.join(' ') === 'fest show --json')).toBe(true)
 })
 
 test('band draws nothing when fest exits nonzero', async ($, on) => {
@@ -52,7 +59,6 @@ test('band draws nothing when fest exits nonzero', async ($, on) => {
   expect(textOf(drawn)).toBe('ENGINE-OWN')
 })
 
-const run = (command: string) => ({ command, args: '', origin: { kind: 'user' } as any, presentation: {} as any })
 const tool = (name: string) => ({ tool: name, origin: { kind: 'user' } as any })
 
 test('/fest-task returns the stubbed fest next text', async ($, on) => {
@@ -155,10 +161,10 @@ test('a failed camp lookup at startup still draws the band and leaves takeover o
   on('session.cwd', () => { throw new Error('cwd unavailable') })
   on('command.register', () => ({ value: undefined }) as any)
   on('fs.exists', () => ({ value: false }))
-  on('process.run', () => ({ value: ok(NEXT) }))
+  on('process.run', () => ({ value: ok(SHOW_JSON) }))
   on('tool.call', () => ({ result: 'entered' }) as any)
   await $.session.start(START)
-  expect(textOf(await $.ui.render(BAND as any))).toContain('19/103 (18%)')
+  expect(textOf(await $.ui.render(BAND as any))).toContain('19/35 (54%)')
   const out: any = await $.tool.call(tool('EnterPlanMode') as any)
   expect(out.result).toBe('entered')
 })
@@ -166,12 +172,49 @@ test('a failed camp lookup at startup still draws the band and leaves takeover o
 test('the pane opens again after the command closed it', async ($, on) => {
   world(on, ['terminal'])
   on('fs.exists', () => ({ value: false }) as any)
-  on('process.run', () => ({ value: ok(NEXT) }) as any)
+  on('process.run', () => ({ value: ok(SHOW_JSON) }) as any)
   on('ui.open', () => ({ value: { isPlaced: true } }) as any)
   on('ui.close', () => ({ value: undefined }) as any)
-  on('clock.every', (() => ({ value: { cancel() {} } })) as any)
+  let timers = 0
+  on('clock.every', (() => { timers += 1; return { value: undefined } }) as any)
   await $.session.start(SESSION)
   const texts: string[] = []
   for (let i = 0; i < 3; i++) texts.push(((await $.command.run(run('fest-watch') as any)) as any).text)
   expect(texts).toEqual(['Festival pane opened.', 'Festival pane closed.', 'Festival pane opened.'])
+  expect(timers).toBe(2)
+})
+
+test('a pane that fails to open does not leave the module thinking it is open', async ($, on) => {
+  world(on, ['terminal'])
+  on('fs.exists', () => ({ value: false }) as any)
+  on('process.run', () => ({ value: ok(SHOW_JSON) }) as any)
+  let opens = 0
+  on('ui.open', (() => { opens += 1; if (opens === 1) throw new Error('no room'); return { value: { isPlaced: true } } }) as any)
+  on('clock.every', () => ({ value: undefined }) as any)
+  await $.session.start(SESSION)
+  const first: any = await $.command.run(run('fest-watch') as any)
+  const second: any = await $.command.run(run('fest-watch') as any)
+  expect(first.text).toBe('The Festival pane could not be toggled.')
+  expect(second.text).toBe('Festival pane opened.')
+})
+
+test('the pane command does nothing in a session with no screen', async ($, on) => {
+  world(on, [])
+  on('fs.exists', () => ({ value: false }) as any)
+  let opened = false
+  on('ui.open', (() => { opened = true; return { value: { isPlaced: true } } }) as any)
+  await $.session.start(SESSION)
+  const out: any = await $.command.run(run('fest-watch') as any)
+  expect(out.text).toContain('needs an interactive')
+  expect(opened).toBe(false)
+})
+
+test('takeover also drops the task reminder', { options: { planningTakeover: true } }, async ($, on) => {
+  inCamp(on)
+  on('prompt.attachment', () => ({ text: 'engine reminder' }) as any)
+  await $.session.start(START)
+  const todo: any = await $.prompt.attachment({ type: 'todo_reminder', detail: {} } as any)
+  const tasks: any = await $.prompt.attachment({ type: 'task_reminder', detail: {} } as any)
+  expect(todo.text).toBeNull()
+  expect(tasks.text).toBeNull()
 })

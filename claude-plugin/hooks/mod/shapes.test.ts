@@ -1,39 +1,55 @@
 import { expect, test } from 'claude-code/testing'
 
-import { bandOf, coalesce, currentRow, focusOf, progressOf, rowsOf, windowStart } from './fest'
-import { NEXT_FESTIVAL, NEXT_STANDALONE, SHOW } from './fixtures'
 import { rootedPath } from './camp'
+import { bandOf, coalesce, currentRow, headerOf, rowsOf, rowsOfView, viewOf, windowStart } from './fest'
+import { SHOW, SHOW_STANDALONE } from './fixtures'
 
-test('bandOf handles the festival shape', () => {
-  expect(bandOf(NEXT_FESTIVAL)).toBe(
-    'festival build-todo-app-BT0001 | 003_IMPLEMENT > 01_app_core > 01_todo_model | 19/35 (54%)',
-  )
+const workflow = (steps: Array<[string, string]>, runStatus = 'active') =>
+  viewOf({ ...SHOW_STANDALONE, run_status: runStatus, steps: steps.map(([name, status], i) => ({ number: i + 1, name, status })) })
+
+test('the festival band names the current phase, sequence, and task from fest show', () => {
+  expect(bandOf(viewOf(SHOW))).toBe('festival build-todo-app-BT0001 | 003_IMPLEMENT > 01_app_core > 01_todo_model | 19/35 (54%)')
 })
 
-test('bandOf handles the standalone shape', () => {
-  expect(bandOf(NEXT_STANDALONE)).toBe(
-    'workflow todo-sync-options | step 2/5: Compare storage backends',
-  )
+test('a festival in a workflow phase shows the current step', () => {
+  const tree = {
+    name: 'ritual', status: 'in_progress', node_type: 'festival',
+    children: [{ name: '001_DISCOVER', status: 'in_progress', node_type: 'phase', children: [
+      { name: '01_inventory', status: 'completed', node_type: 'sequence' },
+      { name: 'Step 1: SCOPE', status: 'in_progress', node_type: 'step' },
+      { name: 'Step 2: DISCOVER', status: 'pending', node_type: 'step' },
+    ] }],
+  }
+  const band = bandOf(viewOf({ name: 'ritual', view: { tree }, stats: { tasks: { total: 9, completed: 4 }, progress: 44 } }))
+  expect(band).toBe('festival ritual | 001_DISCOVER > Step 1: SCOPE | 4/9 (44%)')
 })
 
-test('bandOf rejects junk', () => {
+test('a festival is complete only when nothing is left', () => {
+  const tree = { name: 'done', status: 'completed', node_type: 'festival', children: [{ name: '001_A', status: 'completed', node_type: 'phase' }] }
+  expect(bandOf(viewOf({ view: { tree }, stats: { tasks: { total: 3, completed: 3 }, progress: 100 } }))).toBe('festival done | complete | 3/3 (100%)')
+  const blocked = { name: 'stuck', status: 'blocked', node_type: 'festival', children: [{ name: '001_A', status: 'blocked', node_type: 'phase', children: [{ name: '01_wait.md', status: 'blocked', node_type: 'task' }] }] }
+  expect(bandOf(viewOf({ view: { tree: blocked }, stats: { tasks: { total: 3, completed: 2 }, progress: 66 } }))).toBe('festival stuck | 001_A > 01_wait (blocked) | 2/3 (66%)')
+})
+
+test('standalone workflow bands cover active, blocked, complete, skipped, and no run', () => {
+  expect(bandOf(viewOf(SHOW_STANDALONE))).toBe('workflow todo-sync-options | step 2/5: COMPARE | 1/5 steps')
+  expect(bandOf(workflow([['A', 'completed'], ['B', 'blocked'], ['C', 'pending']]))).toBe('workflow todo-sync-options | step 2/3: B (blocked) | 1/3 steps')
+  expect(bandOf(workflow([['A', 'completed'], ['B', 'completed']], 'completed'))).toBe('workflow todo-sync-options | complete | 2/2 steps')
+  expect(bandOf(workflow([['A', 'skipped'], ['B', 'pending']]))).toBe('workflow todo-sync-options | step 2/2: B | 1/2 steps')
+  expect(bandOf(workflow([]))).toBe('workflow todo-sync-options | no run')
+})
+
+test('viewOf rejects anything that is not a festival or standalone shape', () => {
+  expect(viewOf(null)).toBeNull()
+  expect(viewOf({ error: 'not in a festival directory or linked project' })).toBeNull()
   expect(bandOf(null)).toBeNull()
-  expect(bandOf({ error: 'x' })).toBeNull()
 })
 
 test('tree rows expand only the current branch', () => {
-  const rows = rowsOf(SHOW.view.tree)
-  const text = rows.map(r => '  '.repeat(r.depth) + r.text).join('\n')
-  expect(rows[0]!.text).toContain('build-todo-app-BT0001')
+  const text = rowsOf(SHOW.view.tree).map(r => '  '.repeat(r.depth) + r.text).join('\n')
   expect(text).toContain('[x] 001_INGEST')
   expect(text).toContain('01_todo_model')
   expect(text).not.toContain('Step 1:')
-})
-
-test('the current row is the task fest next names, not an unfinished ancestor', () => {
-  const rows = rowsOf(SHOW.view.tree, focusOf(NEXT_FESTIVAL))
-  expect(rows[currentRow(rows)]!.text).toBe('[ ] 01_todo_model')
-  expect(rows[currentRow(rows)]!.isFocus).toBe(true)
 })
 
 const task = (name: string, status: string) => ({ name: `${name}.md`, status, node_type: 'task' })
@@ -45,49 +61,29 @@ const PARALLEL = {
   ] }],
 }
 
-test('with parallel sequences the window follows the task fest next names, in a later branch', () => {
-  const focus = focusOf({ task: { name: '02_forms', phase_name: '001_BUILD', sequence_name: '02_ui' } })
-  const rows = rowsOf(PARALLEL as any, focus)
-  expect(rows.map(r => r.text)).toContain('[ ] 01_api')
-  expect(rows.some(r => r.depth === 3 && r.text.includes('_api'))).toBe(false)
+test('the task being worked on wins over an earlier unfinished branch', () => {
+  const rows = rowsOf(PARALLEL as any)
+  expect(rows[currentRow(rows)]!.text).toBe('[~] 02_forms')
   const room = 5
   const start = windowStart(rows, room)
   expect(rows.slice(start, start + room).map(r => r.text)).toContain('[~] 02_forms')
 })
 
-test('without a focus an in-progress task wins over an earlier pending one', () => {
-  const rows = rowsOf(PARALLEL as any)
-  expect(rows[currentRow(rows)]!.text).toBe('[~] 02_forms')
-})
-
-test('focusOf needs the full phase, sequence, and task path and ignores .md', () => {
-  expect(focusOf({ task: { name: '02_forms.md', phase_name: '001_BUILD', sequence_name: '02_ui' } })).toEqual(['001_BUILD', '02_ui', '02_forms'])
-  expect(focusOf({ task: { name: '02_forms' } })).toBeNull()
-  expect(focusOf({ festival_complete: true })).toBeNull()
-})
-
 test('the window keeps the current task visible past a long run of finished tasks', () => {
-  const tasks = Array.from({ length: 40 }, (_, i) => ({
-    name: `${String(i + 1).padStart(2, '0')}_task`,
-    status: i < 25 ? 'completed' : 'pending',
-    node_type: 'task',
-  }))
-  const tree = {
-    name: 'demo', status: 'in_progress', node_type: 'festival',
-    children: [{ name: '001_BUILD', status: 'in_progress', node_type: 'phase',
-      children: [{ name: '01_core', status: 'in_progress', node_type: 'sequence', children: tasks }] }],
-  }
+  const tasks = Array.from({ length: 40 }, (_, i) => task(`${String(i + 1).padStart(2, '0')}_task`, i < 25 ? 'completed' : 'pending'))
+  const tree = { name: 'demo', status: 'in_progress', node_type: 'festival', children: [{ name: '001_BUILD', status: 'in_progress', node_type: 'phase', children: [{ name: '01_core', status: 'in_progress', node_type: 'sequence', children: tasks }] }] }
   const rows = rowsOf(tree as any)
   const room = 8
   const start = windowStart(rows, room)
   const visible = rows.slice(start, start + room).map(r => r.text)
-  expect(visible).toContain('[ ] 26_task')
   expect(visible.indexOf('[ ] 26_task')).toBe(Math.floor(room / 3))
 })
 
-test('the window starts at the top when everything fits', () => {
-  const rows = rowsOf(SHOW.view.tree)
-  expect(windowStart(rows, rows.length + 5)).toBe(0)
+test('the window starts at the top when everything fits, and headers count work', () => {
+  const v = viewOf(SHOW)!
+  expect(windowStart(rowsOfView(v), 500)).toBe(0)
+  expect(headerOf(v)).toBe('tasks 19/35 (54%)')
+  expect(headerOf(viewOf(SHOW_STANDALONE)!)).toBe('steps 1/5')
 })
 
 const tick = async () => {
@@ -140,15 +136,4 @@ test('camp-root mentions never leave the camp', async () => {
   expect(await rootedPath(exists, '/camp/projects/demo', '../etc/hosts')).toBeNull()
   expect(await rootedPath(exists, '/camp/projects/demo', 'notes/../../etc/hosts')).toBeNull()
   expect(await rootedPath(exists, '/camp/projects/demo', '/etc/hosts')).toBeNull()
-})
-
-test('the band reports completion only when fest says the festival is complete', () => {
-  const base = { location: { festival_path: '/camp/festivals/active/demo' }, progress: { completed_tasks: 4, total_tasks: 9, percentage: 44 } }
-  const waiting = bandOf({ ...base, festival_complete: false, reason: 'No tasks are currently ready (dependencies not satisfied)' })!
-  expect(waiting).not.toContain('complete |')
-  expect(waiting).toContain('No tasks are currently ready')
-  expect(waiting).toContain('4/9 (44%)')
-  expect(bandOf({ ...base, festival_complete: true, progress: { completed_tasks: 9, total_tasks: 9, percentage: 100 } })).toBe('festival demo | complete | 9/9 (100%)')
-  expect(bandOf({ ...base, festival_complete: false, planning: { phase_name: '001_INGEST' } })).toBe('festival demo | 001_INGEST (planning) | 4/9 (44%)')
-  expect(bandOf({ location: base.location, festival_complete: false, festival_planning: { status: 'planning' } })).toBe('festival demo | planning')
 })

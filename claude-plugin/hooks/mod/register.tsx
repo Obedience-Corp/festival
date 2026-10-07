@@ -2,12 +2,11 @@ import { atom, read, update } from 'claude-code'
 import type { Register } from 'claude-code'
 
 import { rootedPath, campRoot } from './camp'
-import { STATUS_COLOR, bandOf, coalesce, focusOf, progressOf, rowsOf, windowStart } from './fest'
+import { STATUS_COLOR, bandOf, coalesce, currentRow, headerOf, rowsOfView, viewOf, windowStart } from './fest'
 
 const PANE = 'fest-watch'
 const band = atom({ plugin: 'festival', key: 'band' } as const, null)
-const show = atom({ plugin: 'festival', key: 'show' } as const, null)
-const focus = atom({ plugin: 'festival', key: 'focus' } as const, null)
+const view = atom({ plugin: 'festival', key: 'view' } as const, null)
 const isOpen = atom({ plugin: 'festival', key: 'isOpen' } as const, false)
 
 const COMMANDS = [
@@ -37,15 +36,9 @@ async function runJson($: any, argv: string[]) {
 
 async function refresh($: any) {
   if ((await $.session.surfaces()).length === 0) return
-  const nextJson = await runJson($, ['fest', 'next', '--json'])
-  const text = bandOf(nextJson)
-  const path = focusOf(nextJson)
-  await update($, band, () => text)
-  await update($, focus, () => path)
-  if (await read($, isOpen)) {
-    const json = await runJson($, ['fest', 'show', '--json'])
-    await update($, show, () => json?.view?.tree ? json : null)
-  }
+  const next = viewOf(await runJson($, ['fest', 'show', '--json']))
+  await update($, view, () => next)
+  await update($, band, () => bandOf(next))
   $.ui.invalidate('ui.render')
 }
 
@@ -82,6 +75,12 @@ export const register: Register = (on, options) => {
     } catch {
       isTakeover = false
     }
+    try {
+      const panes = await $.ui.panes()
+      if (!panes.some((p: { id: string }) => p.id === PANE)) await stopWatching($)
+    } catch {
+      await stopWatching($)
+    }
     await scheduleRefresh($)
     return next(e)
   }).catch(($, e, next) => next(e))
@@ -108,7 +107,7 @@ export const register: Register = (on, options) => {
   on('tool.call', { tool: ['TodoWrite', 'TaskCreate'] }, ($, e, next) =>
     isTakeover ? { deny: TODO_DENY } : next(e),
   ).catch(($, e, next) => next(e))
-  on('prompt.attachment', { type: 'todo_reminder' }, ($, e, next) =>
+  on('prompt.attachment', { type: ['todo_reminder', 'task_reminder'] }, ($, e, next) =>
     isTakeover ? { text: null } : next(e),
   ).catch(($, e, next) => next(e))
 
@@ -123,8 +122,11 @@ export const register: Register = (on, options) => {
       await $.ui.close({ id: PANE })
       return { text: 'Festival pane closed.' }
     }
-    await update($, isOpen, () => true)
+    if ((await $.session.surfaces()).length === 0) {
+      return { text: 'The Festival pane needs an interactive Claude Code session.' }
+    }
     await $.ui.open({ id: PANE, title: 'Festival' })
+    await update($, isOpen, () => true)
     await scheduleRefresh($)
     if (!(await read($, isOpen))) return { text: 'Festival pane closed.' }
     timer?.cancel()
@@ -156,16 +158,18 @@ export const register: Register = (on, options) => {
 
   on('ui.render', { component: 'Pane', requestId: PANE }, async ($, e) => {
     const { Box, Text } = $.ui.resolve(e)
-    const data = await read($, show)
-    if (!data) return <Text dimColor>No festival here (fest show failed).</Text>
-    const room = Math.max(3, (e.viewport?.rows ?? 24) - 6)
-    const rows = rowsOf(data.view.tree, await read($, focus))
+    const data = await read($, view)
+    if (!data) return <Text dimColor>No festival or workflow here.</Text>
+    const body = e.props.scroll?.bodyRows ?? (e.viewport?.rows ?? 24) - 6
+    const room = Math.max(3, body - 1)
+    const rows = rowsOfView(data)
+    const cur = currentRow(rows)
     const start = windowStart(rows, room)
     return (
       <Box flexDirection="column">
-        <Text color="claude" bold>{progressOf(data)}</Text>
-        {rows.slice(start, start + room).map(r => (
-          <Text color={STATUS_COLOR[r.status] ?? 'text'} bold={r.isFocus || r.status === 'in_progress'}>
+        <Text color="claude" bold>{headerOf(data)}</Text>
+        {rows.slice(start, start + room).map((r, i) => (
+          <Text color={STATUS_COLOR[r.status] ?? 'text'} bold={start + i === cur || r.status === 'in_progress'}>
             {'  '.repeat(r.depth)}{r.text}
           </Text>
         ))}
