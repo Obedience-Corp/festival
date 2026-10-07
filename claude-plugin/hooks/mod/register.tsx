@@ -49,6 +49,12 @@ function scheduleRefresh($: any): Promise<void> {
   return runRefresh(() => refresh($))
 }
 
+async function stopWatching($: any) {
+  timer?.cancel()
+  timer = null
+  await update($, isOpen, () => false)
+}
+
 async function plain($: any, argv: string[]) {
   try {
     const r = await $.process.run(argv, { timeoutMs: 10000 })
@@ -109,23 +115,21 @@ export const register: Register = (on, options) => {
 
   on('command.run', { command: 'fest-watch' }, async $ => {
     if (await read($, isOpen)) {
+      await stopWatching($)
       await $.ui.close({ id: PANE })
       return { text: 'Festival pane closed.' }
     }
     await update($, isOpen, () => true)
     await $.ui.open({ id: PANE, title: 'Festival' })
     await scheduleRefresh($)
+    if (!(await read($, isOpen))) return { text: 'Festival pane closed.' }
     timer?.cancel()
     timer = $.clock.every(5000, () => void scheduleRefresh($))
     return { text: 'Festival pane opened.' }
   }).catch(() => ({ text: 'The Festival pane could not be toggled.' }))
 
   on('ui.close', async ($, e, next) => {
-    if (e.id === PANE) {
-      timer?.cancel()
-      timer = null
-      await update($, isOpen, () => false)
-    }
+    if (e.id === PANE) await stopWatching($)
     return next(e)
   }).catch(($, e, next) => next(e))
 

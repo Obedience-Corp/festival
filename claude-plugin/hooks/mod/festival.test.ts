@@ -162,3 +162,16 @@ test('a failed camp lookup at startup still draws the band and leaves takeover o
   const out: any = await $.tool.call(tool('EnterPlanMode') as any)
   expect(out.result).toBe('entered')
 })
+
+test('the pane opens again after the command closed it', async ($, on) => {
+  world(on, ['terminal'])
+  on('fs.exists', () => ({ value: false }) as any)
+  on('process.run', () => ({ value: ok(NEXT) }) as any)
+  on('ui.open', () => ({ value: { isPlaced: true } }) as any)
+  on('ui.close', () => ({ value: undefined }) as any)
+  on('clock.every', (() => ({ value: { cancel() {} } })) as any)
+  await $.session.start(SESSION)
+  const texts: string[] = []
+  for (let i = 0; i < 3; i++) texts.push(((await $.command.run(run('fest-watch') as any)) as any).text)
+  expect(texts).toEqual(['Festival pane opened.', 'Festival pane closed.', 'Festival pane opened.'])
+})

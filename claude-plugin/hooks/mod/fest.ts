@@ -21,9 +21,16 @@ export function bandOf(json: any): string | null {
     const fest = last(json.location?.festival_path ?? 'festival')
     const p = json.progress
     const count = p ? `${p.completed_tasks}/${p.total_tasks} (${p.percentage}%)` : ''
-    if (!json.task) return `festival ${fest} | complete ${count}`
-    const t = json.task
-    return `festival ${fest} | ${t.phase_name} > ${t.sequence_name} > ${t.name} | ${count}`
+    const withCount = (s: string) => (count ? `${s} | ${count}` : s)
+    if (json.task) {
+      const t = json.task
+      return withCount(`festival ${fest} | ${t.phase_name} > ${t.sequence_name} > ${t.name}`)
+    }
+    if (json.festival_complete === true) return withCount(`festival ${fest} | complete`)
+    if (json.planning?.phase_name) return withCount(`festival ${fest} | ${json.planning.phase_name} (planning)`)
+    if (json.festival_planning) return `festival ${fest} | planning`
+    const why = typeof json.reason === 'string' && json.reason ? json.reason : 'no task ready'
+    return withCount(`festival ${fest} | ${why.length > 60 ? `${why.slice(0, 59)}…` : why}`)
   }
   return null
 }

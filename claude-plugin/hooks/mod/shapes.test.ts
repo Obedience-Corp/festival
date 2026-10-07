@@ -110,3 +110,14 @@ test('camp-root mentions never leave the camp', async () => {
   expect(await rootedPath(exists, '/camp/projects/demo', 'notes/../../etc/hosts')).toBeNull()
   expect(await rootedPath(exists, '/camp/projects/demo', '/etc/hosts')).toBeNull()
 })
+
+test('the band reports completion only when fest says the festival is complete', () => {
+  const base = { location: { festival_path: '/camp/festivals/active/demo' }, progress: { completed_tasks: 4, total_tasks: 9, percentage: 44 } }
+  const waiting = bandOf({ ...base, festival_complete: false, reason: 'No tasks are currently ready (dependencies not satisfied)' })!
+  expect(waiting).not.toContain('complete |')
+  expect(waiting).toContain('No tasks are currently ready')
+  expect(waiting).toContain('4/9 (44%)')
+  expect(bandOf({ ...base, festival_complete: true, progress: { completed_tasks: 9, total_tasks: 9, percentage: 100 } })).toBe('festival demo | complete | 9/9 (100%)')
+  expect(bandOf({ ...base, festival_complete: false, planning: { phase_name: '001_INGEST' } })).toBe('festival demo | 001_INGEST (planning) | 4/9 (44%)')
+  expect(bandOf({ location: base.location, festival_complete: false, festival_planning: { status: 'planning' } })).toBe('festival demo | planning')
+})
