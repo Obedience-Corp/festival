@@ -297,3 +297,37 @@ test('with fest older than 0.9.3 a linked project directory is never polled', as
   expect(textOf(await $.ui.render(BAND as any))).toBe('ENGINE-OWN')
   expect(ran.some(argv => argv.join(' ') === 'fest show --json')).toBe(false)
 })
+
+test('a failed fest version check is retried instead of sticking', async ($, on) => {
+  world(on, ['terminal'], '/camp/projects/demo')
+  on('fs.exists', (_$: any, e: any) => ({ value: e.path === '/camp/.campaign' }) as any)
+  let versionCalls = 0
+  on('process.run', (_$: any, e: any) => {
+    if (e.argv.includes('version')) {
+      versionCalls += 1
+      if (versionCalls === 1) throw new Error('fest not installed yet')
+      return { value: ok('v0.9.3\n') }
+    }
+    return { value: ok(SHOW_JSON) }
+  })
+  on('clock.after', () => ({ value: undefined }) as any)
+  on('clock.every', () => ({ value: undefined }) as any)
+  on('ui.open', () => ({ value: { isPlaced: true } }) as any)
+  await $.session.start({ ...SESSION, cwd: '/camp/projects/demo' })
+  await $.command.run(run('fest-watch') as any)
+  expect(versionCalls).toBe(2)
+  expect(textOf(await $.ui.render(BAND as any))).toContain(BAND_TEXT)
+})
+
+test('with an older fest, fest show runs in the directory the guard checked', async ($, on) => {
+  const root = '/camp/festivals/active/build-todo-app-BT0001'
+  world(on, ['terminal'], root)
+  on('fs.exists', (_$: any, e: any) => ({ value: e.path === `${root}/fest.yaml` }) as any)
+  let showCwd: string | undefined
+  on('process.run', (_$: any, e: any) => {
+    if (e.argv.includes('show')) showCwd = e.init?.cwd ?? e.cwd
+    return fest(SHOW_JSON, 'v0.9.2')(_$, e)
+  })
+  await $.session.start({ ...SESSION, cwd: root })
+  expect(showCwd).toBe(root)
+})

@@ -136,8 +136,7 @@ Commands the module registers (the markdown commands `fest-next` and
 `fest-status` are separate and unchanged):
 
 - `/fest-watch` opens or closes the pane.
-- `/fest-task` prints the text of `fest next`. It runs `fest next` exactly as a
-  terminal would, so it can record workflow progress the same way.
+- `/fest-task` prints the text of `fest next`.
 - `/fest-progress` prints the text of `fest progress`.
 
 Camp-root mentions: inside a camp, an `@path` mention that does not exist
@@ -154,14 +153,17 @@ through Festival.
 Outside a camp the option does nothing.
 
 What the module reads and runs, and nothing else: `fest show --json` for the
-band and pane, `fest version --short` once per session, `fest next` and
-`fest progress` only when you run `/fest-task` or `/fest-progress`, and file
-existence checks for @-mentions. It never polls `fest next`, which can write
-workflow state. Before fest 0.9.3, `fest show` itself can write: it rewrites a
-standalone workflow's cached summary and migrates a festival's legacy
-`.fest/progress.yaml` or `.fest/workflow_state.yaml`. So with an older fest the
-band and pane only run inside a festival directory that has neither legacy
-file, and elsewhere stay empty with a note to update fest. It makes no network calls and never asks
+band and pane, `fest version --short` once each time the module loads (retried
+if it fails), `fest next` and `fest progress` only when you run `/fest-task` or
+`/fest-progress`, and file existence checks for @-mentions. The two commands run
+exactly as they would in a terminal, so they can record workflow progress or
+migrate legacy progress files the same way. The background view never runs
+`fest next`. Before fest 0.9.3, `fest show` itself can write: it migrates a
+festival's legacy `.fest/progress.yaml` or `.fest/workflow_state.yaml`, and fest
+0.9.1 also rewrites a standalone workflow's cached summary. So with an older
+fest (including 0.9.3 pre-releases) the band and pane only run inside a festival
+directory that has neither legacy file, and elsewhere stay empty with a note to
+update fest. It makes no network calls and never asks
 you a question. Every process it starts has a timeout (5 seconds for JSON and
 the version check, 10 seconds for text). Every hook that can refuse something
 has a `.catch` that lets the original action through, so a fault in the module

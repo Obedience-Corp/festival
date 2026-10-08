@@ -106,14 +106,14 @@ export const READ_ONLY_FEST = '0.9.3'
 export const LEGACY_PROGRESS_FILES = ['progress.yaml', 'workflow_state.yaml']
 
 export function versionAtLeast(text: string, want: string): boolean {
-  const have = /v?(\d+)\.(\d+)\.(\d+)/.exec(text)
+  const have = /v?(\d+)\.(\d+)\.(\d+)(-\S*)?/.exec(text)
   if (!have) return false
   const w = want.split('.').map(Number)
   for (let i = 0; i < 3; i++) {
     const h = Number(have[i + 1])
     if (h !== w[i]) return h > w[i]!
   }
-  return true
+  return have[4] === undefined
 }
 
 export function coalesce(): (run: () => Promise<void>) => Promise<void> {

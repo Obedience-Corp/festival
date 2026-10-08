@@ -145,6 +145,9 @@ test('versionAtLeast compares the release number and treats unknown output as to
   expect(versionAtLeast('v0.9.1', '0.9.2')).toBe(false)
   expect(versionAtLeast('v0.9.1-12-gb37066a4', '0.9.2')).toBe(false)
   expect(versionAtLeast('dev', '0.9.2')).toBe(false)
+  expect(versionAtLeast('v0.9.3-rc.1', '0.9.3')).toBe(false)
+  expect(versionAtLeast('v0.9.3', '0.9.3')).toBe(true)
+  expect(versionAtLeast('v0.9.4-rc.1', '0.9.3')).toBe(true)
 })
 
 test('festivalRoot finds the nearest fest.yaml and stops at the camp root', async () => {
@@ -153,4 +156,6 @@ test('festivalRoot finds the nearest fest.yaml and stops at the camp root', asyn
   expect(await festivalRoot(exists, '/camp/festivals/active/f/001_A/01_s')).toBe('/camp/festivals/active/f')
   expect(await festivalRoot(exists, '/camp/projects/demo')).toBeNull()
   expect(await festivalRoot(exists, '/tmp/elsewhere')).toBeNull()
+  const goalOnly = new Set(['/camp/.campaign', '/camp/festivals/.dungeon/old/FESTIVAL_GOAL.md'])
+  expect(await festivalRoot(async p => goalOnly.has(p), '/camp/festivals/.dungeon/old/001_A')).toBe('/camp/festivals/.dungeon/old')
 })

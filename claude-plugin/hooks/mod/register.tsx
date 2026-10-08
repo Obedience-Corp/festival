@@ -19,16 +19,16 @@ const COMMANDS = [
 let timer: { cancel: () => void } | null = null
 const runRefresh = coalesce()
 let isTakeover = false
-let showIsReadOnly: Promise<boolean> | null = null
+let showIsReadOnly: boolean | null = null
 
 const PLAN_DENY =
   'This camp plans with Festival, so plan mode is off here. Do not retry it. Size the work as one session, a standalone workflow (`fest create workflow`), or a festival, then run `fest next` and follow what it prints.'
 const TODO_DENY =
   'This camp tracks tasks with Festival, not a session todo list. Run `fest next` for the current task and `fest task completed` when it is done.'
 
-async function runJson($: any, argv: string[]) {
+async function runJson($: any, argv: string[], cwd?: string) {
   try {
-    const r = await $.process.run(argv, { timeoutMs: 5000 })
+    const r = await $.process.run(argv, cwd ? { timeoutMs: 5000, cwd } : { timeoutMs: 5000 })
     if (r.exitCode !== 0 || r.isStdoutTruncated) return null
     return JSON.parse(r.stdout)
   } catch {
@@ -36,36 +36,39 @@ async function runJson($: any, argv: string[]) {
   }
 }
 
-async function festShowIsReadOnly($: any): Promise<boolean> {
+async function festShowIsReadOnly($: any): Promise<boolean | null> {
   try {
     const r = await $.process.run(['fest', 'version', '--short'], { timeoutMs: 5000 })
-    return r.exitCode === 0 && versionAtLeast(r.stdout, READ_ONLY_FEST)
+    return r.exitCode === 0 ? versionAtLeast(r.stdout, READ_ONLY_FEST) : null
   } catch {
-    return false
+    return null
   }
 }
 
 const NEEDS_NEWER_FEST = `This view needs fest ${READ_ONLY_FEST} or newer here.`
 
-async function pollBlocker($: any): Promise<string | null> {
-  showIsReadOnly ??= festShowIsReadOnly($)
-  if (await showIsReadOnly) return null
+type PollPlan = { blocker: string | null; cwd?: string }
+
+async function pollPlan($: any): Promise<PollPlan> {
+  if (showIsReadOnly === null) showIsReadOnly = await festShowIsReadOnly($)
+  if (showIsReadOnly === true) return { blocker: null }
   try {
     const exists = (p: string) => $.fs.exists(p)
-    const root = await festivalRoot(exists, await $.session.cwd())
-    if (root === null) return NEEDS_NEWER_FEST
+    const cwd = await $.session.cwd()
+    const root = await festivalRoot(exists, cwd)
+    if (root === null) return { blocker: NEEDS_NEWER_FEST }
     for (const file of LEGACY_PROGRESS_FILES) {
-      if (await exists(`${root}/.fest/${file}`)) return NEEDS_NEWER_FEST
+      if (await exists(`${root}/.fest/${file}`)) return { blocker: NEEDS_NEWER_FEST }
     }
-    return null
+    return { blocker: null, cwd }
   } catch {
-    return NEEDS_NEWER_FEST
+    return { blocker: NEEDS_NEWER_FEST }
   }
 }
 
 async function refresh($: any) {
   if ((await $.session.surfaces()).length === 0) return
-  const blocker = await pollBlocker($)
+  const { blocker, cwd } = await pollPlan($)
   if (blocker !== null) {
     await update($, view, () => null)
     await update($, band, () => null)
@@ -73,7 +76,7 @@ async function refresh($: any) {
     $.ui.invalidate('ui.render')
     return
   }
-  const next = viewOf(await runJson($, ['fest', 'show', '--json']))
+  const next = viewOf(await runJson($, ['fest', 'show', '--json'], cwd))
   await update($, notice, () => null)
   await update($, view, () => next)
   await update($, band, () => bandOf(next))

@@ -23,13 +23,17 @@ export async function rootedPath(
   return (await exists(candidate)) ? candidate : null
 }
 
+const FESTIVAL_MARKERS = ['fest.yaml', 'FESTIVAL_GOAL.md', 'FESTIVAL_OVERVIEW.md']
+
 export async function festivalRoot(
   exists: (path: string) => Promise<boolean>,
   cwd: string,
 ): Promise<string | null> {
   let dir = cwd.replace(/\/+$/, '')
   while (dir !== '') {
-    if (await exists(`${dir}/fest.yaml`)) return dir
+    for (const marker of FESTIVAL_MARKERS) {
+      if (await exists(`${dir}/${marker}`)) return dir
+    }
     if (await exists(`${dir}/.campaign`)) return null
     dir = dir.slice(0, dir.lastIndexOf('/'))
   }
