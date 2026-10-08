@@ -1,7 +1,7 @@
 ---
 name: cross-campaign
 description: Discover and reference other camps, projects, and files across camp boundaries. Use when the user mentions another camp or campaign by name, references work done "in another project/camp", or needs to find/copy/compare code across camps.
-version: "1.4.0"
+version: "1.4.1"
 author: Obedience Corp
 license: Apache-2.0
 metadata:

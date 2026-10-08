@@ -5,7 +5,7 @@ weight: 20
 
 # opencode
 
-Skills are native in opencode, and plugin code runs at load, so Festival's bundle here is small: a short JavaScript plugin plus the skills tree. The plugin has exactly one job at load, which is to make sure `fest` and `camp` exist. Everything else is opencode's own discovery doing the work.
+Skills are native in opencode, and plugin code runs at load, so Festival's bundle here is small: a short JavaScript plugin plus the skills tree. The plugin has two jobs: at load, make sure `fest` and `camp` exist, and before each shell command, stop a raw `git commit` inside a camp. Everything else is opencode's own discovery doing the work.
 
 The loop is unchanged: `fest next`, do the task, `fest task completed`, `fest commit`.
 
@@ -100,11 +100,24 @@ The second one is the tradeoff to be aware of. A failed install does not announc
 curl -fsSL https://raw.githubusercontent.com/Obedience-Corp/festival/main/install.sh | bash
 ```
 
-## 6. AGENTS.md
+## 6. The commit guard
+
+Camps have their own commit verbs so that work stays traceable: `camp commit` at the camp root, `camp p commit` inside `projects/*`, and `fest commit` during a festival. The plugin registers a `tool.execute.before` hook, and before every `bash` tool call it runs `scripts/commit-guard.sh`, the same script the Claude Code plugin ships, with the command and the directory the command will run in: the call's `workdir` resolved against the session directory, or the session directory itself.
+
+The guard blocks only when both of these hold:
+
+- the command has a raw `git commit` segment, including one after `;`, `&&`, or `||`, and
+- `camp id` succeeds in that directory, so the command runs inside a camp.
+
+On a block the hook throws with the guard's reason, which names the right verb. opencode does not run the command, marks the `bash` call as an error, and hands that reason to the model as the tool result. The hook runs before opencode's permission check and can only throw or return, so it never approves anything. Everything else passes untouched: commands outside a camp, a machine without `camp` or `jq`, and a guard that fails to start or exits with anything but its block code. To make one raw commit deliberately, set `CAMP_ALLOW_RAW_GIT=1`.
+
+A global install fires the hook in every opencode session, and it stays quiet outside a camp.
+
+## 7. AGENTS.md
 
 `camp init` writes `AGENTS.md` at the camp root, and it is the file to keep as your context. Start opencode at the camp root so the session picks it up. Projects inside a camp are usually their own git repositories, and a session started inside one may resolve a different context file, or none.
 
-## 7. The loop
+## 8. The loop
 
 Give the agent the loop once and it repeats it:
 
@@ -124,7 +137,9 @@ Phase gates are checkpoints for a human. The agent submits a gate and stops. You
 
 ## What was verified
 
-There is no opencode CLI on the machine this page was written on, so nothing here was run against opencode. Neither the native skills auto-discovery nor the load-time install was observed working.
+On 2026-10-08, opencode 1.18.35 was run through `npx` with an isolated home and config directory, the generated `.opencode/` bundle copied into a scratch camp as a project plugin, and a local stand-in model endpoint configured as a custom provider, so no credentials were involved. `opencode run` was scripted to make one `bash` call, `git commit --allow-empty -m test`. The call came back with status `error` and the guard's reason as its text, that same text reached the model as the tool result, and the scratch repository stayed at zero commits. The same run with `CAMP_ALLOW_RAW_GIT=1` committed. The plugin's load-time install ran in those sessions. Native skills auto-discovery and the global and `opencode.json` install paths were not exercised.
+
+`just plugin check` also imports the generated plugin under Node with a stub shell and calls its `tool.execute.before` hook with the `bash` tool's input and output shapes. A raw `git commit` in a temp camp throws with the guard's reason, including through a `workdir` that points into a camp, while `fest commit`, `git status`, a commit outside a camp, a non-`bash` tool, malformed arguments, `CAMP_ALLOW_RAW_GIT=1`, and a guard that crashes all pass. That the hook runs before the permission check was read from the opencode 1.18.35 source rather than observed.
 
 What was verified, on 2026-08-19: the generated plugin parses and the path it references resolves, which `just plugin check` enforces and which passes; the skills tree under `.opencode/skills/` holds 12 skills generated from the same source as every other harness; and there is no published npm package for this plugin, checked against the registry directly.
 

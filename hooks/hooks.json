@@ -12,6 +12,19 @@
           }
         ]
       }
+    ],
+    "BeforeTool": [
+      {
+        "matcher": "^run_shell_command$",
+        "hooks": [
+          {
+            "name": "festival-commit-guard",
+            "type": "command",
+            "command": "bash \"${extensionPath}/hooks/scripts/gemini-commit-guard.sh\"",
+            "description": "Block a raw git commit inside a camp; camp and fest have their own commit commands."
+          }
+        ]
+      }
     ]
   }
 }

@@ -5,7 +5,7 @@ weight: 18
 
 # Gemini CLI
 
-Gemini CLI installs Festival as an extension straight from GitHub, in one command. The extension carries a context file that imports every Festival skill, and a session-start hook that installs the `fest` and `camp` CLIs.
+Gemini CLI installs Festival as an extension straight from GitHub, in one command. The extension carries a context file that imports every Festival skill, a session-start hook that installs the `fest` and `camp` CLIs, and a `BeforeTool` hook that stops a raw `git commit` inside a camp.
 
 The loop is unchanged: `fest next`, do the task, `fest task completed`, `fest commit`.
 
@@ -67,11 +67,13 @@ gemini extensions update festival
 
 The install reads the extension manifest at the repository root, which is why the extension is the whole repository rather than a subdirectory. Other harnesses get a generated subdirectory bundle; Gemini gets the root.
 
+The install asks you to acknowledge the risks of a third-party extension before it adds Festival; `gemini extensions install` and `gemini extensions link` both accept `--consent` to answer that prompt up front. In the check recorded at the end of this page, the extension's hooks then ran with no further prompt.
+
 ## 4. What the extension ships
 
 - **`gemini-extension.json`**, which names the extension `festival` at version 1.3.1 and points `contextFileName` at `GEMINI.md`.
 - **`GEMINI.md`**, which describes Festival and `@`-imports each of the **12 skills** directly.
-- **`hooks/hooks.json`** at the repository root, carrying the `SessionStart` hook described in section 6.
+- **`hooks/hooks.json`** at the repository root, carrying the `SessionStart` hook described in section 6 and the `BeforeTool` commit guard described in section 7.
 
 Skills reach Gemini as context imports rather than as a bundled skills directory. Festival's 11 slash commands and 2 agents are not shipped to Gemini; the same workflows run through the `fest` and `camp` CLIs, which is what those commands call anyway.
 
@@ -95,7 +97,20 @@ If the hook cannot run, install the binaries by hand:
 curl -fsSL https://raw.githubusercontent.com/Obedience-Corp/festival/main/install.sh | bash
 ```
 
-## 7. AGENTS.md and GEMINI.md
+## 7. The commit guard
+
+Camps have their own commit verbs so that work stays traceable: `camp commit` at the camp root, `camp p commit` inside `projects/*`, and `fest commit` during a festival. The extension's `BeforeTool` hook, matched to `^run_shell_command$`, runs `hooks/scripts/gemini-commit-guard.sh` before every shell command. That adapter hands the call to `commit-guard.sh`, the same script the Claude Code plugin ships.
+
+Gemini sends the command as `tool_input.command` and the session directory as `cwd`, which is what the guard reads. When the model sets `dir_path` on the call, the adapter checks that directory instead, so a commit aimed into a camp from outside one is caught too. The guard blocks only when both of these hold:
+
+- the command has a raw `git commit` segment, including one after `;`, `&&`, or `||`, and
+- `camp id` succeeds in the directory the command runs in, so it is inside a camp.
+
+A block exits 2 with the reason on stderr. Gemini does not run the command and returns `Tool execution blocked:` followed by that reason to the model as the tool error, which names the right verb. This happens before Gemini's own approval step, so it holds in YOLO mode too.
+
+Every other path exits 0 with no output. That matters on Gemini: it treats an exit code other than 0 and 1 that comes with text as a denial, so the adapter turns any failure inside the guard, and a missing `camp` or `jq`, into a silent exit 0 rather than a blocked command. The hook never prints a decision, so it never approves anything. To make one raw commit deliberately, set `CAMP_ALLOW_RAW_GIT=1`.
+
+## 8. AGENTS.md and GEMINI.md
 
 Two files, two jobs, and they do not conflict.
 
@@ -105,7 +120,7 @@ Two files, two jobs, and they do not conflict.
 
 Keep both.
 
-## 8. The loop
+## 9. The loop
 
 Give the agent the loop once and it repeats it:
 
@@ -125,7 +140,9 @@ Phase gates are checkpoints for a human. The agent submits a gate and stops. You
 
 ## What was verified
 
-On 2026-10-08, with Gemini CLI 0.63.0 run through `npx` in an isolated home directory, `gemini extensions validate` accepted the extension, and `gemini extensions install https://github.com/Obedience-Corp/festival` installed it from the v0.3.19 release and listed it as enabled. The hook running and the context imports loading were not observed.
+On 2026-10-08, with Gemini CLI 0.63.0 run through `npx` in an isolated home directory, `gemini extensions validate` accepted the extension, and `gemini extensions install https://github.com/Obedience-Corp/festival` installed it from the v0.3.19 release and listed it as enabled. The hook running and the context imports loading were not observed in that run.
+
+Later the same day, the commit guard was checked against a local checkout linked with `gemini extensions link --consent`, again in an isolated home directory, with the CLI's canned-response mode standing in for the model so no key or network call was involved. The scripted `run_shell_command` call `git commit --allow-empty -m test` in a scratch camp, under `--approval-mode=yolo`, came back as a `policy_violation` tool error reading `Tool execution blocked: raw git commit is forbidden inside a camp; ...`, and the scratch repository stayed at zero commits. The same call with `CAMP_ALLOW_RAW_GIT=1` committed. A session started outside the camp with `dir_path` pointing into it was blocked. The session-start hook ran in those sessions as well.
 
 Earlier, Gemini CLI was not installed on the machine this page was written on, so the checks below were structural only.
 

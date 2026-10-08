@@ -264,7 +264,7 @@ generated_targets_check() {
     done < <(find "$tmp" -type f | sort)
 
     local owned rel
-    for owned in cursor-plugin .cursor-plugin plugins/festival .opencode skills .agents/plugins; do
+    for owned in cursor-plugin .cursor-plugin plugins/festival .opencode skills .agents/plugins hooks; do
         [ -d "$repo_root/$owned" ] || continue
         while IFS= read -r rel; do
             if [ ! -f "$tmp/$rel" ]; then
@@ -325,6 +325,36 @@ for (const ref of refs) {
 const skillsDir = path.resolve(pluginRoot, manifest.skills);
 const skills = fs.readdirSync(skillsDir).filter((d) => fs.existsSync(path.join(skillsDir, d, "SKILL.md")));
 if (skills.length === 0) throw new Error(`.codex-plugin/skills/ resolves but contains no SKILL.md`);
+
+const hooksFile = path.resolve(pluginRoot, manifest.hooks);
+const hooksRel = path.relative(repoRoot, hooksFile);
+const hooksDoc = JSON.parse(fs.readFileSync(hooksFile, "utf8"));
+// codex-cli 0.161.0 refuses the whole file on any other top-level key:
+// "unknown field `_generated`, expected `description` or `hooks`".
+const strayKeys = Object.keys(hooksDoc).filter((key) => key !== "description" && key !== "hooks");
+if (strayKeys.length > 0) {
+  throw new Error(`${hooksRel}: Codex rejects plugin hooks files with top-level keys other than description and hooks, found: ${strayKeys.join(", ")}`);
+}
+const hooks = hooksDoc.hooks || {};
+for (const def of Object.values(hooks).flat().flatMap((group) => group.hooks || [])) {
+  if (typeof def.command !== "string" || !def.command.includes("${PLUGIN_ROOT}/")) {
+    throw new Error(`${hooksRel}: hook command must run from \${PLUGIN_ROOT}: ${def.command}`);
+  }
+  def.command.replace(/\$\{PLUGIN_ROOT\}\/([^"\x27\s]+)/g, (_, ref) => {
+    const target = path.resolve(pluginRoot, ref);
+    const rel = path.relative(pluginRoot, target);
+    if (rel.startsWith("..") || path.isAbsolute(rel)) throw new Error(`${hooksRel}: hook references a file outside the plugin: ${ref}`);
+    if (!fs.existsSync(target)) throw new Error(`${hooksRel}: hook references a missing file: ${ref}`);
+    return _;
+  });
+}
+const guard = (hooks.PreToolUse || []).find((group) => group.matcher === "Bash");
+if (!guard || !(guard.hooks || []).some((def) => def.command.includes("/hooks/scripts/commit-guard.sh"))) {
+  throw new Error(`${hooksRel}: expected a PreToolUse hook with matcher Bash that runs hooks/scripts/commit-guard.sh`);
+}
+if ((guard.hooks || []).some((def) => def.async === true)) {
+  throw new Error(`${hooksRel}: the commit guard must run synchronously; Codex ignores decisions from async hooks`);
+}
 
 if (entry.version !== plugin.version) {
   throw new Error(`.agents/plugins/marketplace.json version ${entry.version} != plugin.json ${plugin.version}`);
@@ -507,6 +537,10 @@ const installer = path.join(ocDir, "scripts", "ensure-festival.sh");
 if (!fs.existsSync(installer)) {
   throw new Error(".opencode/plugins/festival.js references missing installer: scripts/ensure-festival.sh");
 }
+const guard = path.join(ocDir, "scripts", "commit-guard.sh");
+if (!fs.existsSync(guard)) {
+  throw new Error(".opencode/plugins/festival.js references missing commit guard: scripts/commit-guard.sh");
+}
 
 const skillsDir = path.join(ocDir, "skills");
 if (!fs.existsSync(skillsDir)) throw new Error(".opencode/skills/ missing (plugin relies on auto-discovery)");
@@ -605,7 +639,209 @@ for (const line of imports) {
     throw new Error(`${contextFile} @-import does not resolve: ${ref}`);
   }
 }
+
+// Gemini substitutes ${extensionPath} into hook commands as raw text, and the
+// extension root is the repository root.
+const hooksRel = "hooks/hooks.json";
+const hooks = JSON.parse(fs.readFileSync(path.join(repoRoot, hooksRel), "utf8")).hooks || {};
+for (const def of Object.values(hooks).flat().flatMap((group) => group.hooks || [])) {
+  if (typeof def.command !== "string" || !def.command.includes("${extensionPath}/")) {
+    throw new Error(`${hooksRel}: hook command must run from \${extensionPath}: ${def.command}`);
+  }
+  def.command.replace(/\$\{extensionPath\}\/([^"\x27\s]+)/g, (_, ref) => {
+    if (!fs.existsSync(path.resolve(repoRoot, ref))) throw new Error(`${hooksRel}: hook references a missing file: ${ref}`);
+    return _;
+  });
+}
+const guards = (hooks.BeforeTool || []).filter((group) => {
+  try {
+    return new RegExp(group.matcher).test("run_shell_command") && !new RegExp(group.matcher).test("read_file");
+  } catch {
+    return false;
+  }
+});
+if (!guards.some((group) => (group.hooks || []).some((def) => def.command.includes("/hooks/scripts/gemini-commit-guard.sh")))) {
+  throw new Error(`${hooksRel}: expected a BeforeTool hook matching run_shell_command that runs hooks/scripts/gemini-commit-guard.sh`);
+}
 ' "$repo_root" "$1"
+}
+
+# A `camp` whose `id` answers the way the real one does: success only somewhere
+# under a .campaign/campaign.yaml. The guard calls nothing else on it.
+write_camp_id_stub() {
+    cat > "$1" <<'EOF_STUB'
+#!/usr/bin/env bash
+[ "${1:-}" = "id" ] || exit 1
+dir="$PWD"
+while :; do
+    if [ -f "$dir/.campaign/campaign.yaml" ]; then
+        echo "stub-camp-id"
+        exit 0
+    fi
+    [ "$dir" = "/" ] && exit 1
+    dir="$(dirname "$dir")"
+done
+EOF_STUB
+    chmod +x "$1"
+}
+
+# The commit guard as the Codex, Gemini, and opencode bundles wire it. Each case
+# feeds that harness's own hook input to the hook command from the generated
+# bundle, run the way the harness runs it, against a temp camp and a stub camp
+# binary. No network, no real camp, nothing written outside the temp dir.
+commit_guard_harness_check() {
+    local tmp fakebin camp outside path_env codex_hook gemini_hook
+    tmp="$(mktemp -d "${TMPDIR:-/tmp}/festival-commit-guard.XXXXXX")"
+    trap 'rm -rf "$tmp"' RETURN
+    fakebin="$tmp/fakebin"
+    camp="$tmp/camp"
+    outside="$tmp/outside"
+    mkdir -p "$fakebin" "$camp/.campaign" "$camp/projects/app" "$outside"
+    : > "$camp/.campaign/campaign.yaml"
+    write_camp_id_stub "$fakebin/camp"
+    path_env="$fakebin:$PATH"
+    # BASH_ENV runs before every non-interactive bash script; this one makes only
+    # commit-guard.sh itself fail with exit 3 and text on stderr, the shape of an
+    # internal error, so each wiring is checked for failing open on it.
+    printf '%s\n' 'case "$0" in */commit-guard.sh) echo "guard crashed" >&2; exit 3 ;; esac' > "$tmp/crash-guard.sh"
+
+    # guard_case LABEL WANT HOOK CWD PAYLOAD [VAR=value...]: run HOOK through
+    # bash -c in CWD with PAYLOAD on stdin. block wants exit 2, no stdout, and the
+    # reason on stderr; allow wants exit 0 and no output on either stream; pass
+    # wants any exit but 2 and no stdout, which a harness that fails open on
+    # every other exit code treats as allow.
+    guard_case() {
+        local label="$1" want="$2" hook="$3" cwd="$4" payload="$5" rc=0 out err
+        shift 5
+        out="$(cd "$cwd" && printf '%s' "$payload" | env PATH="$path_env" "$@" bash -c "$hook" 2>"$tmp/stderr")" || rc=$?
+        err="$(cat "$tmp/stderr")"
+        if [ "$want" = "block" ]; then
+            if [ "$rc" -ne 2 ] || [ -n "$out" ] || [[ "$err" != *"raw git commit is forbidden inside a camp"* ]]; then
+                echo "commit guard ($label): want exit 2 with the reason on stderr, got exit $rc, stdout: $out, stderr: $err" >&2
+                return 1
+            fi
+        elif [ "$want" = "pass" ]; then
+            if [ "$rc" -eq 2 ] || [ -n "$out" ]; then
+                echo "commit guard ($label): want any exit but 2 and no stdout, got exit $rc, stdout: $out, stderr: $err" >&2
+                return 1
+            fi
+        elif [ "$rc" -ne 0 ] || [ -n "$out" ] || [ -n "$err" ]; then
+            echo "commit guard ($label): want exit 0 and no output, got exit $rc, stdout: $out, stderr: $err" >&2
+            return 1
+        fi
+    }
+
+    # Codex PreToolUse input, with every field its published schema requires.
+    # Codex runs the command from the session cwd with PLUGIN_ROOT set.
+    codex_payload() {
+        printf '{"session_id":"s1","turn_id":"t1","transcript_path":null,"cwd":"%s","hook_event_name":"PreToolUse","model":"test-model","permission_mode":"default","tool_name":"Bash","tool_use_id":"call_1","tool_input":{"command":"%s"}}' "$1" "$2"
+    }
+    codex_hook="$(node -e '
+const hooks = JSON.parse(require("fs").readFileSync(process.argv[1], "utf8")).hooks;
+process.stdout.write(hooks.PreToolUse.find((group) => group.matcher === "Bash").hooks[0].command);
+' "$repo_root/plugins/festival/hooks/hooks.json")"
+    codex_case() {
+        local label="$1" want="$2" cwd="$3" payload="$4"
+        shift 4
+        guard_case "codex: $label" "$want" "$codex_hook" "$cwd" "$payload" PLUGIN_ROOT="$repo_root/plugins/festival" "$@"
+    }
+    codex_case "git commit in a camp" block "$camp" "$(codex_payload "$camp" "git commit -m x")" || return 1
+    codex_case "git commit in a camp project" block "$camp/projects/app" "$(codex_payload "$camp/projects/app" "git add -A && git commit -m x")" || return 1
+    codex_case "fest commit in a camp" allow "$camp" "$(codex_payload "$camp" "fest commit -m x")" || return 1
+    codex_case "git status in a camp" allow "$camp" "$(codex_payload "$camp" "git status")" || return 1
+    codex_case "git commit outside a camp" allow "$outside" "$(codex_payload "$outside" "git commit -m x")" || return 1
+    codex_case "CAMP_ALLOW_RAW_GIT=1" allow "$camp" "$(codex_payload "$camp" "git commit -m x")" CAMP_ALLOW_RAW_GIT=1 || return 1
+    codex_case "malformed JSON" allow "$camp" 'not json' || return 1
+    codex_case "empty input" allow "$camp" '' || return 1
+    codex_case "no tool_input" allow "$camp" "{\"cwd\":\"$camp\",\"tool_name\":\"Bash\"}" || return 1
+    # Codex fails open on any exit but 2, so a crashing guard only has to avoid 2.
+    codex_case "guard crashes" pass "$camp" "$(codex_payload "$camp" "git commit -m x")" BASH_ENV="$tmp/crash-guard.sh" || return 1
+
+    # Gemini BeforeTool input for run_shell_command. Gemini substitutes
+    # ${extensionPath} as raw text and runs the command from the session cwd.
+    gemini_payload() {
+        local dir_field=""
+        [ -n "${3:-}" ] && dir_field=",\"dir_path\":\"$3\""
+        printf '{"session_id":"s1","transcript_path":"/tmp/session.json","cwd":"%s","hook_event_name":"BeforeTool","timestamp":"2026-10-08T00:00:00.000Z","tool_name":"run_shell_command","tool_input":{"command":"%s","description":"test"%s}}' "$1" "$2" "$dir_field"
+    }
+    gemini_hook="$(node -e '
+const hooks = JSON.parse(require("fs").readFileSync(process.argv[1], "utf8")).hooks;
+const group = hooks.BeforeTool.find((g) => new RegExp(g.matcher).test("run_shell_command"));
+process.stdout.write(group.hooks[0].command.split("${extensionPath}").join(process.argv[2]));
+' "$repo_root/hooks/hooks.json" "$repo_root")"
+    gemini_case() {
+        guard_case "gemini: $1" "$2" "$gemini_hook" "$3" "$4" "${@:5}"
+    }
+    gemini_case "git commit in a camp" block "$camp" "$(gemini_payload "$camp" "git commit -m x")" || return 1
+    gemini_case "dir_path into a camp from outside" block "$tmp" "$(gemini_payload "$tmp" "git commit -m x" "camp/projects/app")" || return 1
+    gemini_case "absolute dir_path outside a camp" allow "$camp" "$(gemini_payload "$camp" "git commit -m x" "$outside")" || return 1
+    gemini_case "fest commit in a camp" allow "$camp" "$(gemini_payload "$camp" "fest commit -m x")" || return 1
+    gemini_case "git status in a camp" allow "$camp" "$(gemini_payload "$camp" "git status")" || return 1
+    gemini_case "git commit outside a camp" allow "$outside" "$(gemini_payload "$outside" "git commit -m x")" || return 1
+    gemini_case "CAMP_ALLOW_RAW_GIT=1" allow "$camp" "$(gemini_payload "$camp" "git commit -m x")" CAMP_ALLOW_RAW_GIT=1 || return 1
+    gemini_case "malformed JSON" allow "$camp" 'not json' || return 1
+    gemini_case "empty input" allow "$camp" '' || return 1
+    gemini_case "tool_input is a string" allow "$camp" "{\"cwd\":\"$camp\",\"tool_input\":\"git commit -m x\"}" || return 1
+    # Gemini denies on exit codes other than 0 and 1 when the hook printed text,
+    # so the adapter must turn a crashing guard into a silent exit 0.
+    gemini_case "guard crashes" allow "$camp" "$(gemini_payload "$camp" "git commit -m x")" BASH_ENV="$tmp/crash-guard.sh" || return 1
+
+    # opencode: import the generated plugin with a stub Bun shell and call its
+    # tool.execute.before hook with the bash tool's (input, output) shape.
+    if ! PATH="$path_env" node --input-type=module -e '
+const [pluginFile, camp, outside] = process.argv.slice(1);
+const mod = await import(pluginFile);
+const load = (directory) => mod.default({ $: () => Promise.resolve(), directory });
+const cases = [
+  ["git commit in a camp", camp, { command: "git commit -m x", description: "commit" }, "block"],
+  ["git commit with workdir in a camp project", outside, { command: "git commit -m x", workdir: `${camp}/projects/app` }, "block"],
+  ["relative workdir outside a camp", camp, { command: "git commit -m x", workdir: "../outside" }, "allow"],
+  ["fest commit in a camp", camp, { command: "fest commit -m x" }, "allow"],
+  ["git status in a camp", camp, { command: "git status" }, "allow"],
+  ["git commit outside a camp", outside, { command: "git commit -m x" }, "allow"],
+  ["command is not a string", camp, { command: 42 }, "allow"],
+  ["no args", camp, undefined, "allow"],
+];
+let failed = 0;
+for (const [label, directory, args, want] of cases) {
+  const hooks = await load(directory);
+  let got = "allow";
+  let message = "";
+  try {
+    await hooks["tool.execute.before"]({ tool: "bash", sessionID: "s1", callID: "c1" }, { args });
+  } catch (error) {
+    got = "block";
+    message = error.message;
+  }
+  if (got !== want || (want === "block" && !message.includes("raw git commit is forbidden inside a camp"))) {
+    console.error(`commit guard (opencode: ${label}): want ${want}, got ${got} ${message}`);
+    failed = 1;
+  }
+}
+const hooks = await load(camp);
+try {
+  await hooks["tool.execute.before"]({ tool: "read", sessionID: "s1", callID: "c1" }, { args: { command: "git commit -m x" } });
+} catch (error) {
+  console.error(`commit guard (opencode: non-bash tool): want allow, got block ${error.message}`);
+  failed = 1;
+}
+process.exit(failed);
+' "$repo_root/.opencode/plugins/festival.js" "$camp" "$outside"; then
+        return 1
+    fi
+    local label env_var
+    for env_var in CAMP_ALLOW_RAW_GIT=1 "BASH_ENV=$tmp/crash-guard.sh"; do
+        label="${env_var%%=*}"
+        if ! (cd "$camp" && env PATH="$path_env" "$env_var" node --input-type=module -e '
+const mod = await import(process.argv[1]);
+const hooks = await mod.default({ $: () => Promise.resolve(), directory: process.argv[2] });
+await hooks["tool.execute.before"]({ tool: "bash", sessionID: "s1", callID: "c1" }, { args: { command: "git commit -m x" } });
+' "$repo_root/.opencode/plugins/festival.js" "$camp"); then
+            echo "commit guard (opencode: $label): want allow, got block" >&2
+            return 1
+        fi
+    done
+    echo "commit guard harness checks passed (codex, gemini, opencode)"
 }
 
 target_for_host() {
@@ -1105,6 +1341,7 @@ mod_check() {
 require_command node
 require_command tar
 require_command bash
+require_command jq
 
 json_check "$plugin_dir/.claude-plugin/plugin.json"
 json_check "$plugin_dir/hooks/hooks.json"
@@ -1124,7 +1361,12 @@ hermes_target_check "$plugin_dir/.claude-plugin/plugin.json"
 bash -n "$plugin_dir/hooks/scripts/ensure-festival.sh" "$plugin_dir/hooks/scripts/ensure-festival.test.sh" \
     "$plugin_dir/hooks/scripts/sync-check.sh" \
     "$plugin_dir/hooks/scripts/commit-guard.sh" "$plugin_dir/hooks/scripts/commit-guard.test.sh"
+for script in "$repo_root/plugins/festival/hooks/scripts/commit-guard.sh" \
+    "$repo_root/hooks/scripts/gemini-commit-guard.sh" "$repo_root/.opencode/scripts/commit-guard.sh"; do
+    bash -n "$script"
+done
 bash "$plugin_dir/hooks/scripts/commit-guard.test.sh"
+commit_guard_harness_check
 bash "$plugin_dir/hooks/scripts/ensure-festival.test.sh"
 
 if [ -x "$repo_root/fest/bin/fest" ] && [ -x "$repo_root/camp/bin/camp" ]; then

@@ -22,6 +22,8 @@ supports as plugin components, per `packaging/survey/codex.md` and `packaging/su
   - `festival-intake`: Route work that is too large for a single chat into a structured plan. Use when the user describes a multi-step build, a migration, a rewrite, an audit, a refactor across many files, or a research question with several threads. Use when a goal would otherwise need step-by-step supervision across more than one session. Also use when the user says "plan this", "where do I start", "help me build X", "this is a big one", or hands over a spec, a ticket, or a document and asks what to do with it.
 - **Session-start hook** (`hooks: "./hooks/hooks.json"`) runs `ensure-festival.sh` to install
   and update the `fest` and `camp` CLIs on every session start (idempotent).
+- **Commit guard** (`PreToolUse`, matcher `Bash`) runs `commit-guard.sh` before each shell
+  command and blocks a raw `git commit` inside a camp. See below.
 
 The repo-root `AGENTS.md` (not part of this bundle) describes the plugin and is read by Codex as
 workspace instructions when you work in the Festival repo.
@@ -49,3 +51,27 @@ The bundled `SessionStart` command hook then runs
 `fest` and `camp` CLIs. The script is idempotent (it no-ops when they are already current),
 mirroring the Claude Code hook, so no manual step is required after `codex plugin add festival@festival`. Inside a Codex session,
 `/plugins` opens the plugin browser, where the same plugin can be installed.
+
+Codex skips plugin-bundled hooks until you review and trust them. After installing or updating
+the plugin, open `/hooks` in a Codex session and trust the Festival hooks; until then neither the
+installer nor the commit guard runs.
+
+`hooks/hooks.json` is generated like the rest of this bundle but carries no `_generated` key:
+Codex rejects any top-level key other than `description` and `hooks` in a plugin hooks file and
+then loads none of its hooks.
+
+## Commit guard
+
+The `PreToolUse` hook runs `bash ${PLUGIN_ROOT}/hooks/scripts/commit-guard.sh`, the same script
+the Claude Code bundle ships, byte for byte apart from the generated banner. Codex sends the shell
+command as `tool_input.command` and the session directory as `cwd`, which is the input the script
+already reads. The script blocks only when both hold:
+
+- the command has a raw `git commit` segment (`camp commit`, `camp p commit`, and `fest commit`
+  pass), and
+- `camp id` succeeds in the session directory, so the session is inside a camp.
+
+A block exits 2 with the reason on stderr, which Codex returns to the model in place of the command
+output. Every other path exits 0 with no output, including a missing `camp` or `jq` and input the
+script cannot parse, so the guard never blocks outside a camp and never approves anything. Set
+`CAMP_ALLOW_RAW_GIT=1` to allow one raw commit deliberately.

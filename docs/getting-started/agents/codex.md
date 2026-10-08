@@ -5,7 +5,7 @@ weight: 16
 
 # Codex
 
-Codex runs Festival through a plugin that carries the skills and a session-start hook. The loop is the same `fest next` loop it is everywhere else. The plugin's job is narrow: make sure the `fest` and `camp` CLIs exist, and make sure the agent knows the vocabulary.
+Codex runs Festival through a plugin that carries the skills, a session-start hook, and a commit guard. The loop is the same `fest next` loop it is everywhere else. The plugin's job is narrow: make sure the `fest` and `camp` CLIs exist, make sure the agent knows the vocabulary, and stop a raw `git commit` inside a camp.
 
 Order matters. Install the binaries first, then open a camp, then install the plugin.
 
@@ -61,6 +61,8 @@ From inside a Codex session, `/plugins` opens the plugin browser, where you can 
 
 Note the verb. It is `codex plugin add`; there is no `codex plugin install`.
 
+Then trust the hooks. Codex skips plugin-bundled hooks until you review and trust them, and it records trust against each hook's current definition, so this comes up again after an update that changes a hook. Open `/hooks` in a Codex session and trust the Festival entries. Until you do, neither the installer nor the commit guard runs.
+
 Here is the real output of that last shell command, after the install:
 
 ```text
@@ -77,6 +79,7 @@ Festival self-hosts its marketplace inside the repository, at `.agents/plugins/m
 
 - **12 skills**, one `SKILL.md` each, covering camp navigation, camp structure, commit discipline, festival planning, festival execution, standalone workflows, and work intake.
 - **A `SessionStart` hook** that installs and updates the CLIs. See section 7.
+- **A `PreToolUse` hook** on `Bash` that blocks a raw `git commit` inside a camp. See section 8.
 
 Skills are Codex's recommended primitive for this kind of capability, so a skills-plus-hook bundle is the native shape on this harness rather than a stripped-down one. What the next section describes is not missing functionality; it is the same functionality reached through a different door.
 
@@ -105,7 +108,22 @@ That is why there is no manual step after `codex plugin add`.
 
 Codex nests hook events under a top-level `hooks` object, the same shape Claude Code wants. Bundles before this release put the events at the top level; the generated Codex manifest now carries the wrapper.
 
-## 8. The loop
+Codex also refuses a plugin hooks file with any other top-level key. Earlier bundles carried a `_generated` provenance key there, and Codex CLI 0.161.0 rejected the whole file with ``unknown field `_generated`, expected `description` or `hooks` ``, so no Festival hook loaded at all. The generated file now holds only `description` and `hooks`.
+
+## 8. The commit guard
+
+Camps have their own commit verbs so that work stays traceable: `camp commit` at the camp root, `camp p commit` inside `projects/*`, and `fest commit` during a festival. The plugin's `PreToolUse` hook on `Bash` runs `commit-guard.sh`, the same script the Claude Code plugin ships, before every shell command Codex runs. Codex hands it the command as `tool_input.command` and the session directory as `cwd`, the input the script already reads.
+
+It blocks only when both of these hold:
+
+- the command has a raw `git commit` segment, including one after `;`, `&&`, or `||`, and
+- `camp id` succeeds in the session directory, so the session is inside a camp.
+
+A block exits 2 with the reason on stderr. Codex does not run the command and hands the model `Command blocked by PreToolUse hook:` followed by that reason, which names the right verb. Every other path exits 0 with no output, so the guard never interferes outside a camp, on a machine without `camp` or `jq`, or on input it cannot parse, and it never answers an approval prompt. To make one raw commit deliberately, set `CAMP_ALLOW_RAW_GIT=1`.
+
+The guard sees the session directory, not a per-command working directory, so start Codex inside the camp. A session started outside a camp that commits into one is not stopped.
+
+## 9. The loop
 
 Give the agent the loop once and it repeats it:
 
@@ -125,6 +143,8 @@ Phase gates are checkpoints for a human. The agent submits a gate and stops. You
 
 ## What was verified
 
+On 2026-10-08, with Codex CLI 0.161.0, an isolated `CODEX_HOME` and home directory, the Festival worktree added as a local marketplace, and a local stand-in model endpoint configured as a custom provider so no credentials were involved, `codex exec` was scripted to run `git commit --allow-empty -m test` in a scratch camp. With the hooks trusted for the run (`--dangerously-bypass-hook-trust`), the command never ran, the scratch repository stayed at zero commits, and the model received `Command blocked by PreToolUse hook: raw git commit is forbidden inside a camp; ...`. The same run with `CAMP_ALLOW_RAW_GIT=1` committed. A run without the trust flag also committed, which is the trust gate in section 3 at work. The `PreToolUse` input Codex sent was captured and matches the fields listed in section 8. Before the `_generated` key was removed, the same setup reported `failed to parse plugin hooks config` and ran neither hook; after, the session-start hook ran as well. The in-session `/hooks` trust flow was not exercised.
+
 The shell install flow was run against Codex CLI 0.147.0 on 2026-08-19 with an isolated `CODEX_HOME`, using both the `Obedience-Corp/festival` shorthand and a local repository path. Both produced `installed, enabled` at plugin version 1.3.1, and the `codex plugin list` excerpt in section 3 is from that run. Component counts were taken from the plugin tree on the same date.
 
-The in-session slash-command spelling is documented by the plugin bundle and was not exercised from a script. The session-start hook's corrected manifest parses and the plugin loads enabled; the hook was not observed firing on Codex, because an isolated `CODEX_HOME` carries no credentials and the run stopped at authentication. The same hook was observed firing on Claude Code (see that page's verification note). The commands and agents gap in section 5 comes from the Festival plugin survey, verified 2026-06-16.
+The in-session slash-command spelling is documented by the plugin bundle and was not exercised from a script. In that 2026-08-19 run the session-start hook was not observed firing on Codex, because an isolated `CODEX_HOME` carries no credentials and the run stopped at authentication. The same hook was observed firing on Claude Code (see that page's verification note). The commands and agents gap in section 5 comes from the Festival plugin survey, verified 2026-06-16.
