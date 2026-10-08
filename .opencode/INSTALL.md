@@ -19,6 +19,18 @@ At load the plugin runs `scripts/ensure-festival.sh` through opencode's Bun shel
 update the `fest` and `camp` CLIs. It is best-effort and idempotent, and it never blocks plugin
 load (failures are swallowed so opencode still starts).
 
+## Commit guard
+
+The plugin also registers a `tool.execute.before` hook. Before each `bash` tool call it runs
+`scripts/commit-guard.sh`, the same script the Claude Code bundle ships, with the command and the
+directory the command runs in (the tool's `workdir` resolved against the session directory, or
+the session directory itself). When the command has a raw `git commit` segment and `camp id`
+succeeds in that directory, the hook throws with the guard's reason and the command never runs; use
+`camp commit`, `camp p commit`, or `fest commit` instead. Everything else passes untouched,
+including a missing `camp` or `jq` and a guard that fails to start, and the hook never answers a
+permission prompt. Set `CAMP_ALLOW_RAW_GIT=1` to allow one raw commit deliberately. A global
+install fires the hook in every session, and it stays quiet outside a camp.
+
 ## Skills
 
 The 12 Festival skills ship under `.opencode/skills/` and are picked up by

@@ -1,3 +1,5 @@
+const COMMIT_GUARD = "hooks/scripts/gemini-commit-guard.sh";
+
 function context(ctx) {
   const imports = ctx.skills.map((s) => `@./claude-plugin/skills/${s.name}/SKILL.md`).join("\n");
   return `<!-- ${ctx.banner} -->
@@ -17,8 +19,17 @@ cannot run, install them by hand:
 curl -fsSL https://raw.githubusercontent.com/Obedience-Corp/festival/main/install.sh | bash
 \`\`\`
 
+Inside a camp, a \`BeforeTool\` hook refuses a raw \`git commit\` and returns the reason as the tool
+error. Commit with \`camp commit\` at the camp root, \`camp p commit\` inside \`projects/*\`, or
+\`fest commit\` during a festival instead; the \`campaign-commit\` skill explains which.
+
 ${imports}
 `;
+}
+
+function withBanner(ctx, script) {
+  const nl = script.indexOf("\n");
+  return script.slice(0, nl + 1) + `# ${ctx.banner}\n` + script.slice(nl + 1);
 }
 
 function geminiHooks(ctx) {
@@ -33,6 +44,19 @@ function geminiHooks(ctx) {
               name: "festival-install",
               type: "command",
               command: "bash ${extensionPath}/claude-plugin/hooks/scripts/ensure-festival.sh",
+            },
+          ],
+        },
+      ],
+      BeforeTool: [
+        {
+          matcher: "^run_shell_command$",
+          hooks: [
+            {
+              name: "festival-commit-guard",
+              type: "command",
+              command: `bash "\${extensionPath}/${COMMIT_GUARD}"`,
+              description: "Block a raw git commit inside a camp; camp and fest have their own commit commands.",
             },
           ],
         },
@@ -55,5 +79,6 @@ export default {
     });
     ctx.writeText("GEMINI.md", context(ctx));
     ctx.writeJSON("hooks/hooks.json", geminiHooks(ctx));
+    ctx.writeText(COMMIT_GUARD, withBanner(ctx, ctx.readTemplate("gemini", "sh")));
   },
 };

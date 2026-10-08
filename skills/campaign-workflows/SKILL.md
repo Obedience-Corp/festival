@@ -1,7 +1,7 @@
 ---
 name: campaign-workflows
 description: Manage a camp's intents, dungeons, and workflow collections with `camp`. Use when capturing ideas, promoting intents to festivals, archiving work, or moving workflow items between statuses.
-version: "1.4.0"
+version: "1.4.1"
 author: Obedience Corp
 license: Apache-2.0
 metadata:

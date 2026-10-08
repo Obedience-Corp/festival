@@ -15,6 +15,10 @@ cannot run, install them by hand:
 curl -fsSL https://raw.githubusercontent.com/Obedience-Corp/festival/main/install.sh | bash
 ```
 
+Inside a camp, a `BeforeTool` hook refuses a raw `git commit` and returns the reason as the tool
+error. Commit with `camp commit` at the camp root, `camp p commit` inside `projects/*`, or
+`fest commit` during a festival instead; the `campaign-commit` skill explains which.
+
 @./claude-plugin/skills/camp-navigation/SKILL.md
 @./claude-plugin/skills/camp-projects/SKILL.md
 @./claude-plugin/skills/camp-workitems/SKILL.md

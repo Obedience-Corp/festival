@@ -20,6 +20,18 @@ At load the plugin runs \`scripts/ensure-festival.sh\` through opencode's Bun sh
 update the \`fest\` and \`camp\` CLIs. It is best-effort and idempotent, and it never blocks plugin
 load (failures are swallowed so opencode still starts).
 
+## Commit guard
+
+The plugin also registers a \`tool.execute.before\` hook. Before each \`bash\` tool call it runs
+\`scripts/commit-guard.sh\`, the same script the Claude Code bundle ships, with the command and the
+directory the command runs in (the tool's \`workdir\` resolved against the session directory, or
+the session directory itself). When the command has a raw \`git commit\` segment and \`camp id\`
+succeeds in that directory, the hook throws with the guard's reason and the command never runs; use
+\`camp commit\`, \`camp p commit\`, or \`fest commit\` instead. Everything else passes untouched,
+including a missing \`camp\` or \`jq\` and a guard that fails to start, and the hook never answers a
+permission prompt. Set \`CAMP_ALLOW_RAW_GIT=1\` to allow one raw commit deliberately. A global
+install fires the hook in every session, and it stays quiet outside a camp.
+
 ## Skills
 
 The ${ctx.skills.length} Festival skills ship under \`.opencode/skills/\` and are picked up by
@@ -41,6 +53,7 @@ export default {
   emit(ctx) {
     ctx.writeText(".opencode/plugins/festival.js", ctx.readTemplate("opencode", "js"), "//");
     ctx.writeText(".opencode/scripts/ensure-festival.sh", ctx.bundledScript("hooks/scripts/ensure-festival.sh"));
+    ctx.writeText(".opencode/scripts/commit-guard.sh", ctx.bundledScript("hooks/scripts/commit-guard.sh"));
     for (const skill of ctx.skills) {
       ctx.writeText(`.opencode/skills/${skill.name}/SKILL.md`, ctx.readPluginFile(skill.path));
     }
