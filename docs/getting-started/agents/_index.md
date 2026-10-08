@@ -23,7 +23,7 @@ Some agents have their own skill channels and their own conventions. These guide
 
 - [Claude Code](claude-code/): install the plugin from the marketplace and get the skills, slash commands, and agents, plus what to know about the two hooks on current builds.
 - [Codex](codex/): install the plugin from the self-hosted marketplace and get the skills plus the session install hook.
-- [Cursor](cursor/): the plugin carries skills, commands, agents, and a blocking install hook.
+- [Cursor](cursor/): the plugin carries skills, commands, agents, and a session start install hook.
 - [Gemini CLI](gemini/): install the extension from GitHub in one command.
 - [Hermes Agent](hermes/): install the binaries, add the Festival skills tap, and run the loop from a camp root.
 - [opencode](opencode/): drop the plugin into your opencode config and let native skill discovery do the rest.

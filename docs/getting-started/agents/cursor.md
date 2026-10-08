@@ -34,7 +34,7 @@ festival --version
 
 If either one is missing or resolves somewhere you did not expect, `festival doctor` reports the installer's view of your PATH, sources, and receipts. Full install options are on the [installation page](../installation/).
 
-The plugin's install hook does this for you as well, in the way section 5 describes. Doing it by hand first means your first shell command in a session does not pause.
+The plugin's install hook does this for you as well, in the way section 5 describes. Doing it by hand first means the agent's first `fest` command never races the download.
 
 ## 2. Open a camp
 
@@ -86,7 +86,7 @@ Cursor and Claude Code are the two harnesses that carry all four surfaces. If yo
 
 ## 5. How the CLIs get installed
 
-This is the one place where the Cursor bundle differs in shape from the others, and the reason is worth knowing.
+Like the Codex and Gemini bundles, the Cursor bundle installs the tools from a session start hook. The details below explain why it does not use a shell-command hook instead.
 
 The bundle runs the installer from a `sessionStart` hook, which fires when a new agent session starts. The hook command is `bash "${CURSOR_PLUGIN_ROOT}/hooks/scripts/cursor-install-hook.sh"` with a 120 second timeout, and Cursor replaces `${CURSOR_PLUGIN_ROOT}` with the plugin's install path.
 
@@ -124,9 +124,9 @@ Phase gates are checkpoints for a human. The agent submits a gate and stops. You
 
 ## What was verified
 
-On 2026-10-07 the plugin was loaded with the Cursor CLI (`agent` 2026.10.01) using `agent -p --plugin-dir <clone>/cursor-plugin` in an empty git directory, with Cursor's config directory, the installer's cache directory, and its install directory all pointed at scratch paths. The agent's context listed the 12 skills from `cursor-plugin/skills/` and the 2 agents from `cursor-plugin/agents/`, and the agent listed the 11 commands. A test `echo` ran. The hook ran before it: the installer's update check stamp appeared in the scratch cache directory. Two control runs confirmed that the CLI enforces the hook's answer: a wrapper that printed text that is not JSON, and one that answered `deny`, each stopped the `echo` from running. A further run used a copy of the plugin whose installer was replaced by a stub that printed to stdout, exited 1, and recorded each call. The `echo` still ran, so the real wrapper kept the installer's stdout out of its answer and allowed the command when the installer failed. The stub's record showed the hook running with the plugin directory as its working directory.
+On 2026-10-08 the plugin was loaded with the Cursor CLI (`agent` 2026.10.01) using `agent -p --plugin-dir <clone>/cursor-plugin` in an empty git directory, with the installer's cache and install directories pointed at scratch paths. The agent's context listed the 12 skills from `cursor-plugin/skills/` and the 2 agents from `cursor-plugin/agents/`, and a test `echo` ran. In a second run, with the installer replaced by a stub that records each call, the `sessionStart` hook ran once at session start, with the plugin directory as its working directory.
 
-Not verified: the Cursor editor itself (the steps in section 3 that use **Customize**, the local plugin folder, and team marketplaces come from Cursor's documentation), slash command registration in the editor, and a first install that actually downloads `fest` and `camp` from inside Cursor.
+Not verified: the Cursor editor itself (the steps in section 3 that use **Customize**, the local plugin folder, and team marketplaces come from Cursor's documentation), the 11 slash commands (the CLI's `-p` mode did not show them, and their registration was not observed in the editor), and a first install that actually downloads `fest` and `camp` from inside Cursor.
 
 `just plugin check` enforces the bundle's structure: the manifest parses, every path it references stays inside `cursor-plugin/` and exists, the hook command runs from `${CURSOR_PLUGIN_ROOT}` and points at a file that exists, the repository-root `.cursor-plugin/` holds only `marketplace.json` and its entry resolves to `cursor-plugin/`, the hook is a `sessionStart` hook and no permission hook is registered, and the wrapper prints `{}` and exits 0 when the installer is missing, fails, or succeeds.
 

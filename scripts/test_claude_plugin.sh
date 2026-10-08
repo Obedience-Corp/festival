@@ -263,6 +263,17 @@ generated_targets_check() {
         fi
     done < <(find "$tmp" -type f | sort)
 
+    local owned rel
+    for owned in cursor-plugin .cursor-plugin plugins/festival .opencode skills .agents/plugins; do
+        [ -d "$repo_root/$owned" ] || continue
+        while IFS= read -r rel; do
+            if [ ! -f "$tmp/$rel" ]; then
+                echo "file in a generated target that the generator does not write (remove it or edit claude-plugin/): $rel" >&2
+                drift=1
+            fi
+        done < <(cd "$repo_root" && find "$owned" -type f ! -name .DS_Store | sort)
+    done
+
     if [ "$drift" -ne 0 ]; then
         echo "generated_targets_check failed: committed targets do not match claude-plugin/" >&2
         return 1
