@@ -50,7 +50,8 @@ in-repo surface where it does not). No fork-PR sync exists; the Superpowers
   the latest release (Gemini CLI documents the full URL, not owner/repo shorthand), with `--ref=`
   pinning; `gemini extensions update` updates it. The gallery at `geminicli.com/extensions` indexes
   public repos with `gemini-extension.json` at the root and the `gemini-cli-extension` topic, crawled
-  daily, so publishing is "add the repo topic," not a scripted push.
+  daily, so publishing is "add the repo topic," not a scripted push. Festival is listed there
+  (checked 2026-10-08) although the repo does not currently carry the topic.
 - **Surface**: the repo root itself (`gemini-extension.json` + `GEMINI.md`, generated, drift-covered).
 - Source: `packaging/survey/gemini.md`.
 
