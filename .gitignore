@@ -16,3 +16,6 @@ resources/_gen/
 *.swp
 *.swo
 *~
+
+# Claude Code mod engine-generated typings
+claude-plugin/.claude-plugin/types/

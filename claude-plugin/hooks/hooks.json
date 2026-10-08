@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/ensure-festival.sh",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/scripts/ensure-festival.sh\"",
             "timeout": 60
           }
         ]
@@ -18,10 +18,13 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/commit-guard.sh"
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/scripts/commit-guard.sh\""
           }
         ]
       }
     ]
-  }
+  },
+  "modules": [
+    "./mod/register.tsx"
+  ]
 }

@@ -15,12 +15,18 @@ docs linked at the end.
 
 ```
 claude-plugin/
-  .claude-plugin/plugin.json    plugin manifest (name, version, description)
+  .claude-plugin/plugin.json    plugin manifest (name, version, planningTakeover option, types)
+  tsconfig.json                 type-check config for the mod (extends the engine-generated one)
+  types/index.d.ts              types for the mod's `$.state` atoms
   skills/                       12 skills, one SKILL.md each
   commands/                     11 fest-* and camp-* slash commands
   agents/                       fest-executor, fest-planner
   hooks/
-    hooks.json                  SessionStart + PreToolUse hook wiring
+    hooks.json                  SessionStart + PreToolUse hook wiring, plus the `modules` entry for the mod
+    mod/register.tsx            the live festival view and planning takeover (Claude Code 2.1.290+)
+    mod/fest.ts                 pure helpers that shape `fest` JSON into the band and tree rows
+    mod/camp.ts                 camp-root lookup for @-mentions
+    mod/*.test.ts               tests, run by `claude plugin test`
     scripts/ensure-festival.sh  installs and updates fest and camp
     scripts/ensure-festival.test.sh  unit tests for local-version parsing (run by the gate)
     scripts/commit-guard.sh     blocks raw `git commit` inside a camp
@@ -93,13 +99,91 @@ Outside a camp, in repos without `camp`, or on machines without `jq`, it
 fails open. Set `CAMP_ALLOW_RAW_GIT=1` to override deliberately for one command.
 `commit-guard.test.sh` encodes the detection matrix and runs in the plugin gate.
 
+## Live festival view (mod)
+
+The plugin ships an in-process hooks module, `hooks/mod/register.tsx`, that
+Claude Code loads from the `modules` key in `hooks/hooks.json`. It needs Claude
+Code 2.1.290 or newer. Older versions either ignore the module or report that
+it failed to load. Either way the rest of this plugin (skills, commands,
+agents, the install hook, and the commit guard) keeps working.
+
+What it draws:
+
+- A one-line band above the prompt with the current position, for example
+  `festival build-todo-app-BT0001 | 003_IMPLEMENT > 01_app_core > 01_todo_model | 19/35 (54%)`.
+  In a workflow phase it names the current step, a blocked task or step is
+  marked `(blocked)`, a finished festival says `complete`, and in a standalone
+  workflow it shows `step N/M` with the step name. The current position is the
+  task or step in progress, or else the first unfinished one. It refreshes at
+  session start (awaited), then after each turn and after any Bash call that
+  runs `fest` or `camp`, without waiting for those refreshes to finish.
+- A pane that shows the festival tree with finished branches collapsed and the
+  current branch expanded, headed by the task count and percentage, or a
+  standalone workflow's steps. When the tree is taller than the pane, the view
+  follows the current task so it stays on screen. It refreshes every five
+  seconds while open.
+
+On a narrow terminal the pane sits inline above the prompt instead of docked
+beside the transcript, and the engine leaves no rows for the AbovePrompt band
+while that inline pane is open (see `AbovePrompt` `maxRows` in the mod types).
+
+When the session has no interactive surface (for example `claude -p`) the
+module does no band or pane work, and `/fest-watch` says it needs an
+interactive session. When `fest` is missing, exits non-zero, or prints something it cannot
+read, the module draws nothing and leaves the normal screen alone.
+
+Commands the module registers (the markdown commands `fest-next` and
+`fest-status` are separate and unchanged):
+
+- `/fest-watch` opens or closes the pane.
+- `/fest-task` prints the text of `fest next`.
+- `/fest-progress` prints the text of `fest progress`.
+
+Camp-root mentions: inside a camp, an `@path` mention that does not exist
+relative to the current directory is retried against the camp root. This lets
+you mention `@docs/guide.md` from inside a project directory. These mentions
+have no autocomplete; you type the whole path.
+
+Planning takeover is an option, `planningTakeover`, set when you enable the
+plugin. It is off by default. When on, and only while the session's current
+directory is inside a camp (a `.campaign` directory in it or an ancestor), the
+module hides the `Plan` agent, denies `EnterPlanMode`, denies `TodoWrite` and
+`TaskCreate`, and drops the todo and task reminders, so planning and task
+tracking go through Festival. Outside a camp the option does nothing.
+
+What the module reads and runs, and nothing else: `fest show --json` for the
+band and pane, `fest version --short` once each time the module loads (retried
+if it fails), `fest next` and `fest progress` only when you run `/fest-task` or
+`/fest-progress`, and file existence checks for @-mentions. The two commands run
+exactly as they would in a terminal, so they can record workflow progress or
+migrate legacy progress files the same way. The background view never runs
+`fest next`. Before fest 0.9.3, `fest show` itself can write: it migrates a
+festival's legacy `.fest/progress.yaml` or `.fest/workflow_state.yaml`, and fest
+0.9.1 also rewrites a standalone workflow's cached summary. So with an older
+fest (including 0.9.3 pre-releases) the band and pane only run inside a festival
+directory that has neither legacy file, and elsewhere stay empty with a note to
+update fest. It makes no network calls and never asks
+you a question. Every process it starts has a timeout (5 seconds for JSON and
+the version check, 10 seconds for text). Every hook that can refuse something
+has a `.catch` that lets the original action through, so a fault in the module
+cannot block a tool call or a mention.
+
+`claude plugin validate claude-plugin` lists the module's hooks and the `$`
+calls it makes, so you can audit it without reading the source.
+
 ## Local development gate
 
 From the festival repo root:
 
 - `just plugin check` runs `scripts/test_claude_plugin.sh`: JSON parse of both
   manifests, plugin semver and metadata, component frontmatter, in-bundle hook
-  references, the CLI sync-check, and the install-hook smoke test.
+  references, the CLI sync-check, the install-hook smoke test, and the mod
+  check. The mod check always verifies the module's manifest wiring. When the
+  `claude` CLI is installed it also runs `claude plugin validate`,
+  `claude plugin test`, and a `tsc` type-check against the typings the engine
+  writes to `.claude-plugin/types/` (git-ignored; the gate produces them with
+  one `claude -p` load when absent). Without `claude` those three steps are
+  skipped with a notice, so the gate and the release never require Claude Code.
 - `just plugin list` lists the bundled commands, skills, and agents.
 - `just plugin bump <version>` rewrites the `version` in `plugin.json` and
   `marketplace.json` together and rejects a non-semver argument.
@@ -129,6 +213,8 @@ checksum file, and the platform archive. Downloads are checksum-verified
 before install. Update checks are rate-limited to once per day. When `fest`
 and `camp` are already on PATH and current, the hook does not download
 anything.
+
+The mod described above makes no network calls either.
 
 The `PreToolUse` commit guard does not make network calls. It only inspects
 the Bash command line, and only when the session is inside a camp and
