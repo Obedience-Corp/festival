@@ -154,7 +154,67 @@ The plugin's slash commands are shortcuts to these same verbs. `/fest-next` and 
 
 Phase gates are checkpoints for a human. The agent submits a gate and stops. You run `fest workflow approve` when you have looked at what it did.
 
-## 8. Going further
+## 8. The live festival view
+
+On Claude Code 2.1.290 or newer the plugin also loads a small in-process module that shows where you are in a festival without a model turn. It is separate from the 11 markdown slash commands and the two hooks counted in section 4.
+
+### The band and the pane
+
+A one-line band sits above the prompt:
+
+```text
+festival build-todo-app-BT0001 | 003_IMPLEMENT > 01_app_core > 01_todo_model | 19/35 (54%)
+```
+
+It shows the festival, the current position (phase, sequence, task), and tasks completed out of total. The current position is the task or step in progress, or else the first unfinished one. In a workflow phase it names the current step. A blocked task or step is marked `(blocked)`, a finished festival says `complete`, and a standalone workflow shows `step N/M` with the step name.
+
+The band refreshes at session start, after each turn, and after any Bash call that runs `fest` or `camp`.
+
+`/fest-watch` opens and closes a pane with the festival tree. Finished branches are collapsed and the current branch is expanded. The pane is headed by the task count and percentage, follows the current task when the tree is taller than the pane, and refreshes every five seconds while open. For a standalone workflow it lists the workflow's steps. On a narrow terminal the pane sits above the prompt, and the band is not drawn while it is open.
+
+### Commands
+
+| Command | What it does |
+| --- | --- |
+| `/fest-watch` | Opens or closes the live pane |
+| `/fest-task` | Prints the output of `fest next` |
+| `/fest-progress` | Prints the output of `fest progress` |
+
+None of these takes a model turn. `/fest-task` and `/fest-progress` run the real CLI exactly as a terminal would, so `fest next` can record workflow progress and either command can migrate legacy progress files. The background view never runs `fest next`.
+
+### Camp-root @-mentions
+
+Inside a camp, an `@path` mention that does not exist relative to your current directory is retried against the camp root. From `projects/my-app` you can mention `@docs/guide.md` and reach the camp's `docs/guide.md`. There is no autocomplete for these, so type the whole path. A mention that contains `..` is not redirected.
+
+### Planning takeover (opt-in)
+
+The `planningTakeover` option is off by default. When it is on, and only while the session's current directory is inside a camp, the plugin hides the `Plan` agent, denies `EnterPlanMode`, denies `TodoWrite` and `TaskCreate`, and drops the todo and task reminders. Planning and task tracking then go through Festival. Outside a camp the option does nothing.
+
+To turn it on, run `/plugin`, open the Installed tab, select `festival`, choose Configure options, and enable "Festival planning takeover".
+
+### Requirements
+
+- Claude Code 2.1.290 or newer for the module. Older versions ignore it or report that it failed to load; the skills, commands, agents, and both hooks keep working.
+- fest 0.9.3 or newer for the view to work everywhere. Before 0.9.3, `fest show` can itself migrate a festival's legacy `.fest/progress.yaml` or `.fest/workflow_state.yaml`. With an older fest, the view therefore runs only inside a festival directory that has neither legacy file. Elsewhere it stays empty and the pane shows a note to update fest.
+
+### Where it does not draw
+
+The band and pane need an interactive session. In `claude -p` the module draws nothing, and `/fest-watch` says it needs an interactive session. It does not draw in the VS Code extension panel. The Claude desktop app's Code tab bundles its own Claude Code, so it needs that bundled version to be 2.1.290 or newer. If `fest` is missing or prints something unreadable, the module draws nothing and leaves the screen alone.
+
+### What it reads and runs
+
+- `fest show --json` for the band and pane.
+- `fest version --short`, once each time the module loads.
+- `fest next` and `fest progress`, only when you run `/fest-task` or `/fest-progress`.
+- File existence checks for @-mentions.
+
+It makes no network calls and never asks you a question. Every process it starts has a timeout, and every hook that can refuse something lets the original action through if the module faults, so it cannot block a tool call or a mention. `claude plugin validate claude-plugin` lists the module's hooks and the calls it makes.
+
+### Turning it off
+
+Disable the plugin (`claude plugin disable festival@festival`, or `/plugin`), or set `disableAllHooks` in your Claude Code settings. Either removes the band, the pane, and the three commands. Disabling the plugin also removes its skills, commands, agents, and hooks; `disableAllHooks` turns off hooks generally, not just this module.
+
+## 9. Going further
 
 [Claude Code project management](/use-cases/claude-code-project-management/) covers the session-instructions pattern: what to put in front of the agent so it drives the loop without being told each step. The [quickstart](../quickstart/) is the agent-agnostic version of this page.
 

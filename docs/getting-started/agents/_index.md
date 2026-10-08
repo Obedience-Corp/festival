@@ -21,7 +21,7 @@ That reaches the agents behind [skills.sh](https://skills.sh/Obedience-Corp/fest
 
 Some agents have their own skill channels and their own conventions. These guides cover the setup path end to end for each one.
 
-- [Claude Code](claude-code/): install the plugin from the marketplace and get the skills, slash commands, and agents, plus what to know about the two hooks on current builds.
+- [Claude Code](claude-code/): install the plugin from the marketplace and get the skills, slash commands, and agents, plus what to know about the two hooks on current builds and the live festival band and pane.
 - [Codex](codex/): install the plugin from the self-hosted marketplace and get the skills plus the session install hook.
 - [Cursor](cursor/): the plugin carries skills, commands, agents, and a session start install hook.
 - [Gemini CLI](gemini/): install the extension from GitHub in one command.
