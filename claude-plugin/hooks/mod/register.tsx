@@ -46,12 +46,14 @@ async function festShowIsReadOnly($: any): Promise<boolean | null> {
 }
 
 const NEEDS_NEWER_FEST = `This view needs fest ${READ_ONLY_FEST} or newer here.`
+const FEST_UNAVAILABLE = 'fest did not answer `fest version --short`; is it installed?'
 
 type PollPlan = { blocker: string | null; cwd?: string }
 
 async function pollPlan($: any): Promise<PollPlan> {
   if (showIsReadOnly === null) showIsReadOnly = await festShowIsReadOnly($)
   if (showIsReadOnly === true) return { blocker: null }
+  if (showIsReadOnly === null) return { blocker: FEST_UNAVAILABLE }
   try {
     const exists = (p: string) => $.fs.exists(p)
     const cwd = await $.session.cwd()
