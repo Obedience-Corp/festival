@@ -6,13 +6,15 @@
 
 **Festival is a vibe engineering framework.**
 
-It uses the filesystem and Git. You configure it to your workflows and processes. When agents plan and executes, the work is done the way you want it done.
+It uses the filesystem and Git. You configure it to your workflows and processes. When agents plan and execute, the work is done the way you want it done.
+
+I was working with agents at scale, and the bottleneck moved from doing the work to reviewing, understanding, and tracking it. That was draining the time I wanted for thinking about the right thing to do.
 
 Everything lives in a camp workspace: your skills, planning documents, one-off scripts, and projects. A festival is an ambitious goal inside that camp. Specs, smaller workflows, and ideas you intend to execute are tracked as work items.
 
 You can create as many camps as you need and specialize each with its own skills, workflows, and processes. As you refine them over time, agents work differently in each camp. Switch between camps with `camp switch` (`csw`) to pick up that workspace's context and way of working.
 
-You describe a goal in a sentence. Your agent plans that goal inside the workflows you set up, and `fest next` runs the next step. The plan, the checks, and the commits stay in files and Git when the session ends.
+You describe a goal in a sentence. Your agent plans that goal inside the workflows you set up, and `fest next` shows it the next step. The plan, the checks, and the commits stay in files and Git when the session ends.
 
 Use it with Claude Code, Codex, Grok Build, Cursor, OpenCode, or another agent that can read files and run commands.
 
@@ -33,7 +35,7 @@ review findings, and verification evidence for each build.
 [Inspect the three festivals](https://github.com/Festival-Examples/codesignal-practice-simulator/tree/main/festivals) ·
 [Watch all three replays](https://github.com/Festival-Examples/codesignal-practice-simulator#how-this-was-built)
 
-[Try your own handoff](#get-started), or star this repository to keep it handy.
+[Try it on one real goal](#get-started), or star this repository to keep it handy.
 
 ## What would you hand off?
 
@@ -49,9 +51,35 @@ The goal, constraints, and success criteria come from you. Your agent works thro
 
 ## Get started
 
-### 1. Install
+**Try it on one real goal.** Start with one repository and one goal you already want to finish. Use your existing coding agent to plan the work, execute it, and leave the results ready for review.
 
-Choose one method. Both install `camp`, `fest`, and the `festival` manager. Git is required.
+### 1. Set up with your agent
+
+Replace the brackets and paste this into your coding agent. It will install Festival if needed, create one camp, and link your existing repository. Git is required.
+
+```text
+Help me set up Festival for this goal: [what you want done and how you'll know it worked].
+My existing repository is at: [full local path].
+
+If `camp`, `fest`, or `festival` is missing, install Festival. On macOS with Homebrew, use `brew install --cask Obedience-Corp/tap/festival`. On macOS or Linux with Node.js, use `npm install -g @obedience-corp/festival`. Run `festival doctor` to check the install.
+
+To update camp, fest, and festival together, run `festival update`. Do not pass `--force`.
+
+Ask me for a camp name, a one-line description, and a mission. Create the camp with `camp create <name> -d "<description>" -m "<mission>"`. Read `camp create --help` before adding flags. Use `camp create` for this. Do not run `camp init` or `festival setup`. Use the camp path printed by the command (by default, `~/campaigns/<name>`).
+
+Set up navigation for my shell, adding the following lines to its config only if they are missing. For zsh or bash, use `eval "$(camp shell-init <shell>)"` and `eval "$(fest shell-init <shell>)"`, replacing `<shell>` with `zsh` or `bash`. For fish, use `camp shell-init fish | source` and `fest shell-init fish | source`. Tell me to open a new terminal and run `csw <name>`; you can keep working from the camp root.
+
+From the camp root, run `camp project link <full-local-repo-path> --yes`. This leaves the repository in place, links it under `projects/`, and adds a `.camp` attachment file to it.
+
+Read the camp and project instructions, then use `fest understand` to learn the workflow. Skills are optional. Create a festival for my goal, link it to the project with `fest link` from the festival directory, and run the `fest next` loop. Ask me when you need a decision. Show me the festival path so I can follow progress, and leave the results and verification evidence ready for review.
+```
+
+The [agent setup guides](https://docs.fest.build/getting-started/agents/) cover optional skills and integrations for your tool.
+
+<details>
+<summary>Prefer to set up manually?</summary>
+
+Choose one method. Both install `camp`, `fest`, and the `festival` manager.
 
 **macOS with Homebrew**
 
@@ -65,64 +93,33 @@ brew install --cask Obedience-Corp/tap/festival
 npm install -g @obedience-corp/festival
 ```
 
-Then check the install:
+Check the install and create one camp:
 
 ```bash
 festival doctor
-```
-
-[Linux packages, WSL2, and other install methods](https://docs.fest.build/getting-started/installation/). Native Windows support is being hardened; use WSL2 for now.
-
-### 2. Make a camp for your work
-
-A **camp** holds the context for one part of your life: your job, a side project, or a hobby. It can contain several projects, along with their research, plans, and decisions.
-
-After installing, create a camp:
-
-```bash
 camp create my-camp
-camp create work
-csw my-camp
-csw work
 ```
 
-`camp create` puts each camp in `~/campaigns/` and asks for a description and mission. `csw` is the shorthand for `camp switch` and moves your shell from one camp to the other. Add the [shell integration](https://docs.fest.build/getting-started/shell-setup/) so the shorthand exists. With no name, `csw` opens the picker.
-
-<p align="center">
-  <img src="docs/images/demos/tui-camp-create.gif" alt="One session creates two camps, answering the description and mission prompts, then csw switches the shell from my-camp to work." width="700">
-</p>
-
-One recording, in a fresh demo home. On your machine the camps are at `~/campaigns/my-camp` and `~/campaigns/work`.
-
-If an agent is already open, paste this. It installs Festival when `camp` is missing, updates `camp`, `fest`, and `festival` together, creates the camp, and adds the shell hook. Open a new terminal and run `csw <name>` to enter the camp.
-
-```text
-If `camp` is missing, install Festival, then run `festival doctor`. On macOS with Homebrew, use `brew install --cask Obedience-Corp/tap/festival`. On macOS or Linux with Node.js, use `npm install -g @obedience-corp/festival`.
-
-To update camp, fest, and festival together, run `festival update`. Do not pass `--force`.
-
-Ask me for a camp name, a one-line description, and a mission. Create the camp with `camp create <name> -d "<description>" -m "<mission>"`. The camp is at `~/campaigns/<name>`. Read `camp create --help` before adding flags. Use `camp create` for this. Do not run `camp init` or `festival setup`.
-
-After Festival is installed, add the shell hook with the installer. Detect my shell and run one of `festival shell-init zsh --append --yes`, `festival shell-init bash --append --yes`, or `festival shell-init fish --append --yes`. Pass `--yes`. Without it, and with no terminal to answer, the installer writes nothing. The command skips the edit when the hook is already there. Then tell me to open a new terminal and run `csw <name>`. You can keep working in `~/campaigns/<name>`.
-
-Skills are optional. The CLI can teach you the workflow.
-```
-
-Open your coding agent at that camp root. The [agent setup guides](https://docs.fest.build/getting-started/agents/) cover skills and integrations for your tool. Skills are optional; the CLI can teach your agent the workflow.
-
-Link a repository you already use. Replace the path with its full local path:
+`camp create` asks for a description and mission. By default, it creates your camp at `~/campaigns/my-camp`. Enter the path printed by the command and link a repository you already use:
 
 ```bash
+cd ~/campaigns/my-camp
 camp project link /path/to/your-existing-repo
 ```
 
-Your repository stays where it is. Camp links it under `projects/` and adds a `.camp` attachment file to the repository. You can also [clone a project into the camp](https://docs.fest.build/cli-reference/camp/camp_project_add/).
+Replace the repository path with its full local path. Your repository stays where it is. Camp links it under `projects/` and adds a `.camp` attachment file to the repository. You can also [clone a project into the camp](https://docs.fest.build/cli-reference/camp/camp_project_add/).
 
-### 3. Give your agent a goal
+Open your coding agent at the camp root, then give it a goal below. Add the [shell integration](https://docs.fest.build/getting-started/shell-setup/) to enable navigation shortcuts such as `csw`.
 
-A **festival** is the structured plan and work record for a goal. Tell your agent what you want done and ask it to create a festival for the work:
+[Linux packages, WSL2, and other install methods](https://docs.fest.build/getting-started/installation/). Native Windows support is being hardened; use WSL2 for now.
 
-> I want [what you want done]. Create a festival for it and run the `fest next` loop.
+</details>
+
+### 2. Give your agent a goal
+
+If you used the setup prompt, your agent already has your first goal. For manual setup or your next goal, tell it:
+
+> I want [what you want done]. Success means [what you will check]. Create a festival for it, link it to the project, and run the `fest next` loop. Show me the festival path and leave the results ready for review.
 
 <p align="center">
   <img src="docs/images/demos/tui-delegate.gif" alt="Grok Build receives a goal, reads Festival guidance, and creates a design work item and festival plan." width="700">
@@ -130,11 +127,19 @@ A **festival** is the structured plan and work record for a goal. Tell your agen
 
 A real Grok Build session planning a sample app feature. The agent handles the planning commands; you review the proposed work.
 
-### 4. Follow progress and review the result
+### 3. Follow progress and review the result
 
 Your agent handles planning and execution, asking you when it reaches an approval point or needs a decision. You can focus on other work and review the results when they're ready.
 
-To check progress along the way, open another terminal in the festival directory and run `fest watch`.
+To check progress along the way, open another terminal at the festival path your agent gives you and run `fest watch`.
+
+When the work is ready, ask your agent to show you:
+
+- The result against your original goal and success criteria.
+- The changed files and commits in your project.
+- The test and review evidence, including failures, unresolved questions, and decisions that still need you.
+
+Use the saved festival plan and work records together with your project's Git history to review what happened before accepting the result.
 
 <p align="center">
   <img src="docs/images/demos/tui-fest-watch.gif" alt="The fest watch terminal view updates a festival tree as scripted sample tasks advance." width="700">
@@ -161,10 +166,6 @@ Use `fest gif --embed` to refresh it or add a replay to an older festival.
 
 See the [replay guide](https://docs.fest.build/guides/festival-replays/) for
 examples, sharing, and recovery.
-
-## Why I built Festival
-
-I was working with agents at scale, and the bottleneck moved from doing the work to reviewing, understanding, and tracking it. That was draining the time I wanted for thinking about the right thing to do.
 
 ## How the work stays coherent
 
@@ -204,6 +205,27 @@ Run `festival browse` to explore available CLI plugins. See [suite and plugin ma
 ## Explore the tools
 
 The GIFs play on this page at a readable size.
+
+<details>
+<summary>Create specialized camps and switch between them</summary>
+
+Once you have a camp for your first goal, you can add others for your job, side projects, or hobbies. Give each its own skills, workflows, and processes so your agents work the way you want in that context.
+
+```bash
+camp create work
+csw work
+csw my-camp
+```
+
+`csw` is the shorthand for `camp switch`. It requires the [shell integration](https://docs.fest.build/getting-started/shell-setup/). With no name, it opens the camp picker.
+
+<p align="center">
+  <img src="docs/images/demos/tui-camp-create.gif" alt="One session creates two camps, answering the description and mission prompts, then csw switches the shell from my-camp to work." width="700">
+</p>
+
+This recording shows both camps being created in a fresh demo home, then switching between them. By default, the camps are at `~/campaigns/my-camp` and `~/campaigns/work`.
+
+</details>
 
 <details open>
 <summary>Move between projects, plans, and camps</summary>
