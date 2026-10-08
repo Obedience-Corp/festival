@@ -1,0 +1,14 @@
+{
+  "name": "festival",
+  "owner": {
+    "name": "Obedience Corp"
+  },
+  "plugins": [
+    {
+      "name": "festival",
+      "source": "./cursor-plugin",
+      "description": "Festival Methodology: goal-oriented project management for human-AI development workflows. Provides fest and camp CLI integration, automatic installation, and methodology guidance.",
+      "version": "1.4.0"
+    }
+  ]
+}

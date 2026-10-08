@@ -263,6 +263,17 @@ generated_targets_check() {
         fi
     done < <(find "$tmp" -type f | sort)
 
+    local owned rel
+    for owned in cursor-plugin .cursor-plugin plugins/festival .opencode skills .agents/plugins; do
+        [ -d "$repo_root/$owned" ] || continue
+        while IFS= read -r rel; do
+            if [ ! -f "$tmp/$rel" ]; then
+                echo "file in a generated target that the generator does not write (remove it or edit claude-plugin/): $rel" >&2
+                drift=1
+            fi
+        done < <(cd "$repo_root" && find "$owned" -type f ! -name .DS_Store | sort)
+    done
+
     if [ "$drift" -ne 0 ]; then
         echo "generated_targets_check failed: committed targets do not match claude-plugin/" >&2
         return 1
@@ -321,36 +332,164 @@ if (entry.version !== plugin.version) {
 ' "$repo_root" "$1"
 }
 
+# Cursor treats the directory that contains .cursor-plugin/ as the plugin root and
+# resolves manifest paths and runs hook commands from there. The repo root only
+# carries .cursor-plugin/marketplace.json; the plugin itself is cursor-plugin/.
 cursor_target_check() {
     node -e '
 const fs = require("fs");
 const path = require("path");
 const repoRoot = process.argv[1];
 const plugin = JSON.parse(fs.readFileSync(process.argv[2], "utf8"));
-const cursorDir = path.join(repoRoot, ".cursor-plugin");
-const manifest = JSON.parse(fs.readFileSync(path.join(cursorDir, "plugin.json"), "utf8"));
+const kebab = /^[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?$/;
 
-if (!manifest.name) throw new Error(".cursor-plugin/plugin.json missing required key: name");
+function inside(root, target) {
+  const rel = path.relative(root, target);
+  return rel !== "" && !rel.startsWith("..") && !path.isAbsolute(rel);
+}
+
+function relativeRef(file, ref) {
+  if (typeof ref !== "string" || ref === "") throw new Error(`${file}: path must be a non-empty string: ${JSON.stringify(ref)}`);
+  if (path.isAbsolute(ref) || ref.split(/[\\/]/).includes("..")) {
+    throw new Error(`${file}: path must be relative with no "..": ${ref}`);
+  }
+}
+
+const rootDir = path.join(repoRoot, ".cursor-plugin");
+const stray = fs.readdirSync(rootDir).filter((f) => f !== "marketplace.json" && !f.startsWith("."));
+if (stray.length > 0) {
+  throw new Error(`.cursor-plugin/ at the repo root must hold only marketplace.json (Cursor would load the repo root as the plugin), found: ${stray.join(", ")}`);
+}
+
+const marketFile = ".cursor-plugin/marketplace.json";
+const market = JSON.parse(fs.readFileSync(path.join(repoRoot, marketFile), "utf8"));
+if (!market.name || !kebab.test(market.name)) throw new Error(`${marketFile}: name must be kebab-case: ${market.name}`);
+if (!market.owner || !market.owner.name) throw new Error(`${marketFile}: owner.name is required`);
+if (!Array.isArray(market.plugins) || market.plugins.length !== 1) {
+  throw new Error(`${marketFile}: expected exactly one plugin entry`);
+}
+const entry = market.plugins[0];
+if (entry.name !== plugin.name) throw new Error(`${marketFile}: plugin name ${entry.name} != plugin.json ${plugin.name}`);
+if (entry.version !== plugin.version) throw new Error(`${marketFile}: version ${entry.version} != plugin.json ${plugin.version}`);
+const source = typeof entry.source === "string" ? entry.source : entry.source && entry.source.path;
+relativeRef(marketFile, source);
+const pluginRoot = path.resolve(repoRoot, source);
+if (!inside(repoRoot, pluginRoot)) throw new Error(`${marketFile}: source escapes the repo root: ${source}`);
+const manifestFile = path.join(pluginRoot, ".cursor-plugin", "plugin.json");
+if (!fs.statSync(pluginRoot, { throwIfNoEntry: false })?.isDirectory() || !fs.existsSync(manifestFile)) {
+  throw new Error(`${marketFile}: source ${source} is not a directory with .cursor-plugin/plugin.json`);
+}
+
+const manifestRel = path.relative(repoRoot, manifestFile);
+const manifest = JSON.parse(fs.readFileSync(manifestFile, "utf8"));
+if (!manifest.name || !kebab.test(manifest.name)) throw new Error(`${manifestRel}: name must be kebab-case: ${manifest.name}`);
+if (manifest.name !== plugin.name) throw new Error(`${manifestRel}: name ${manifest.name} != plugin.json ${plugin.name}`);
 if (manifest.version !== plugin.version) {
-  throw new Error(`.cursor-plugin/plugin.json version ${manifest.version} != plugin.json ${plugin.version}`);
+  throw new Error(`${manifestRel}: version ${manifest.version} != plugin.json ${plugin.version}`);
+}
+if (manifest.author && !manifest.author.name) throw new Error(`${manifestRel}: author.name is required when author is set`);
+
+for (const key of ["skills", "commands", "agents", "hooks", "rules", "mcpServers", "logo"]) {
+  if (manifest[key] === undefined) continue;
+  for (const ref of [].concat(manifest[key])) {
+    if ((key === "hooks" || key === "mcpServers") && typeof ref === "object" && ref !== null) continue;
+    if (key === "logo" && /^https?:\/\//.test(ref)) continue;
+    relativeRef(manifestRel, ref);
+    const target = path.resolve(pluginRoot, ref);
+    if (!inside(pluginRoot, target)) throw new Error(`${manifestRel}: ${key} points outside the plugin: ${ref}`);
+    if (!fs.existsSync(target)) throw new Error(`${manifestRel}: ${key} references a missing path: ${ref}`);
+  }
+}
+for (const key of ["skills", "commands", "agents", "hooks"]) {
+  if (typeof manifest[key] !== "string") throw new Error(`${manifestRel}: ${key} must be declared`);
 }
 
-const refs = [manifest.skills, manifest.commands, manifest.agents, manifest.hooks].filter((r) => typeof r === "string");
-for (const ref of refs) {
-  const target = path.resolve(cursorDir, ref);
-  const rel = path.relative(cursorDir, target);
-  if (rel.startsWith("..") || path.isAbsolute(rel)) {
-    throw new Error(`.cursor-plugin/plugin.json references out-of-bundle path: ${ref}`);
-  }
-  if (!fs.existsSync(target)) {
-    throw new Error(`.cursor-plugin/plugin.json references missing path: ${ref}`);
-  }
-}
-
-const skillsDir = path.resolve(cursorDir, manifest.skills);
+const skillsDir = path.resolve(pluginRoot, manifest.skills);
 const skills = fs.readdirSync(skillsDir).filter((d) => fs.existsSync(path.join(skillsDir, d, "SKILL.md")));
-if (skills.length === 0) throw new Error(`.cursor-plugin/skills/ resolves but contains no SKILL.md`);
+if (skills.length === 0) throw new Error(`${manifestRel}: skills resolves but contains no SKILL.md`);
+for (const key of ["commands", "agents"]) {
+  const dir = path.resolve(pluginRoot, manifest[key]);
+  if (fs.readdirSync(dir).filter((f) => f.endsWith(".md")).length === 0) throw new Error(`${manifestRel}: ${key} resolves but holds no .md file`);
+}
+
+const EVENTS = new Set([
+  "sessionStart", "sessionEnd", "preToolUse", "postToolUse", "postToolUseFailure", "subagentStart",
+  "subagentStop", "beforeShellExecution", "afterShellExecution", "beforeMCPExecution", "afterMCPExecution",
+  "beforeReadFile", "afterFileEdit", "beforeSubmitPrompt", "preCompact", "stop", "afterAgentResponse",
+  "afterAgentThought", "beforeTabFileRead", "afterTabFileEdit", "workspaceOpen",
+]);
+const hooksFile = path.resolve(pluginRoot, manifest.hooks);
+const hooksRel = path.relative(repoRoot, hooksFile);
+const hooks = JSON.parse(fs.readFileSync(hooksFile, "utf8"));
+if (hooks.version !== 1) throw new Error(`${hooksRel}: version must be 1`);
+if (!hooks.hooks || typeof hooks.hooks !== "object" || Array.isArray(hooks.hooks)) throw new Error(`${hooksRel}: missing the "hooks" object`);
+for (const [event, defs] of Object.entries(hooks.hooks)) {
+  if (!EVENTS.has(event)) throw new Error(`${hooksRel}: not a Cursor hook event: ${event}`);
+  if (!Array.isArray(defs) || defs.length === 0) throw new Error(`${hooksRel}: hooks.${event} must be a non-empty array`);
+}
+const start = hooks.hooks.sessionStart || [];
+if (start.length !== 1) throw new Error(`${hooksRel}: expected one sessionStart hook (the CLI installer)`);
+for (const permission of ["beforeShellExecution", "beforeMCPExecution", "beforeReadFile", "preToolUse", "subagentStart", "beforeTabFileRead"]) {
+  if (hooks.hooks[permission]) throw new Error(`${hooksRel}: the installer must not register a permission hook (${permission})`);
+}
+const refs = [];
+for (const def of Object.values(hooks.hooks).flat()) {
+  if (typeof def.command !== "string" || !def.command.includes("${CURSOR_PLUGIN_ROOT}/")) {
+    throw new Error(`${hooksRel}: hook command must run from \${CURSOR_PLUGIN_ROOT}: ${def.command}`);
+  }
+  def.command.replace(/\$\{CURSOR_PLUGIN_ROOT\}\/([^"\x27\s]+)/g, (_, p) => { refs.push(p); return _; });
+}
+for (const ref of refs) {
+  const target = path.resolve(pluginRoot, ref);
+  if (!inside(pluginRoot, target)) throw new Error(`${hooksRel}: hook references a file outside the plugin: ${ref}`);
+  if (!fs.existsSync(target)) throw new Error(`${hooksRel}: hook references a missing file: ${ref}`);
+}
 ' "$repo_root" "$1"
+}
+
+# The Cursor install hook must print valid JSON ({}) on stdout and exit 0
+# whatever the installer does, with installer output kept on stderr. The installer
+# here is a stub or absent: nothing is downloaded and nothing is written outside
+# the temp dir.
+cursor_install_hook_check() {
+    local tmp hook out rc
+    tmp="$(mktemp -d "${TMPDIR:-/tmp}/festival-cursor-hook.XXXXXX")"
+    trap 'rm -rf "$tmp"' RETURN
+    hook="$tmp/plugin/hooks/scripts/cursor-install-hook.sh"
+    mkdir -p "$(dirname "$hook")"
+    cp "$repo_root/cursor-plugin/hooks/scripts/cursor-install-hook.sh" "$hook"
+
+    expect_allow() {
+        local label="$1"
+        rc=0
+        out="$(printf '%s' '{"session_id":"s1","hook_event_name":"sessionStart"}' | bash "$hook" 2>"$tmp/stderr")" || rc=$?
+        if [ "$rc" -ne 0 ] || [ "$out" != '{}' ]; then
+            echo "cursor-install-hook.sh ($label): want exit 0 and {} on stdout, got exit $rc and: $out" >&2
+            cat "$tmp/stderr" >&2
+            return 1
+        fi
+    }
+
+    expect_allow "installer missing" || return 1
+
+    cat > "$(dirname "$hook")/ensure-festival.sh" <<'EOF_STUB'
+#!/usr/bin/env bash
+echo "installer progress on stdout"
+echo "installer failure on stderr" >&2
+exit 1
+EOF_STUB
+    expect_allow "installer fails" || return 1
+    if ! grep -q "installer progress on stdout" "$tmp/stderr"; then
+        echo "cursor-install-hook.sh must route installer stdout to stderr" >&2
+        return 1
+    fi
+
+    cat > "$(dirname "$hook")/ensure-festival.sh" <<'EOF_STUB'
+#!/usr/bin/env bash
+echo "installed"
+exit 0
+EOF_STUB
+    expect_allow "installer succeeds" || return 1
 }
 
 opencode_target_check() {
@@ -977,6 +1116,8 @@ hooks_shape_check "$plugin_dir/hooks/hooks.json" "$repo_root/plugins/festival/ho
 generated_targets_check
 codex_target_check "$plugin_dir/.claude-plugin/plugin.json"
 cursor_target_check "$plugin_dir/.claude-plugin/plugin.json"
+bash -n "$repo_root/cursor-plugin/hooks/scripts/cursor-install-hook.sh"
+cursor_install_hook_check
 opencode_target_check
 gemini_target_check "$plugin_dir/.claude-plugin/plugin.json"
 hermes_target_check "$plugin_dir/.claude-plugin/plugin.json"

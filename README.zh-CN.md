@@ -48,7 +48,8 @@ Festival 有三个核心组件：
 安装 Festival 插件：
 
 ```bash
-claude plugin add --source git-subdir --url Obedience-Corp/festival --path claude-plugin
+claude plugin marketplace add Obedience-Corp/festival
+claude plugin install festival@festival
 ```
 
 然后在 Claude Code 里运行：

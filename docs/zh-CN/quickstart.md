@@ -14,7 +14,8 @@ Festival 是面向长期 AI 编程工作的 local-first 工作流层。它让 Cl
 如果你使用 Claude Code，推荐先安装插件：
 
 ```bash
-claude plugin add --source git-subdir --url Obedience-Corp/festival --path claude-plugin
+claude plugin marketplace add Obedience-Corp/festival
+claude plugin install festival@festival
 ```
 
 然后在 Claude Code 中运行：

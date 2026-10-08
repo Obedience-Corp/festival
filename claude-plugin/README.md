@@ -62,10 +62,11 @@ plugin:
 This resolves the repo-root `marketplace.json`, whose single entry points at the
 in-repo bundle (`source: "./claude-plugin"`).
 
-Direct subdirectory add:
+The same two steps from a shell:
 
 ```
-claude plugin add --source git-subdir --url Obedience-Corp/festival --path claude-plugin
+claude plugin marketplace add Obedience-Corp/festival
+claude plugin install festival@festival
 ```
 
 On first session the `SessionStart` hook (`hooks/scripts/ensure-festival.sh`)

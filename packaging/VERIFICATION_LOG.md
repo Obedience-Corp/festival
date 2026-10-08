@@ -3,6 +3,10 @@
 Evidence for each acceptance criterion in `002_PLAN/plan/IMPLEMENTATION_PLAN.md`. Every check was run
 against the committed tree; commands are reproducible.
 
+The paths below record the tree at FP0006 acceptance. The Cursor plugin has since moved from the
+repo-root `.cursor-plugin/` to `cursor-plugin/` (the root `.cursor-plugin/` now holds only
+`marketplace.json`); `packaging/README.md` describes the current layout.
+
 ## AC1: `just plugin generate` is idempotent
 
 - Command: `just plugin generate` twice, then `diff -r` the two output trees.

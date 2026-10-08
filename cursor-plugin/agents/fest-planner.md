@@ -1,4 +1,5 @@
 ---
+name: fest-planner
 description: Festival planning specialist. Use when creating new festivals, designing phase/sequence/task structure, choosing festival and phase types, scaffolding from plans, and validating festival structure. Expert in the Festival Methodology hierarchy and naming conventions.
 ---
 

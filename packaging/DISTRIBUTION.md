@@ -9,7 +9,8 @@ in-repo surface where it does not). No fork-PR sync exists; the Superpowers
 
 - **Channel**: self-hosted marketplace. The generator emits `.agents/plugins/marketplace.json`
   pointing at `plugins/festival/`.
-- **Install**: `/plugin marketplace add Obedience-Corp/festival` then `/plugin install festival`.
+- **Install**: `codex plugin marketplace add Obedience-Corp/festival` then `codex plugin add festival@festival`
+  (in a session, `/plugins` opens the plugin browser).
 - **Note**: OpenAI's official curated directory has no self-serve publishing yet ("coming soon").
 - **Surface**: `plugins/festival/` + `.agents/plugins/marketplace.json` (generated, drift-covered).
 - Source: `packaging/survey/codex.md`.
@@ -17,11 +18,23 @@ in-repo surface where it does not). No fork-PR sync exists; the Superpowers
 ## Cursor
 
 - **Channel**: Cursor Marketplace. Submit the public git repo at `cursor.com/marketplace/publish`
-  (MANUAL review); in-editor install is `/add-plugin`. This is a one-time human web submission, not a
-  scriptable sync. Multi-plugin repos may add a `.cursor-plugin/marketplace.json`; Festival is a
-  single plugin, so `.cursor-plugin/plugin.json` is the distribution unit.
-- **Surface**: the in-repo `.cursor-plugin/` (generated, drift-covered).
-- Source: `packaging/survey/cursor.md`.
+  (MANUAL review). This is a one-time human web submission, not a scriptable sync. Once listed,
+  users install from **Customize** in the Cursor sidebar (project or user scope). Cursor documents
+  no `/add-plugin` command. The Cursor CLI (2026.10.01) has `agent plugin marketplace add <gitUrl>`,
+  which needs a login, clones the URL, and registers the marketplace on the Cursor account; its
+  plugins then install from the CLI's interactive `/plugins` view.
+- **Layout**: Cursor loads the directory that contains `.cursor-plugin/` as the plugin root, so the
+  plugin is the self-contained `cursor-plugin/` (`cursor-plugin/.cursor-plugin/plugin.json`), and the
+  repo root carries only `.cursor-plugin/marketplace.json`, whose one entry points at
+  `source: "./cursor-plugin"`.
+- **Other channels**: local install by copying `cursor-plugin/` to `~/.cursor/plugins/local/festival`
+  (a symlink to a clone elsewhere is skipped by Cursor); one CLI session with
+  `agent --plugin-dir <clone>/cursor-plugin`; Teams and Enterprise admins can use
+  **Dashboard -> Plugins & MCPs -> Add Marketplace -> Import from Repo** with the repo URL, which
+  reads `.cursor-plugin/marketplace.json`.
+- **Surface**: `cursor-plugin/` + `.cursor-plugin/marketplace.json` (generated, drift-covered).
+- Source: `packaging/survey/cursor.md`; current Cursor plugin reference at
+  `cursor.com/docs/reference/plugins` and `cursor.com/docs/plugins`.
 
 ## opencode
 
@@ -33,10 +46,11 @@ in-repo surface where it does not). No fork-PR sync exists; the Superpowers
 
 ## Gemini
 
-- **Channel**: `gemini extensions install Obedience-Corp/festival` (GitHub shorthand) installs the
-  repo directly, with `--ref=` pinning; `gemini extensions update` updates it. The gallery at
-  `geminicli.com/extensions` auto-indexes repos carrying the `gemini-cli-extension` topic, so
-  publishing is "add the repo topic," not a scripted push.
+- **Channel**: `gemini extensions install https://github.com/Obedience-Corp/festival` installs from
+  the latest release (Gemini CLI documents the full URL, not owner/repo shorthand), with `--ref=`
+  pinning; `gemini extensions update` updates it. The gallery at `geminicli.com/extensions` indexes
+  public repos with `gemini-extension.json` at the root and the `gemini-cli-extension` topic, crawled
+  daily, so publishing is "add the repo topic," not a scripted push.
 - **Surface**: the repo root itself (`gemini-extension.json` + `GEMINI.md`, generated, drift-covered).
 - Source: `packaging/survey/gemini.md`.
 
@@ -59,7 +73,8 @@ in-repo surface where it does not). No fork-PR sync exists; the Superpowers
 
 ## Summary
 
-Only Codex needs a generated distribution artifact (`marketplace.json`). Cursor is a manual web
-submission, and opencode, Gemini, and Hermes install straight from the git repo, so for those four
-the distribution surface is the in-repo generated target plus its INSTALL notes. The acceptance sweep
+Codex and Cursor each have a generated marketplace manifest (`.agents/plugins/marketplace.json`,
+`.cursor-plugin/marketplace.json`). Cursor's public listing is still a manual web submission, and
+opencode, Gemini, and Hermes install straight from the git repo, so for those three the distribution
+surface is the in-repo generated target plus its INSTALL notes. The acceptance sweep
 (sequence 08) proves each path with a `--dry-run` or no-push check and captures the output.
