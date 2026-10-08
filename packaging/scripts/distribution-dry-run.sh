@@ -31,7 +31,7 @@ echo "Distribution dry-run (no live push)"
 echo ""
 
 echo "Codex -> self-hosted marketplace"
-require "install: /plugin marketplace add Obedience-Corp/festival && /plugin install festival" \
+require "install: codex plugin marketplace add Obedience-Corp/festival && codex plugin add festival@festival" \
     .agents/plugins/marketplace.json plugins/festival/.codex-plugin/plugin.json
 
 echo ""

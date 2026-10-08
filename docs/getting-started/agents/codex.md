@@ -57,14 +57,9 @@ codex plugin add festival@festival
 codex plugin list
 ```
 
-From inside a Codex session, which is the form the plugin bundle documents:
+From inside a Codex session, `/plugins` opens the plugin browser, where you can add the marketplace and install Festival.
 
-```text
-/plugin marketplace add Obedience-Corp/festival
-/plugin install festival
-```
-
-Note the verb. Non-interactively it is `codex plugin add`; there is no `codex plugin install`. The in-session slash command is spelled `/plugin install`. Both are correct in their own context.
+Note the verb. It is `codex plugin add`; there is no `codex plugin install`.
 
 Here is the real output of that last shell command, after the install:
 

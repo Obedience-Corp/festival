@@ -33,14 +33,15 @@ Codex installs from the self-hosted marketplace (per the \`survey/codex.md\` dis
 OpenAI's official directory has no self-serve publishing yet):
 
 \`\`\`
-/plugin marketplace add Obedience-Corp/festival
-/plugin install festival
+codex plugin marketplace add Obedience-Corp/festival
+codex plugin add festival@festival
 \`\`\`
 
 The bundled \`SessionStart\` command hook then runs
 \`bash \${PLUGIN_ROOT}/hooks/scripts/ensure-festival.sh\` on every session start to auto-install the
 \`fest\` and \`camp\` CLIs. The script is idempotent (it no-ops when they are already current),
-mirroring the Claude Code hook, so no manual step is required after \`/plugin install festival\`.
+mirroring the Claude Code hook, so no manual step is required after \`codex plugin add festival@festival\`. Inside a Codex session,
+\`/plugins\` opens the plugin browser, where the same plugin can be installed.
 `;
 }
 
