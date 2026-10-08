@@ -140,28 +140,41 @@ export function versionAtLeast(text: string, want: string): boolean {
   return have[4] === undefined
 }
 
+type Job = { run: () => Promise<void>; done: Promise<void>; finish: () => void }
+
+function jobOf(run: () => Promise<void>): Job {
+  let finish = () => {}
+  const done = new Promise<void>(resolve => { finish = resolve })
+  return { run, done, finish }
+}
+
 export function coalesce(): (run: () => Promise<void>) => Promise<void> {
-  let busy: Promise<void> | null = null
-  let pending: (() => Promise<void>) | null = null
-  return run => {
-    if (busy) {
-      pending = run
-      return busy
-    }
-    busy = (async () => {
-      let current: (() => Promise<void>) | null = run
+  let running = false
+  let pending: Job | null = null
+  const drain = async (first: Job) => {
+    running = true
+    let job: Job | null = first
+    while (job) {
       try {
-        while (current) {
-          pending = null
-          try {
-            await current()
-          } catch {}
-          current = pending
-        }
-      } finally {
-        busy = null
-      }
-    })()
-    return busy
+        await job.run()
+      } catch {}
+      job.finish()
+      job = pending
+      pending = null
+    }
+    running = false
+  }
+  return run => {
+    if (!running) {
+      const job = jobOf(run)
+      void drain(job)
+      return job.done
+    }
+    if (pending) {
+      pending.run = run
+      return pending.done
+    }
+    pending = jobOf(run)
+    return pending.done
   }
 }

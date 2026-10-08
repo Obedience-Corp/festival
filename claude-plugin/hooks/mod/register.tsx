@@ -131,15 +131,15 @@ export const register: Register = (on, options) => {
     try {
       const panes = await $.ui.panes()
       if (!panes.some((p: { id: string }) => p.id === PANE)) await stopWatching($)
-      else {
-        await update($, isOpen, () => true)
-        timer?.cancel()
-        timer = $.clock.every(5000, () => void scheduleRefresh($))
-      }
+      else await update($, isOpen, () => true)
     } catch {
       await stopWatching($)
     }
     await scheduleRefresh($)
+    if (await read($, isOpen)) {
+      timer?.cancel()
+      timer = $.clock.every(5000, () => void scheduleRefresh($))
+    }
     return next(e)
   }).catch(($, e, next) => next(e))
 

@@ -104,16 +104,35 @@ test('coalesce never runs two refreshes at once and keeps only the latest pendin
     running -= 1
   }
   const first = schedule(job('a'))
-  void schedule(job('b'))
+  const second = schedule(job('b'))
   const last = schedule(job('c'))
-  expect(last).toBe(first)
+  expect(last).toBe(second)
   while (gates.length) {
     gates.shift()!()
     await tick()
   }
-  await last
+  await Promise.all([first, last])
   expect(peak).toBe(1)
   expect(ran).toEqual(['a', 'c'])
+})
+
+test('a caller waits only for its own refresh, not for requests that keep arriving', async () => {
+  const schedule = coalesce()
+  const gates: Array<() => void> = []
+  const slow = () => new Promise<void>(resolve => gates.push(resolve))
+  let firstDone = false
+  void schedule(slow).then(() => { firstDone = true })
+  await tick()
+  for (let i = 0; i < 3; i++) {
+    void schedule(slow)
+    gates.shift()!()
+    await tick()
+  }
+  expect(firstDone).toBe(true)
+  while (gates.length) {
+    gates.shift()!()
+    await tick()
+  }
 })
 
 test('coalesce keeps going after a refresh throws', async () => {

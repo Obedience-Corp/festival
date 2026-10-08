@@ -246,15 +246,15 @@ test('with fest 0.9.3 a standalone workflow shows its step', async ($, on) => {
   expect(textOf(await $.ui.render(BAND as any))).toContain('step 2/5: COMPARE')
 })
 
-test('after a module reload with the pane still open, polling resumes', async ($, on) => {
+test('after a module reload with the pane still open, polling resumes once the startup refresh is done', async ($, on) => {
   world(on, ['terminal'])
   on('fs.exists', () => ({ value: false }) as any)
-  on('process.run', fest(SHOW_JSON) as any)
+  const order: string[] = []
+  on('process.run', (_$: any, e: any) => { if (e.argv.includes('show')) order.push('show'); return fest(SHOW_JSON)(_$, e) })
   on('ui.panes', () => ({ value: [{ id: 'fest-watch', title: 'Festival' }] }) as any)
-  let timers = 0
-  on('clock.every', (() => { timers += 1; return { value: undefined } }) as any)
+  on('clock.every', (() => { order.push('timer'); return { value: undefined } }) as any)
   await $.session.start(SESSION)
-  expect(timers).toBe(1)
+  expect(order).toEqual(['show', 'timer'])
 })
 
 const oldFestWorld = (on: any, cwd: string, files: string[], ran: string[][]) => {
