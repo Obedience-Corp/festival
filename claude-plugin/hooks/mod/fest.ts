@@ -21,19 +21,43 @@ const FINISHED = new Set(['completed', 'skipped'])
 const last = (path: string) => path.split('/').filter(Boolean).pop() ?? path
 const bare = (name: string) => name.replace(/\.md$/, '')
 
+const isText = (v: unknown): v is string => typeof v === 'string'
+
+function nodeOf(raw: any): FestNode | null {
+  if (!raw || typeof raw !== 'object' || !isText(raw.name) || !isText(raw.status)) return null
+  const kids = Array.isArray(raw.children) ? raw.children.map(nodeOf) : []
+  if (kids.some((k: FestNode | null) => k === null)) return null
+  return { name: raw.name, status: raw.status, node_type: isText(raw.node_type) ? raw.node_type : '', children: kids }
+}
+
+function stepOf(raw: any): WorkflowStep | null {
+  if (!raw || typeof raw !== 'object' || typeof raw.number !== 'number' || !isText(raw.name) || !isText(raw.status)) return null
+  return { number: raw.number, name: raw.name, status: raw.status }
+}
+
 export function viewOf(json: any): FestView | null {
   if (!json || typeof json !== 'object') return null
-  if (typeof json.mode === 'string' && json.mode.startsWith('standalone')) {
-    const doc = typeof json.workflow_doc === 'string' ? json.workflow_doc : ''
+  if (isText(json.mode) && json.mode.startsWith('standalone')) {
+    const raw = Array.isArray(json.steps) ? json.steps : []
+    const steps = raw.map(stepOf)
+    if (steps.some((s: WorkflowStep | null) => s === null)) return null
+    const doc = isText(json.workflow_doc) ? json.workflow_doc : ''
     return {
       kind: 'workflow',
       name: last(doc.replace(/\/WORKFLOW\.md$/, '')) || 'workflow',
-      runStatus: typeof json.run_status === 'string' ? json.run_status : '',
-      steps: Array.isArray(json.steps) ? json.steps : [],
+      runStatus: isText(json.run_status) ? json.run_status : '',
+      steps: steps as WorkflowStep[],
     }
   }
-  if (json.view?.tree && json.stats?.tasks) {
-    return { kind: 'festival', name: json.name ?? json.view.tree.name, tree: json.view.tree, stats: json.stats }
+  const tree = nodeOf(json.view?.tree)
+  const tasks = json.stats?.tasks
+  if (tree && tasks && typeof tasks.total === 'number' && typeof tasks.completed === 'number' && typeof json.stats.progress === 'number') {
+    return {
+      kind: 'festival',
+      name: isText(json.name) ? json.name : tree.name,
+      tree,
+      stats: { tasks: { total: tasks.total, completed: tasks.completed }, progress: json.stats.progress },
+    }
   }
   return null
 }

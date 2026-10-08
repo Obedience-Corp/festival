@@ -159,3 +159,11 @@ test('festivalRoot finds the nearest fest.yaml, refuses goal-only festivals, and
   const goalOnly = new Set(['/camp/.campaign', '/camp/festivals/.dungeon/old/FESTIVAL_GOAL.md', '/camp/festivals/active/f/fest.yaml'])
   expect(await festivalRoot(async p => goalOnly.has(p), '/camp/festivals/.dungeon/old/001_A')).toBeNull()
 })
+
+test('viewOf rejects malformed fest show output instead of letting it break the view', () => {
+  expect(viewOf({ ...SHOW_STANDALONE, steps: [null] })).toBeNull()
+  expect(viewOf({ ...SHOW_STANDALONE, steps: [{ number: 1, name: 'A' }] })).toBeNull()
+  expect(viewOf({ view: { tree: { name: 'x', status: 'pending', children: [null] } }, stats: SHOW.stats })).toBeNull()
+  expect(viewOf({ view: { tree: SHOW.view.tree }, stats: { tasks: {} } })).toBeNull()
+  expect(bandOf(viewOf(SHOW))).toContain('01_todo_model')
+})

@@ -1,5 +1,6 @@
 import { atom, read, update } from 'claude-code'
 import type { Register } from 'claude-code'
+import type { FestView } from '../../types/index'
 
 import { campRoot, festivalRoot, rootedPath } from './camp'
 import { LEGACY_PROGRESS_FILES, READ_ONLY_FEST, STATUS_COLOR, bandOf, coalesce, currentRow, headerOf, rowsOfView, versionAtLeast, viewOf, windowStart } from './fest'
@@ -78,10 +79,19 @@ async function refresh($: any) {
     $.ui.invalidate('ui.render')
     return
   }
-  const next = viewOf(await runJson($, ['fest', 'show', '--json'], cwd))
+  let next: FestView | null = null
+  let text: string | null = null
+  try {
+    next = viewOf(await runJson($, ['fest', 'show', '--json'], cwd))
+    text = bandOf(next)
+    if (next) rowsOfView(next)
+  } catch {
+    next = null
+    text = null
+  }
   await update($, notice, () => null)
   await update($, view, () => next)
-  await update($, band, () => bandOf(next))
+  await update($, band, () => text)
   $.ui.invalidate('ui.render')
 }
 

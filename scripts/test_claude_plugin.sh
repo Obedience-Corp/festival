@@ -912,7 +912,7 @@ mod_generate_types() {
     scratch="$(mktemp -d "${TMPDIR:-/tmp}/festival-plugin-types.XXXXXX")"
     (
         export FESTIVAL_CACHE_DIR="$scratch/cache" INSTALL_DIR="$scratch/bin"
-        cd "$repo_root" && claude -p "/fest-progress" --setting-sources project --plugin-dir "$plugin_dir" </dev/null >/dev/null 2>&1
+        mkdir -p "$scratch/cwd" && cd "$scratch/cwd" && claude -p "/fest-watch" --setting-sources project --plugin-dir "$plugin_dir" </dev/null >/dev/null 2>&1
     ) &
     pid=$!
     ( sleep 90; kill "$pid" 2>/dev/null ) &
