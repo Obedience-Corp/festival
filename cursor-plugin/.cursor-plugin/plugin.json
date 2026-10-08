@@ -16,6 +16,7 @@
     "camp",
     "methodology"
   ],
+  "logo": "assets/logo.svg",
   "skills": "./skills/",
   "commands": "./commands/",
   "agents": "./agents/",
