@@ -8,7 +8,7 @@
 
 It uses the filesystem and Git. You configure it to your workflows and processes. When agents plan and execute, the work is done the way you want it done.
 
-I was working with agents at scale, and the bottleneck moved from doing the work to reviewing, understanding, and tracking it. That was draining the time I wanted for thinking about the right thing to do.
+When you're working with agents at scale, reviewing, understanding, and tracking their work can become the bottleneck. That leaves you less time to think about the right thing to do.
 
 Everything lives in a camp workspace: your skills, planning documents, one-off scripts, and projects. A festival is an ambitious goal inside that camp. Specs, smaller workflows, and ideas you intend to execute are tracked as work items.
 
