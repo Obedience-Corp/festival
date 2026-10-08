@@ -148,7 +148,9 @@ function jobOf(run: () => Promise<void>): Job {
   return { run, done, finish }
 }
 
-export function coalesce(): (run: () => Promise<void>) => Promise<void> {
+export type Scheduler = ((run: () => Promise<void>) => Promise<void>) & { isBusy: () => boolean }
+
+export function coalesce(): Scheduler {
   let running = false
   let pending: Job | null = null
   const drain = async (first: Job) => {
@@ -164,7 +166,7 @@ export function coalesce(): (run: () => Promise<void>) => Promise<void> {
     }
     running = false
   }
-  return run => {
+  const schedule = (run: () => Promise<void>) => {
     if (!running) {
       const job = jobOf(run)
       void drain(job)
@@ -177,4 +179,5 @@ export function coalesce(): (run: () => Promise<void>) => Promise<void> {
     pending = jobOf(run)
     return pending.done
   }
+  return Object.assign(schedule, { isBusy: () => running })
 }

@@ -104,9 +104,11 @@ test('coalesce never runs two refreshes at once and keeps only the latest pendin
     running -= 1
   }
   const first = schedule(job('a'))
+  expect(schedule.isBusy()).toBe(true)
   const second = schedule(job('b'))
   const last = schedule(job('c'))
   expect(last).toBe(second)
+  expect(last).not.toBe(first)
   while (gates.length) {
     gates.shift()!()
     await tick()
@@ -114,6 +116,7 @@ test('coalesce never runs two refreshes at once and keeps only the latest pendin
   await Promise.all([first, last])
   expect(peak).toBe(1)
   expect(ran).toEqual(['a', 'c'])
+  expect(schedule.isBusy()).toBe(false)
 })
 
 test('a caller waits only for its own refresh, not for requests that keep arriving', async () => {

@@ -18,6 +18,7 @@ const COMMANDS = [
 ] as const
 
 let timer: { cancel: () => void } | null = null
+let watchGeneration = 0
 const runRefresh = coalesce()
 let isTakeover = false
 let showIsReadOnly: boolean | null = null
@@ -99,7 +100,22 @@ function scheduleRefresh($: any): Promise<void> {
   return runRefresh(() => refresh($))
 }
 
+async function refreshOwnOrSkip($: any): Promise<void> {
+  if (runRefresh.isBusy()) {
+    void scheduleRefresh($)
+    return
+  }
+  await scheduleRefresh($)
+}
+
+function startPolling($: any, generation: number) {
+  if (generation !== watchGeneration) return
+  timer?.cancel()
+  timer = $.clock.every(5000, () => void scheduleRefresh($))
+}
+
 async function stopWatching($: any) {
+  watchGeneration += 1
   timer?.cancel()
   timer = null
   await update($, isOpen, () => false)
@@ -135,11 +151,9 @@ export const register: Register = (on, options) => {
     } catch {
       await stopWatching($)
     }
-    await scheduleRefresh($)
-    if (await read($, isOpen)) {
-      timer?.cancel()
-      timer = $.clock.every(5000, () => void scheduleRefresh($))
-    }
+    const generation = watchGeneration
+    await refreshOwnOrSkip($)
+    if (await read($, isOpen)) startPolling($, generation)
     return next(e)
   }).catch(($, e, next) => next(e))
 
@@ -185,10 +199,10 @@ export const register: Register = (on, options) => {
     }
     await $.ui.open({ id: PANE, title: 'Festival' })
     await update($, isOpen, () => true)
-    await scheduleRefresh($)
-    if (!(await read($, isOpen))) return { text: 'Festival pane closed.' }
-    timer?.cancel()
-    timer = $.clock.every(5000, () => void scheduleRefresh($))
+    const generation = watchGeneration
+    await refreshOwnOrSkip($)
+    if (!(await read($, isOpen)) || generation !== watchGeneration) return { text: 'Festival pane closed.' }
+    startPolling($, generation)
     return { text: 'Festival pane opened.' }
   }).catch(() => ({ text: 'The Festival pane could not be toggled.' }))
 
