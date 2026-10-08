@@ -146,12 +146,10 @@ have no autocomplete; you type the whole path.
 
 Planning takeover is an option, `planningTakeover`, set when you enable the
 plugin. It is off by default. When on, and only while the session's current
-directory is
-inside a camp (a `.campaign` directory in it or an ancestor), the module hides
-the `Plan` agent, denies `EnterPlanMode`, denies `TodoWrite` and `TaskCreate`,
-and drops the todo and task reminders, so planning and task tracking go
-through Festival.
-Outside a camp the option does nothing.
+directory is inside a camp (a `.campaign` directory in it or an ancestor), the
+module hides the `Plan` agent, denies `EnterPlanMode`, denies `TodoWrite` and
+`TaskCreate`, and drops the todo and task reminders, so planning and task
+tracking go through Festival. Outside a camp the option does nothing.
 
 What the module reads and runs, and nothing else: `fest show --json` for the
 band and pane, `fest version --short` once each time the module loads (retried
