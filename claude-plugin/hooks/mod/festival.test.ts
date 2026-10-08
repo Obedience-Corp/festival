@@ -331,3 +331,19 @@ test('with an older fest, fest show runs in the directory the guard checked', as
   await $.session.start({ ...SESSION, cwd: root })
   expect(showCwd).toBe(root)
 })
+
+test('takeover follows the current directory, not the one the session started in', { options: { planningTakeover: true } }, async ($, on) => {
+  let cwd = '/elsewhere'
+  on('session.start', () => ({ cwd }))
+  on('session.surfaces', () => ({ value: [] }))
+  on('session.cwd', () => ({ value: cwd }))
+  on('command.register', () => ({ value: undefined }) as any)
+  on('fs.exists', (_$: any, e: any) => ({ value: e.path === '/camp/.campaign' }) as any)
+  on('tool.call', () => ({ result: 'entered' }) as any)
+  await $.session.start({ ...SESSION, cwd })
+  expect(((await $.tool.call(tool('EnterPlanMode') as any)) as any).result).toBe('entered')
+  cwd = '/camp/projects/demo'
+  expect(String(((await $.tool.call(tool('EnterPlanMode') as any)) as any).deny)).toContain('plans with Festival')
+  cwd = '/other/repo'
+  expect(((await $.tool.call(tool('EnterPlanMode') as any)) as any).result).toBe('entered')
+})

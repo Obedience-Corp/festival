@@ -20,7 +20,7 @@ const COMMANDS = [
 let timer: { cancel: () => void } | null = null
 let watchGeneration = 0
 const runRefresh = coalesce()
-let isTakeover = false
+let wantsTakeover = false
 let showIsReadOnly: boolean | null = null
 
 const PLAN_DENY =
@@ -114,6 +114,15 @@ function startPolling($: any, generation: number) {
   timer = $.clock.every(5000, () => void scheduleRefresh($))
 }
 
+async function takeoverActive($: any): Promise<boolean> {
+  if (!wantsTakeover) return false
+  try {
+    return (await campRoot(p => $.fs.exists(p), await $.session.cwd())) !== null
+  } catch {
+    return false
+  }
+}
+
 async function stopWatching($: any) {
   watchGeneration += 1
   timer?.cancel()
@@ -131,18 +140,13 @@ async function plain($: any, argv: string[]) {
 }
 
 export const register: Register = (on, options) => {
-  const wantsTakeover = (options as { planningTakeover?: boolean } | undefined)?.planningTakeover === true
+  wantsTakeover = (options as { planningTakeover?: boolean } | undefined)?.planningTakeover === true
 
   on('session.start', async ($, e, next) => {
     for (const spec of COMMANDS) {
       try {
         await $.command.register(spec)
       } catch {}
-    }
-    try {
-      isTakeover = wantsTakeover && (await campRoot(p => $.fs.exists(p), await $.session.cwd())) !== null
-    } catch {
-      isTakeover = false
     }
     try {
       const panes = await $.ui.panes()
@@ -169,19 +173,26 @@ export const register: Register = (on, options) => {
     return ran
   }).catch(($, e, next) => next(e))
 
-  on('agent.offer', ($, e, next) =>
-    isTakeover && e.agent === 'Plan' ? { isOffered: false } : next(e),
+  on('agent.offer', async ($, e, next) =>
+    e.agent === 'Plan' && (await takeoverActive($)) ? { isOffered: false } : next(e),
   ).catch(($, e, next) => next(e))
 
-  on('tool.call', { tool: 'EnterPlanMode' }, ($, e, next) =>
-    isTakeover ? { deny: PLAN_DENY } : next(e),
+  on('tool.call', { tool: 'EnterPlanMode' }, async ($, e, next) =>
+    (await takeoverActive($)) ? { deny: PLAN_DENY } : next(e),
   ).catch(($, e, next) => next(e))
-  on('tool.call', { tool: ['TodoWrite', 'TaskCreate'] }, ($, e, next) =>
-    isTakeover ? { deny: TODO_DENY } : next(e),
+  on('tool.call', { tool: ['TodoWrite', 'TaskCreate'] }, async ($, e, next) =>
+    (await takeoverActive($)) ? { deny: TODO_DENY } : next(e),
   ).catch(($, e, next) => next(e))
-  on('prompt.attachment', { type: ['todo_reminder', 'task_reminder'] }, ($, e, next) =>
-    isTakeover ? { text: null } : next(e),
+  on('prompt.attachment', { type: ['todo_reminder', 'task_reminder'] }, async ($, e, next) =>
+    (await takeoverActive($)) ? { text: null } : next(e),
   ).catch(($, e, next) => next(e))
+
+  on('classic.CwdChanged', async ($, e, next) => {
+    const done = await next(e)
+    $.ui.invalidate('prompt.attachment')
+    $.clock.after(0, () => void scheduleRefresh($))
+    return done
+  }).catch(($, e, next) => next(e))
 
   on('command.run', { command: 'fest-task' }, async $ => ({ text: await plain($, ['fest', 'next']) }))
     .catch(() => ({ text: 'fest-task failed; run `fest next` in a terminal.' }))

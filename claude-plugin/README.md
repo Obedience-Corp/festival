@@ -145,7 +145,8 @@ you mention `@docs/guide.md` from inside a project directory. These mentions
 have no autocomplete; you type the whole path.
 
 Planning takeover is an option, `planningTakeover`, set when you enable the
-plugin. It is off by default. When on, and only when the session directory is
+plugin. It is off by default. When on, and only while the session's current
+directory is
 inside a camp (a `.campaign` directory in it or an ancestor), the module hides
 the `Plan` agent, denies `EnterPlanMode`, denies `TodoWrite` and `TaskCreate`,
 and drops the todo and task reminders, so planning and task tracking go
