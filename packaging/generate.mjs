@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import {
+  copyFileSync,
   existsSync,
   mkdirSync,
   readFileSync,
@@ -84,6 +85,13 @@ function makeContext(generated, outRoot) {
     agents: readDocs("agents"),
     sourceHooks: JSON.parse(readFileSync(join(PLUGIN_DIR, "hooks", "hooks.json"), "utf8")),
     readPluginFile: (rel) => readFileSync(join(PLUGIN_DIR, rel), "utf8"),
+    hasPluginFile: (rel) => existsSync(join(PLUGIN_DIR, rel)),
+    copyPluginFile(rel, relPath) {
+      const filePath = join(outRoot, relPath);
+      mkdirSync(dirname(filePath), { recursive: true });
+      copyFileSync(join(PLUGIN_DIR, rel), filePath);
+      generated.push(relPath);
+    },
     bundledScript(rel) {
       const src = readFileSync(join(PLUGIN_DIR, rel), "utf8");
       const nl = src.indexOf("\n");

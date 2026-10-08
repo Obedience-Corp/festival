@@ -1,4 +1,5 @@
 ---
+name: fest-executor
 description: Festival task execution specialist. Use when working through festival tasks, marking completion, committing with traceability, managing task state (completed/blocked/reset), and advancing through sequences. Follows the fest next → work → complete → commit loop.
 ---
 

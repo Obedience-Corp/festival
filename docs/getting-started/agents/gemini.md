@@ -50,13 +50,13 @@ camp init
 ## 3. Install the extension
 
 ```bash
-gemini extensions install Obedience-Corp/festival
+gemini extensions install https://github.com/Obedience-Corp/festival
 ```
 
-To pin a specific ref rather than tracking the default branch:
+This installs from the latest Festival release. To pin a specific release instead:
 
 ```bash
-gemini extensions install Obedience-Corp/festival --ref=v0.2.16
+gemini extensions install https://github.com/Obedience-Corp/festival --ref=v0.3.19
 ```
 
 And to update an installed extension later:
@@ -125,7 +125,9 @@ Phase gates are checkpoints for a human. The agent submits a gate and stops. You
 
 ## What was verified
 
-Gemini CLI is not installed on the machine this page was written on. The extension install, the hook running, and the context imports loading were not observed.
+On 2026-10-08, with Gemini CLI 0.63.0 run through `npx` in an isolated home directory, `gemini extensions validate` accepted the extension, and `gemini extensions install https://github.com/Obedience-Corp/festival` installed it from the v0.3.19 release and listed it as enabled. The hook running and the context imports loading were not observed.
+
+Earlier, Gemini CLI was not installed on the machine this page was written on, so the checks below were structural only.
 
 What was verified, on 2026-08-19, is structural. The manifest parses and its `contextFileName` resolves to `GEMINI.md`. All 12 `@`-imported paths in `GEMINI.md` exist, checked one by one. The hook command's script path resolves. `just plugin check` enforces the generated Gemini target and its referenced paths, and it passes.
 

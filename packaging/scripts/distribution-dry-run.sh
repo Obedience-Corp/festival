@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Distribution dry-run: confirm every target's distribution surface is present and the install
 # command is ready, WITHOUT performing any live external push. Per packaging/DISTRIBUTION.md (D006):
-# Codex ships a self-hosted marketplace.json; Cursor is a manual web submission; opencode, Gemini,
+# Codex ships a self-hosted marketplace.json; Cursor ships .cursor-plugin/marketplace.json and its
+# public listing is a manual web submission; opencode, Gemini,
 # and Hermes install straight from the git repo. Nothing here pushes anywhere.
 
 set -euo pipefail
@@ -36,8 +37,8 @@ require "install: codex plugin marketplace add Obedience-Corp/festival && codex 
 
 echo ""
 echo "Cursor -> Cursor Marketplace (manual web submission)"
-require "install: submit repo at cursor.com/marketplace/publish, then /add-plugin" \
-    .cursor-plugin/plugin.json
+require "install: submit repo at cursor.com/marketplace/publish, then Customize > Install; local: cp -R cursor-plugin ~/.cursor/plugins/local/festival" \
+    .cursor-plugin/marketplace.json cursor-plugin/.cursor-plugin/plugin.json
 
 echo ""
 echo "opencode -> npm package or git URL in opencode.json plugin array"
@@ -45,8 +46,8 @@ require "install: add this repo's git URL (or published package) to opencode.jso
     .opencode/plugins/festival.js
 
 echo ""
-echo "Gemini -> gemini extensions install (GitHub shorthand)"
-require "install: gemini extensions install Obedience-Corp/festival" \
+echo "Gemini -> gemini extensions install (full GitHub URL)"
+require "install: gemini extensions install https://github.com/Obedience-Corp/festival" \
     gemini-extension.json GEMINI.md
 
 echo ""
