@@ -8,7 +8,15 @@ import test from 'node:test';
 const site = resolve(process.env.DOCS_SITE_DIR || 'public');
 const origin = 'https://docs.fest.build';
 
+const pluginRoutes = [
+  '/plugins/',
+  '/plugins/camp-graph/',
+  '/plugins/camp-buzz/',
+  '/plugins/camp-leverage-all/',
+  '/plugins/fest-direction/',
+];
 const newRoutes = [
+  ...pluginRoutes,
   '/getting-started/festival-manager/',
   '/guides/everyday-development/',
   '/use-cases/incident-investigation/',
@@ -19,6 +27,7 @@ const newRoutes = [
 const useCaseRoutes = newRoutes.filter((route) => route.startsWith('/use-cases/'));
 const changedAuthoredRoutes = [
   ...newRoutes,
+  '/guides/plugin-authoring/',
   '/use-cases/ai-agent-project-management/',
   '/use-cases/long-running-ai-coding-sessions/',
   '/use-cases/claude-code-project-management/',
@@ -140,7 +149,7 @@ function assertLocalReferences(html, route) {
   }
 }
 
-test('production build contains the six new guide and use-case routes', () => {
+test('production build contains the authored discovery routes', () => {
   for (const route of newRoutes) page(route);
 });
 
@@ -209,7 +218,7 @@ test('documentation menu exposes new routes and the agent hub exposes deep setup
 });
 
 test('curated hubs do not append duplicate automatic child lists', () => {
-  for (const route of ['/getting-started/', '/use-cases/', agentHubRoute]) {
+  for (const route of ['/getting-started/', '/use-cases/', '/plugins/', agentHubRoute]) {
     assert.doesNotMatch(page(route), /<div style="margin-bottom: 0\.5rem;">/i, `automatic child list leaked into ${route}`);
   }
 });

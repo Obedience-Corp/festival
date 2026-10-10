@@ -19,6 +19,9 @@
     {{ with site.GetPage "/use-cases" }}
       <a href="{{ .RelPermalink }}" class="site-header__link site-header__link--desktop">Use Cases</a>
     {{ end }}
+    {{ with site.GetPage "/plugins" }}
+      <a href="{{ .RelPermalink }}" class="site-header__link site-header__link--desktop">Plugins</a>
+    {{ end }}
     {{ with site.GetPage "/getting-started/installation" }}
       <a href="{{ .RelPermalink }}" class="site-header__link site-header__link--desktop">Install</a>
     {{ end }}
