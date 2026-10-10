@@ -55,6 +55,9 @@ changing an installation.
 
 ## Browse and install CLI plugins
 
+Visit the [Plugin Marketplace]({{< ref "/plugins" >}}) for released plugins,
+installation instructions, requirements, and first-use examples for Camp and Fest.
+
 The manager can register a Git marketplace and display packages from the
 marketplaces already registered on this machine:
 

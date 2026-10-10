@@ -189,6 +189,34 @@ menu:
       url: /tutorials/ci-integration/
       weight: 43
 
+    - name: Plugin Marketplace
+      identifier: plugins
+      weight: 45
+    - name: Browse Plugins
+      parent: plugins
+      url: /plugins/
+      weight: 1
+    - name: Camp Graph
+      parent: plugins
+      url: /plugins/camp-graph/
+      weight: 2
+    - name: Camp Buzz
+      parent: plugins
+      url: /plugins/camp-buzz/
+      weight: 3
+    - name: Camp Leverage All
+      parent: plugins
+      url: /plugins/camp-leverage-all/
+      weight: 4
+    - name: Fest Direction (Preview)
+      parent: plugins
+      url: /plugins/fest-direction/
+      weight: 5
+    - name: Write a Plugin
+      parent: plugins
+      url: /guides/plugin-authoring/
+      weight: 6
+
     - name: CLI Reference
       identifier: cli-reference
       weight: 50

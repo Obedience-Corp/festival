@@ -1,8 +1,11 @@
 ---
 title: "Camp and Fest Plugins"
+description: "Write executable Camp and Fest plugins with PATH-based discovery, optional manifests, and shared runtime asset conventions."
 ---
 
 # Camp and Fest Plugins
+
+Looking for an existing extension? Browse the [Plugin Marketplace]({{< ref "/plugins" >}}) for plugin pages and installation instructions.
 
 Camp and Fest plugins use the same idea as Git plugins: put an executable with
 the right name on your `PATH`, and the CLI can run it as a subcommand.
