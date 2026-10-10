@@ -36,12 +36,13 @@ First [install the Festival suite]({{< ref "/getting-started/installation" >}}).
 festival
 ```
 
-Choose **Browse**, select a compatible plugin, and press Enter to install it. You can also browse by host or install a released plugin by name:
+Choose **Browse**, select a compatible plugin, and press Enter to install it. Wait for installation to finish, then quit the manager.
+
+To list catalog entries by host from your shell:
 
 ```bash
 festival browse --kind plugin --product camp
 festival browse --kind plugin --product fest
-festival install camp-graph
 ```
 
 The installer resolves the package, verifies its artifact, and records an installation receipt. A catalog entry alone does not guarantee a downloadable release; check the plugin's availability and requirements on its page.

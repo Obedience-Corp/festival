@@ -16,10 +16,15 @@ The plugin does not provide a hosted relay. This is an independent integration, 
 
 ## Install
 
-With the [Festival manager]({{< ref "/getting-started/festival-manager" >}}) installed:
+With the [Festival manager]({{< ref "/getting-started/festival-manager" >}}) installed, open its interactive launchpad:
 
 ```bash
-festival install camp-buzz
+festival
+```
+
+Choose **Browse**, select `obedience-corp/camp-buzz`, and press Enter to install it. Wait for installation to finish, then quit the manager and check that Camp discovers the plugin:
+
+```bash
 camp plugins
 ```
 

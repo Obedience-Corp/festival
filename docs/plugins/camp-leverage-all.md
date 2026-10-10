@@ -12,10 +12,15 @@ This is an experimental plugin. Its effort and dollar figures are model estimate
 
 ## Install
 
-With the [Festival manager]({{< ref "/getting-started/festival-manager" >}}) installed:
+With the [Festival manager]({{< ref "/getting-started/festival-manager" >}}) installed, open its interactive launchpad:
 
 ```bash
-festival install camp-leverage-all
+festival
+```
+
+Choose **Browse**, select `obedience-corp/camp-leverage-all`, and press Enter to install it. Wait for installation to finish, then quit the manager and check that Camp discovers the plugin:
+
+```bash
 camp plugins
 ```
 

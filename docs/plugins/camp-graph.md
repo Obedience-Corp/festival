@@ -10,10 +10,15 @@ Turn the files in your camp into a knowledge graph. Camp Graph connects projects
 
 ## Install
 
-With the [Festival manager]({{< ref "/getting-started/festival-manager" >}}) installed:
+With the [Festival manager]({{< ref "/getting-started/festival-manager" >}}) installed, open its interactive launchpad:
 
 ```bash
-festival install camp-graph
+festival
+```
+
+Choose **Browse**, select `obedience-corp/camp-graph`, and press Enter to install it. Wait for installation to finish, then quit the manager and check that Camp discovers the plugin:
+
+```bash
 camp plugins
 ```
 
