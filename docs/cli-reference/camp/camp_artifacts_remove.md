@@ -30,4 +30,4 @@ camp artifacts remove <path> [flags]
 
 ### SEE ALSO
 
-* [camp artifacts](../camp_artifacts/)	 - Manage declared artifact roots (.campaign/artifacts.yaml)
+* [camp artifacts](../camp_artifacts/)	 - Explore artifact files and manage declared roots

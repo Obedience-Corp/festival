@@ -52,7 +52,7 @@ camp [flags]
 
 ### SEE ALSO
 
-* [camp artifacts](../camp_artifacts/)	 - Manage declared artifact roots (.campaign/artifacts.yaml)
+* [camp artifacts](../camp_artifacts/)	 - Explore artifact files and manage declared roots
 * [camp attach](../camp_attach/)	 - Attach an external directory to a camp
 * [camp cache](../camp_cache/)	 - Manage the navigation index cache
 * [camp clone](../camp_clone/)	 - Clone a camp with full submodule setup
@@ -79,7 +79,7 @@ camp [flags]
 * [camp log](../camp_log/)	 - Show git log of the camp
 * [camp machine](../camp_machine/)	 - Manage remote machines (~/.obey/machines.yaml)
 * [camp move](../camp_move/)	 - Move a file or directory within the camp
-* [camp notify](../camp_notify/)	 - Manage camp state notices
+* [camp notify](../camp_notify/)	 - Review, dismiss, and restore camp state notices
 * [camp org](../camp_org/)	 - Group camps into orgs
 * [camp pack](../camp_pack/)	 - Pack a directory into a portable .festival bundle
 * [camp pin](../camp_pin/)	 - Pin a directory

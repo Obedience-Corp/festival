@@ -15,6 +15,10 @@ Show git status of the camp root directory.
 Works from anywhere within the camp - always shows the status
 of the camp root repository.
 
+Untracked files that camp commit keeps out of git as artifact content
+(over-threshold files inside a declared artifact root) are summarized by
+count and size. Run camp artifacts to explore files outside git.
+
 Use --sub to show status of the submodule detected from your current directory.
 Use --project/-p to show status of a specific project.
 Pass git status flags after -- to forward them directly to git.

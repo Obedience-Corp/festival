@@ -36,4 +36,4 @@ camp idea notes mv <note-id> <folder> [flags]
 
 ### SEE ALSO
 
-* [camp idea notes](../camp_idea_notes/)	 - Manage the note store (folders, moves, meetings)
+* [camp idea notes](../camp_idea_notes/)	 - Manage the note store (list, folders, moves, meetings)

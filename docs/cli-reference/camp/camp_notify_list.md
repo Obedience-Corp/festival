@@ -26,4 +26,4 @@ camp notify list [flags]
 
 ### SEE ALSO
 
-* [camp notify](../camp_notify/)	 - Manage camp state notices
+* [camp notify](../camp_notify/)	 - Review, dismiss, and restore camp state notices

@@ -22,6 +22,7 @@ Examples:
   camp idea note "check the daemon socket path"   Capture a note immediately
   camp idea note "follow up" --body "details..."  Note with a longer body
   echo "body" | camp idea note "idea" --body-file -
+  camp idea note "standup" --json                 Print the new note's id and path as JSON
   camp idea note                                  Note TUI (title + body)
 
 ```
@@ -37,6 +38,7 @@ camp idea note [text] [flags]
       --create-folder      Create --folder path if missing
       --folder string      Note folder under notes/ (must exist unless --create-folder)
   -h, --help               help for note
+      --json               emit a structured JSON result
       --no-commit          Don't create a git commit
   -t, --tag stringArray    Add a tag (repeatable)
 ```

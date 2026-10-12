@@ -34,4 +34,4 @@ camp notify dismiss <notice-id> [flags]
 
 ### SEE ALSO
 
-* [camp notify](../camp_notify/)	 - Manage camp state notices
+* [camp notify](../camp_notify/)	 - Review, dismiss, and restore camp state notices
