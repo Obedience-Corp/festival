@@ -22,7 +22,26 @@ A public example workspace for learning the `camp` and `fest` CLIs. It preserves
 full planning, execution, review, and ritual structure around its example projects,
 including a fully worked Go todo CLI as the golden path.
 
-## A working application built with Festival
+### Helix Hardening Camp
+
+**Camp:** <https://github.com/Festival-Examples/azx-camp> ·
+**Implementation:** <https://github.com/lancekrogers/helix>
+
+<img src="https://raw.githubusercontent.com/Festival-Examples/azx-camp/main/festivals/.dungeon/completed/2026-10-11/helix-hardening-HH0001/festival-replay.gif" alt="Replay of the Helix hardening festival from first task to completion" width="480">
+
+This example starts with an existing AI app-hosting platform. The camp records
+[repository exploration](https://github.com/Festival-Examples/azx-camp/tree/main/workflow/explore/helix-repo-exploration),
+[design decisions](https://github.com/Festival-Examples/azx-camp/tree/main/workflow/design/helix-spend-containment-egress),
+and a [completed hardening festival](https://github.com/Festival-Examples/azx-camp/tree/main/festivals/.dungeon/completed/2026-10-11/helix-hardening-HH0001)
+with four sequences and 54 tasks. The work covers spend controls, network egress,
+CSP and response headers, and a separate hosted-app domain. Each sequence includes
+tests, review findings, and fixes.
+
+The implementation is in an independent Helix clone. The camp's final records
+include local verification and mark Azure-specific behavior as unverified. The
+changes were not deployed to Azure or the live installs.
+
+## one app built with festival
 
 ### CodeSignal Practice Simulator
 
