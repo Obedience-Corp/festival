@@ -18,11 +18,13 @@ It keeps items visible without them competing for your attention.
 Commands:
   add     Initialize dungeon structure with documentation
   crawl   Interactive review and archival of dungeon contents
+  explore Browse finished work across every dungeon
   list    List dungeon items (agent-friendly)
   move    Move items between dungeon statuses (agent-friendly)
 
 Examples:
   camp dungeon add                        Initialize the dungeon
+  camp dungeon explore                    Browse finished work in every dungeon
   camp dungeon crawl                      Review and archive dungeon items
   camp dungeon list                       List dungeon root items
   camp dungeon list --triage              List parent items eligible for triage
@@ -49,6 +51,7 @@ camp dungeon [flags]
 * [camp](../camp/)	 - Manage your camps and the projects and festivals inside them
 * [camp dungeon add](../camp_dungeon_add/)	 - Initialize dungeon structure
 * [camp dungeon crawl](../camp_dungeon_crawl/)	 - Interactive dungeon review
+* [camp dungeon explore](../camp_dungeon_explore/)	 - Browse finished work across every dungeon
 * [camp dungeon list](../camp_dungeon_list/)	 - List dungeon items
 * [camp dungeon migrate](../camp_dungeon_migrate/)	 - Convert every camp dungeon to the hidden .dungeon spelling
 * [camp dungeon move](../camp_dungeon_move/)	 - Move dungeon items between statuses

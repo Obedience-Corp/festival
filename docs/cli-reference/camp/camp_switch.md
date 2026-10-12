@@ -35,9 +35,13 @@ camp query.
 The --print flag outputs just the path for shell integration (local only):
   cd "$(camp switch --print)"
 
-Use camp@tab to navigate to a specific location in the target camp:
-  camp switch obey-campaign@p    # Switch and navigate to projects/
-  camp switch obey/platform@f    # Switch inside org and navigate to festivals/
+Use camp@target to land somewhere specific in the target camp. The part
+after @ resolves exactly like 'camp go' inside that camp: a navigation tab
+first, then any indexed target such as a project, worktree, or festival.
+  camp switch obey-campaign@p         # Switch and navigate to projects/
+  camp switch obey/platform@f         # Switch inside org and navigate to festivals/
+  csw mytools@keepshot                # Switch and land in projects/keepshot
+  csw mytools@p@keepshot              # Same, via the tab drill form
 
 A bare name is resolved on this machine first, then across machines in
 ~/.obey/machines.yaml and the machine this shell was hopped from. One match
@@ -79,6 +83,7 @@ camp switch [camp] [flags]
   camp switch a1b2                   # Switch by ID prefix
   camp switch --print                # Picker, output path only (local)
   camp switch obey-campaign@p        # Switch and navigate to projects/
+  csw mytools@keepshot               # Switch and land in a project
   camp switch --all old-reference    # Include inactive/reference camps
   camp switch --org obey platform --json
 ```

@@ -14,6 +14,9 @@ List ideas with filtering, sorting, and output format options.
 
 By default, lists ideas in inbox, ready, and active status.
 Use --all to include dungeon ideas.
+Use --status notes to list notes from every note folder except archived, the
+same notes "camp idea notes list" returns. Notes have no type, project, or
+claim, so --type, --project, and --stale leave them out.
 
 OUTPUT FORMATS:
   table (default)   Human-readable table with columns
@@ -23,6 +26,7 @@ OUTPUT FORMATS:
 Examples:
   camp idea list                         List active ideas
   camp idea ls --status inbox            List inbox only
+  camp idea list --status notes --json   Notes as JSON items
   camp idea list -f json                 JSON output
   camp idea list -f simple | xargs ...   Pipe IDs to commands
   camp idea list --all                   Include archived
@@ -46,7 +50,7 @@ camp idea list [flags]
   -p, --project string   Filter by project
   -S, --sort string      Sort by: updated, created, priority, title (default "updated")
       --stale            Only show claimed ideas with no update in --days (default 7)
-  -s, --status strings   Filter by status (repeatable)
+  -s, --status strings   Filter by status (repeatable); notes lists notes
   -t, --type strings     Filter by type (repeatable)
 ```
 

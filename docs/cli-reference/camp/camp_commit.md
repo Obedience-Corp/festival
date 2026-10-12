@@ -19,6 +19,10 @@ At the camp root, submodule ref changes (projects/*) are excluded
 from staging by default to prevent accidental ref conflicts across
 machines. Use --include-refs to stage them explicitly.
 
+Use --auto-write --background to require a queued commit. Add --json to return
+a job receipt immediately after staging and snapshotting. Without --background,
+--json continues to wait for a completed commit hash.
+
 Use --sub to commit in the submodule detected from your current directory.
 Use -p/--project to commit in a specific project (e.g., -p projects/camp).
 
@@ -27,6 +31,7 @@ Commit tags use explicit --workitem or context from the current path
 
 Examples:
   camp commit -m "Add new feature"
+  camp commit --auto-write --background --json
   camp commit --amend -m "Fix typo"
   camp commit -a -m "Stage and commit all"
   camp commit --include-refs -m "Sync all submodule refs"
@@ -43,6 +48,7 @@ camp commit [flags]
   -a, --all                   Stage all changes before committing (default true)
       --amend                 Amend the previous commit
       --auto-write            Run configured commit message writer
+      --background            Queue an auto-write commit; with --json return a job receipt instead of a commit hash
       --commit-large          Commit over-threshold files instead of keeping them out of git
       --commit-nested         Commit undeclared nested git repositories as gitlinks instead of keeping them out of git
   -h, --help                  help for commit

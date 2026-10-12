@@ -38,7 +38,7 @@ camp idea notes folders [flags]
 
 ### SEE ALSO
 
-* [camp idea notes](../camp_idea_notes/)	 - Manage the note store (folders, moves, meetings)
+* [camp idea notes](../camp_idea_notes/)	 - Manage the note store (list, folders, moves, meetings)
 * [camp idea notes folders add](../camp_idea_notes_folders_add/)	 - Create a note folder
 * [camp idea notes folders mv](../camp_idea_notes_folders_mv/)	 - Rename a note folder
 * [camp idea notes folders rm](../camp_idea_notes_folders_rm/)	 - Remove an empty note folder
