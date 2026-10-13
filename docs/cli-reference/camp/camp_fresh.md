@@ -20,6 +20,24 @@ Auto-detects the current project from your working directory, or accepts a
 single project name. Use --list to cycle a specific set of projects in one
 run, or 'camp fresh all' to cycle every project submodule in the camp.
 
+OUTSIDE A CAMP
+
+Run with no project name inside a git repository that is not part of a camp,
+and camp fresh links that repository into a camp as a project, says so in one
+line, and runs the normal cycle. The repository stays where it is: the link is
+a shortcut at projects/<name> in the camp and a .camp attachment marker in the
+repository, kept out of git status. 'camp project unlink' reverses it.
+
+The repository is linked into the camp named festival. With no registered
+camps, that starter camp is created first, the way 'camp setup' creates it.
+With registered camps and none named festival, camp fresh stops and asks for
+--campaign rather than guessing. From a secondary git worktree, the main
+checkout is the project that gets linked.
+
+--dry-run never links and never creates a camp: it prints what would be
+linked, then the plan. --no-link turns linking off, so an unlinked repository
+is an error.
+
 Without configuration, syncs to the default branch and prunes.
 Configure .campaign/settings/fresh.yaml to set a default working branch, or
 follow-up command workflows (install, build, bootstrap, ...) to run once the
@@ -59,6 +77,8 @@ Examples:
   camp fresh --no-prune                 # Sync without pruning
   camp fresh --no-follow-up             # Sync without running configured follow-ups
   camp fresh --dry-run                  # Preview what would happen (follow-ups listed, not run)
+  camp fresh --campaign work            # In an unlinked repository: link it into the camp named work, then sync
+  camp fresh --no-link                  # In an unlinked repository: fail instead of linking
 
   camp fresh --branch feat/aggregate-CW0003 --cleanup-stack
                                         # Switch to an existing aggregate branch and
@@ -81,6 +101,7 @@ camp fresh [project-name] [flags]
 ```
       --allow-default-target   Permit --cleanup-stack against the default branch (main/master). Without this, cleanup-stack refuses default-branch targets because every merged feature worktree would look like a stack child
   -b, --branch string          Branch to create after syncing (overrides config)
+  -c, --campaign string        Camp to link an unlinked repository into, by name or ID (ignored when already linked or inside a camp)
       --cleanup-stack          Target an existing aggregate branch and remove child worktrees merged into it by ancestry or squash (requires --branch; refuses the default branch unless --allow-default-target)
   -n, --dry-run                Preview without making changes
   -h, --help                   help for fresh
@@ -88,6 +109,7 @@ camp fresh [project-name] [flags]
       --no-branch              Skip branch creation even if configured
       --no-drain               Do not wait for camp's queued commits first
       --no-follow-up           Skip configured follow-up command workflows
+      --no-link                Never link an unlinked repository into a camp; fail with 'not in a camp' instead
       --no-prune               Skip pruning merged branches
       --no-push                Skip pushing the new branch upstream
   -p, --project string         Project name (auto-detected from cwd)
