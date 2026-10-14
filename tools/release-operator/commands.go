@@ -845,6 +845,11 @@ var stablePublishSecrets = []struct {
 		Label:       "Marketplace",
 		FailureNote: "Stable release would fail when publishing the marketplace entry (.github/workflows/release.yaml).",
 	},
+	{
+		Name:        "SCOOP_GITHUB_TOKEN",
+		Label:       "Scoop",
+		FailureNote: "Stable release would fail when publishing the Windows Scoop manifest.",
+	},
 }
 
 func runRequireStablePublishCredentials(ctx *repoContext) error {

@@ -4,9 +4,34 @@ import (
 	"errors"
 	"os"
 	"path/filepath"
+	"reflect"
+	"regexp"
 	"strings"
 	"testing"
 )
+
+func TestStablePublishSecretsMatchWorkflow(t *testing.T) {
+	workflow, err := os.ReadFile(filepath.Join("..", "..", ".github", "workflows", "release.yaml"))
+	if err != nil {
+		t.Fatalf("read release workflow: %v", err)
+	}
+	section := strings.SplitN(string(workflow), "- name: Validate stable publish credentials", 2)
+	if len(section) != 2 {
+		t.Fatal("release workflow has no stable publish credentials step")
+	}
+	match := regexp.MustCompile(`for name in ([A-Z_ ]+); do`).FindStringSubmatch(section[1])
+	if len(match) != 2 {
+		t.Fatal("release workflow has no stable publisher secret list")
+	}
+	want := strings.Fields(match[1])
+	got := make([]string, 0, len(stablePublishSecrets))
+	for _, secret := range stablePublishSecrets {
+		got = append(got, secret.Name)
+	}
+	if !reflect.DeepEqual(got, want) {
+		t.Fatalf("release operator secrets %v differ from release workflow %v", got, want)
+	}
+}
 
 func TestJustReleaseCommandIsPositional(t *testing.T) {
 	got := justReleaseCommand("stable", map[string]string{
