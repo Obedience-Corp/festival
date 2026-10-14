@@ -103,11 +103,14 @@ try {
     Grant-ContainerUserModify -ContainerId $containerId -ContainerPath $workRoot -UserSid $userSid
 
     Invoke-DockerCli -DockerArgs @('cp', $archive[0].FullName, "${containerId}:${workRoot}\suite.zip") | Out-Null
+    Invoke-DockerCli -DockerArgs @('cp', $checksums[0].FullName, "${containerId}:${workRoot}\checksums.txt") | Out-Null
     $inner = Join-Path $PSScriptRoot 'windows-archive-container-inner.ps1'
     Invoke-DockerCli -DockerArgs @('cp', $inner, "${containerId}:${workRoot}\proof.ps1") | Out-Null
 
     $journey = Join-Path $PSScriptRoot 'windows-archive-container-journey-inner.ps1'
     Invoke-DockerCli -DockerArgs @('cp', $journey, "${containerId}:${workRoot}\journey.ps1") | Out-Null
+    $installerJourney = Join-Path $PSScriptRoot 'windows-installer-cli-container-inner.ps1'
+    Invoke-DockerCli -DockerArgs @('cp', $installerJourney, "${containerId}:${workRoot}\installer-cli.ps1") | Out-Null
     Invoke-DockerCli -DockerArgs @('cp', $driver, "${containerId}:${workRoot}\camp-terminal-proof.exe") | Out-Null
     $gitRoot = Get-HostGitRoot
     Write-Host "Copying host Git from $gitRoot into isolated Windows container"
@@ -140,6 +143,15 @@ try {
         -not $terminalMessage.Contains('Windows installed ConPTY terminal proof: PASS')) {
         throw "Native ConPTY terminal proof failed ($terminalCode)"
     }
+
+    Write-ProofSection 'Installed candidate CLI lifecycle'
+    Invoke-ContainerProof -ContainerId $containerId -ScriptPath "${workRoot}\installer-cli.ps1" `
+        -Arguments @('-WorkRoot', $workRoot, '-Mode', 'run') `
+        -PassMarker 'Windows installer CLI candidate journey: PASS' -TimeoutSeconds 750
+    Write-ProofSection 'Installed candidate CLI fresh-process readback'
+    Invoke-ContainerProof -ContainerId $containerId -ScriptPath "${workRoot}\installer-cli.ps1" `
+        -Arguments @('-WorkRoot', $workRoot, '-Mode', 'readback') `
+        -PassMarker 'Windows installer CLI fresh-process readback: PASS'
 } finally {
     if ($containerId) {
         $evidence = Join-Path $ArtifactDirectory 'native-terminal-proof'
