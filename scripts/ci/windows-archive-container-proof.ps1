@@ -13,9 +13,9 @@ $ErrorActionPreference = 'Stop'
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 . (Join-Path $repoRoot 'fest/scripts/ci/windows-servercore-container.ps1')
 
-$campCommit = (& git -C (Join-Path $repoRoot 'camp') rev-parse --short HEAD | Out-String).Trim()
+$campCommit = (& git -C (Join-Path $repoRoot 'camp') rev-parse --short=12 HEAD | Out-String).Trim()
 if ($LASTEXITCODE -ne 0 -or -not $campCommit) { throw 'Cannot read pinned Camp commit' }
-$festCommit = (& git -C (Join-Path $repoRoot 'fest') rev-parse --short HEAD | Out-String).Trim()
+$festCommit = (& git -C (Join-Path $repoRoot 'fest') rev-parse --short=12 HEAD | Out-String).Trim()
 if ($LASTEXITCODE -ne 0 -or -not $festCommit) { throw 'Cannot read pinned Fest commit' }
 
 $archive = @(Get-ChildItem -LiteralPath $ArtifactDirectory -Recurse -File -Filter 'festival-*-windows-x86_64.zip')
