@@ -15,10 +15,11 @@ $ErrorActionPreference = 'Stop'
 $install = Join-Path $WorkRoot 'Install Folder [native]'
 $camp = Join-Path $install 'camp.exe'
 $fest = Join-Path $install 'fest.exe'
+$festivalExe = Join-Path $install 'festival.exe'
 $gitCmd = Join-Path $WorkRoot 'Git\cmd'
 $gitMingw = Join-Path $WorkRoot 'Git\mingw64\bin'
 $git = Join-Path $gitCmd 'git.exe'
-foreach ($required in @($camp, $fest, $git)) {
+foreach ($required in @($camp, $fest, $festivalExe, $git)) {
     if (-not (Test-Path -LiteralPath $required -PathType Leaf)) {
         throw "installed journey prerequisite missing: $required"
     }
@@ -29,6 +30,11 @@ $base = Join-Path $WorkRoot 'journey-workspaces'
 $campRoot = Join-Path $base 'native-beginner'
 $source = Join-Path $WorkRoot 'native-source-project'
 $statePath = Join-Path $WorkRoot 'journey-state.json'
+$firstRunHome = Join-Path $WorkRoot 'first-run-home'
+$firstRunStatePath = Join-Path $WorkRoot 'first-run-state.json'
+$firstRunInstallerHome = Join-Path $firstRunHome 'installer'
+$firstRunBin = Join-Path $firstRunInstallerHome 'bin'
+$firstRunFestival = Join-Path $firstRunBin 'festival.exe'
 $env:PATH = "$install;$gitCmd;$gitMingw;$env:PATH"
 $env:HOME = $homeRoot
 $env:USERPROFILE = $homeRoot
@@ -108,6 +114,184 @@ function New-MarkersFile {
 function Assert-File([string]$Path) {
     if (-not (Test-Path -LiteralPath $Path -PathType Leaf)) {
         throw "missing persisted file: $Path"
+    }
+}
+
+function Assert-Doctor([object]$Report, [string]$Stage) {
+    $checks = @($Report.data.checks)
+    $byId = @{}
+    foreach ($check in $checks) {
+        if ($byId.ContainsKey([string]$check.id)) {
+            throw "$Stage festival doctor repeated check $($check.id)"
+        }
+        $byId[[string]$check.id] = $check
+    }
+    foreach ($id in @('managed_bin_on_path', 'sources_reachable',
+        'marketplace_trust', 'receipts_integrity', 'path_shadowing')) {
+        if (-not $byId.ContainsKey($id)) {
+            throw "$Stage festival doctor omitted $id"
+        }
+    }
+    if (-not $Report.ok -or $checks.Count -ne 5 -or
+        $byId['managed_bin_on_path'].status -ne 'ok' -or
+        $byId['receipts_integrity'].status -ne 'ok' -or
+        @($checks | Where-Object { $_.status -eq 'fail' }).Count -ne 0) {
+        throw "$Stage festival doctor reports failed or incomplete checks: $($Report | ConvertTo-Json -Compress -Depth 5)"
+    }
+}
+
+function Use-FirstRunEnvironment([scriptblock]$Body) {
+    $names = @('HOME', 'USERPROFILE', 'XDG_CONFIG_HOME', 'CAMP_REGISTRY_PATH',
+        'FEST_CONFIG_DIR', 'FESTIVAL_HOME', 'OBEY_INSTALLER_HOME', 'CAMP_ROOT',
+        'PATH', 'TEMP', 'TMP')
+    $saved = @{}
+    foreach ($name in $names) {
+        $saved[$name] = [Environment]::GetEnvironmentVariable($name, 'Process')
+    }
+    try {
+        $tmp = Join-Path $firstRunHome 'tmp'
+        [void][System.IO.Directory]::CreateDirectory($tmp)
+        $env:HOME = $firstRunHome
+        $env:USERPROFILE = $firstRunHome
+        $env:XDG_CONFIG_HOME = Join-Path $firstRunHome 'config'
+        $env:CAMP_REGISTRY_PATH = Join-Path $firstRunHome 'registry.json'
+        $env:FEST_CONFIG_DIR = Join-Path $firstRunHome 'fest-config'
+        $env:FESTIVAL_HOME = $firstRunInstallerHome
+        $env:PATH = "$firstRunBin;$gitCmd;$gitMingw;C:\Windows\System32;C:\Windows"
+        $env:TEMP = $tmp
+        $env:TMP = $tmp
+        [Environment]::SetEnvironmentVariable('OBEY_INSTALLER_HOME', $null, 'Process')
+        [Environment]::SetEnvironmentVariable('CAMP_ROOT', $null, 'Process')
+        & $Body
+    } finally {
+        foreach ($name in $names) {
+            [Environment]::SetEnvironmentVariable($name, $saved[$name], 'Process')
+        }
+    }
+}
+
+function Invoke-FirstRunSetupProof {
+    [void][System.IO.Directory]::CreateDirectory($firstRunBin)
+    foreach ($name in @('camp.exe', 'fest.exe', 'festival.exe')) {
+        $from = Join-Path $install $name
+        $to = Join-Path $firstRunBin $name
+        [System.IO.File]::Copy($from, $to)
+        if ((Get-FileHash -LiteralPath $from -Algorithm SHA256).Hash -ne
+            (Get-FileHash -LiteralPath $to -Algorithm SHA256).Hash) {
+            throw "managed first-run copy differs from extracted candidate ZIP: $name"
+        }
+    }
+    Write-Host 'fresh-user managed bin contains three exact candidate ZIP binaries'
+    Use-FirstRunEnvironment {
+        $doctorBefore = (Invoke-Native $firstRunFestival @('doctor', '--json')).Output | ConvertFrom-Json
+        Assert-Doctor $doctorBefore 'before setup'
+        if (Test-Path -LiteralPath $env:CAMP_REGISTRY_PATH) {
+            throw 'clean-user festival doctor created a camp registry'
+        }
+        Write-Host 'clean-user festival doctor before setup: OK'
+
+        # Recreate the durable state left by a process interrupted after Camp
+        # journals its staging directory and before it writes the scaffold.
+        $base = Join-Path $firstRunHome 'campaigns'
+        $target = Join-Path $base 'festival'
+        $staging = Join-Path $base '.festival-setup-interrupted\festival'
+        [void][System.IO.Directory]::CreateDirectory($staging)
+        $sentinel = Join-Path $staging 'keep-user-data.txt'
+        [System.IO.File]::WriteAllText($sentinel, 'preserve interrupted setup data')
+        $configDir = Join-Path $firstRunHome 'config\obey\campaign'
+        [void][System.IO.Directory]::CreateDirectory($configDir)
+        $journal = Join-Path $configDir 'starter.json'
+        $invalid = @{ version = 1; completed = $false; path = $target;
+            staging = (Join-Path $WorkRoot 'outside-starter\festival'); ready = $false }
+        [System.IO.File]::WriteAllText($journal, ($invalid | ConvertTo-Json -Depth 3),
+            (New-Object System.Text.UTF8Encoding($false)))
+        $rejected = Invoke-Native $firstRunFestival @('setup', '--json') -AllowFailure
+        if ($rejected.Code -eq 0 -or $rejected.Output -notmatch 'invalid staging path' -or
+            (Test-Path -LiteralPath $target) -or
+            (Test-Path -LiteralPath $env:CAMP_REGISTRY_PATH)) {
+            throw "unsafe interrupted starter journal was not rejected cleanly: $($rejected.Output)"
+        }
+        Write-Host 'negative foreign staging path: rejected without publishing or registering'
+
+        $interrupted = @{ version = 1; completed = $false; path = $target;
+            staging = $staging; ready = $false }
+        [System.IO.File]::WriteAllText($journal, ($interrupted | ConvertTo-Json -Depth 3),
+            (New-Object System.Text.UTF8Encoding($false)))
+        if (Test-Path -LiteralPath $env:CAMP_REGISTRY_PATH) {
+            throw 'interrupted starter was registered before setup resumed'
+        }
+        Write-Host 'injected interrupted starter journal before scaffold publication'
+
+        $setup = (Invoke-Native $firstRunFestival @('setup', '--json')).Output | ConvertFrom-Json
+        if (-not $setup.ok -or $setup.data.action -ne 'created' -or
+            $setup.data.path -ne $target) {
+            throw "festival setup did not resume interrupted starter: $($setup | ConvertTo-Json -Compress)"
+        }
+        Assert-File (Join-Path $target '.campaign\campaign.yaml')
+        Assert-File (Join-Path $target '.git\HEAD')
+        Assert-File (Join-Path $target 'keep-user-data.txt')
+        if ([System.IO.File]::ReadAllText((Join-Path $target 'keep-user-data.txt')) -ne
+            'preserve interrupted setup data') {
+            throw 'festival setup changed the interrupted user file'
+        }
+        $journalData = Get-Content -LiteralPath $journal -Raw | ConvertFrom-Json
+        if (-not $journalData.completed -or $journalData.staging) {
+            throw 'festival setup left its starter journal incomplete'
+        }
+        $entries = @((Invoke-Native $camp @('list', '--json')).Output | ConvertFrom-Json)
+        if ($entries.Count -ne 1 -or $entries[0].name -ne 'festival' -or
+            $entries[0].path -ne $target) {
+            throw 'resumed setup did not register exactly one starter camp'
+        }
+        $head = (Invoke-Native $git @('-C', $target, 'rev-parse', 'HEAD')).Output.Trim()
+        $again = (Invoke-Native $firstRunFestival @('setup', '--json')).Output | ConvertFrom-Json
+        if (-not $again.ok -or $again.data.action -ne 'complete') {
+            throw 'second festival setup did not report completed idempotent state'
+        }
+        $doctorAfter = (Invoke-Native $firstRunFestival @('doctor', '--json')).Output | ConvertFrom-Json
+        Assert-Doctor $doctorAfter 'after setup'
+        $proof = @{ home = $firstRunHome; camp = $target; journal = $journal;
+            sentinel = Join-Path $target 'keep-user-data.txt'; head = $head }
+        [System.IO.File]::WriteAllText($firstRunStatePath, ($proof | ConvertTo-Json -Depth 3),
+            (New-Object System.Text.UTF8Encoding($false)))
+        Write-Host 'Windows installed festival doctor/setup interrupted-resume: PASS'
+    }
+}
+
+function Assert-FirstRunSetupReadback {
+    Assert-File $firstRunStatePath
+    $proof = Get-Content -LiteralPath $firstRunStatePath -Raw | ConvertFrom-Json
+    foreach ($name in @('camp.exe', 'fest.exe', 'festival.exe')) {
+        $from = Join-Path $install $name
+        $to = Join-Path $firstRunBin $name
+        Assert-File $to
+        if ((Get-FileHash -LiteralPath $from -Algorithm SHA256).Hash -ne
+            (Get-FileHash -LiteralPath $to -Algorithm SHA256).Hash) {
+            throw "fresh-process managed binary differs from extracted candidate ZIP: $name"
+        }
+    }
+    Use-FirstRunEnvironment {
+        foreach ($path in @($proof.camp, $proof.journal, $proof.sentinel)) {
+            Assert-File $path
+        }
+        if ([System.IO.File]::ReadAllText($proof.sentinel) -ne 'preserve interrupted setup data') {
+            throw 'fresh-process interrupted user file changed'
+        }
+        $journalData = Get-Content -LiteralPath $proof.journal -Raw | ConvertFrom-Json
+        if (-not $journalData.completed -or $journalData.staging) {
+            throw 'fresh-process starter journal is incomplete'
+        }
+        $entries = @((Invoke-Native $camp @('list', '--json')).Output | ConvertFrom-Json)
+        if ($entries.Count -ne 1 -or $entries[0].name -ne 'festival' -or
+            $entries[0].path -ne $proof.camp) {
+            throw 'fresh-process starter registry differs from saved setup'
+        }
+        $head = (Invoke-Native $git @('-C', $proof.camp, 'rev-parse', 'HEAD')).Output.Trim()
+        if ($head -ne $proof.head) { throw 'fresh-process starter Git HEAD changed' }
+        $doctor = (Invoke-Native $firstRunFestival @('doctor', '--json')).Output | ConvertFrom-Json
+        Assert-Doctor $doctor 'fresh-process readback'
+        Write-Host "fresh-process starter registry, Git HEAD, journal, user file, doctor: $head"
+        Write-Host 'Windows installed festival doctor/setup readback: PASS'
     }
 }
 
@@ -231,6 +415,7 @@ if ($Mode -eq 'create') {
     }
     [System.IO.File]::WriteAllText($statePath, ($state | ConvertTo-Json -Depth 3),
         (New-Object System.Text.UTF8Encoding($false)))
+    Invoke-FirstRunSetupProof
     Write-Host 'Windows installed beginner journey create: PASS'
     exit 0
 }
@@ -275,4 +460,5 @@ if ($log -notmatch 'Verify installed Windows beginner journey') {
 }
 Write-Host "fresh-process camp HEAD: $readHead"
 Write-Host 'fresh-process linked project, fest next, task progress/activity, and Git commit: OK'
+Assert-FirstRunSetupReadback
 Write-Host 'Windows installed beginner journey readback: PASS'
