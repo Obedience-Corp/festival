@@ -21,8 +21,8 @@ $gitMingw = Join-Path $WorkRoot 'Git\mingw64\bin'
 $gitUsr = Join-Path $WorkRoot 'Git\usr\bin'
 $git = Join-Path $gitCmd 'git.exe'
 $userRoot = Join-Path $WorkRoot 'installer-user'
-$home = Join-Path $userRoot 'installer'
-$binDir = Join-Path $home 'bin'
+$installerHome = Join-Path $userRoot 'installer'
+$binDir = Join-Path $installerHome 'bin'
 $managed = Join-Path $binDir 'festival.exe'
 $bootstrap = Join-Path $WorkRoot 'bootstrap\festival.exe'
 $repo = Join-Path $WorkRoot 'local-marketplace'
@@ -37,7 +37,7 @@ $script:commandNumber = 0
 $env:PATH = "$binDir;$gitCmd;$gitMingw;$gitUsr;$PSHOME;C:\Windows\System32;C:\Windows"
 $env:HOME = $userRoot
 $env:USERPROFILE = $userRoot
-$env:FESTIVAL_HOME = $home
+$env:FESTIVAL_HOME = $installerHome
 $env:TEMP = Join-Path $userRoot 'tmp'
 $env:TMP = $env:TEMP
 $env:CAMP_NO_DEFER = '1'
@@ -291,7 +291,7 @@ function Invoke-Run {
         [void][IO.Directory]::CreateDirectory((Split-Path -Parent $bootstrap))
         [IO.File]::Copy((Join-Path $expanded 'festival.exe'), $bootstrap, $true)
         [IO.File]::Copy((Join-Path $prior.Directory 'festival.exe'), $managed, $true)
-        [IO.File]::WriteAllText((Join-Path $home 'config.toml'), "[marketplaces]`ndefault = 'candidate-fixture'`n")
+        [IO.File]::WriteAllText((Join-Path $installerHome 'config.toml'), "[marketplaces]`ndefault = 'candidate-fixture'`n")
 
         Invoke-CommandFile -Executable $bootstrap -CommandArgs @('marketplace', 'add', $repo,
             '--name', 'candidate-fixture', '--allow-unverified') | Out-Null
@@ -316,7 +316,7 @@ function Invoke-Run {
         # reconcile this intent before checksum verification; a deliberately
         # bad checksum then proves recovery is independent of a new install.
         $journalId = [Guid]::NewGuid().ToString('N')
-        $backupDir = Join-Path $home "intent-backups\$journalId"
+        $backupDir = Join-Path $installerHome "intent-backups\$journalId"
         [void][IO.Directory]::CreateDirectory($backupDir)
         $camp = Join-Path $binDir 'camp.exe'
         $campBackup = Join-Path $backupDir 'camp.exe'
@@ -328,7 +328,7 @@ function Invoke-Run {
             started_at = (Get-Date).ToUniversalTime().ToString('o')
             placed = @(@{ dest = $camp; backup = $campBackup })
         }
-        [IO.File]::WriteAllText((Join-Path $home 'install-intent.json'),
+        [IO.File]::WriteAllText((Join-Path $installerHome 'install-intent.json'),
             ($journal | ConvertTo-Json -Depth 8), (New-Object Text.UTF8Encoding($false)))
         Write-PackageManifest $candidateVersion "http://127.0.0.1:$port/candidate.zip" ('0' * 64)
         Commit-Manifest 'invalid checksum after interrupted activation'
@@ -337,7 +337,7 @@ function Invoke-Run {
         if (($failure.Output + $failure.Error) -notmatch 'SHA|checksum|hash') {
             throw "failed install did not identify checksum failure: $($failure.Output) $($failure.Error)"
         }
-        if (Test-Path -LiteralPath (Join-Path $home 'install-intent.json')) {
+        if (Test-Path -LiteralPath (Join-Path $installerHome 'install-intent.json')) {
             throw 'recovery left interrupted transaction journal'
         }
         if ((Get-FileHash -LiteralPath $camp -Algorithm SHA256).Hash.ToLowerInvariant() -ne $candidateHashes['camp.exe']) {
