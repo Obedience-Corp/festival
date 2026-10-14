@@ -13,6 +13,8 @@ All installation methods below install all three.
 signed package metadata against a compiled-in key and refuses unsigned
 content by default.
 
+For a Festival-managed install, use:
+
 ```bash
 festival install festival  # install the suite (camp, fest, and festival)
 festival update            # keep camp, fest, and festival in sync
@@ -25,7 +27,7 @@ festival doctor            # check the install
 - `git` is required. Festival depends on it for camp init, project management, template sync, and commit-aware workflows.
 - `scc` is recommended but optional. Without it, `camp leverage` features will not work.
 
-## npm / pnpm / bun
+## npm / pnpm / bun (macOS and Linux)
 
 ```bash
 npm install -g @obedience-corp/festival
@@ -35,9 +37,10 @@ The npm package downloads the matching Festival GitHub release archive for your
 platform, verifies it against the release checksums, and exposes `fest`,
 `camp`, and `festival`. It also keeps the release completion and shell-helper
 assets inside the installed package, but it does not edit your shell startup
-files.
+files. Windows is excluded from this package; use Scoop or the checksummed ZIP
+below on Windows x64.
 
-{{< tabs names="macOS, Linux, Windows (Temporarily Paused)" >}}
+{{< tabs names="macOS, Linux, Windows x64" >}}
 
 ### Homebrew (Recommended)
 
@@ -94,13 +97,62 @@ sudo mv fest camp festival /usr/local/bin/
 
 <!-- tab -->
 
-Stable Windows packages are temporarily paused while Windows support is being hardened.
+### Scoop
 
-For now, use WSL2 and follow the Linux installation methods above.
+Install [Scoop](https://scoop.sh/) first, then run these commands in PowerShell:
 
-Scoop and direct `.zip` downloads will return once Windows support is marked stable.
+```powershell
+scoop install git
+scoop bucket add obedience https://github.com/Obedience-Corp/scoop-bucket
+scoop install obedience/festival
+festival doctor
+```
+
+The bucket installs `camp.exe`, `fest.exe`, and `festival.exe`. To update a
+Scoop install, run `scoop update festival`.
+
+### Direct ZIP
+
+Download `festival-<version>-windows-x86_64.zip` and `checksums.txt` from the
+same [GitHub release](https://github.com/Obedience-Corp/festival/releases/latest)
+into one directory. In PowerShell 5.1 or 7, verify the archive and extract it:
+
+```powershell
+$archives = @(Get-ChildItem -File -Filter 'festival-*-windows-x86_64.zip')
+if ($archives.Count -ne 1) { throw 'Expected one Windows x64 Festival ZIP' }
+$archive = $archives[0]
+$lines = @(Get-Content .\checksums.txt | Where-Object {
+    $_ -match ('^[0-9a-fA-F]{64}\s+' + [regex]::Escape($archive.Name) + '$')
+})
+if ($lines.Count -ne 1) { throw 'Archive checksum is missing or duplicated' }
+$expected = ($lines[0] -split '\s+')[0]
+$actual = (Get-FileHash -LiteralPath $archive.FullName -Algorithm SHA256).Hash
+if ($actual -ne $expected) { throw 'Archive checksum does not match' }
+
+$bin = Join-Path $HOME 'bin\festival'
+Add-Type -AssemblyName System.IO.Compression.FileSystem
+[System.IO.Compression.ZipFile]::ExtractToDirectory($archive.FullName, $bin)
+$userPath = [Environment]::GetEnvironmentVariable('Path', 'User')
+if (($userPath -split ';') -notcontains $bin) {
+    $newPath = (@($userPath, $bin) | Where-Object { $_ }) -join ';'
+    [Environment]::SetEnvironmentVariable('Path', $newPath, 'User')
+}
+$env:Path += ";$bin"
+festival version
+```
+
+The ZIP method is a manual install into a new directory. To update a ZIP install,
+remove it using the Direct ZIP steps under [Upgrading](#upgrading), then verify
+and extract the new release. For managed updates, migrate to Scoop after removing
+the ZIP copy so its commands cannot hide Scoop commands on PATH. npm does not
+install the Windows suite.
 
 {{< /tabs >}}
+
+On Windows, local camps, Git projects, and festivals are supported.
+`camp sync --from`, `camp clone --from`, and artifact transfer to or from
+another camp are not available in this release; those commands fail with a
+specific error.
 
 ## Other Methods
 
@@ -170,8 +222,8 @@ line and report the suite version as the tool's version instead.
 Binaries built with `go install` have no `bundle:` line, since they were not
 built from a suite release.
 
-Then run `festival doctor`. On a coherent AUR (`festival-bin`), Homebrew, npm,
-or `obedience-festival` (deb/rpm/apk) install, doctor **exits 0**. Marketplace
+Then run `festival doctor`. On a coherent AUR (`festival-bin`), Homebrew, Scoop,
+npm, or `obedience-festival` (deb/rpm/apk) install, doctor **exits 0**. Marketplace
 empty (`no marketplaces registered`) is a **warn**, not a failure. Browse if
 you want the official catalog; doctor does not require it.
 
@@ -226,6 +278,72 @@ brew upgrade --cask festival
 ```
 
 `brew outdated --cask` will surface a new festival release when one is available.
+
+### Scoop (Windows x64)
+
+```powershell
+scoop update festival
+```
+
+To remove the three Scoop-installed commands, run `scoop uninstall festival`.
+Scoop keeps your camps and project repositories separate from the package.
+
+### Direct ZIP (Windows x64)
+
+A direct ZIP install is separate from Scoop. If you installed the ZIP into the
+default `$HOME\bin\festival` directory shown above, remove that copy before
+switching to Scoop, or before extracting a newer ZIP into the same directory.
+In one PowerShell session, inspect every file without following directory links:
+
+```powershell
+$bin = Join-Path $HOME 'bin\festival'
+$root = Get-Item -LiteralPath $bin -Force -ErrorAction Stop
+if (-not $root.PSIsContainer -or ($root.Attributes -band [IO.FileAttributes]::ReparsePoint)) {
+    throw 'The ZIP directory is not an ordinary directory; inspect it separately'
+}
+function Show-FestivalZipTree([string]$dir) {
+    foreach ($item in Get-ChildItem -LiteralPath $dir -Force -ErrorAction Stop) {
+        $item.FullName
+        if ($item.Attributes -band [IO.FileAttributes]::ReparsePoint) {
+            throw "Linked item under ZIP directory: $($item.FullName)"
+        }
+        if ($item.PSIsContainer) { Show-FestivalZipTree $item.FullName }
+    }
+}
+Show-FestivalZipTree $bin
+```
+
+Only after confirming it contains no personal files, run this cleanup in the
+same session. It rechecks for links and deletes the ZIP directory without
+traversing a link introduced after inspection:
+
+```powershell
+$bin = Join-Path $HOME 'bin\festival'
+$binItem = Get-Item -LiteralPath $bin -Force -ErrorAction Stop
+if (-not $binItem.PSIsContainer -or ($binItem.Attributes -band [IO.FileAttributes]::ReparsePoint)) {
+    throw 'The ZIP directory is not an ordinary directory; inspect it before removing it'
+}
+if (-not (Get-Command Show-FestivalZipTree -CommandType Function -ErrorAction SilentlyContinue)) {
+    throw 'Run the read-only ZIP inspection above in this PowerShell session first'
+}
+Show-FestivalZipTree $bin | Out-Null
+try { [IO.Directory]::Delete($bin, $true) } catch {
+    throw "ZIP cleanup stopped; inspect remaining files: $($_.Exception.Message)"
+}
+$userPath = [Environment]::GetEnvironmentVariable('Path', 'User')
+$remaining = @($userPath -split ';' | Where-Object {
+    $_ -and ($_.TrimEnd('\') -ine $bin.TrimEnd('\'))
+})
+[Environment]::SetEnvironmentVariable('Path', ($remaining -join ';'), 'User')
+$env:Path = (@($env:Path -split ';' | Where-Object {
+    $_ -and ($_.TrimEnd('\') -ine $bin.TrimEnd('\'))
+})) -join ';'
+Get-Command festival -All -ErrorAction SilentlyContinue
+```
+
+The last command shows any other installed `festival` command, including a
+Scoop copy. Open a new PowerShell window after changing User PATH. This does not
+remove your camps or project repositories.
 
 ### npm / pnpm / bun
 
@@ -289,6 +407,14 @@ Replace `zsh` with `bash` or `sh` for those shells, or pipe the `fish` output to
 neither bash nor zsh; it has no packaged helper file and installs no tab
 completion.
 
+For Windows PowerShell 5.1 or PowerShell 7, add these lines to `$PROFILE` and
+open a new session (or run `. $PROFILE`):
+
+```powershell
+Invoke-Expression (& camp shell-init powershell | Out-String)
+Invoke-Expression (& fest shell-init powershell | Out-String)
+```
+
 See [Shell Setup]({{< ref "/getting-started/shell-setup" >}}) for details.
 Then continue with the [Quick Start]({{< ref "/getting-started/quickstart" >}}) to follow the validated beginner path through first `fest next`.
 
@@ -298,9 +424,11 @@ The shell and npm installers create a camp named `festival` when you have no
 registered camps. It lives at `~/campaigns/festival`, or under the camps directory
 you configured in Camp. Existing camps keep their names and paths.
 
-After installing with Homebrew or a system package manager, run `festival setup`
-as your regular user. This also retries a setup step that could not finish.
-`festival update` checks starter setup even when your tools are already current.
+After installing with Homebrew, Scoop, a direct ZIP, or a system package manager,
+run `festival setup` as your regular user. This also retries a setup step that
+could not finish.
+For a Festival-managed install, `festival update` checks starter setup even when
+your tools are already current. Use the package manager to update a Scoop install.
 Once setup succeeds, deleting the starter does not cause it to be recreated.
 
 If the destination contains unrelated files, setup leaves them in place and
