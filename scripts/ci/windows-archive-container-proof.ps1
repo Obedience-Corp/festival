@@ -37,6 +37,30 @@ if ($expected -ne $actual) {
     throw "SHA-256 mismatch for $name"
 }
 
+function Get-HostGitRoot {
+    $gitCmd = (Get-Command git.exe -ErrorAction Stop).Source
+    for ($dir = Split-Path -Parent $gitCmd; $dir; $dir = Split-Path -Parent $dir) {
+        if (Test-Path -LiteralPath (Join-Path $dir 'cmd\git.exe')) {
+            return $dir
+        }
+        $parent = Split-Path -Parent $dir
+        if ($parent -eq $dir) { break }
+    }
+    throw "host Git layout unexpected at $gitCmd (no parent with cmd\git.exe)"
+}
+
+function Invoke-ContainerProof([string]$ContainerId, [string]$ScriptPath, [string[]]$Arguments, [string]$PassMarker) {
+    $ps51 = 'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe'
+    $output = & docker exec -u ContainerUser $ContainerId $ps51 -NoProfile -NonInteractive `
+        -ExecutionPolicy Bypass -File $ScriptPath @Arguments 2>&1
+    $code = $LASTEXITCODE
+    $message = $output | Out-String
+    Write-Host $message
+    if ($code -ne 0 -or -not $message.Contains($PassMarker)) {
+        throw "$ScriptPath failed ($code), required marker: $PassMarker"
+    }
+}
+
 $containerId = $null
 try {
     Assert-WindowsProofHost
@@ -54,16 +78,23 @@ try {
     $inner = Join-Path $PSScriptRoot 'windows-archive-container-inner.ps1'
     Invoke-DockerCli -DockerArgs @('cp', $inner, "${containerId}:${workRoot}\proof.ps1") | Out-Null
 
-    $ps51 = 'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe'
-    $output = & docker exec -u ContainerUser $containerId $ps51 -NoProfile -NonInteractive `
-        -ExecutionPolicy Bypass -File "${workRoot}\proof.ps1" -WorkRoot $workRoot `
-        -ExpectedCampCommit $campCommit -ExpectedFestCommit $festCommit 2>&1
-    $code = $LASTEXITCODE
-    $message = $output | Out-String
-    Write-Host $message
-    if ($code -ne 0 -or $message -notmatch 'Windows suite archive container proof: PASS') {
-        throw "Native Windows archive proof failed ($code)"
-    }
+    $journey = Join-Path $PSScriptRoot 'windows-archive-container-journey-inner.ps1'
+    Invoke-DockerCli -DockerArgs @('cp', $journey, "${containerId}:${workRoot}\journey.ps1") | Out-Null
+    $gitRoot = Get-HostGitRoot
+    Write-Host "Copying host Git from $gitRoot into isolated Windows container"
+    Invoke-DockerCli -DockerArgs @('cp', $gitRoot, "${containerId}:${workRoot}\Git") | Out-Null
+
+    Invoke-ContainerProof $containerId "${workRoot}\proof.ps1" `
+        @('-WorkRoot', $workRoot, '-ExpectedCampCommit', $campCommit, '-ExpectedFestCommit', $festCommit) `
+        'Windows suite archive container proof: PASS'
+    Invoke-ContainerProof $containerId "${workRoot}\journey.ps1" `
+        @('-WorkRoot', $workRoot, '-Mode', 'create') `
+        'Windows installed beginner journey create: PASS'
+    # This is a separate PowerShell process. It reads the saved camp, Git,
+    # festival, task progress, and commit instead of trusting in-memory state.
+    Invoke-ContainerProof $containerId "${workRoot}\journey.ps1" `
+        @('-WorkRoot', $workRoot, '-Mode', 'readback') `
+        'Windows installed beginner journey readback: PASS'
 } finally {
     if ($containerId) {
         Remove-ServerCoreContainer $containerId
