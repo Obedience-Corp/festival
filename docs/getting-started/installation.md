@@ -293,23 +293,43 @@ Scoop keeps your camps and project repositories separate from the package.
 A direct ZIP install is separate from Scoop. If you installed the ZIP into the
 default `$HOME\bin\festival` directory shown above, remove that copy before
 switching to Scoop, or before extracting a newer ZIP into the same directory.
-First inspect every file in the directory:
+In one PowerShell session, inspect every file without following directory links:
 
 ```powershell
 $bin = Join-Path $HOME 'bin\festival'
-Get-ChildItem -LiteralPath $bin -Force -Recurse
+$root = Get-Item -LiteralPath $bin -Force -ErrorAction Stop
+if (-not $root.PSIsContainer -or ($root.Attributes -band [IO.FileAttributes]::ReparsePoint)) {
+    throw 'The ZIP directory is not an ordinary directory; inspect it separately'
+}
+function Show-FestivalZipTree([string]$dir) {
+    foreach ($item in Get-ChildItem -LiteralPath $dir -Force -ErrorAction Stop) {
+        $item.FullName
+        if ($item.Attributes -band [IO.FileAttributes]::ReparsePoint) {
+            throw "Linked item under ZIP directory: $($item.FullName)"
+        }
+        if ($item.PSIsContainer) { Show-FestivalZipTree $item.FullName }
+    }
+}
+Show-FestivalZipTree $bin
 ```
 
-Only after confirming it contains no personal files, run this cleanup. It
-rejects a linked directory and deletes everything in the ZIP directory:
+Only after confirming it contains no personal files, run this cleanup in the
+same session. It rechecks for links and deletes the ZIP directory without
+traversing a link introduced after inspection:
 
 ```powershell
 $bin = Join-Path $HOME 'bin\festival'
 $binItem = Get-Item -LiteralPath $bin -Force -ErrorAction Stop
-if ($binItem.Attributes -band [IO.FileAttributes]::ReparsePoint) {
-    throw 'The ZIP directory is a link; inspect its target before removing it'
+if (-not $binItem.PSIsContainer -or ($binItem.Attributes -band [IO.FileAttributes]::ReparsePoint)) {
+    throw 'The ZIP directory is not an ordinary directory; inspect it before removing it'
 }
-Remove-Item -LiteralPath $bin -Recurse -Force -ErrorAction Stop
+if (-not (Get-Command Show-FestivalZipTree -CommandType Function -ErrorAction SilentlyContinue)) {
+    throw 'Run the read-only ZIP inspection above in this PowerShell session first'
+}
+Show-FestivalZipTree $bin | Out-Null
+try { [IO.Directory]::Delete($bin, $true) } catch {
+    throw "ZIP cleanup stopped; inspect remaining files: $($_.Exception.Message)"
+}
 $userPath = [Environment]::GetEnvironmentVariable('Path', 'User')
 $remaining = @($userPath -split ';' | Where-Object {
     $_ -and ($_.TrimEnd('\') -ine $bin.TrimEnd('\'))
