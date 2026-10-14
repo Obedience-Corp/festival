@@ -33,8 +33,15 @@ permissions:
   id-token: write
 
 jobs:
+  windows-candidate-proof:
+    if: github.event_name == 'push'
+    uses: ./.github/workflows/windows-archive-proof.yml
+    permissions:
+      contents: read
+
   release:
     if: github.event_name == 'push'
+    needs: windows-candidate-proof
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -93,10 +100,11 @@ jobs:
           HOMEBREW_TAP_GITHUB_TOKEN: ${{ secrets.HOMEBREW_TAP_GITHUB_TOKEN }}
           AUR_SSH_KEY: ${{ secrets.AUR_SSH_KEY }}
           MARKETPLACE_PUBLISH_TOKEN: ${{ secrets.MARKETPLACE_PUBLISH_TOKEN }}
+          SCOOP_GITHUB_TOKEN: ${{ secrets.SCOOP_GITHUB_TOKEN }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           missing=0
-          for name in HOMEBREW_TAP_GITHUB_TOKEN AUR_SSH_KEY MARKETPLACE_PUBLISH_TOKEN; do
+          for name in HOMEBREW_TAP_GITHUB_TOKEN AUR_SSH_KEY MARKETPLACE_PUBLISH_TOKEN SCOOP_GITHUB_TOKEN; do
             if [ -z "${!name:-}" ]; then
               echo "::error::Missing required secret ${name}"
               missing=1
@@ -108,6 +116,14 @@ jobs:
           push_ok="$(GH_TOKEN=$MARKETPLACE_PUBLISH_TOKEN gh api repos/Obedience-Corp/marketplace --jq '.permissions.push')"
           if [ "${push_ok}" != "true" ]; then
             echo "::error::MARKETPLACE_PUBLISH_TOKEN cannot push to Obedience-Corp/marketplace (needed to open the marketplace entry pull request)"
+            exit 1
+          fi
+          if ! scoop_push_ok="$(GH_TOKEN=$SCOOP_GITHUB_TOKEN gh api repos/Obedience-Corp/scoop-bucket --jq '.permissions.push')"; then
+            echo "::error::SCOOP_GITHUB_TOKEN cannot access Obedience-Corp/scoop-bucket"
+            exit 1
+          fi
+          if [ "${scoop_push_ok}" != "true" ]; then
+            echo "::error::SCOOP_GITHUB_TOKEN cannot push to Obedience-Corp/scoop-bucket"
             exit 1
           fi
 
@@ -129,6 +145,10 @@ jobs:
       - name: Test release operator
         run: just test release-operator
 
+      - name: Test published Windows Scoop verification
+        if: steps.release_channel.outputs.mode == 'stable'
+        run: PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s scripts -p 'test_verify_published_windows_scoop.py'
+
       - name: Build CLIs for smoke test
         run: CLI_PROFILE=${{ steps.release_channel.outputs.cli_profile }} just build all
 
@@ -137,7 +157,8 @@ jobs:
 
       - name: Check Claude Code plugin sync
         run: |
-          export PATH="$(pwd)/bin:$PATH"
+          PATH="$(pwd)/bin:$PATH"
+          export PATH
           just plugin check
 
       - name: Generate bundled release notes
@@ -157,9 +178,25 @@ jobs:
       - name: Resolve bundled tool versions
         run: bash scripts/tool-versions.sh >> "$GITHUB_ENV"
 
+      - name: Build Windows suite archive before publishing
+        uses: goreleaser/goreleaser-action@f06c13b6b1a9625abc9e6e439d9c05a8f2190e94 # v7.2.3
+        with:
+          version: '~> v2'
+          args: release --snapshot --clean --skip=publish,announce
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GOPRIVATE: github.com/Obedience-Corp/*
+
+      - name: Verify Windows suite archive before publishing
+        run: python3 scripts/verify_windows_archive.py dist
+
+      - name: Verify Scoop manifest before publishing
+        run: python3 scripts/verify_scoop_manifest.py dist
+
       # AUR (and occasionally other publishers) can fail after the GitHub release
       # is already live. Soft-fail GoReleaser in that case so npm/marketplace and
-      # release-notes rewrite still run; hard-fail only if no release was created.
+      # release-notes rewrite still run. The stable gate below requires both the
+      # published Windows asset and its matching Scoop bucket entry.
       - name: Run GoReleaser
         id: goreleaser
         continue-on-error: true
@@ -191,6 +228,36 @@ jobs:
           fi
           echo "::error::GoReleaser failed before publishing GitHub release ${GITHUB_REF_NAME}"
           exit 1
+
+      - name: Verify published Windows ZIP and Scoop bucket
+        if: steps.release_channel.outputs.mode == 'stable'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          release_state="$(gh release view "${GITHUB_REF_NAME}" \
+            --repo Obedience-Corp/festival --json isDraft,isPrerelease \
+            --jq '[.isDraft, .isPrerelease] | join(" ")')"
+          if [ "$release_state" != 'false false' ]; then
+            echo "::error::Stable release ${GITHUB_REF_NAME} is draft or prerelease"
+            exit 1
+          fi
+
+          proof_dir="${RUNNER_TEMP}/published-windows-scoop"
+          mkdir -p "$proof_dir"
+          archive_name="festival-${GITHUB_REF_NAME#v}-windows-x86_64.zip"
+          gh release download "${GITHUB_REF_NAME}" --repo Obedience-Corp/festival \
+            --pattern "$archive_name" --dir "$proof_dir"
+          gh release download "${GITHUB_REF_NAME}" --repo Obedience-Corp/festival \
+            --pattern checksums.txt --dir "$proof_dir"
+          gh api 'repos/Obedience-Corp/scoop-bucket/contents/festival.json?ref=main' \
+            --jq .content | base64 --decode > "$proof_dir/festival.json"
+
+          python3 scripts/verify_published_windows_scoop.py \
+            --tag "${GITHUB_REF_NAME}" \
+            --archive "$proof_dir/$archive_name" \
+            --checksums "$proof_dir/checksums.txt" \
+            --manifest "$proof_dir/festival.json"
 
       - name: Rewrite GitHub release body from bundled component notes
         run: |
@@ -317,6 +384,39 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh release view "v${{ inputs.version }}" --repo Obedience-Corp/festival --json tagName --jq .tagName
+
+      # A manual recovery must satisfy the same public Windows gate as the
+      # tag-triggered release before it can resume downstream publishers.
+      - name: Verify published Windows ZIP and Scoop bucket
+        if: inputs.release_mode == 'stable'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: v${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          release_state="$(gh release view "$RELEASE_TAG" \
+            --repo Obedience-Corp/festival --json isDraft,isPrerelease \
+            --jq '[.isDraft, .isPrerelease] | join(" ")')"
+          if [ "$release_state" != 'false false' ]; then
+            echo "::error::Stable release $RELEASE_TAG is draft or prerelease"
+            exit 1
+          fi
+
+          proof_dir="${RUNNER_TEMP}/published-windows-scoop"
+          mkdir -p "$proof_dir"
+          archive_name="festival-${RELEASE_TAG#v}-windows-x86_64.zip"
+          gh release download "$RELEASE_TAG" --repo Obedience-Corp/festival \
+            --pattern "$archive_name" --dir "$proof_dir"
+          gh release download "$RELEASE_TAG" --repo Obedience-Corp/festival \
+            --pattern checksums.txt --dir "$proof_dir"
+          gh api 'repos/Obedience-Corp/scoop-bucket/contents/festival.json?ref=main' \
+            --jq .content | base64 --decode > "$proof_dir/festival.json"
+
+          python3 scripts/verify_published_windows_scoop.py \
+            --tag "$RELEASE_TAG" \
+            --archive "$proof_dir/$archive_name" \
+            --checksums "$proof_dir/checksums.txt" \
+            --manifest "$proof_dir/festival.json"
 
       - name: Generate bundled release notes
         run: |

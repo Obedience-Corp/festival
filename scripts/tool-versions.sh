@@ -36,7 +36,9 @@ tool_version() {
 }
 
 tool_commit() {
-    git -C "$repo_root/$1" rev-parse --short HEAD
+    # Git's default abbreviation length varies with the installed version and
+    # object database. Use the same fixed width in the native archive proof.
+    git -C "$repo_root/$1" rev-parse --short=12 HEAD
 }
 
 # Values are eval'd by the just recipes and appended to $GITHUB_ENV in CI, so

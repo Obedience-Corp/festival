@@ -34,8 +34,10 @@ festival version
 - macOS: Intel and Apple Silicon, distributed as a universal archive
 - Linux: x64 and arm64
 
-Windows npm installation is paused until the Festival Windows release artifacts
-are re-enabled.
+Windows is not an npm installation target for this release. The npm package
+excludes `win32` and its installer handles Unix archives only. On Windows, use
+the checksummed suite ZIP or the Festival Scoop bucket after the Windows
+release is published. See the [installation guide](https://docs.fest.build/getting-started/installation/).
 
 ## How It Works
 
