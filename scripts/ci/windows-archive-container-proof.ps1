@@ -82,14 +82,32 @@ function Invoke-ContainerProof([string]$ContainerId, [string]$ScriptPath,
         $message = $stdout.Result + $stderr.Result
         Write-Host $message
         if ($process.ExitCode -ne 0 -or -not $message.Contains($PassMarker)) {
-            throw "$ScriptPath failed ($($process.ExitCode)), required marker: $PassMarker"
+            throw "$ScriptPath failed ($($process.ExitCode)), required marker: $PassMarker; output: $message"
         }
     } finally {
         $process.Dispose()
     }
 }
 
+function Get-HostCheckoutStatus([string]$Root, [string]$ArtifactPath) {
+    $gitArgs = @('-C', $Root, 'status', '--porcelain=v1', '--untracked-files=all')
+    $relativeArtifact = [IO.Path]::GetRelativePath($Root, [IO.Path]::GetFullPath($ArtifactPath)).Replace('\', '/')
+    if ($relativeArtifact -ne '.' -and -not $relativeArtifact.StartsWith('../') -and
+        -not [IO.Path]::IsPathRooted($relativeArtifact)) {
+        # The downloaded archive and terminal capture are intentional host-side
+        # CI artifacts. Everything else in the checkout must stay unchanged.
+        $gitArgs += @('--', '.', ":(exclude)$relativeArtifact/**")
+    }
+    $status = & git @gitArgs | Out-String
+    if ($LASTEXITCODE -ne 0) { throw "cannot inspect host checkout status ($LASTEXITCODE)" }
+    return $status
+}
+
 $containerId = $null
+$hostSentinelPath = $null
+$hostSentinelContent = $null
+$hostCheckoutBefore = $null
+$controlledFailureObserved = $false
 try {
     Assert-WindowsProofHost
     Report-DockerServices
@@ -152,18 +170,72 @@ try {
     Invoke-ContainerProof -ContainerId $containerId -ScriptPath "${workRoot}\installer-cli.ps1" `
         -Arguments @('-WorkRoot', $workRoot, '-Mode', 'readback') `
         -PassMarker 'Windows installer CLI fresh-process readback: PASS'
+
+    # The inner script creates a fixture only inside the container and exits
+    # nonzero. Exercise the normal proof failure path, then verify cleanup and
+    # the host boundary after the outer finally removes this container.
+    Write-ProofSection 'Controlled inner-proof failure and isolation cleanup'
+    $failureScript = Join-Path $PSScriptRoot 'windows-archive-container-failure-inner.ps1'
+    Invoke-DockerCli -DockerArgs @('cp', $failureScript, "${containerId}:${workRoot}\failure-proof.ps1") | Out-Null
+    $hostSentinelPath = Join-Path $ArtifactDirectory 'host-boundary-sentinel.txt'
+    $hostSentinelContent = "host-only-$([guid]::NewGuid().ToString('n'))"
+    [IO.File]::WriteAllText($hostSentinelPath, $hostSentinelContent, [Text.UTF8Encoding]::new($false))
+    $hostCheckoutBefore = Get-HostCheckoutStatus -Root $repoRoot -ArtifactPath $ArtifactDirectory
+    try {
+        Invoke-ContainerProof -ContainerId $containerId -ScriptPath "${workRoot}\failure-proof.ps1" `
+            -Arguments @('-WorkRoot', $workRoot) -PassMarker 'unexpected inner-proof success'
+        throw 'controlled inner proof unexpectedly passed'
+    } catch {
+        $failure = $_.Exception.Message
+        if ($failure -notmatch 'failure-proof\.ps1 failed \([1-9][0-9]*\)' -or
+            -not $failure.Contains('intentional Windows inner-proof failure')) {
+            throw
+        }
+        $fixtureCheck = "if not exist $workRoot\intentional-failure-fixture.txt exit /b 7"
+        Invoke-DockerExecAsAdmin $containerId $fixtureCheck | Out-Null
+        $controlledFailureObserved = $true
+        Write-Host 'controlled inner-proof failure reported with container-only fixture'
+    }
 } finally {
-    if ($containerId) {
-        $evidence = Join-Path $ArtifactDirectory 'native-terminal-proof'
-        [void][System.IO.Directory]::CreateDirectory($evidence)
-        foreach ($file in @('terminal-capture.vt', 'terminal-frames.json')) {
-            try {
-                Invoke-DockerCli -DockerArgs @('cp',
-                    "${containerId}:${workRoot}\$file", (Join-Path $evidence $file)) | Out-Null
-            } catch {
-                Write-Warning "Could not collect $file from native container: $_"
+    try {
+        if ($containerId) {
+            $evidence = Join-Path $ArtifactDirectory 'native-terminal-proof'
+            [void][System.IO.Directory]::CreateDirectory($evidence)
+            foreach ($file in @('terminal-capture.vt', 'terminal-frames.json')) {
+                try {
+                    Invoke-DockerCli -DockerArgs @('cp',
+                        "${containerId}:${workRoot}\$file", (Join-Path $evidence $file)) | Out-Null
+                } catch {
+                    Write-Warning "Could not collect $file from native container: $_"
+                }
+            }
+            Remove-ServerCoreContainer $containerId
+            if ($controlledFailureObserved) {
+                $priorPreference = $ErrorActionPreference
+                try {
+                    $ErrorActionPreference = 'Continue'
+                    $null = & docker inspect $containerId 2>&1
+                    $inspectCode = $LASTEXITCODE
+                } finally {
+                    $ErrorActionPreference = $priorPreference
+                }
+                if ($inspectCode -eq 0) { throw "controlled-failure container was not removed: $containerId" }
+                # A failed inspect alone can also mean Docker is unavailable.
+                Invoke-DockerCli -DockerArgs @('ps', '-a', '--quiet') | Out-Null
+                if (-not (Test-Path -LiteralPath $hostSentinelPath -PathType Leaf) -or
+                    [IO.File]::ReadAllText($hostSentinelPath) -cne $hostSentinelContent) {
+                    throw 'controlled inner proof changed or removed the host sentinel'
+                }
+                $hostCheckoutAfter = Get-HostCheckoutStatus -Root $repoRoot -ArtifactPath $ArtifactDirectory
+                if ($hostCheckoutAfter -cne $hostCheckoutBefore) {
+                    throw "controlled inner proof changed the host checkout: before=$hostCheckoutBefore after=$hostCheckoutAfter"
+                }
+                Write-Host 'Windows controlled failure cleanup and host boundary: PASS'
             }
         }
-        Remove-ServerCoreContainer $containerId
+    } finally {
+        if ($hostSentinelPath) {
+            Remove-Item -LiteralPath $hostSentinelPath -Force -ErrorAction SilentlyContinue
+        }
     }
 }
