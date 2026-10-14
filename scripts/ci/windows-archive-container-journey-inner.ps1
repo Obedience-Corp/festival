@@ -235,7 +235,9 @@ function Invoke-FirstRunSetupProof {
             throw 'festival setup changed the interrupted user file'
         }
         $journalData = Get-Content -LiteralPath $journal -Raw | ConvertFrom-Json
-        if (-not $journalData.completed -or $journalData.staging) {
+        $journalStaging = $journalData.PSObject.Properties['staging']
+        if (-not $journalData.completed -or
+            ($null -ne $journalStaging -and $journalStaging.Value)) {
             throw 'festival setup left its starter journal incomplete'
         }
         $entries = @((Invoke-Native $camp @('list', '--json')).Output | ConvertFrom-Json)
@@ -278,7 +280,9 @@ function Assert-FirstRunSetupReadback {
             throw 'fresh-process interrupted user file changed'
         }
         $journalData = Get-Content -LiteralPath $proof.journal -Raw | ConvertFrom-Json
-        if (-not $journalData.completed -or $journalData.staging) {
+        $journalStaging = $journalData.PSObject.Properties['staging']
+        if (-not $journalData.completed -or
+            ($null -ne $journalStaging -and $journalStaging.Value)) {
             throw 'fresh-process starter journal is incomplete'
         }
         $entries = @((Invoke-Native $camp @('list', '--json')).Output | ConvertFrom-Json)
