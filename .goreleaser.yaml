@@ -336,12 +336,12 @@ release:
 
     | Platform | Command |
     |----------|---------|
-    | npm / pnpm / bun | `npm install -g @obedience-corp/festival` |
+    | macOS/Linux npm | `npm install -g @obedience-corp/festival` |
     | macOS | `brew install --cask Obedience-Corp/tap/festival` |
     | Arch Linux | `yay -S festival-bin` |
     | Debian/Ubuntu | Download `.deb` from assets below |
     | Fedora/RHEL | Download `.rpm` from assets below |
-    | Windows | Temporarily paused while Windows support is stabilized |
+    | Windows x64 | `scoop install git`, `scoop bucket add obedience https://github.com/Obedience-Corp/scoop-bucket`, then `scoop install obedience/festival`; or download the checksummed ZIP below |
 
 # macOS signing and notarization: disabled until Apple Developer account is configured.
 # To enable: set MACOS_SIGN_P12, MACOS_SIGN_PASSWORD, MACOS_NOTARY_KEY,

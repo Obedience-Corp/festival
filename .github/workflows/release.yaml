@@ -33,8 +33,15 @@ permissions:
   id-token: write
 
 jobs:
+  windows-candidate-proof:
+    if: github.event_name == 'push'
+    uses: ./.github/workflows/windows-archive-proof.yml
+    permissions:
+      contents: read
+
   release:
     if: github.event_name == 'push'
+    needs: windows-candidate-proof
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -150,7 +157,8 @@ jobs:
 
       - name: Check Claude Code plugin sync
         run: |
-          export PATH="$(pwd)/bin:$PATH"
+          PATH="$(pwd)/bin:$PATH"
+          export PATH
           just plugin check
 
       - name: Generate bundled release notes

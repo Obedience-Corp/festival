@@ -115,6 +115,17 @@ try {
         }
     }
 
+    # Bucket registration on a clean account requires Git. Exercise the same
+    # prerequisite as the public Windows instructions before installing the
+    # candidate manifest.
+    Invoke-Scoop -Arguments @('install', 'git')
+    $gitShim = Join-Path $scoopRoot 'shims\git.exe'
+    if (-not (Test-Path -LiteralPath $gitShim -PathType Leaf)) {
+        throw 'Scoop did not install the Git shim required for bucket add'
+    }
+    & $gitShim --version | Out-Host
+    if ($LASTEXITCODE -ne 0) { throw 'Scoop Git shim cannot run' }
+
     Invoke-Scoop -Arguments @('install', $manifestPath)
     Assert-Shims
     Assert-Workspace
