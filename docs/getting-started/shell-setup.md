@@ -43,6 +43,17 @@ camp shell-init fish | source
 fest shell-init fish | source
 ```
 
+For Windows PowerShell 5.1 or PowerShell 7, add both lines to `$PROFILE` and
+open a new session (or run `. $PROFILE`):
+
+```powershell
+Invoke-Expression (& camp shell-init powershell | Out-String)
+Invoke-Expression (& fest shell-init powershell | Out-String)
+```
+
+The functions make navigation commands such as `csw`, `cgo`, and `fgo` change
+the current PowerShell directory.
+
 For dash, busybox ash, or any other Bourne shell that is neither bash nor zsh,
 use `sh` and add it to `~/.profile`:
 

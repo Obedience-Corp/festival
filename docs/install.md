@@ -11,6 +11,8 @@ Every method on this page installs three binaries: `camp`, `fest`, and
 verifies signed package metadata against a compiled-in key and refuses
 unsigned content by default.
 
+For a Festival-managed install, use:
+
 ```bash
 festival install festival  # install the suite (camp, fest, and festival)
 festival update            # keep camp, fest, and festival in sync
@@ -74,11 +76,21 @@ Choose your distribution's package format:
 
 ## Windows
 
-Stable Windows packages are temporarily paused while Windows support is being hardened.
+On Windows x64, install the three tools with [Scoop](https://scoop.sh/) in PowerShell:
 
-For now, use WSL2 and the Linux install methods from this page.
+```powershell
+scoop install git
+scoop bucket add obedience https://github.com/Obedience-Corp/scoop-bucket
+scoop install obedience/festival
+festival doctor
+```
 
-Scoop and direct `.zip` downloads will return once Windows support is marked stable.
+Or download the `festival-*-windows-x86_64.zip` archive and `checksums.txt` from
+[GitHub Releases](https://github.com/Obedience-Corp/festival/releases/latest).
+Verify the SHA-256 checksum before extracting the archive; the
+[full installation guide]({{< ref "/getting-started/installation" >}}) has the
+PowerShell commands and shell setup. The npm package currently supports macOS
+and Linux; use Scoop or the ZIP on Windows.
 
 </div>
 

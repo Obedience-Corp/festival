@@ -61,13 +61,13 @@ Replace the brackets and paste this into your coding agent. It will install Fest
 Help me set up Festival for this goal: [what you want done and how you'll know it worked].
 My existing repository is at: [full local path].
 
-If `camp`, `fest`, or `festival` is missing, install Festival. On macOS with Homebrew, use `brew install --cask Obedience-Corp/tap/festival`. On macOS or Linux with Node.js, use `npm install -g @obedience-corp/festival`. Run `festival doctor` to check the install.
+If `camp`, `fest`, or `festival` is missing, install Festival. On macOS with Homebrew, use `brew install --cask Obedience-Corp/tap/festival`. On macOS or Linux with Node.js, use `npm install -g @obedience-corp/festival`. On Windows x64 with Scoop, run `scoop install git`, `scoop bucket add obedience https://github.com/Obedience-Corp/scoop-bucket`, and `scoop install obedience/festival`. Run `festival doctor` to check the install.
 
-To update camp, fest, and festival together, run `festival update`. Do not pass `--force`.
+Use the installer that owns the suite for updates. For Scoop, run `scoop update festival`. For a Festival-managed install, run `festival update` without `--force`.
 
 Ask me for a camp name, a one-line description, and a mission. Create the camp with `camp create <name> -d "<description>" -m "<mission>"`. Read `camp create --help` before adding flags. Use `camp create` for this. Do not run `camp init` or `festival setup`. Use the camp path printed by the command (by default, `~/campaigns/<name>`).
 
-Set up navigation for my shell, adding the following lines to its config only if they are missing. For zsh or bash, use `eval "$(camp shell-init <shell>)"` and `eval "$(fest shell-init <shell>)"`, replacing `<shell>` with `zsh` or `bash`. For fish, use `camp shell-init fish | source` and `fest shell-init fish | source`. Tell me to open a new terminal and run `csw <name>`; you can keep working from the camp root.
+Set up navigation for my shell, adding the following lines to its config only if they are missing. For zsh or bash, use `eval "$(camp shell-init <shell>)"` and `eval "$(fest shell-init <shell>)"`, replacing `<shell>` with `zsh` or `bash`. For fish, use `camp shell-init fish | source` and `fest shell-init fish | source`. For PowerShell 5.1 or 7, add `Invoke-Expression (& camp shell-init powershell | Out-String)` and `Invoke-Expression (& fest shell-init powershell | Out-String)` to `$PROFILE`. Tell me to open a new terminal and run `csw <name>`; you can keep working from the camp root.
 
 From the camp root, run `camp project link <full-local-repo-path> --yes`. This leaves the repository in place, links it under `projects/`, and adds a `.camp` attachment file to it.
 
@@ -79,7 +79,7 @@ The [agent setup guides](https://docs.fest.build/getting-started/agents/) cover 
 <details>
 <summary>Prefer to set up manually?</summary>
 
-Choose one method. Both install `camp`, `fest`, and the `festival` manager.
+Choose one method. Each installs `camp`, `fest`, and the `festival` manager.
 
 **macOS with Homebrew**
 
@@ -91,6 +91,14 @@ brew install --cask Obedience-Corp/tap/festival
 
 ```bash
 npm install -g @obedience-corp/festival
+```
+
+**Windows x64 with Scoop (PowerShell)**
+
+```powershell
+scoop install git
+scoop bucket add obedience https://github.com/Obedience-Corp/scoop-bucket
+scoop install obedience/festival
 ```
 
 Check the install and create one camp:
@@ -111,7 +119,7 @@ Replace the repository path with its full local path. Your repository stays wher
 
 Open your coding agent at the camp root, then give it a goal below. Add the [shell integration](https://docs.fest.build/getting-started/shell-setup/) to enable navigation shortcuts such as `csw`.
 
-[Linux packages, WSL2, and other install methods](https://docs.fest.build/getting-started/installation/). Native Windows support is being hardened; use WSL2 for now.
+[Linux packages, the checksummed Windows ZIP, and other install methods](https://docs.fest.build/getting-started/installation/).
 
 </details>
 
