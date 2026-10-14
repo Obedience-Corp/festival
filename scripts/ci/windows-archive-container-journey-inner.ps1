@@ -412,6 +412,27 @@ if ($Mode -eq 'create') {
     if ($completedProgress.status -ne 'completed') {
         throw "completed task absent from progress: $($completedProgress | ConvertTo-Json -Compress)"
     }
+    # A failed Git commit must be visible to the caller and must not advance
+    # the camp's history. Retry the same saved festival state after removing
+    # the injected hook, rather than treating task progress as a committed run.
+    $beforeRejectedCommit = (Invoke-Native $git @('-C', $campRoot, 'rev-parse', 'HEAD')).Output.Trim()
+    $preCommit = Join-Path $campRoot '.git\hooks\pre-commit'
+    [System.IO.File]::WriteAllText($preCommit,
+        "#!/bin/sh`necho intentional-windows-commit-rejection >&2`nexit 29`n",
+        (New-Object System.Text.UTF8Encoding($false)))
+    try {
+        $rejectedCommit = Invoke-Native $fest @('commit', '-m',
+            'Reject installed Windows beginner commit') -AllowFailure
+    } finally {
+        Remove-Item -LiteralPath $preCommit -Force
+    }
+    $afterRejectedCommit = (Invoke-Native $git @('-C', $campRoot, 'rev-parse', 'HEAD')).Output.Trim()
+    if ($rejectedCommit.Code -eq 0 -or
+        $rejectedCommit.Output -notmatch 'intentional-windows-commit-rejection' -or
+        $afterRejectedCommit -ne $beforeRejectedCommit) {
+        throw "failed Git commit reported success or advanced HEAD: $($rejectedCommit.Output)"
+    }
+    Write-Host 'negative Git commit hook: rejected without advancing camp HEAD'
     Invoke-Native $fest @('commit', '-m', 'Verify installed Windows beginner journey') | Out-Null
     $savedHead = (Invoke-Native $git @('-C', $campRoot, 'rev-parse', 'HEAD')).Output.Trim()
     if ($savedHead -eq $firstHead) { throw 'fest commit did not update camp Git history' }
