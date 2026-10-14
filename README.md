@@ -101,6 +101,10 @@ scoop bucket add obedience https://github.com/Obedience-Corp/scoop-bucket
 scoop install obedience/festival
 ```
 
+Windows supports local Camp and Fest work. `camp sync --from`,
+`camp clone --from`, and artifact transfer to or from another camp are not
+available in this release.
+
 Check the install and create one camp:
 
 ```bash

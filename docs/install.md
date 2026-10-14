@@ -91,6 +91,8 @@ Verify the SHA-256 checksum before extracting the archive; the
 [full installation guide]({{< ref "/getting-started/installation" >}}) has the
 PowerShell commands and shell setup. The npm package currently supports macOS
 and Linux; use Scoop or the ZIP on Windows.
+`camp sync --from`, `camp clone --from`, and artifact transfer to or from
+another camp remain unavailable on Windows; local camps and Git projects work.
 
 </div>
 

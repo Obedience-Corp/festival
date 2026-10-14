@@ -149,6 +149,11 @@ install the Windows suite.
 
 {{< /tabs >}}
 
+On Windows, local camps, Git projects, and festivals are supported.
+`camp sync --from`, `camp clone --from`, and artifact transfer to or from
+another camp are not available in this release; those commands fail with a
+specific error.
+
 ## Other Methods
 
 ### Shell Script
