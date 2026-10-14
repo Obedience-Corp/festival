@@ -1,10 +1,15 @@
 name: Deploy GitHub Pages
 
 on:
-  push:
-    tags:
-      - 'v*'
+  workflow_run:
+    workflows: [Release]
+    types: [completed]
   workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'Published Festival release tag to deploy (for example v0.3.22)'
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -17,7 +22,13 @@ concurrency:
 
 jobs:
   deploy:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.event == 'push' &&
+       github.event.workflow_run.conclusion == 'success')
     runs-on: ubuntu-latest
+    env:
+      RELEASE_TAG: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_branch || inputs.release_tag }}
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -25,8 +36,46 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || inputs.release_tag }}
           submodules: recursive
           fetch-depth: 0
+
+      - name: Verify release tag and published Windows route
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          if [[ ! "$RELEASE_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-rc\.[0-9]+|-dev\.[0-9]+)?$ ]]; then
+            echo "::error::Expected a Festival release tag, got $RELEASE_TAG"
+            exit 1
+          fi
+          if [ "$(git rev-parse "refs/tags/$RELEASE_TAG^{commit}")" != "$(git rev-parse HEAD)" ]; then
+            echo "::error::Checkout does not match release tag $RELEASE_TAG"
+            exit 1
+          fi
+          if [[ "$RELEASE_TAG" == *-rc.* || "$RELEASE_TAG" == *-dev.* ]]; then
+            exit 0
+          fi
+          release_state="$(gh release view "$RELEASE_TAG" --repo Obedience-Corp/festival \
+            --json isDraft,isPrerelease --jq '[.isDraft, .isPrerelease] | join(" ")')"
+          if [ "$release_state" != 'false false' ]; then
+            echo "::error::Stable release $RELEASE_TAG is draft or prerelease"
+            exit 1
+          fi
+          proof_dir="${RUNNER_TEMP}/published-windows-scoop"
+          mkdir -p "$proof_dir"
+          archive_name="festival-${RELEASE_TAG#v}-windows-x86_64.zip"
+          gh release download "$RELEASE_TAG" --repo Obedience-Corp/festival \
+            --pattern "$archive_name" --dir "$proof_dir"
+          gh release download "$RELEASE_TAG" --repo Obedience-Corp/festival \
+            --pattern checksums.txt --dir "$proof_dir"
+          gh api 'repos/Obedience-Corp/scoop-bucket/contents/festival.json?ref=main' \
+            --jq .content | base64 --decode > "$proof_dir/festival.json"
+          python3 scripts/verify_published_windows_scoop.py \
+            --tag "$RELEASE_TAG" \
+            --archive "$proof_dir/$archive_name" \
+            --checksums "$proof_dir/checksums.txt" \
+            --manifest "$proof_dir/festival.json"
 
       - name: Set up Go
         uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
@@ -57,7 +106,7 @@ jobs:
       - name: Detect release docs profile
         id: docs_profile
         run: |
-          case "${GITHUB_REF_NAME}" in
+          case "$RELEASE_TAG" in
             v*-dev.*)
               echo "cli_profile=dev" >> "$GITHUB_OUTPUT"
               ;;

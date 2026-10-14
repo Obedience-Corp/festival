@@ -61,7 +61,7 @@ Replace the brackets and paste this into your coding agent. It will install Fest
 Help me set up Festival for this goal: [what you want done and how you'll know it worked].
 My existing repository is at: [full local path].
 
-If `camp`, `fest`, or `festival` is missing, install Festival. On macOS with Homebrew, use `brew install --cask Obedience-Corp/tap/festival`. On macOS or Linux with Node.js, use `npm install -g @obedience-corp/festival`. On Windows x64 with Scoop, run `scoop install git`, `scoop bucket add obedience https://github.com/Obedience-Corp/scoop-bucket`, and `scoop install obedience/festival`. Run `festival doctor` to check the install.
+If `camp`, `fest`, or `festival` is missing, install Festival. On macOS with Homebrew, use `brew install --cask Obedience-Corp/tap/festival`. On macOS or Linux with Node.js, use `npm install -g @obedience-corp/festival`. Native Windows x64 packages are not published yet; use WSL2 with a Linux install until the first stable Windows release. After installing, run `festival doctor` to check the install.
 
 Use the installer that owns the suite for updates. For Scoop, run `scoop update festival`. For a Festival-managed install, run `festival update` without `--force`.
 
@@ -93,7 +93,10 @@ brew install --cask Obedience-Corp/tap/festival
 npm install -g @obedience-corp/festival
 ```
 
-**Windows x64 with Scoop (PowerShell)**
+**Windows x64 with Scoop (PowerShell, after the first stable Windows release)**
+
+The Scoop bucket has no package yet. Use WSL2 with a Linux install until the
+stable Windows suite ZIP and Scoop manifest are published.
 
 ```powershell
 scoop install git

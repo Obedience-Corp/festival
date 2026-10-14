@@ -37,8 +37,8 @@ The npm package downloads the matching Festival GitHub release archive for your
 platform, verifies it against the release checksums, and exposes `fest`,
 `camp`, and `festival`. It also keeps the release completion and shell-helper
 assets inside the installed package, but it does not edit your shell startup
-files. Windows is excluded from this package; use Scoop or the checksummed ZIP
-below on Windows x64.
+files. Windows is excluded from this package; after the first native Windows
+release, use Scoop or the checksummed ZIP below on Windows x64.
 
 {{< tabs names="macOS, Linux, Windows x64" >}}
 
@@ -96,6 +96,10 @@ sudo mv fest camp festival /usr/local/bin/
 ```
 
 <!-- tab -->
+
+Native Windows x64 packages are not published yet. Use WSL2 with a Linux install
+until the first stable Windows suite ZIP and Scoop manifest are available. The
+steps below are prepared for that release.
 
 ### Scoop
 
