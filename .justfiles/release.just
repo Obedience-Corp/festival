@@ -85,6 +85,12 @@ dry-run:
     eval "$tool_env"
     set +a
     goreleaser release --snapshot --clean --skip=publish,announce
+    python3 scripts/verify_windows_archive.py dist
+
+# Verify the Windows suite archive and checksum produced by GoReleaser
+[no-cd]
+verify-windows-archive dist_dir="dist":
+    python3 scripts/verify_windows_archive.py "{{dist_dir}}"
 
 # Publish the npm wrapper for an already-created GitHub release.
 # This is a manual backfill path only; tag releases should normally publish npm from CI.

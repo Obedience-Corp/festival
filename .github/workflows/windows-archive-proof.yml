@@ -1,0 +1,76 @@
+name: windows-archive-proof
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.goreleaser.yaml'
+      - '.justfiles/release.just'
+      - 'camp'
+      - 'fest'
+      - 'festival-installer'
+      - 'scripts/tool-versions.sh'
+      - 'scripts/verify_windows_archive.py'
+      - '.github/workflows/windows-archive-proof.yml'
+  pull_request:
+    paths:
+      - '.goreleaser.yaml'
+      - '.justfiles/release.just'
+      - 'camp'
+      - 'fest'
+      - 'festival-installer'
+      - 'scripts/tool-versions.sh'
+      - 'scripts/verify_windows_archive.py'
+      - '.github/workflows/windows-archive-proof.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  windows-archive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout pinned suite sources
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Set up Go
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: fest/go.mod
+          cache-dependency-path: |
+            fest/go.sum
+            camp/go.sum
+            festival-installer/go.sum
+
+      - name: Resolve component versions from pins
+        run: bash scripts/tool-versions.sh >> "$GITHUB_ENV"
+
+      - name: Validate GoReleaser configuration
+        uses: goreleaser/goreleaser-action@f06c13b6b1a9625abc9e6e439d9c05a8f2190e94 # v7.2.3
+        with:
+          version: '~> v2'
+          args: check
+
+      - name: Build and verify Windows suite archive
+        uses: goreleaser/goreleaser-action@f06c13b6b1a9625abc9e6e439d9c05a8f2190e94 # v7.2.3
+        with:
+          version: '~> v2'
+          args: release --snapshot --clean --skip=publish,announce
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GOPRIVATE: github.com/Obedience-Corp/*
+
+      - name: Verify archive members and checksum
+        run: python3 scripts/verify_windows_archive.py dist
+
+      - name: Upload Windows suite for native proof
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: windows-suite
+          path: |
+            dist/festival-*-windows-x86_64.zip
+            dist/checksums.txt
+          if-no-files-found: error

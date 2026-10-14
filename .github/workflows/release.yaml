@@ -157,6 +157,18 @@ jobs:
       - name: Resolve bundled tool versions
         run: bash scripts/tool-versions.sh >> "$GITHUB_ENV"
 
+      - name: Build Windows suite archive before publishing
+        uses: goreleaser/goreleaser-action@f06c13b6b1a9625abc9e6e439d9c05a8f2190e94 # v7.2.3
+        with:
+          version: '~> v2'
+          args: release --snapshot --clean --skip=publish,announce
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GOPRIVATE: github.com/Obedience-Corp/*
+
+      - name: Verify Windows suite archive before publishing
+        run: python3 scripts/verify_windows_archive.py dist
+
       # AUR (and occasionally other publishers) can fail after the GitHub release
       # is already live. Soft-fail GoReleaser in that case so npm/marketplace and
       # release-notes rewrite still run; hard-fail only if no release was created.
