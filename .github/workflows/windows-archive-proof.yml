@@ -1,6 +1,7 @@
 name: windows-archive-proof
 
 on:
+  workflow_call:
   push:
     branches: [main]
     paths:
@@ -13,6 +14,7 @@ on:
       - 'scripts/verify_windows_archive.py'
       - 'scripts/verify_scoop_manifest.py'
       - 'scripts/ci/windows-archive-container-*.ps1'
+      - 'scripts/ci/windows-terminal-proof/**'
       - 'scripts/ci/windows-scoop-container-*.ps1'
       - '.github/workflows/windows-archive-proof.yml'
   pull_request:
@@ -26,6 +28,7 @@ on:
       - 'scripts/verify_windows_archive.py'
       - 'scripts/verify_scoop_manifest.py'
       - 'scripts/ci/windows-archive-container-*.ps1'
+      - 'scripts/ci/windows-terminal-proof/**'
       - 'scripts/ci/windows-scoop-container-*.ps1'
       - '.github/workflows/windows-archive-proof.yml'
 
@@ -75,6 +78,10 @@ jobs:
       - name: Verify Scoop manifest against archive
         run: python3 scripts/verify_scoop_manifest.py dist
 
+      - name: Test VT screen renderer
+        working-directory: scripts/ci/windows-terminal-proof
+        run: go test ./...
+
       - name: Upload Windows suite for native proof
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
@@ -95,15 +102,36 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Set up Go for native ConPTY proof
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: fest/go.mod
+          cache-dependency-path: scripts/ci/windows-terminal-proof/go.sum
+
       - name: Download Windows suite archive
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
           name: windows-suite
           path: proof-artifact
 
+      - name: Build native ConPTY driver
+        shell: pwsh
+        working-directory: scripts/ci/windows-terminal-proof
+        run: |
+          & go build -trimpath -o (Join-Path $env:RUNNER_TEMP 'camp-terminal-proof.exe') .
+          if ($LASTEXITCODE -ne 0) { throw "ConPTY driver build failed ($LASTEXITCODE)" }
+
       - name: Extract and launch installed binaries as ContainerUser
         shell: pwsh
-        run: ./scripts/ci/windows-archive-container-proof.ps1 -ArtifactDirectory proof-artifact
+        run: ./scripts/ci/windows-archive-container-proof.ps1 -ArtifactDirectory proof-artifact -TerminalDriver (Join-Path $env:RUNNER_TEMP 'camp-terminal-proof.exe')
+
+      - name: Upload native terminal capture
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: windows-terminal-proof
+          path: proof-artifact/native-terminal-proof/
+          if-no-files-found: ignore
 
       - name: Install, update, and uninstall Scoop package as ContainerUser
         shell: pwsh

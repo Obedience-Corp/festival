@@ -45,6 +45,7 @@ Remove-Item Env:CAMP_ROOT -ErrorAction SilentlyContinue
 
 function Invoke-Native {
     param([string]$Executable, [string[]]$Arguments, [switch]$AllowFailure)
+    Write-Host "journey command: $([System.IO.Path]::GetFileName($Executable)) $($Arguments -join ' ')"
     $oldPreference = $ErrorActionPreference
     $ErrorActionPreference = 'Continue'
     try {
@@ -122,7 +123,9 @@ if ($Mode -eq 'create') {
     $savedPath = $env:PATH
     try {
         $env:PATH = "$install;C:\Windows\System32;C:\Windows"
-        $missing = Invoke-Native $camp @('create', 'git-is-missing', '--path', $base) -AllowFailure
+        $missing = Invoke-Native $camp @('create', 'git-is-missing', '--path', $base,
+            '--description', 'Missing Git negative proof',
+            '--mission', 'Reject creation when Git is unavailable') -AllowFailure
     } finally {
         $env:PATH = $savedPath
     }
@@ -147,7 +150,9 @@ if ($Mode -eq 'create') {
     if (-not $firstHead) { throw 'camp create did not record its initial Git commit' }
     Write-Host "camp create: $firstHead"
 
-    $occupied = Invoke-Native $camp @('create', 'native-beginner', '--path', $base) -AllowFailure
+    $occupied = Invoke-Native $camp @('create', 'native-beginner', '--path', $base,
+        '--description', 'Occupied target negative proof',
+        '--mission', 'Preserve the existing camp when the target is occupied') -AllowFailure
     $afterOccupied = (Invoke-Native $git @('-C', $campRoot, 'rev-parse', 'HEAD')).Output.Trim()
     if ($occupied.Code -eq 0 -or $afterOccupied -ne $firstHead -or
         $occupied.Output -notmatch '(?i)already contains a camp|not empty') {
