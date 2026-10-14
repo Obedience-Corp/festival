@@ -138,6 +138,10 @@ jobs:
       - name: Test release operator
         run: just test release-operator
 
+      - name: Test published Windows Scoop verification
+        if: steps.release_channel.outputs.mode == 'stable'
+        run: PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s scripts -p 'test_verify_published_windows_scoop.py'
+
       - name: Build CLIs for smoke test
         run: CLI_PROFILE=${{ steps.release_channel.outputs.cli_profile }} just build all
 
@@ -183,7 +187,8 @@ jobs:
 
       # AUR (and occasionally other publishers) can fail after the GitHub release
       # is already live. Soft-fail GoReleaser in that case so npm/marketplace and
-      # release-notes rewrite still run; hard-fail only if no release was created.
+      # release-notes rewrite still run. The stable gate below requires both the
+      # published Windows asset and its matching Scoop bucket entry.
       - name: Run GoReleaser
         id: goreleaser
         continue-on-error: true
@@ -215,6 +220,36 @@ jobs:
           fi
           echo "::error::GoReleaser failed before publishing GitHub release ${GITHUB_REF_NAME}"
           exit 1
+
+      - name: Verify published Windows ZIP and Scoop bucket
+        if: steps.release_channel.outputs.mode == 'stable'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          release_state="$(gh release view "${GITHUB_REF_NAME}" \
+            --repo Obedience-Corp/festival --json isDraft,isPrerelease \
+            --jq '[.isDraft, .isPrerelease] | join(" ")')"
+          if [ "$release_state" != 'false false' ]; then
+            echo "::error::Stable release ${GITHUB_REF_NAME} is draft or prerelease"
+            exit 1
+          fi
+
+          proof_dir="${RUNNER_TEMP}/published-windows-scoop"
+          mkdir -p "$proof_dir"
+          archive_name="festival-${GITHUB_REF_NAME#v}-windows-x86_64.zip"
+          gh release download "${GITHUB_REF_NAME}" --repo Obedience-Corp/festival \
+            --pattern "$archive_name" --dir "$proof_dir"
+          gh release download "${GITHUB_REF_NAME}" --repo Obedience-Corp/festival \
+            --pattern checksums.txt --dir "$proof_dir"
+          gh api 'repos/Obedience-Corp/scoop-bucket/contents/festival.json?ref=main' \
+            --jq .content | base64 --decode > "$proof_dir/festival.json"
+
+          python3 scripts/verify_published_windows_scoop.py \
+            --tag "${GITHUB_REF_NAME}" \
+            --archive "$proof_dir/$archive_name" \
+            --checksums "$proof_dir/checksums.txt" \
+            --manifest "$proof_dir/festival.json"
 
       - name: Rewrite GitHub release body from bundled component notes
         run: |
