@@ -273,7 +273,12 @@ function Assert-FirstRunSetupReadback {
         }
     }
     Use-FirstRunEnvironment {
-        foreach ($path in @($proof.camp, $proof.journal, $proof.sentinel)) {
+        if (-not (Test-Path -LiteralPath $proof.camp -PathType Container)) {
+            throw "fresh-process starter camp directory missing: $($proof.camp)"
+        }
+        foreach ($path in @($proof.journal, $proof.sentinel,
+            (Join-Path $proof.camp '.campaign\campaign.yaml'),
+            (Join-Path $proof.camp '.git\HEAD'))) {
             Assert-File $path
         }
         if ([System.IO.File]::ReadAllText($proof.sentinel) -ne 'preserve interrupted setup data') {
