@@ -11,6 +11,7 @@ on:
       - 'festival-installer'
       - 'scripts/tool-versions.sh'
       - 'scripts/verify_windows_archive.py'
+      - 'scripts/ci/windows-archive-container-*.ps1'
       - '.github/workflows/windows-archive-proof.yml'
   pull_request:
     paths:
@@ -21,6 +22,7 @@ on:
       - 'festival-installer'
       - 'scripts/tool-versions.sh'
       - 'scripts/verify_windows_archive.py'
+      - 'scripts/ci/windows-archive-container-*.ps1'
       - '.github/workflows/windows-archive-proof.yml'
 
 permissions:
@@ -74,3 +76,23 @@ jobs:
             dist/festival-*-windows-x86_64.zip
             dist/checksums.txt
           if-no-files-found: error
+
+  windows-archive-native:
+    needs: windows-archive
+    runs-on: windows-2025
+    timeout-minutes: 30
+    steps:
+      - name: Checkout suite and pinned sources
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          submodules: recursive
+
+      - name: Download Windows suite archive
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: windows-suite
+          path: proof-artifact
+
+      - name: Extract and launch installed binaries as ContainerUser
+        shell: pwsh
+        run: ./scripts/ci/windows-archive-container-proof.ps1 -ArtifactDirectory proof-artifact
