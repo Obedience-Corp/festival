@@ -288,12 +288,22 @@ Scoop keeps your camps and project repositories separate from the package.
 A direct ZIP install is separate from Scoop. If you installed the ZIP into the
 default `$HOME\bin\festival` directory shown above, remove that copy before
 switching to Scoop, or before extracting a newer ZIP into the same directory.
-First inspect the directory and confirm it contains only files from the ZIP;
-the removal command deletes everything in that directory.
+First inspect every file in the directory:
 
 ```powershell
 $bin = Join-Path $HOME 'bin\festival'
-Get-ChildItem -LiteralPath $bin -Force
+Get-ChildItem -LiteralPath $bin -Force -Recurse
+```
+
+Only after confirming it contains no personal files, run this cleanup. It
+rejects a linked directory and deletes everything in the ZIP directory:
+
+```powershell
+$bin = Join-Path $HOME 'bin\festival'
+$binItem = Get-Item -LiteralPath $bin -Force -ErrorAction Stop
+if ($binItem.Attributes -band [IO.FileAttributes]::ReparsePoint) {
+    throw 'The ZIP directory is a link; inspect its target before removing it'
+}
 Remove-Item -LiteralPath $bin -Recurse -Force -ErrorAction Stop
 $userPath = [Environment]::GetEnvironmentVariable('Path', 'User')
 $remaining = @($userPath -split ';' | Where-Object {
