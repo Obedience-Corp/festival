@@ -86,6 +86,15 @@ function Invoke-JsonCli {
     return $doc.data
 }
 
+function Get-JsonProperty([object]$Document, [string]$Name) {
+    # Go's omitempty fields are absent when false or empty. StrictMode makes
+    # direct access to an absent property an error, so assert their values
+    # through the property collection instead.
+    $property = $Document.PSObject.Properties[$Name]
+    if ($null -eq $property) { return $null }
+    return $property.Value
+}
+
 function Assert-Workspace {
     Assert-File $sentinel
     if ([IO.File]::ReadAllText($sentinel) -ne 'user workspace survives installer lifecycle') {
@@ -297,7 +306,8 @@ function Invoke-Run {
             '--name', 'candidate-fixture', '--allow-unverified') | Out-Null
         $installed = Invoke-JsonCli -Executable $managed -CommandArgs @('install', 'festival',
             '--allow-unverified', '--json')
-        if ($installed.self_placement -ne 'managed' -or $installed.self_skipped -or
+        if ((Get-JsonProperty $installed 'self_placement') -ne 'managed' -or
+            (Get-JsonProperty $installed 'self_skipped') -eq $true -or
             @($installed.files).Count -ne 3) { throw "initial install did not replace managed suite: $($installed | ConvertTo-Json)" }
         Assert-Installed $fixtureVersion $prior.Hashes
 
@@ -305,8 +315,10 @@ function Invoke-Run {
         Commit-Manifest 'candidate Windows suite fixture'
         $updated = Invoke-JsonCli -Executable $managed -CommandArgs @('update', 'festival',
             '--allow-unverified', '--json')
-        if ($updated.action -ne 'upgraded' -or $updated.from -ne $fixtureVersion -or
-            $updated.version -ne $candidateVersion -or -not $updated.self_replaced) {
+        if ($updated.action -ne 'upgraded' -or
+            (Get-JsonProperty $updated 'from') -ne $fixtureVersion -or
+            (Get-JsonProperty $updated 'version') -ne $candidateVersion -or
+            -not $updated.self_replaced) {
             throw "managed suite update did not replace self: $($updated | ConvertTo-Json)"
         }
         Assert-Installed $candidateVersion $candidateHashes
@@ -351,11 +363,15 @@ function Invoke-Run {
         $reinstalled = Invoke-JsonCli -Executable $managed -CommandArgs @('install', 'festival',
             '--allow-unverified', '--json')
         if ($reinstalled.version -ne $candidateVersion -or @($reinstalled.files).Count -ne 3 -or
-            $reinstalled.self_skipped) { throw "reinstall incomplete: $($reinstalled | ConvertTo-Json)" }
+            (Get-JsonProperty $reinstalled 'self_skipped') -eq $true) {
+            throw "reinstall incomplete: $($reinstalled | ConvertTo-Json)"
+        }
         Assert-Installed $candidateVersion $candidateHashes
 
         $removed = Invoke-JsonCli -Executable $bootstrap -CommandArgs @('uninstall', 'festival', '--json')
-        if (@($removed.removed).Count -ne 3) { throw "external-hub uninstall did not remove three owned binaries: $($removed | ConvertTo-Json)" }
+        if (@(Get-JsonProperty $removed 'removed').Count -ne 3) {
+            throw "external-hub uninstall did not remove three owned binaries: $($removed | ConvertTo-Json)"
+        }
         foreach ($name in @('camp.exe', 'fest.exe', 'festival.exe')) {
             if (Test-Path -LiteralPath (Join-Path $binDir $name)) { throw "uninstall left managed $name" }
         }
@@ -380,7 +396,7 @@ function Invoke-Readback {
     }
     $hashes = Get-Content -LiteralPath $expectedCandidate -Raw | ConvertFrom-Json
     foreach ($name in @('camp.exe', 'fest.exe', 'festival.exe')) {
-        if ([string]::IsNullOrWhiteSpace($hashes.PSObject.Properties[$name].Value)) {
+        if ([string]::IsNullOrWhiteSpace((Get-JsonProperty $hashes $name))) {
             throw "missing candidate hash for $name"
         }
     }
