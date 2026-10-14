@@ -205,18 +205,19 @@ aurs:
       install -Dm644 "./shell/festival.fish" "${pkgdir}/usr/share/festival/shell/festival.fish"
     commit_msg_template: "Update to {{ .Tag }}"
 
-# Scoop publishing is temporarily disabled while Windows support is stabilized.
-# Re-enable by uncommenting this block after Windows artifacts are re-enabled.
-# scoops:
-#   - name: festival
-#     repository:
-#       owner: Obedience-Corp
-#       name: scoop-bucket
-#       branch: main
-#       token: "{{ .Env.SCOOP_GITHUB_TOKEN }}"
-#     homepage: "https://fest.build"
-#     description: "Festival Methodology CLI suite (fest, camp, and festival) - AI-native project planning"
-#     license: "Apache-2.0"
+scoops:
+  - name: festival
+    repository:
+      owner: Obedience-Corp
+      name: scoop-bucket
+      branch: main
+      token: "{{ .Env.SCOOP_GITHUB_TOKEN }}"
+    homepage: "https://fest.build"
+    description: "Festival Methodology CLI suite (fest, camp, and festival) - AI-native project planning"
+    license: "Apache-2.0"
+    # Keep the stable bucket on stable suite releases. RC/dev archives remain
+    # available through GitHub Releases without replacing the stable manifest.
+    skip_upload: auto
 
 checksum:
   name_template: 'checksums.txt'

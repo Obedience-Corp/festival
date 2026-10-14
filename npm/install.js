@@ -53,7 +53,7 @@ function targetForCurrentPlatform() {
 
   if (!platform || !arch) {
     throw new Error(
-      `Unsupported platform: ${process.platform}/${process.arch}. Festival npm install currently supports macOS and Linux on x64/arm64.`,
+      `Unsupported platform: ${process.platform}/${process.arch}. Festival npm install supports macOS and Linux on x64/arm64. On Windows, use Scoop or the checksummed suite ZIP.`,
     );
   }
 

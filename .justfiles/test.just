@@ -7,7 +7,7 @@ default:
 
 # Test all projects
 [no-cd]
-all: fest camp festival-installer release-operator release-notes plugin marketplace-publish completion-assets install-shell no-em-dash
+all: fest camp festival-installer release-operator release-notes plugin marketplace-publish completion-assets npm-windows-channel install-shell no-em-dash
     @echo "All tests passed"
 
 # Fail if an em dash (U+2014) appears in tracked or untracked files this repo
@@ -72,6 +72,11 @@ marketplace-publish:
 [no-cd]
 completion-assets:
     bash scripts/test_completion_assets.sh
+
+# Keep npm's Windows exclusion explicit until a separate Windows npm port is proven
+[no-cd]
+npm-windows-channel:
+    node scripts/test_npm_windows_channel.js
 
 # Test fest
 [no-cd]
