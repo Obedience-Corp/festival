@@ -13,6 +13,7 @@ on:
       - 'scripts/verify_windows_archive.py'
       - 'scripts/verify_scoop_manifest.py'
       - 'scripts/ci/windows-archive-container-*.ps1'
+      - 'scripts/ci/windows-scoop-container-*.ps1'
       - '.github/workflows/windows-archive-proof.yml'
   pull_request:
     paths:
@@ -25,6 +26,7 @@ on:
       - 'scripts/verify_windows_archive.py'
       - 'scripts/verify_scoop_manifest.py'
       - 'scripts/ci/windows-archive-container-*.ps1'
+      - 'scripts/ci/windows-scoop-container-*.ps1'
       - '.github/workflows/windows-archive-proof.yml'
 
 permissions:
@@ -80,6 +82,7 @@ jobs:
           path: |
             dist/festival-*-windows-x86_64.zip
             dist/checksums.txt
+            dist/scoop/festival.json
           if-no-files-found: error
 
   windows-archive-native:
@@ -101,3 +104,7 @@ jobs:
       - name: Extract and launch installed binaries as ContainerUser
         shell: pwsh
         run: ./scripts/ci/windows-archive-container-proof.ps1 -ArtifactDirectory proof-artifact
+
+      - name: Install, update, and uninstall Scoop package as ContainerUser
+        shell: pwsh
+        run: ./scripts/ci/windows-scoop-container-proof.ps1 -ArtifactDirectory proof-artifact
