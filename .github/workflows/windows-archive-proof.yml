@@ -11,6 +11,7 @@ on:
       - 'festival-installer'
       - 'scripts/tool-versions.sh'
       - 'scripts/verify_windows_archive.py'
+      - 'scripts/verify_scoop_manifest.py'
       - 'scripts/ci/windows-archive-container-*.ps1'
       - '.github/workflows/windows-archive-proof.yml'
   pull_request:
@@ -22,6 +23,7 @@ on:
       - 'festival-installer'
       - 'scripts/tool-versions.sh'
       - 'scripts/verify_windows_archive.py'
+      - 'scripts/verify_scoop_manifest.py'
       - 'scripts/ci/windows-archive-container-*.ps1'
       - '.github/workflows/windows-archive-proof.yml'
 
@@ -67,6 +69,9 @@ jobs:
 
       - name: Verify archive members and checksum
         run: python3 scripts/verify_windows_archive.py dist
+
+      - name: Verify Scoop manifest against archive
+        run: python3 scripts/verify_scoop_manifest.py dist
 
       - name: Upload Windows suite for native proof
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4

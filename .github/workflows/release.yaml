@@ -93,10 +93,11 @@ jobs:
           HOMEBREW_TAP_GITHUB_TOKEN: ${{ secrets.HOMEBREW_TAP_GITHUB_TOKEN }}
           AUR_SSH_KEY: ${{ secrets.AUR_SSH_KEY }}
           MARKETPLACE_PUBLISH_TOKEN: ${{ secrets.MARKETPLACE_PUBLISH_TOKEN }}
+          SCOOP_GITHUB_TOKEN: ${{ secrets.SCOOP_GITHUB_TOKEN }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           missing=0
-          for name in HOMEBREW_TAP_GITHUB_TOKEN AUR_SSH_KEY MARKETPLACE_PUBLISH_TOKEN; do
+          for name in HOMEBREW_TAP_GITHUB_TOKEN AUR_SSH_KEY MARKETPLACE_PUBLISH_TOKEN SCOOP_GITHUB_TOKEN; do
             if [ -z "${!name:-}" ]; then
               echo "::error::Missing required secret ${name}"
               missing=1
@@ -108,6 +109,14 @@ jobs:
           push_ok="$(GH_TOKEN=$MARKETPLACE_PUBLISH_TOKEN gh api repos/Obedience-Corp/marketplace --jq '.permissions.push')"
           if [ "${push_ok}" != "true" ]; then
             echo "::error::MARKETPLACE_PUBLISH_TOKEN cannot push to Obedience-Corp/marketplace (needed to open the marketplace entry pull request)"
+            exit 1
+          fi
+          if ! scoop_push_ok="$(GH_TOKEN=$SCOOP_GITHUB_TOKEN gh api repos/Obedience-Corp/scoop-bucket --jq '.permissions.push')"; then
+            echo "::error::SCOOP_GITHUB_TOKEN cannot access Obedience-Corp/scoop-bucket"
+            exit 1
+          fi
+          if [ "${scoop_push_ok}" != "true" ]; then
+            echo "::error::SCOOP_GITHUB_TOKEN cannot push to Obedience-Corp/scoop-bucket"
             exit 1
           fi
 
@@ -168,6 +177,9 @@ jobs:
 
       - name: Verify Windows suite archive before publishing
         run: python3 scripts/verify_windows_archive.py dist
+
+      - name: Verify Scoop manifest before publishing
+        run: python3 scripts/verify_scoop_manifest.py dist
 
       # AUR (and occasionally other publishers) can fail after the GitHub release
       # is already live. Soft-fail GoReleaser in that case so npm/marketplace and
