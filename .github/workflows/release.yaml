@@ -385,6 +385,39 @@ jobs:
         run: |
           gh release view "v${{ inputs.version }}" --repo Obedience-Corp/festival --json tagName --jq .tagName
 
+      # A manual recovery must satisfy the same public Windows gate as the
+      # tag-triggered release before it can resume downstream publishers.
+      - name: Verify published Windows ZIP and Scoop bucket
+        if: inputs.release_mode == 'stable'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: v${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          release_state="$(gh release view "$RELEASE_TAG" \
+            --repo Obedience-Corp/festival --json isDraft,isPrerelease \
+            --jq '[.isDraft, .isPrerelease] | join(" ")')"
+          if [ "$release_state" != 'false false' ]; then
+            echo "::error::Stable release $RELEASE_TAG is draft or prerelease"
+            exit 1
+          fi
+
+          proof_dir="${RUNNER_TEMP}/published-windows-scoop"
+          mkdir -p "$proof_dir"
+          archive_name="festival-${RELEASE_TAG#v}-windows-x86_64.zip"
+          gh release download "$RELEASE_TAG" --repo Obedience-Corp/festival \
+            --pattern "$archive_name" --dir "$proof_dir"
+          gh release download "$RELEASE_TAG" --repo Obedience-Corp/festival \
+            --pattern checksums.txt --dir "$proof_dir"
+          gh api 'repos/Obedience-Corp/scoop-bucket/contents/festival.json?ref=main' \
+            --jq .content | base64 --decode > "$proof_dir/festival.json"
+
+          python3 scripts/verify_published_windows_scoop.py \
+            --tag "$RELEASE_TAG" \
+            --archive "$proof_dir/$archive_name" \
+            --checksums "$proof_dir/checksums.txt" \
+            --manifest "$proof_dir/festival.json"
+
       - name: Generate bundled release notes
         run: |
           cd tools/release-notes
