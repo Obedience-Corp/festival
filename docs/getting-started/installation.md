@@ -141,8 +141,11 @@ $env:Path += ";$bin"
 festival version
 ```
 
-The ZIP method is a manual install into a new directory; for managed updates,
-use Scoop. npm does not install the Windows suite.
+The ZIP method is a manual install into a new directory. To update a ZIP install,
+remove it using the Direct ZIP steps under [Upgrading](#upgrading), then verify
+and extract the new release. For managed updates, migrate to Scoop after removing
+the ZIP copy so its commands cannot hide Scoop commands on PATH. npm does not
+install the Windows suite.
 
 {{< /tabs >}}
 
@@ -279,6 +282,33 @@ scoop update festival
 
 To remove the three Scoop-installed commands, run `scoop uninstall festival`.
 Scoop keeps your camps and project repositories separate from the package.
+
+### Direct ZIP (Windows x64)
+
+A direct ZIP install is separate from Scoop. If you installed the ZIP into the
+default `$HOME\bin\festival` directory shown above, remove that copy before
+switching to Scoop, or before extracting a newer ZIP into the same directory.
+First inspect the directory and confirm it contains only files from the ZIP;
+the removal command deletes everything in that directory.
+
+```powershell
+$bin = Join-Path $HOME 'bin\festival'
+Get-ChildItem -LiteralPath $bin -Force
+Remove-Item -LiteralPath $bin -Recurse -Force -ErrorAction Stop
+$userPath = [Environment]::GetEnvironmentVariable('Path', 'User')
+$remaining = @($userPath -split ';' | Where-Object {
+    $_ -and ($_.TrimEnd('\') -ine $bin.TrimEnd('\'))
+})
+[Environment]::SetEnvironmentVariable('Path', ($remaining -join ';'), 'User')
+$env:Path = (@($env:Path -split ';' | Where-Object {
+    $_ -and ($_.TrimEnd('\') -ine $bin.TrimEnd('\'))
+})) -join ';'
+Get-Command festival -All -ErrorAction SilentlyContinue
+```
+
+The last command shows any other installed `festival` command, including a
+Scoop copy. Open a new PowerShell window after changing User PATH. This does not
+remove your camps or project repositories.
 
 ### npm / pnpm / bun
 
