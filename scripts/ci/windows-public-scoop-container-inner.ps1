@@ -71,9 +71,18 @@ switch ($Mode) {
         $bucketManifest = @(Get-ChildItem -LiteralPath (Join-Path $scoopRoot 'buckets\obedience') `
             -Recurse -File -Filter 'festival.json')
         if ($bucketManifest.Count -ne 1) { throw 'Scoop bucket did not contain one festival.json' }
-        $localHash = (Get-FileHash -LiteralPath (Join-Path $WorkRoot 'festival.json') -Algorithm SHA256).Hash
-        $bucketHash = (Get-FileHash -LiteralPath $bucketManifest[0].FullName -Algorithm SHA256).Hash
-        if ($localHash -ne $bucketHash) { throw 'Cloned Scoop manifest differs from the verified public manifest' }
+        $publicManifest = Get-Content -LiteralPath (Join-Path $WorkRoot 'festival.json') -Raw | ConvertFrom-Json
+        $clonedManifest = Get-Content -LiteralPath $bucketManifest[0].FullName -Raw | ConvertFrom-Json
+        foreach ($field in @('url', 'hash')) {
+            if ($clonedManifest.architecture.'64bit'.$field -ne $publicManifest.architecture.'64bit'.$field) {
+                throw "Cloned Scoop manifest $field differs from the verified public manifest"
+            }
+        }
+        if ($clonedManifest.version -ne $publicManifest.version -or
+            (@($clonedManifest.architecture.'64bit'.bin) -join '|') -ne
+            (@($publicManifest.architecture.'64bit'.bin) -join '|')) {
+            throw 'Cloned Scoop manifest version or shims differ from the verified public manifest'
+        }
 
         Invoke-Scoop -Arguments @('install', 'obedience/festival')
         Assert-Shims
