@@ -22,6 +22,7 @@ to the selected project when shell integration is loaded:
 
   eval "$(camp shell-init zsh)"   # or bash / sh
   camp shell-init fish | source   # fish
+  Invoke-Expression (& camp shell-init powershell | Out-String)   # PowerShell
   camp project list               # interactive browser; g cds into the project
 
 Piped, with --json/--count, or with a non-table --format it prints that

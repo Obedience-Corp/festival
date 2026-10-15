@@ -73,6 +73,9 @@ EXAMPLES:
   # to plain origin cloning.
   camp clone git@github.com:org/repo.git --from studio-mac
 
+On Windows, --from peer seeding is unavailable in this release. Omit --from
+to clone directly from origin.
+
 ```
 camp clone <url> [directory] [flags]
 ```

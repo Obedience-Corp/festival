@@ -27,15 +27,19 @@ SETUP (one-time):
   # For fish, add to ~/.config/fish/config.fish:
   fest shell-init fish | source
 
+  # For Windows PowerShell 5.1 or PowerShell 7, add to $PROFILE:
+  Invoke-Expression (& fest shell-init powershell | Out-String)
+
   # For dash, busybox ash, or any other POSIX sh, add to ~/.profile:
   eval "$(fest shell-init sh)"
 ```
 
-After setup, reload your shell or run: source ~/.zshrc
+After setup, restart your shell or reload its profile (for example,
+source ~/.zshrc in zsh, or . $PROFILE in PowerShell).
 
-fgo, fls, and fest work identically in every supported shell. Only tab
-completion differs: POSIX sh has no programmable completion to hook, so
-'fest shell-init sh' installs the helpers without it.
+fgo, fls, and fest work in every supported shell. The shell-init command
+installs tab completion in bash, zsh, and fish. POSIX sh and PowerShell get
+the navigation helpers without tab completion.
 
 USAGE - fgo (navigation):
   fgo              Smart navigation (linked project ↔ festival, or festivals root)
@@ -63,6 +67,9 @@ fest shell-init <shell> [flags]
 
   # Add to your shell config (zsh)
   eval "$(fest shell-init zsh)"
+
+  # Add to $PROFILE (PowerShell)
+  Invoke-Expression (& fest shell-init powershell | Out-String)
 
   # After setup, use the helpers:
   fgo              # Go to festivals root

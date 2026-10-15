@@ -27,6 +27,8 @@ Machine forms (one side only; both-remote is refused):
                     file on a machine registered in ~/.obey/machines.yaml
 
 See docs/transfer.md for the full grammar, transport, and skew guidance.
+On Windows, local camp-to-camp transfers work; machine endpoints are
+unavailable in this release.
 
 At least one side must reference a different camp or machine. For copies
 within the same camp on this machine, use 'camp copy' instead.

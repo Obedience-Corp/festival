@@ -13,7 +13,7 @@ Manage task status (show, edit, complete, block, reset)
 Commands for managing individual task status within a festival.
 
 This is the single home for task state mutations. Consequential changes
-(completed, blocked, reset) prompt for confirmation to ensure agents verify
+(completed, blocked, defer, reset) prompt for confirmation to ensure agents verify
 their work; pass --yes to skip the prompt for non-interactive or agent use, and
 --json to emit a structured result (--json requires --yes). Progress signals
 (update, unblock) are frictionless and never prompt.
@@ -40,7 +40,8 @@ Examples:
   fest task reset                         # Reset task to pending (Y/n)
   fest task update 50%                    # Set progress to 50%
   fest task unblock                       # Clear a blocker, resume work
-  fest task defer --reason "vendor reply"  # Operator: let a blocker wait (no --yes)
+  fest task defer --reason "vendor reply"        # Let a blocker wait (type task number)
+  fest task defer --reason "vendor reply" --yes  # Defer non-interactively
 ```
 
 ### Options
