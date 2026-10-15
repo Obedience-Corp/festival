@@ -36,7 +36,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || inputs.release_tag }}
+          # Release-triggered deploys use the exact tagged source. A manual
+          # refresh picks up reviewed docs merged after the immutable tag.
+          ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || 'main' }}
           submodules: recursive
           fetch-depth: 0
 
@@ -49,9 +51,23 @@ jobs:
             echo "::error::Expected a Festival release tag, got $RELEASE_TAG"
             exit 1
           fi
-          if [ "$(git rev-parse "refs/tags/$RELEASE_TAG^{commit}")" != "$(git rev-parse HEAD)" ]; then
-            echo "::error::Checkout does not match release tag $RELEASE_TAG"
-            exit 1
+          tag_commit="$(git rev-parse "refs/tags/$RELEASE_TAG^{commit}")"
+          if [ "${{ github.event_name }}" = 'workflow_run' ]; then
+            if [ "$tag_commit" != "$(git rev-parse HEAD)" ]; then
+              echo "::error::Release checkout does not match tag $RELEASE_TAG"
+              exit 1
+            fi
+          else
+            if ! git merge-base --is-ancestor "$tag_commit" HEAD; then
+              echo "::error::Manual docs checkout does not contain release tag $RELEASE_TAG"
+              exit 1
+            fi
+            for component in camp fest festival-installer; do
+              if [ "$(git rev-parse "$RELEASE_TAG:$component")" != "$(git rev-parse "HEAD:$component")" ]; then
+                echo "::error::Manual docs checkout has a different $component pin from $RELEASE_TAG"
+                exit 1
+              fi
+            done
           fi
           if [[ "$RELEASE_TAG" == *-rc.* || "$RELEASE_TAG" == *-dev.* ]]; then
             exit 0
