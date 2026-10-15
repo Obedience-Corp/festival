@@ -255,6 +255,7 @@ func suiteArtifactsFromChecksums(path, tag string) ([]operator.ArtifactInput, er
 		"macOS-all.tar.gz":    {"darwin", "all"},
 		"linux-x86_64.tar.gz": {"linux", "amd64"},
 		"linux-arm64.tar.gz":  {"linux", "arm64"},
+		"windows-x86_64.zip":  {"windows", "amd64"},
 	}
 	var arts []operator.ArtifactInput
 	for _, line := range strings.Split(strings.TrimSpace(string(data)), "\n") {
@@ -275,12 +276,11 @@ func suiteArtifactsFromChecksums(path, tag string) ([]operator.ArtifactInput, er
 			}
 		}
 	}
-	// 3 here is the platform archive count (macOS-all, linux-x86_64,
-	// linux-arm64), not the binary count. Each archive bundles every suite
-	// binary (camp, fest, and now festival), so this check does not grow
-	// when a fourth binary joins the suite.
-	if len(arts) != 3 {
-		return nil, fmt.Errorf("expected 3 suite artifacts in %s, found %d", path, len(arts))
+	// Earlier releases had three platform archives. Include the Windows ZIP
+	// when present, while allowing post-publish recovery for those older tags.
+	// Each archive bundles camp, fest, and festival.
+	if len(arts) < 3 || len(arts) > 4 {
+		return nil, fmt.Errorf("expected 3 or 4 suite artifacts in %s, found %d", path, len(arts))
 	}
 	return arts, nil
 }

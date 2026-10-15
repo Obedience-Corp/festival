@@ -335,8 +335,25 @@ func TestRunEmitMarketplaceEntry_PublishedAt(t *testing.T) {
 		"1111111111111111111111111111111111111111111111111111111111111111  festival-9.9.9-macOS-all.tar.gz",
 		"2222222222222222222222222222222222222222222222222222222222222222  festival-9.9.9-linux-x86_64.tar.gz",
 		"3333333333333333333333333333333333333333333333333333333333333333  festival-9.9.9-linux-arm64.tar.gz",
+		"4444444444444444444444444444444444444444444444444444444444444444  festival-9.9.9-windows-x86_64.zip",
 		"",
 	}, "\n"))
+
+	t.Run("older releases without a Windows archive remain recoverable", func(t *testing.T) {
+		legacyPath := filepath.Join(t.TempDir(), "checksums.txt")
+		writeFile(t, legacyPath, strings.Join([]string{
+			"1111111111111111111111111111111111111111111111111111111111111111  festival-9.9.8-macOS-all.tar.gz",
+			"2222222222222222222222222222222222222222222222222222222222  festival-9.9.8-linux-x86_64.tar.gz",
+			"3333333333333333333333333333333333333333333333333333333333  festival-9.9.8-linux-arm64.tar.gz",
+		}, "\n"))
+		artifacts, err := suiteArtifactsFromChecksums(legacyPath, "v9.9.8")
+		if err != nil {
+			t.Fatalf("older release checksums: %v", err)
+		}
+		if len(artifacts) != 3 {
+			t.Fatalf("older release has %d artifacts, want 3", len(artifacts))
+		}
+	})
 
 	t.Run("a real published-at value reaches the emitted manifest and satisfies the hub schema's date-time format", func(t *testing.T) {
 		outputPath := filepath.Join(t.TempDir(), "obey-package.json")
@@ -349,7 +366,16 @@ func TestRunEmitMarketplaceEntry_PublishedAt(t *testing.T) {
 		}
 		var doc struct {
 			Releases []struct {
-				PublishedAt string `json:"published_at"`
+				PublishedAt   string `json:"published_at"`
+				Compatibility struct {
+					OS []string `json:"os"`
+				} `json:"compatibility"`
+				Artifacts []struct {
+					OS       string `json:"os"`
+					Arch     string `json:"arch"`
+					Filename string `json:"filename"`
+					SHA256   string `json:"sha256"`
+				} `json:"artifacts"`
 			} `json:"releases"`
 		}
 		if err := json.Unmarshal(raw, &doc); err != nil {
@@ -357,6 +383,18 @@ func TestRunEmitMarketplaceEntry_PublishedAt(t *testing.T) {
 		}
 		if len(doc.Releases) != 1 {
 			t.Fatalf("got %d releases, want 1", len(doc.Releases))
+		}
+		if !strings.Contains(strings.Join(doc.Releases[0].Compatibility.OS, ","), "windows") {
+			t.Fatalf("compatibility OS omits Windows: %v", doc.Releases[0].Compatibility.OS)
+		}
+		foundWindows := false
+		for _, artifact := range doc.Releases[0].Artifacts {
+			if artifact.OS == "windows" {
+				foundWindows = artifact.Arch == "amd64" && artifact.Filename == "festival-9.9.9-windows-x86_64.zip" && artifact.SHA256 == strings.Repeat("4", 64)
+			}
+		}
+		if !foundWindows {
+			t.Fatalf("Windows archive missing or incorrect: %+v", doc.Releases[0].Artifacts)
 		}
 		// This is the exact constraint the hub's manifest.schema.json places
 		// on published_at ("format": "date-time"), and the exact field that
