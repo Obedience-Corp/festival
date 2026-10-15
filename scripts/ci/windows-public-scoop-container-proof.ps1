@@ -38,8 +38,11 @@ try {
     Grant-ContainerUserModify -ContainerId $containerId -ContainerPath $workRoot -UserSid $userSid
 
     Invoke-DockerCli -DockerArgs @('cp', $manifestPath, "${containerId}:${workRoot}\festival.json") | Out-Null
+    Invoke-DockerCli -DockerArgs @('cp', $archivePath, "${containerId}:${workRoot}\suite.zip") | Out-Null
     $inner = Join-Path $PSScriptRoot 'windows-public-scoop-container-inner.ps1'
     Invoke-DockerCli -DockerArgs @('cp', $inner, "${containerId}:${workRoot}\proof.ps1") | Out-Null
+    $marketplaceInner = Join-Path $PSScriptRoot 'windows-public-marketplace-container-inner.ps1'
+    Invoke-DockerCli -DockerArgs @('cp', $marketplaceInner, "${containerId}:${workRoot}\marketplace-proof.ps1") | Out-Null
 
     $ps51 = 'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe'
     foreach ($mode in @('install', 'readback', 'uninstall')) {
@@ -53,6 +56,19 @@ try {
         $marker = "Windows public Scoop ${mode}: PASS"
         if ($code -ne 0 -or -not $message.Contains($marker)) {
             throw "Public Scoop $mode failed ($code); expected marker: $marker"
+        }
+    }
+    foreach ($mode in @('install', 'readback', 'uninstall')) {
+        Write-Host "Public marketplace $mode as ContainerUser"
+        $output = & docker exec -u ContainerUser $containerId $ps51 -NoProfile -NonInteractive `
+            -ExecutionPolicy Bypass -File "${workRoot}\marketplace-proof.ps1" `
+            -WorkRoot $workRoot -ExpectedTag $ExpectedTag -Mode $mode 2>&1
+        $code = $LASTEXITCODE
+        $message = $output | Out-String
+        Write-Host $message
+        $marker = "Windows public marketplace ${mode}: PASS"
+        if ($code -ne 0 -or -not $message.Contains($marker)) {
+            throw "Public marketplace $mode failed ($code); expected marker: $marker"
         }
     }
 } finally {
