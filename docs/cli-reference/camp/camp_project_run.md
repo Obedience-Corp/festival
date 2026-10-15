@@ -10,7 +10,7 @@ Run a command inside a project directory, like cr but project-scoped
 
 ### Synopsis
 
-Run any shell command inside a project directory from anywhere in the camp.
+Run a command inside a project directory from anywhere in the camp.
 
 This is the project-scoped counterpart to 'camp run' (cr): cr runs from the
 camp root, camp project run (cr -p) runs inside a project.
@@ -36,9 +36,13 @@ Examples:
   # Simple commands (no -- needed when no flags)
   camp project run make build
 
-  # Shell shorthand (after 'eval "$(camp shell-init <shell>)"')
+  # POSIX/fish shell shorthand (after loading that shell's camp integration)
   cr -p fest -- just build
   cr -p camp go test ./...
+
+On Windows, the command is run directly with literal arguments. For a shell
+expression, invoke powershell.exe -Command explicitly. Outside Windows, the
+command retains its existing shell-expression behavior.
 
 ```
 camp project run [--project <name>] [--] <command> [args...] [flags]

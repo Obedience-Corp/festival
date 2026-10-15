@@ -9,16 +9,16 @@ description: "Print shell code to put the installer-managed bin dir on PATH"
 Print shell code to put the installer-managed bin dir on PATH
 
 ```
-festival shell-init <zsh|bash|fish> [flags]
+festival shell-init <zsh|bash|fish|powershell> [flags]
 ```
 
 ### Options
 
 ```
-      --append   show the block and offer to append it to your shell rc file
+      --append   offer to persist the managed bin on PATH after showing the change
       --check    report whether the managed bin dir is on PATH
   -h, --help     help for shell-init
-      --yes      append without asking (requires --append)
+      --yes      apply without asking (requires --append)
 ```
 
 ### SEE ALSO

@@ -28,7 +28,11 @@ paths display as '~'.
 Shell integration (recommended for go/hop from the browser):
   eval "$(camp shell-init zsh)"   # or bash / sh
   camp shell-init fish | source   # fish
+  Invoke-Expression (& camp shell-init powershell | Out-String)   # PowerShell
   camp list                       # interactive browser; g hops remote rows
+
+In PowerShell, g navigates local rows. Selecting a remote row reports that
+the ssh hop requires a POSIX shell wrapper.
 
 Use the shell you actually run. "sh" covers dash, busybox ash, and any other
 Bourne shell that is not bash or zsh; the bash script will not parse there.

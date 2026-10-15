@@ -20,8 +20,12 @@ Use --print to output just the bare path (for scripts, tools, and agents).
 
 SHELL INTEGRATION (recommended):
 ```bash
-  # Add to ~/.zshrc or ~/.bashrc:
+  # Zsh (use bash instead when running bash):
   eval "$(fest shell-init zsh)"
+  # Fish:
+  fest shell-init fish | source
+  # PowerShell ($PROFILE):
+  Invoke-Expression (& fest shell-init powershell | Out-String)
 ```
 
 Then use 'fgo' to navigate:
@@ -33,6 +37,8 @@ Then use 'fgo' to navigate:
 Without shell integration, use command substitution:
   cd "$(fest go --print)"
   cd "$(fest go 002 --print)"
+In PowerShell, use Set-Location -LiteralPath (fest go --print). The fgo helper
+handles this after shell integration is loaded.
 
 Fuzzy matching is supported - partial names like "impl" will match
 phases containing "IMPLEMENT". Multiple words narrow the search.

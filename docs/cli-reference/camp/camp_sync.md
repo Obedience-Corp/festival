@@ -70,6 +70,10 @@ EXAMPLES:
   camp sync --verify-artifacts
   camp sync --verify-artifacts --from studio-mac
 
+On Windows, peer transfer via --from is unavailable in this release. Use
+'camp sync' without --from for origin-backed git. --verify-artifacts --from
+still reads local snapshots and does not contact a peer.
+
 ```
 camp sync [submodule...] [flags]
 ```

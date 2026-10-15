@@ -17,14 +17,16 @@ If the first argument exactly matches a project name (a directory in projects/
 with a git repo), camp dispatches to 'just' in that project's directory.
 Any remaining arguments are passed as the recipe and arguments to just.
 
-If the first argument does not match a project, it is treated as a shell command
+If the first argument does not match a project, it is treated as a command
 and executed from the camp root directory.
 
 Use @shortcut prefix to run from a shortcut's directory instead of root.
 Only navigation shortcuts (those with paths) can be used.
 
-Raw command arguments after 'run' (or '@shortcut') are passed directly to the
-shell. Project just-dispatch passes recipe arguments directly to just.
+On Windows, raw commands run as an executable with each argument preserved.
+Use 'camp run powershell.exe -Command <expression>' for a PowerShell expression.
+Outside Windows, raw commands retain the existing shell-expression behavior.
+Project just-dispatch passes recipe arguments directly to just.
 
 ```
 camp run [project | @shortcut] [command | recipe] [args...] [flags]

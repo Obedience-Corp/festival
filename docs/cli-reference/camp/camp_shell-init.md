@@ -17,6 +17,7 @@ Add to your shell config:
   bash: eval "$(camp shell-init bash)"
   fish: camp shell-init fish | source
   sh:   eval "$(camp shell-init sh)"
+  PowerShell: Invoke-Expression (& camp shell-init powershell | Out-String)
 
 Use 'sh' for dash, busybox ash, and any other Bourne-family shell that is
 neither bash nor zsh, including the /bin/sh on minimal and embedded systems.
@@ -25,17 +26,21 @@ parse under those shells. The sh script provides the wrapper, cgo, and the
 shorthand functions; it installs no tab completion, because POSIX sh has no
 completion mechanism to install into.
 
-This provides:
+Every supported shell gets:
   - A camp shell function that wraps the camp binary
   - cgo function for navigation
-  - Tab completion for camp commands
-  - Category shortcuts (p, c, f, etc.)
+  - csw shorthand for camp switch
+
+The POSIX and fish integrations also provide category shortcuts and helpers
+such as cr, cint, cnote, and cie. Tab completion is available in bash, zsh,
+and fish. PowerShell provides local navigation through cgo, csw, and browser
+go actions; remote hops require a POSIX shell wrapper.
 
 IMPORTANT: this defines a shell function named 'camp' that wraps the camp
 binary. The function intercepts 'camp switch' and 'camp go' to perform
 directory changes in the current shell session.
 
-The following shell aliases and functions are also installed:
+The POSIX and fish integrations also install:
   cr     camp run (run a just recipe in a project)
   csw    camp switch (shorthand)
   cint   camp intent add (quick idea capture)
@@ -46,7 +51,7 @@ The cgo function enables quick navigation:
   cgo                 Interactive picker or jump to camp root
   cgo p               Jump to projects/
   cgo p api           Fuzzy find "api" in projects/
-  cgo -c p ls         Run "ls" in projects/ directory
+  cgo -c p ls         Run "ls" in projects/ directory (POSIX/fish)
 
 ```
 camp shell-init <shell> [flags]
@@ -66,6 +71,9 @@ camp shell-init <shell> [flags]
 
   # Add to ~/.profile (dash, busybox ash, other POSIX shells)
   eval "$(camp shell-init sh)"
+
+  # Add to $PROFILE (Windows PowerShell 5.1 or PowerShell 7)
+  Invoke-Expression (& camp shell-init powershell | Out-String)
 ```
 
 ### Options

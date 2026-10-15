@@ -27,6 +27,9 @@ file to make the protection go away.
 There is no --all: resolving in bulk is exactly what the sticky conflict
 exists to prevent. Loop the per-path form if you really mean it.
 
+On Windows, --list and --take-local use local snapshots and remain available;
+--take-peer requires a remote transfer and is unavailable in this release.
+
 ```
 camp artifacts resolve [path] [flags]
 ```

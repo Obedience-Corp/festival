@@ -18,9 +18,13 @@ settled, fest next brings the deferred tasks back for another attempt, and the
 festival cannot be promoted to completed while any blocker is deferred unless
 you pass --force.
 
-This verb has no --yes and no --json. Deferring is an operator decision and
-there is deliberately no way to script it. If you want to send the task back to
-the executor instead, use 'fest task unblock --note "<what to try>"'.
+By default, a person confirms a deferral by typing the task number in a
+terminal. Pass --yes to defer non-interactively from an agent or app; the event
+records automation as the actor. --json requires --yes. Agents should first
+work ready tasks and record actual unblock attempts. Defer only a documented
+external blocker when specific independent work can proceed; name that work
+and why the blocker can wait in --reason. To resume this task instead, use
+'fest task unblock --note "<what to try>"'.
 
 ```
 fest task defer [task] [flags]
@@ -30,7 +34,9 @@ fest task defer [task] [flags]
 
 ```
   -h, --help            help for defer
+      --json            output as JSON (requires --yes)
       --reason string   why this blocker can wait until the end (required)
+  -y, --yes             skip the interactive task-number confirmation
 ```
 
 ### Options inherited from parent commands
