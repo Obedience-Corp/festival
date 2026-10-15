@@ -97,9 +97,8 @@ sudo mv fest camp festival /usr/local/bin/
 
 <!-- tab -->
 
-Native Windows x64 packages are not published yet. Use WSL2 with a Linux install
-until the first stable Windows suite ZIP and Scoop manifest are available. The
-steps below are prepared for that release.
+The Windows x64 release includes all three tools. Choose Scoop for managed
+updates or verify and extract the release ZIP yourself.
 
 ### Scoop
 
