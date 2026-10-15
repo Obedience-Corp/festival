@@ -15,7 +15,7 @@ permissions:
 jobs:
   public-scoop:
     runs-on: windows-2025
-    timeout-minutes: 45
+    timeout-minutes: 70
     steps:
       - name: Checkout public proof scripts and pinned sources
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -51,6 +51,35 @@ jobs:
             --manifest (Join-Path $proofDir 'festival.json')
           if ($LASTEXITCODE -ne 0) { throw "Public asset verification failed ($LASTEXITCODE)" }
           "proof_dir=$proofDir" >> $env:GITHUB_OUTPUT
+
+      - name: Checkout the released source and exact component pins
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.tag }}
+          path: release-source
+          submodules: recursive
+
+      - name: Set up Go for the released native terminal proof
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: release-source/fest/go.mod
+          cache-dependency-path: release-source/scripts/ci/windows-terminal-proof/go.sum
+
+      - name: Build the released native terminal driver
+        shell: pwsh
+        working-directory: release-source/scripts/ci/windows-terminal-proof
+        run: |
+          & go build -trimpath -o (Join-Path $env:RUNNER_TEMP 'camp-terminal-proof.exe') .
+          if ($LASTEXITCODE -ne 0) { throw "ConPTY driver build failed ($LASTEXITCODE)" }
+
+      - name: Follow the public ZIP journey as ContainerUser
+        shell: pwsh
+        env:
+          PROOF_DIR: ${{ steps.public_assets.outputs.proof_dir }}
+        run: |
+          ./release-source/scripts/ci/windows-archive-container-proof.ps1 `
+            -ArtifactDirectory $env:PROOF_DIR `
+            -TerminalDriver (Join-Path $env:RUNNER_TEMP 'camp-terminal-proof.exe')
 
       - name: Follow public Scoop instructions as ContainerUser
         shell: pwsh
