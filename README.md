@@ -124,11 +124,29 @@ camp project link /path/to/your-existing-repo
 
 Replace the repository path with its full local path. Your repository stays where it is. Camp links it under `projects/` and adds a `.camp` attachment file to the repository. You can also [clone a project into the camp](https://docs.fest.build/cli-reference/camp/camp_project_add/).
 
-Open your coding agent at the camp root, then give it a goal below. Add the [shell integration](https://docs.fest.build/getting-started/shell-setup/) to enable navigation shortcuts such as `csw`.
+Add the shell integration described below, then open your coding agent at the camp root and give it a goal.
 
 [Linux packages, the checksummed Windows ZIP, and other install methods](https://docs.fest.build/getting-started/installation/).
 
 </details>
+
+**Enable the shell integration.** The navigation shortcuts (`csw`, `cgo`, `fgo`, `fls`, and `cr`) are shell functions, so they exist only in a shell that has loaded the integration. The setup prompt asks your agent to add it, but an agent cannot load it into a terminal you already have open, and some agents skip the step. Check your shell config and add these lines if they are missing.
+
+For zsh, add to `~/.zshrc` (for bash, replace `zsh` with `bash` and use `~/.bashrc`):
+
+```bash
+eval "$(camp shell-init zsh)"
+eval "$(fest shell-init zsh)"
+```
+
+For fish, add to `~/.config/fish/config.fish`:
+
+```fish
+camp shell-init fish | source
+fest shell-init fish | source
+```
+
+Open a new terminal and run `type csw`. It should report a shell function. If it reports "not found", the lines are not in the config file your shell reads at startup. Homebrew, npm, and Linux package installs also ship a sourceable helper file that adds tab completion; the [shell setup guide](https://docs.fest.build/getting-started/shell-setup/) lists the path for each install method.
 
 ### 2. Give your agent a goal
 
