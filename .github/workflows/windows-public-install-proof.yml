@@ -6,7 +6,6 @@ on:
       tag:
         description: Published stable Festival tag to install
         required: true
-        default: v0.3.22
         type: string
 
 permissions:
@@ -81,7 +80,7 @@ jobs:
             -ArtifactDirectory $env:PROOF_DIR `
             -TerminalDriver (Join-Path $env:RUNNER_TEMP 'camp-terminal-proof.exe')
 
-      - name: Follow public Scoop instructions as ContainerUser
+      - name: Follow public Scoop and signed marketplace instructions as ContainerUser
         shell: pwsh
         env:
           RELEASE_TAG: ${{ inputs.tag }}
