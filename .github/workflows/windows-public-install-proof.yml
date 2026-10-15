@@ -1,0 +1,62 @@
+name: windows-public-install-proof
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Published stable Festival tag to install
+        required: true
+        default: v0.3.22
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  public-scoop:
+    runs-on: windows-2025
+    timeout-minutes: 45
+    steps:
+      - name: Checkout public proof scripts and pinned sources
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          submodules: recursive
+
+      - name: Set up Python for published artifact verification
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.13'
+
+      - name: Download and verify public Windows release
+        id: public_assets
+        shell: pwsh
+        env:
+          RELEASE_TAG: ${{ inputs.tag }}
+        run: |
+          if ($env:RELEASE_TAG -notmatch '^v\d+\.\d+\.\d+$') {
+            throw "Expected a published stable tag, got $env:RELEASE_TAG"
+          }
+          $version = $env:RELEASE_TAG.Substring(1)
+          $archiveName = "festival-$version-windows-x86_64.zip"
+          $proofDir = Join-Path $env:RUNNER_TEMP 'festival-public-windows'
+          New-Item -ItemType Directory -Path $proofDir -Force | Out-Null
+          $releaseBase = "https://github.com/Obedience-Corp/festival/releases/download/$env:RELEASE_TAG"
+          Invoke-WebRequest -Uri "$releaseBase/$archiveName" -OutFile (Join-Path $proofDir $archiveName)
+          Invoke-WebRequest -Uri "$releaseBase/checksums.txt" -OutFile (Join-Path $proofDir 'checksums.txt')
+          Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/Obedience-Corp/scoop-bucket/main/festival.json' -OutFile (Join-Path $proofDir 'festival.json')
+          & python scripts/verify_published_windows_scoop.py `
+            --tag $env:RELEASE_TAG `
+            --archive (Join-Path $proofDir $archiveName) `
+            --checksums (Join-Path $proofDir 'checksums.txt') `
+            --manifest (Join-Path $proofDir 'festival.json')
+          if ($LASTEXITCODE -ne 0) { throw "Public asset verification failed ($LASTEXITCODE)" }
+          "proof_dir=$proofDir" >> $env:GITHUB_OUTPUT
+
+      - name: Follow public Scoop instructions as ContainerUser
+        shell: pwsh
+        env:
+          RELEASE_TAG: ${{ inputs.tag }}
+          PROOF_DIR: ${{ steps.public_assets.outputs.proof_dir }}
+        run: |
+          ./scripts/ci/windows-public-scoop-container-proof.ps1 `
+            -ArtifactDirectory $env:PROOF_DIR -ExpectedTag $env:RELEASE_TAG
