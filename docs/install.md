@@ -76,9 +76,7 @@ Choose your distribution's package format:
 
 ## Windows
 
-Native Windows x64 packages are not published yet. Use WSL2 with a Linux install
-until the first stable Windows suite ZIP and Scoop manifest are available. After
-that release, install the three tools with [Scoop](https://scoop.sh/) in PowerShell:
+Install the Windows x64 suite with [Scoop](https://scoop.sh/) in PowerShell:
 
 ```powershell
 scoop install git
@@ -92,7 +90,7 @@ Or download the `festival-*-windows-x86_64.zip` archive and `checksums.txt` from
 Verify the SHA-256 checksum before extracting the archive; the
 [full installation guide]({{< ref "/getting-started/installation" >}}) has the
 PowerShell commands and shell setup. The npm package currently supports macOS
-and Linux; after the native Windows release, use Scoop or the ZIP on Windows.
+and Linux; use Scoop or the ZIP on Windows.
 `camp sync --from`, `camp clone --from`, and artifact transfer to or from
 another camp remain unavailable on Windows; local camps and Git projects work.
 
