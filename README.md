@@ -130,7 +130,7 @@ Add the shell integration described below, then open your coding agent at the ca
 
 </details>
 
-**Enable the shell integration.** The navigation shortcuts (`csw`, `cgo`, `fgo`, `fls`, and `cr`) are shell functions, so they exist only in a shell that has loaded the integration. The setup prompt asks your agent to add it, but an agent cannot load it into a terminal you already have open, and some agents skip the step. Check your shell config and add these lines if they are missing.
+**Enable the shell integration.** The shell shortcuts (`csw`, `cgo`, `fgo`, `fls`, and `cr`) are shell functions, so they exist only in a shell that has loaded the integration. The setup prompt asks your agent to add it, but an agent cannot load it into a terminal you already have open. Check your shell config and add these lines if they are missing.
 
 For zsh, add to `~/.zshrc` (for bash, replace `zsh` with `bash` and use `~/.bashrc`):
 
