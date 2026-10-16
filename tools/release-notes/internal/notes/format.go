@@ -83,7 +83,7 @@ func Render(in ReleaseNotesInput) (string, error) {
 	writeLine("| Arch Linux | `yay -S festival-bin` |")
 	writeLine("| Debian/Ubuntu | Download `.deb` from assets below |")
 	writeLine("| Fedora/RHEL | Download `.rpm` from assets below |")
-	writeLine("| Windows | Temporarily paused while Windows support is stabilized |")
+	writeLine("| Windows x64 | [Install with Scoop or a checksummed ZIP](https://docs.fest.build/getting-started/installation/) |")
 
 	return strings.TrimSpace(b.String()) + "\n", nil
 }

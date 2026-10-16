@@ -56,10 +56,14 @@ func TestRenderIncludesComponentReleaseBodies(t *testing.T) {
 		"## Festival Packaging Notes",
 		"This release bundles the `camp` and `fest` CLIs together with `festival`, the installer and launcher for the suite.",
 		"brew install --cask Obedience-Corp/tap/festival",
+		"| Windows x64 | [Install with Scoop or a checksummed ZIP](https://docs.fest.build/getting-started/installation/) |",
 	} {
 		if !strings.Contains(out, want) {
 			t.Fatalf("rendered notes missing %q:\n%s", want, out)
 		}
+	}
+	if strings.Contains(out, "Temporarily paused") {
+		t.Fatal("rendered notes still say Windows is paused")
 	}
 }
 
