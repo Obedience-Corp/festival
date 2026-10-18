@@ -179,7 +179,7 @@ jobs:
         run: bash scripts/tool-versions.sh >> "$GITHUB_ENV"
 
       - name: Build Windows suite archive before publishing
-        uses: goreleaser/goreleaser-action@f06c13b6b1a9625abc9e6e439d9c05a8f2190e94 # v7.2.3
+        uses: goreleaser/goreleaser-action@a4f02ab5355a589de60d917a659ce617ed19b3de # v7.3.0
         with:
           version: '~> v2'
           args: release --snapshot --clean --skip=publish,announce
@@ -200,7 +200,7 @@ jobs:
       - name: Run GoReleaser
         id: goreleaser
         continue-on-error: true
-        uses: goreleaser/goreleaser-action@f06c13b6b1a9625abc9e6e439d9c05a8f2190e94 # v7.2.3
+        uses: goreleaser/goreleaser-action@a4f02ab5355a589de60d917a659ce617ed19b3de # v7.3.0
         with:
           version: '~> v2'
           args: release --clean
