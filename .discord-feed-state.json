@@ -2,6 +2,7 @@
   "seen": [
     "pr:Obedience-Corp/camp:712",
     "pr:Obedience-Corp/camp:715",
+    "pr:Obedience-Corp/camp:746",
     "pr:Obedience-Corp/fest:415",
     "pr:Obedience-Corp/fest:417",
     "pr:Obedience-Corp/fest:418",
@@ -20,16 +21,19 @@
     "release:Obedience-Corp/camp:395948070",
     "release:Obedience-Corp/camp:403952813",
     "release:Obedience-Corp/camp:409965316",
+    "release:Obedience-Corp/camp:413421353",
     "release:Obedience-Corp/fest:387685145",
     "release:Obedience-Corp/fest:388074387",
     "release:Obedience-Corp/fest:390939833",
     "release:Obedience-Corp/fest:403953884",
     "release:Obedience-Corp/fest:409969949",
+    "release:Obedience-Corp/fest:414254686",
     "release:Obedience-Corp/festival:384452138",
     "release:Obedience-Corp/festival:387718546",
     "release:Obedience-Corp/festival:390944237",
     "release:Obedience-Corp/festival:404138570",
-    "release:Obedience-Corp/festival:410944669"
+    "release:Obedience-Corp/festival:410944669",
+    "release:Obedience-Corp/festival:414278359"
   ],
   "spotlights": [
     "camp-workitems-2026-01",
@@ -41,6 +45,7 @@
     "2026-W39",
     "2026-W40",
     "2026-W41",
-    "2026-W42"
+    "2026-W42",
+    "2026-W43"
   ]
 }
