@@ -28,8 +28,9 @@ festival [flags]
 ### Options
 
 ```
-  -h, --help   help for festival
-      --tui    force the interactive TUI (requires a terminal)
+  -h, --help      help for festival
+      --managed   use a separate Festival-managed toolchain without modifying package-owned files
+      --tui       force the interactive TUI (requires a terminal)
 ```
 
 ### SEE ALSO

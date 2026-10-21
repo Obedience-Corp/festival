@@ -47,13 +47,15 @@ camp settings get [key] [flags]
   camp settings get global.theme
   camp settings get effective.commit.sync_project_refs
   camp settings get --json
+  camp settings get local.campaign.name --campaign my-camp
 ```
 
 ### Options
 
 ```
-  -h, --help   help for get
-      --json   emit a structured JSON result
+  -c, --campaign string   Target camp by exact registered name or ID (independent of cwd)
+  -h, --help              help for get
+      --json              emit a structured JSON result
 ```
 
 ### Options inherited from parent commands

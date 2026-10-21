@@ -20,6 +20,12 @@ See each sub-command's help for details on how to use the generated script.
   -h, --help   help for completion
 ```
 
+### Options inherited from parent commands
+
+```
+      --managed   use a separate Festival-managed toolchain without modifying package-owned files
+```
+
 ### SEE ALSO
 
 * [festival](../festival/)	 - Festival hub: install, onboard, and launch camp/fest tools

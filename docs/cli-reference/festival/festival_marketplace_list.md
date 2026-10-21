@@ -19,6 +19,12 @@ festival marketplace list [flags]
       --json   emit JSON output
 ```
 
+### Options inherited from parent commands
+
+```
+      --managed   use a separate Festival-managed toolchain without modifying package-owned files
+```
+
 ### SEE ALSO
 
 * [festival marketplace](../festival_marketplace/)	 - Manage marketplaces

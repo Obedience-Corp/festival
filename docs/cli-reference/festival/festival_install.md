@@ -36,6 +36,13 @@ festival install <festival|camp|fest|obey> [flags]
   -h, --help               help for install
       --json               emit JSON output
       --no-restart         install the new obey binaries without restarting the running daemon
+      --no-shell-setup     disable automatic terminal integration (remembered across updates)
+```
+
+### Options inherited from parent commands
+
+```
+      --managed   use a separate Festival-managed toolchain without modifying package-owned files
 ```
 
 ### SEE ALSO

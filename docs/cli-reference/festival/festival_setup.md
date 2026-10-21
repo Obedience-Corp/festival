@@ -23,6 +23,14 @@ festival setup [flags]
       --json   emit JSON output
 ```
 
+### Options inherited from parent commands
+
+```
+      --managed   use a separate Festival-managed toolchain without modifying package-owned files
+```
+
 ### SEE ALSO
 
 * [festival](../festival/)	 - Festival hub: install, onboard, and launch camp/fest tools
+* [festival setup integrations](../festival_setup_integrations/)	 - Configure or repair terminal helpers and Obey provider hooks
+* [festival setup prerequisites](../festival_setup_prerequisites/)	 - Install missing Git using the system installer

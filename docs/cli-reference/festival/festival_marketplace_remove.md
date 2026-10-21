@@ -18,6 +18,12 @@ festival marketplace remove <name> [flags]
   -h, --help   help for remove
 ```
 
+### Options inherited from parent commands
+
+```
+      --managed   use a separate Festival-managed toolchain without modifying package-owned files
+```
+
 ### SEE ALSO
 
 * [festival marketplace](../festival_marketplace/)	 - Manage marketplaces

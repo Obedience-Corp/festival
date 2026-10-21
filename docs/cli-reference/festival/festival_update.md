@@ -42,6 +42,12 @@ festival update [festival|camp|fest|obey] [flags]
       --no-restart         install the new obey binaries without restarting the running daemon
 ```
 
+### Options inherited from parent commands
+
+```
+      --managed   use a separate Festival-managed toolchain without modifying package-owned files
+```
+
 ### SEE ALSO
 
 * [festival](../festival/)	 - Festival hub: install, onboard, and launch camp/fest tools
