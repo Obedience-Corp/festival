@@ -14,9 +14,16 @@ Defer a blocker you cannot clear right now.
 
 The task stays blocked and still renders as blocked everywhere. Its dependents
 become ready, so the rest of the festival proceeds. When everything else is
-settled, fest next brings the deferred tasks back for another attempt, and the
-festival cannot be promoted to completed while any blocker is deferred unless
-you pass --force.
+settled, including every phase's WORKFLOW.md and GATES.md, fest next brings
+the deferred tasks back for another attempt, and the festival cannot be
+promoted to completed while any blocker is deferred unless you pass --force.
+
+Phase gates see deferred blockers. Once every other task in a phase is
+settled, its GATES.md steps can run, but fest next and fest workflow status
+list each deferred task with its blocker and deferral reason, the approval
+judge receives them in phase_tasks, and an approval records how many were
+deferred. The phase itself is not marked completed until no deferred blocker
+remains. A blocker that is not deferred stops the gate entirely.
 
 By default, a person confirms a deferral by typing the task number in a
 terminal. Pass --yes to defer non-interactively from an agent or app; the event

@@ -89,6 +89,7 @@ camp [flags]
 * [camp promote](../camp_promote/)	 - Promote any intent, workitem, or festival (universal front door)
 * [camp pull](../camp_pull/)	 - Pull latest changes from remote
 * [camp push](../camp_push/)	 - Push camp changes to remote
+* [camp quest](../camp_quest/)	 - Manage working contexts within a camp
 * [camp refs-sync](../camp_refs-sync/)	 - Sync submodule ref pointers in camp root
 * [camp register](../camp_register/)	 - Register a camp in the global registry
 * [camp registry](../camp_registry/)	 - Manage the camp registry

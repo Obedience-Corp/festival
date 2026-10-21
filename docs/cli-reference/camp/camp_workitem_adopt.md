@@ -33,7 +33,7 @@ camp workitem adopt [dir] [flags]
   -h, --help                  help for adopt
       --id string             override the generated id
       --project stringArray   add a related project path (repeatable, e.g. projects/camp)
-      --quest string          quest ID to associate (requires dev-profile camp; forward-compatible flag)
+      --quest string          capture quest_id from this quest (defaults to CAMP_QUEST env var if set)
       --tag stringArray       add a tag (repeatable, normalized to lowercase kebab-case)
       --title string          human-readable title
       --type string           workitem type (feature, bug, chore, or custom) (default "feature")

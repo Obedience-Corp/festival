@@ -51,6 +51,11 @@ Auto approval:
   reason. Missing commands, timeouts, non-zero exits, malformed JSON, unknown
   decisions, and empty reasons fail closed and do not approve the checkpoint.
 
+  The request's phase_tasks field lists the phase's task counts and every
+  blocked task with its reason and deferral, so a gate is never judged blind
+  to blocked work. A GATES.md step is refused while any task in the phase is
+  blocked without a deferral.
+
   The judge command is resolved as: --judge-command flag, else the
   hooks.definitions.approval_judge hook in .festival/config.yaml. If neither is
   set, --auto fails closed and leaves the checkpoint unchanged.

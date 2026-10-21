@@ -34,6 +34,12 @@ festival completion fish [flags]
       --no-descriptions   disable completion descriptions
 ```
 
+### Options inherited from parent commands
+
+```
+      --managed   use a separate Festival-managed toolchain without modifying package-owned files
+```
+
 ### SEE ALSO
 
 * [festival completion](../festival_completion/)	 - Generate the autocompletion script for the specified shell

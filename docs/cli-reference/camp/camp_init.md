@@ -14,6 +14,7 @@ Initialize a new camp directory structure.
 
 Creates the standard camp directories:
   .campaign/              - Camp configuration and metadata
+  .campaign/quests/       - Quest execution contexts
   .campaign/intents/      - System-managed intent state
   projects/               - Project repositories (submodules or worktrees)
   projects/worktrees/     - Git worktrees for parallel development

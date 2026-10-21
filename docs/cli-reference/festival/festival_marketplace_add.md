@@ -20,6 +20,12 @@ festival marketplace add <git-url> [flags]
       --name string        override the derived source name
 ```
 
+### Options inherited from parent commands
+
+```
+      --managed   use a separate Festival-managed toolchain without modifying package-owned files
+```
+
 ### SEE ALSO
 
 * [festival marketplace](../festival_marketplace/)	 - Manage marketplaces

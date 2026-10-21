@@ -25,9 +25,10 @@ camp workitem doctor [flags]
 ### Options
 
 ```
-      --fix    auto-repair findings tagged auto_fixable
-  -h, --help   help for doctor
-      --json   emit a structured JSON result
+      --fix       auto-repair findings tagged auto_fixable
+  -h, --help      help for doctor
+      --json      emit a structured JSON result
+      --verbose   show finding codes, targets, and per-link removal commands
 ```
 
 ### Options inherited from parent commands

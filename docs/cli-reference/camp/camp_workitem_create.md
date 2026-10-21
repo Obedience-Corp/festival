@@ -51,7 +51,7 @@ camp workitem create <slug> [flags]
       --id string             override the generated id
       --json                  emit a structured JSON result
       --project stringArray   add a related project path (repeatable, e.g. projects/camp)
-      --quest string          quest ID to associate (requires dev-profile camp; forward-compatible flag)
+      --quest string          capture quest_id from this quest (defaults to CAMP_QUEST env var if set)
       --tag stringArray       add a tag (repeatable, normalized to lowercase kebab-case)
       --title string          human-readable title
       --type string           workitem type (feature, bug, chore, or custom); when omitted, inferred from a workflow/<type>/ cwd, --dir, or --file (default "feature")
