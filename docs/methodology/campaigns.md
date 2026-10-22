@@ -25,34 +25,73 @@ Camps are independent. Switching from your day-job camp to your side-project cam
 
 ## Camp Directory Layout
 
-```
-my-camp/
-├── .campaign/              # Camp configuration
-│   └── campaign.yaml       # Name, type, description, metadata
-├── projects/               # Git submodules - your actual code
-│   ├── api-service/        # Each project is a separate repo
-│   └── web-app/            # Added via camp project add
-├── festivals/              # Festival planning workspace
-│   ├── planning/           # Festivals being designed and scoped
-│   ├── active/             # Festivals currently being executed
-│   ├── ready/              # Fully planned, awaiting execution
-│   ├── ritual/             # Recurring or special-purpose festivals
-│   └── dungeon/            # Terminal statuses
-│       ├── completed/      # Successfully finished festivals
-│       ├── archived/       # Shelved but preserved for reference
-│       └── someday/        # Deprioritized, revisit later
-├── workflow/               # Workflow management materials
-│   ├── code_reviews/       # Code review notes and checklists
-│   ├── pipelines/          # CI/CD pipeline definitions
-│   ├── design/             # Design documents and specs
-│   └── intents/            # Intent documents for idea capture
-├── ai_docs/                # AI-generated research and analysis
-├── docs/                   # Human-authored documentation
-├── corpus/                 # Reference materials and external sources
-└── worktrees/              # Git worktrees for parallel development
+```text
+my-camp/                   # Camp Git repository
+├── AGENTS.md              # Instructions for work in this camp
+├── .campaign/             # Camp configuration and managed state
+│   ├── campaign.yaml
+│   └── intents/           # Ideas captured with camp intent
+├── projects/              # Separate repos: submodules or local links
+│   ├── api-service/
+│   ├── web-app/
+│   └── worktrees/         # Isolated branches for concurrent changes
+├── festivals/             # Plans, tasks, and execution records
+│   ├── planning/
+│   ├── ready/
+│   ├── active/
+│   ├── ritual/
+│   └── .dungeon/          # Completed, archived, or someday festivals
+├── workflow/
+│   ├── explore/           # Research and questions before a decision
+│   ├── design/            # Directions you intend to build
+│   ├── code_reviews/
+│   └── pipelines/
+└── docs/                  # Knowledge you want to keep and reuse
 ```
 
-Every directory serves a single purpose. There are no catch-all folders. If something does not fit the structure, it probably belongs in a different camp or does not belong at all.
+This is a representative layout. Add workflow collections and reference materials
+as the mission needs them. Use camp and fest commands to manage tracked work and
+its lifecycle. New camps use `.dungeon/` by default; older camps or a different
+`dungeon_hidden` setting may retain `dungeon/`.
+
+## Camp context and project context
+
+Keeping context outside a project means putting your personal workflow in the
+camp's repository. For example, a research process, cross-project plan, or script
+you use with your agents can live there without requiring every collaborator to
+adopt your setup.
+
+The project's shared rules, architecture, and build instructions still belong in
+the project repository. Agents need both: how you want this work handled, and the
+requirements of the code they are changing.
+
+An existing checkout can stay at `/your/code/api-service`. Linking it creates
+`projects/api-service` as a reference to that directory and adds a `.camp`
+attachment file to the checkout. Camp context and project code keep separate Git
+histories. Start your agent at the camp root so it can navigate to both.
+
+## How agents find context
+
+Predictable locations give an agent a place to start. Think of looking for a fork:
+you look in the kitchen, then the cutlery drawer. A camp uses the same idea for
+work. Instructions and links point toward the relevant files instead of asking a
+session to carry the entire workspace in its conversation.
+
+For a dependency migration, the path through context might be:
+
+1. Read `AGENTS.md` for the camp's working practices.
+2. Find the migration with `camp workitem --json` or its saved path.
+3. Read its goal, decisions, current step, and review notes.
+4. Follow the project link and read that repository's instructions and relevant code.
+5. Run `fest next` in the festival or linked project to get the next planned step.
+
+Files are available to read; they are not all automatically loaded into every
+session. Keep important decisions in the work record and useful recurring
+practices in instructions or templates. A fresh session still needs to read them
+and check them against the current files.
+
+Follow [one change across sessions]({{< ref "/guides/one-change-across-sessions" >}})
+for prompts, a review example, and the next run using what you learned.
 
 ## Real Camp Example
 
@@ -74,10 +113,13 @@ The `camp` CLI manages camps. It handles creation, navigation, project managemen
 ### Creating a Camp
 
 ```bash
-camp init my-camp
+camp create my-camp
 ```
 
-Scaffolds the full directory layout, initializes git, and creates the `.campaign/campaign.yaml` configuration.
+Creates the camp in your configured camps directory (by default `~/campaigns/`),
+asks for its description and mission, initializes Git, and prints its path. Use
+[`camp init`]({{< ref "/cli-reference/camp/camp_init" >}}) when you want to
+initialize a directory at a location you choose.
 
 ### Navigation
 
@@ -165,7 +207,7 @@ camp sync       # Update all submodules to latest refs
 ### Planning Tools
 
 ```bash
-camp intent "add WebSocket support to chat"     # Capture an idea
+camp intent add "add WebSocket support to chat"     # Capture an idea
 camp leverage                                    # Prioritize intents
 camp dungeon move old-festival                   # Archive completed work
 ```

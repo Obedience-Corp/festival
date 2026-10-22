@@ -48,14 +48,18 @@ menu:
       parent: getting-started
       url: /getting-started/agents/
       weight: 15
+    - name: One Change Across Sessions
+      parent: getting-started
+      url: /guides/one-change-across-sessions/
+      weight: 16
     - name: Everyday Development
       parent: getting-started
       url: /guides/everyday-development/
-      weight: 16
+      weight: 17
     - name: Shell Setup
       parent: getting-started
       url: /getting-started/shell-setup/
-      weight: 17
+      weight: 18
     - name: Videos
       parent: getting-started
       url: /videos/

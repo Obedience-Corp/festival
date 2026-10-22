@@ -10,7 +10,9 @@ weight: 12
 
 Festival gives your agent a plan to follow and a lasting record of the work. You set the goal and review the important decisions. Your agent plans, executes, and checks the work while you focus elsewhere.
 
-This guide takes you from a fresh install to your first handoff. The recordings show what to look for along the way.
+This guide takes you from a fresh install to your first handoff. The recordings show what to look for along the way. For one connected example, follow [a dependency migration across sessions]({{< ref "/guides/one-change-across-sessions" >}}).
+
+Start with work that needs a plan and review. A small, understood change can stay in one agent session; [choose the amount of structure]({{< ref "/guides/intent-design-festival" >}}) that fits the task.
 
 1. [Install the tools](#install)
 2. [Create a camp](#create-a-camp)
@@ -49,12 +51,19 @@ Then choose an [agent setup guide]({{< ref "/getting-started/agents" >}}) for yo
 
 A **camp** holds the context for one part of your life: your job, a side project, or a hobby. Each camp can contain several projects, with shared plans, research, and decisions. Start with one.
 
-From a directory where you keep your work:
+Create a camp in your configured camps directory:
 
 ```bash
-camp init my-camp
-cd my-camp
+camp create my-camp
 ```
+
+The command asks for a description and mission and prints the camp's path. By default, that path is `~/campaigns/my-camp`. Enter the printed path:
+
+```bash
+cd ~/campaigns/my-camp
+```
+
+If you deliberately want to initialize a directory at another location, see [`camp init`]({{< ref "/cli-reference/camp/camp_init" >}}).
 
 This creates `projects/`, `festivals/`, `docs/`, and instructions for your agent in `AGENTS.md`.
 
