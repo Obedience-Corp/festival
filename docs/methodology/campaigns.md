@@ -1,25 +1,25 @@
 ---
-title: "Camps"
+title: "Festival Camp Workspaces"
 weight: 22
 ---
 
-# Camps
+# Festival Camp Workspaces
 
-A camp, previously called a campaign, is one workspace holding a group of related projects and the festivals you run in them.
+A **Festival camp workspace** holds the context for a job, business, project, or hobby: related repositories, plans, research, skills, and working practices. We shorten this to **camp** below. Older commands and paths sometimes use **campaign**.
 
 ## The Multiple Missions Problem
 
 Every developer runs multiple missions at once. The day job. The side project that might become a startup. The open-source library you maintain on weekends. Each mission accumulates its own gravity - project repos, planning documents, research notes, AI conversation history, design decisions, workflow configurations. Without a boundary around each mission, that context scatters. It lives in expired chat windows, unmarked browser tabs, and directories named `misc-stuff-2`.
 
-The problem compounds with AI-assisted development. An agent session needs to understand your workspace - where the code lives, what the plan is, what's been tried before. If your projects, plans, and research are spread across unrelated directories with no shared structure, every new session starts from scratch. You spend tokens re-explaining what an organized workspace would make obvious.
+The problem compounds with AI-assisted development. An agent session needs to understand your workspace - where the code lives, what the plan is, what's been tried before. If your projects, plans, and research are spread across unrelated directories with no shared structure, a new session may miss decisions and repeat work. You spend tokens re-explaining what an organized workspace would make obvious.
 
-A camp solves this by isolating one mission into a single, navigable workspace. Everything related to that mission - every repo, every plan, every design doc - lives under one root with a predictable layout. Humans can `cd` into it and know where things are. Agents can read the structure and orient themselves immediately.
+A camp solves this by isolating one mission into a single, navigable workspace. Everything related to that mission - every repo, every plan, every design doc - lives under one root with a predictable layout. Humans can `cd` into it and know where things are. Agents can use the structure to find the instructions and records they need.
 
 ## What is a Camp?
 
-A camp is an isolated workspace for a single mission, a high-level purpose such as a startup, a job, or an open-source project you maintain. A mission is broad and long-lived, so a camp grows with it over months and years. It groups all related projects, as git submodules or as links to repositories already on your machine, all festival plans in a structured hierarchy, and all supporting materials - documentation, research, workflow configs, design artifacts - into a standard directory layout.
+A Festival camp workspace organizes a single mission, a high-level purpose such as a startup, a job, or an open-source project you maintain. A mission is broad and long-lived, so a camp grows with it over months and years. It groups all related projects, as git submodules or as links to repositories already on your machine, all festival plans in a structured hierarchy, and all supporting materials - documentation, research, workflow configs, design artifacts - into a standard directory layout.
 
-The key property is **navigability**. Both humans and AI agents can enter a camp and immediately understand its structure. Projects are in `projects/`. Plans are in `festivals/`. Docs are in `docs/`. There is no guessing, no project-specific convention to learn, no onboarding friction.
+The key property is **navigability**. Both humans and AI agents can enter a camp and immediately understand its structure. Projects are in `projects/`. Plans are in `festivals/`. Docs are in `docs/`. Those conventions give a new session a starting point. It still needs to read the instructions and relevant project context.
 
 Camps are independent. Switching from your day-job camp to your side-project camp is a single command. Each camp carries its own context, its own planning state, its own project graph.
 
@@ -93,18 +93,17 @@ and check them against the current files.
 Follow [one change across sessions]({{< ref "/guides/one-change-across-sessions" >}})
 for prompts, a review example, and the next run using what you learned.
 
-## Real Camp Example
+## A public record of the work
 
-The `obey-campaign` workspace is the central camp for all Obedience Corp product development. It contains:
+The [practice simulator archive](https://github.com/Festival-Examples/codesignal-practice-simulator/tree/main/festivals)
+contains three completed festivals from a job-search workspace: a Python practice
+engine, a browser interface, and a practice library. Its plans, decisions, reviews,
+and corrections show the work around the application, alongside the application
+code. The archive explains how paths and private activity details were sanitized
+for public sharing; it is a historical record, not an active workspace to resume.
 
-- **20 project submodules** spanning Go CLIs, Rust TUI clients, a platform monorepo, a company website, prototypes, and shared libraries
-- **Active festival planning** with festivals in `planning/`, `active/`, `ready/`, and `ritual/` directories
-- **Workflow materials** including code reviews, design documents, and intent captures
-- **AI documentation** with research notes generated across hundreds of agent sessions
-
-Key projects in the camp include `camp` (the Camp CLI itself), `fest` (the festival planning CLI), `obey-platform-monorepo` (the core daemon and services), `obey-chat` (chat client), `guild-chat` (Rust TUI), and `obediencecorp.com` (the website). The camp also holds `guild-core`, the archived reference implementation that the current architecture evolved from.
-
-This is a large camp. Most camps are smaller - a side project with two or three repos and a handful of festivals. The structure scales in both directions.
+You can start smaller: one repository, one goal, and the instructions needed to
+work on it. Add reusable workflows as you discover what helps.
 
 ## Camp CLI Overview
 
@@ -159,8 +158,9 @@ camp project link ~/code/api --name backend      # Override the project name
 
 Linking is the right choice for repositories you already clone and work on outside any
 camp. Your existing branches, remotes, and history stay in place; the camp just
-gains a navigable reference to them. Both humans (`cgo p backend`) and AI agents treat a
-linked workspace exactly like a submodule project.
+gains a navigable reference to them. Humans (`cgo p backend`) and agents can navigate to either kind of project.
+Commands that operate on all submodules do not necessarily include linked projects;
+check each command’s scope before using it to sync repositories.
 
 To list, unlink, or remove projects:
 
@@ -201,7 +201,7 @@ camp detach ~/scratch/research-notes             # Remove the attachment marker
 
 ```bash
 camp doctor     # Diagnose camp issues (broken submodules, missing dirs)
-camp sync       # Update all submodules to latest refs
+camp sync       # Synchronize URLs and check out recorded submodule commits
 ```
 
 ### Planning Tools
@@ -209,7 +209,7 @@ camp sync       # Update all submodules to latest refs
 ```bash
 camp intent add "add WebSocket support to chat"     # Capture an idea
 camp leverage                                    # Prioritize intents
-camp dungeon move old-festival                   # Archive completed work
+camp dungeon move old-note archived              # Archive an item in a dungeon collection
 ```
 
 `camp dungeon crawl` reviews stale work interactively -- for each item, keep it, file it into the dungeon (completed, archived, or someday), or skip it:
@@ -248,4 +248,4 @@ Transfer files between camps when work migrates:
 camp transfer festivals/planning/auth-system day-job
 ```
 
-Each camp is fully isolated. Switching camps does not affect the state of the one you left. Your festivals, project refs, and workflow materials stay exactly where they are until you come back.
+Switching camps changes your navigation context; it does not move the files or reset the work you left. A camp is an organizational boundary, not a security sandbox. Linked projects can be shared between workspaces.

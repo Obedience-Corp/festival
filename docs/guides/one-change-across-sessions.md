@@ -27,7 +27,7 @@ when you need a blocking approval checkpoint inside the loop.
 ## 1. Keep the context beside the code
 
 Follow the [Quick Start]({{< ref "/getting-started/quickstart" >}}) to create a
-camp and link your existing repositories. Each repository keeps its own Git
+**Festival camp workspace** (a camp) and link your existing repositories. Each repository keeps its own Git
 history. The camp holds the work around them:
 
 ```text
@@ -95,6 +95,28 @@ The real record must contain the actual findings and results. Review gates help
 you inspect evidence; their usefulness depends on the checks and decisions you
 put into them. [Workflows & Gates]({{< ref "/methodology/workflows-and-gates" >}})
 explains the approval mechanism.
+
+## A real review finding to inspect
+
+The migration above is a teaching example. The public practice simulator has an
+actual failure-and-correction record you can compare it with:
+
+- **Expected behavior:** restore older saved versions of your code.
+- **Finding:** after edits returned to earlier text, history reconstruction could
+  stop early and hide older versions. Existing tests covered successive distinct
+  versions and missed this case. The architecture review marked the release
+  NO-GO pending a correction.
+- **Evidence before the fix:** two of three focused regression tests failed.
+- **Correction:** follow durable operation order without collapsing repeated
+  content. After the fix, all three regressions passed; a browser journey also
+  restored the oldest version and checked the persisted result.
+
+Read the [review finding](https://github.com/Festival-Examples/codesignal-practice-simulator/blob/main/festivals/codesignal-browser-assessment-simulator-CB0001/006_RELEASE_REVIEW/results/architecture-review.md)
+and the [repair record](https://github.com/Festival-Examples/codesignal-practice-simulator/blob/main/festivals/codesignal-browser-assessment-simulator-CB0001/006_RELEASE_REVIEW/results/history-remediation.md).
+These are historical build results, not tests rerun for this guide. Festival kept
+the decision and evidence connected; the reviewer and regression tests identified
+the defect. For your own work, choose a check that demonstrates what the user must
+be able to do, and record failures as well as successes.
 
 ## 4. Continue in a fresh session
 

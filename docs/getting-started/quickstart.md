@@ -49,7 +49,7 @@ Then choose an [agent setup guide]({{< ref "/getting-started/agents" >}}) for yo
 
 ## 2. Create a camp {#create-a-camp}
 
-A **camp** holds the context for one part of your life: your job, a side project, or a hobby. Each camp can contain several projects, with shared plans, research, and decisions. Start with one.
+A **Festival camp workspace** (a **camp**) holds the context for one part of your life: your job, a side project, or a hobby. Each camp can contain several projects, with shared plans, research, and decisions. Start with one.
 
 Create a camp in your configured camps directory:
 
