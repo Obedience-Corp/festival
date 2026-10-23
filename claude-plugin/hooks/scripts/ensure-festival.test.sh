@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Unit tests for ensure-festival.sh local-version parsing.
+# Unit tests for ensure-festival.sh version parsing and the update notice.
 #
 # Sources the installer (its main() is guarded so sourcing only defines
 # functions) and exercises parse_local_fest_version / is_release_version
@@ -147,6 +147,62 @@ for shape in "$suite_full" "$profile_only_full" "$legacy_full" "$classic_full"; 
     esac
   done
 done
+
+# Update notice: run main() end to end with a stub fest, a stubbed release
+# fetch, and an isolated HOME/cache so nothing touches the network or the real
+# home. PATH holds only the stub dir plus the system dirs, so `festival` is
+# present or absent on purpose.
+notice_tmp="$(mktemp -d "${TMPDIR:-/tmp}/ensure-festival-test.XXXXXX")"
+trap 'rm -rf "$notice_tmp"' EXIT
+mkdir -p "$notice_tmp/bin" "$notice_tmp/home"
+cat > "$notice_tmp/bin/fest" <<'EOF_FEST'
+#!/bin/sh
+case "$*" in
+  "version --short") echo v0.3.20 ;;
+  *) printf 'fest v0.3.20\nprofile: suite\nbundle: festival v0.3.20\n' ;;
+esac
+EOF_FEST
+printf '#!/bin/sh\nexit 0\n' > "$notice_tmp/bin/camp"
+printf '#!/bin/sh\nexit 0\n' > "$notice_tmp/bin/festival"
+chmod +x "$notice_tmp/bin/fest" "$notice_tmp/bin/camp" "$notice_tmp/bin/festival"
+
+run_notice() { # $1 with_festival(yes|no)  $2 latest tag
+  local with_festival="$1" latest="$2" festival_bin="$notice_tmp/bin/festival" hidden="$notice_tmp/bin/festival.off"
+  rm -rf "$notice_tmp/cache"
+  if [ "$with_festival" = no ] && [ -e "$festival_bin" ]; then mv "$festival_bin" "$hidden"; fi
+  if [ "$with_festival" = yes ] && [ -e "$hidden" ]; then mv "$hidden" "$festival_bin"; fi
+  (
+    export HOME="$notice_tmp/home" FESTIVAL_CACHE_DIR="$notice_tmp/cache"
+    export PATH="$notice_tmp/bin:/usr/bin:/bin"
+    unset FESTIVAL_CHECK_FILE
+    # shellcheck disable=SC2034
+    CHECK_FILE="$FESTIVAL_CACHE_DIR/last-update-check"
+    # shellcheck disable=SC2329
+    fetch_release() { printf '{"tag_name": "%s"}\n' "$latest"; }
+    main 2>&1
+  )
+}
+
+check_notice() { # $1 name  $2 want-substring ("" = no output)  $3 forbidden-substring  $4 with_festival  $5 latest
+  local name="$1" want="$2" forbid="$3" got
+  got="$(run_notice "$4" "$5")"
+  if [ -z "$want" ]; then
+    if [ -n "$got" ]; then printf 'FAIL notice %s: want no output, got: %s\n' "$name" "$got"; fail=1; fi
+    return
+  fi
+  case "$got" in
+    *"$want"*) ;;
+    *) printf 'FAIL notice %s: missing "%s" in: %s\n' "$name" "$want" "$got"; fail=1 ;;
+  esac
+  case "$got" in
+    *"$forbid"*) printf 'FAIL notice %s: unexpected "%s" in: %s\n' "$name" "$forbid" "$got"; fail=1 ;;
+  esac
+}
+
+check_notice "festival on PATH" "Festival update available: v0.3.20 -> v0.3.24. Run: festival update" "install.sh" yes v0.3.24
+check_notice "festival absent" "Run: curl -fsSL https://raw.githubusercontent.com/Obedience-Corp/festival/main/install.sh | bash" "Run: festival update" no v0.3.24
+check_notice "up to date, festival on PATH" "" "" yes v0.3.20
+check_notice "up to date, festival absent" "" "" no v0.3.20
 
 if [ "$fail" -ne 0 ]; then
   echo "ensure-festival version parse tests failed" >&2

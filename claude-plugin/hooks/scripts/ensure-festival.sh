@@ -240,6 +240,21 @@ read_local_fest_version() {
     parse_local_fest_version "$short" "$full"
 }
 
+# print_update_notice CURRENT LATEST
+#
+# Prefer `festival update` when the hub binary is on PATH: it knows how the suite
+# was installed and runs or prints the package manager's command for Homebrew,
+# npm, AUR, and Scoop installs. install.sh would drop a second copy into
+# ~/.local/bin next to the package-manager copy.
+print_update_notice() {
+    local current="$1" latest="$2"
+    if command -v festival >/dev/null 2>&1; then
+        info "Festival update available: ${current} -> ${latest}. Run: festival update"
+    else
+        info "Festival update available: ${current} -> ${latest}. Run: curl -fsSL https://raw.githubusercontent.com/${REPO}/main/install.sh | bash"
+    fi
+}
+
 main() {
     require_command curl
     require_command tar
@@ -325,7 +340,7 @@ main() {
     record_check
 
     if [ "$CURRENT_CLEAN" != "$LATEST_CLEAN" ]; then
-        info "Festival update available: ${CURRENT_VERSION} -> ${LATEST_TAG}. Run: curl -fsSL https://raw.githubusercontent.com/${REPO}/main/install.sh | bash"
+        print_update_notice "$CURRENT_VERSION" "$LATEST_TAG"
     fi
 }
 
