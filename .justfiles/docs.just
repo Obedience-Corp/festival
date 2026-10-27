@@ -15,7 +15,7 @@ submodule_go_env := "GOWORK=off"
 default:
     @just --list --unsorted --justfile {{source_file()}}
 
-# Generate docs for all CLIs
+# Generate docs for the suite CLIs (Obey references are checked in)
 [no-cd]
 all: fest camp festival-installer
     @echo "All CLI docs generated in {{docs_root}}/"
@@ -89,6 +89,21 @@ festival-installer:
     ./festival-installer/bin/festival gendocs --output {{docs_root}}/festival --format markdown
     python3 {{normalize_script}} {{docs_root}}/festival
     echo "festival-installer docs generated"
+
+# Refresh Obey reference from the public v0.2.3 stable binary (no private source needed)
+[no-cd]
+obey binary:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    binary={{quote(binary)}}
+    if [ "$("$binary" --version)" != "obey version 0.2.3" ]; then
+        echo "ERROR: use the public Obey v0.2.3 binary for this reference" >&2
+        exit 1
+    fi
+    mkdir -p {{docs_root}}/obey
+    "$binary" gendocs --output {{docs_root}}/obey --format markdown
+    python3 -c 'from pathlib import Path; [p.write_text(p.read_text().replace(chr(0x2014), ";")) for p in Path("{{docs_root}}/obey").glob("obey*.md")]'
+    python3 {{normalize_script}} {{docs_root}}/obey
 
 # Serve docs locally with live reload
 [no-cd]

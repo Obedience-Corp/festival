@@ -193,6 +193,30 @@ menu:
       url: /tutorials/ci-integration/
       weight: 43
 
+    - name: Obey
+      identifier: obey
+      weight: 44
+    - name: Overview
+      parent: obey
+      url: /obey/
+      weight: 1
+    - name: Get Started
+      parent: obey
+      url: /obey/getting-started/
+      weight: 2
+    - name: Configuration
+      parent: obey
+      url: /obey/configuration/
+      weight: 3
+    - name: Everyday Use
+      parent: obey
+      url: /obey/usage/
+      weight: 4
+    - name: Troubleshooting
+      parent: obey
+      url: /obey/troubleshooting/
+      weight: 5
+
     - name: Plugin Marketplace
       identifier: plugins
       weight: 45
@@ -236,6 +260,15 @@ menu:
       parent: cli-reference
       url: /cli-reference/festival/
       weight: 53
+
+    - name: obey
+      parent: cli-reference
+      url: /cli-reference/obey/
+      weight: 54
+    - name: ob
+      parent: cli-reference
+      url: /cli-reference/ob/
+      weight: 55
 
     - name: 简体中文
       identifier: zh-cn

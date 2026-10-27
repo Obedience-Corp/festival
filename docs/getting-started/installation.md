@@ -436,3 +436,10 @@ Once setup succeeds, deleting the starter does not cause it to be recreated.
 
 If the destination contains unrelated files, setup leaves them in place and
 explains how to retry. A setup problem does not undo a successful tool install.
+
+## Optional: Obey and ob
+
+Install the public Obey package separately with `festival install obey`. It
+includes the `obey` daemon CLI and `ob` developer commands. Follow the
+[Obey setup guide]({{< ref "/obey/getting-started" >}}) for service, provider, and
+configuration steps.
