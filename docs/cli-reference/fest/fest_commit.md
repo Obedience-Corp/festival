@@ -30,6 +30,9 @@ and legacy fest.yaml project_path. A festival with no linked project creates one
 camp root commit containing only festival-scoped files (not git add -A).
 
 Use --no-root to skip the camp root commit.
+Use --no-tag to suppress all generated camp and festival reference tags.
+Camp's commit.disable_commit_tags setting also applies: local camp settings
+replace the global commit settings. Tags are enabled by default.
 
 Reference format: [FE-{id}]
   - FE: Festival component identifier
@@ -88,7 +91,7 @@ fest commit [flags]
       --json              output result as JSON
   -m, --message string    commit message (required unless --auto-write)
       --no-root           skip camp root commit (project commit only)
-      --no-tag            don't prepend task reference
+      --no-tag            don't prepend camp or festival reference tags
       --stage             auto-stage all changes before commit (default true)
       --task string       task reference ID to use (e.g., FEST-123456)
 ```

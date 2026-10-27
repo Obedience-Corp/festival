@@ -99,7 +99,7 @@ camp [flags]
 * [camp setup](../camp_setup/)	 - Create your first festival camp once
 * [camp shell-init](../camp_shell-init/)	 - Output shell initialization code
 * [camp shortcuts](../camp_shortcuts/)	 - List all available shortcuts
-* [camp skills](../camp_skills/)	 - Manage camp skill directory links
+* [camp skills](../camp_skills/)	 - Manage camp skill bundles and their directory links
 * [camp stage](../camp_stage/)	 - Stage changes in the camp root
 * [camp status](../camp_status/)	 - Show git status of the camp
 * [camp switch](../camp_switch/)	 - Switch to a different camp

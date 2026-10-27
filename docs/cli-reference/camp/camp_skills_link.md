@@ -61,4 +61,4 @@ camp skills link [flags]
 
 ### SEE ALSO
 
-* [camp skills](../camp_skills/)	 - Manage camp skill directory links
+* [camp skills](../camp_skills/)	 - Manage camp skill bundles and their directory links
