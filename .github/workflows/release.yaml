@@ -295,6 +295,7 @@ jobs:
       - name: Publish npm package
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_PACKAGE_VERSION: ${{ inputs.version }}
           RELEASE_MODE: ${{ steps.release_channel.outputs.mode }}
         run: scripts/publish_npm_package.sh
 
