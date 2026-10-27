@@ -1,22 +1,48 @@
-# Festival
+# Festival: A vibe engineering framework
 
 ![Festival Banner](docs/images/festival_banner.png)
 
 <p align="center"><a href="https://github.com/Obedience-Corp/festival"><img src="https://img.shields.io/github/stars/Obedience-Corp/festival?style=social" alt="Star Festival on GitHub"></a></p>
 
-**Festival orchestrates AI agents through templates and configuration.**
+Vibe coding is a fast way to explore an idea, build a demo, or recreate
+something familiar. When you go beyond the demo, build something new, or work
+where a mistake could cost millions, you need more control over how the work
+gets done.
 
-Three components carry work from a long-term goal through planning, execution,
-and review: **Fest** structures the work, **Camp** manages shared context across
-agent sessions, and **Obey** supervises agents and orchestrates work in the
-background. Together, they form a vibe engineering framework you can configure
-to your own workflows and processes.
+**Vibe engineering means turning AI-assisted work into a process you can
+inspect, improve, and delegate repeatedly.** You define the outcome, review
+important decisions, and check the evidence behind the result. The aim is to
+let agents carry more of the work without having to babysit every step.
 
-You set the goals, constraints, and approval points. Your agents plan and execute
-within that structure. Plans, decisions, progress, and project changes stay in
-files and Git, so the work can continue across sessions.
+Festival gives you the tools to build that process through **templates and
+configuration**: **Fest** for long-term goals and automated planning, **Camp**
+for shared context across sessions, and **Obey** for oversight and background
+orchestration. You shape how agents work, see where they need attention, and
+refine the process for the next run. Plans, decisions, progress, and checks stay
+in files and Git, so you can inspect the work and continue in another session.
 
-[Get started](#get-started) · [How the components fit together](#how-the-components-fit-together) · [Obey setup](https://docs.fest.build/obey/getting-started/) · [Website](https://fest.build/) · [Discord](https://discord.gg/Rt7dDY6VqD) · [简体中文](README.zh-CN.md)
+[Try it on one real goal](#get-started) · [See a completed build](#see-festival-in-action) · [How it works](#how-the-components-fit-together) · [简体中文](README.zh-CN.md)
+
+## See Festival in action
+
+Three completed festivals built the [CodeSignal Practice Simulator](https://github.com/Festival-Examples/codesignal-practice-simulator).
+Agents followed the `fest next` loop, with testing and review gates feeding
+findings back into fixes. The demo repository includes the plans, tasks,
+review findings, and verification evidence for each build.
+
+<p align="center">
+  <a href="https://github.com/Festival-Examples/codesignal-practice-simulator/tree/main/festivals/codesignal-browser-assessment-simulator-CB0001"><img src="https://raw.githubusercontent.com/Festival-Examples/codesignal-practice-simulator/main/festivals/codesignal-browser-assessment-simulator-CB0001/codesignal-browser-assessment-simulator-CB0001.gif" alt="Festival execution replay: six phases advance to completion." width="440"></a>
+</p>
+
+[Explore the demo](https://github.com/Festival-Examples/codesignal-practice-simulator) ·
+[Inspect the three festivals](https://github.com/Festival-Examples/codesignal-practice-simulator/tree/main/festivals) ·
+[Watch all three replays](https://github.com/Festival-Examples/codesignal-practice-simulator#how-this-was-built)
+
+**Start with one goal in a repository you already use.** Keep your existing
+coding agent, let it help set up Camp and Fest, and review the result. Add Obey
+when you want the daemon to manage execution.
+
+[Set up with your agent](#get-started) · [Configure Obey](https://docs.fest.build/obey/getting-started/)
 
 ## How the components fit together
 
@@ -44,16 +70,9 @@ flowchart TB
 | [Obey](https://docs.fest.build/obey/) | **Oversight and background orchestration.** Runs a local daemon that tracks agent sessions, launches and supervises supported providers, and drives festival execution. Its companion `ob` CLI provides planning, review, and other developer commands. |
 
 A **camp** is the workspace around your goals. A **festival** is a larger goal
-inside it. Your templates, skills, and configuration define how agents plan,
-implement, check, and hand off work. Each camp can have its own way of working;
-`camp switch` (`csw`) moves you between them.
-
-For example, give an agent a goal that spans several repositories. Fest guides
-it through planning and exposes the next actionable step with `fest next`.
-Camp keeps the projects and saved context together. With Obey configured,
-`ob fest execute` runs the festival's task loop through the daemon. Agents
-record progress and evidence against the plan, leaving context for the next
-session and review points for you.
+inside it. Each camp can have its own projects, knowledge, templates, and
+working practices. Switch camps with `camp switch` (`csw`); a new agent session
+can read the saved plans and decisions before continuing the work.
 
 You can use Camp and Fest directly with an agent that reads files and runs
 commands, including Claude Code, Codex, Grok Build, Cursor, or OpenCode. Add Obey
@@ -63,23 +82,6 @@ covers the providers it can launch and supervise.
 The `festival` command installs and updates the tools. The base suite includes
 `camp`, `fest`, and the `festival` manager. Install Obey separately with
 `festival install obey`, which adds both `obey` and `ob`.
-
-## See Festival in action
-
-Three completed festivals built the [CodeSignal Practice Simulator](https://github.com/Festival-Examples/codesignal-practice-simulator).
-Agents followed the `fest next` loop, with testing and review gates feeding
-findings back into fixes. The demo repository includes the plans, tasks,
-review findings, and verification evidence for each build.
-
-<p align="center">
-  <a href="https://github.com/Festival-Examples/codesignal-practice-simulator/tree/main/festivals/codesignal-browser-assessment-simulator-CB0001"><img src="https://raw.githubusercontent.com/Festival-Examples/codesignal-practice-simulator/main/festivals/codesignal-browser-assessment-simulator-CB0001/codesignal-browser-assessment-simulator-CB0001.gif" alt="Festival execution replay: six phases advance to completion." width="440"></a>
-</p>
-
-[Explore the demo](https://github.com/Festival-Examples/codesignal-practice-simulator) ·
-[Inspect the three festivals](https://github.com/Festival-Examples/codesignal-practice-simulator/tree/main/festivals) ·
-[Watch all three replays](https://github.com/Festival-Examples/codesignal-practice-simulator#how-this-was-built)
-
-[Try it on one real goal](#get-started), or star this repository to keep it handy.
 
 ## What would you hand off?
 
