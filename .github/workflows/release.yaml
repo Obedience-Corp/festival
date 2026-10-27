@@ -30,6 +30,7 @@ on:
 
 permissions:
   contents: write
+  actions: read
   id-token: write
 
 jobs:
@@ -40,15 +41,29 @@ jobs:
       contents: read
 
   release:
-    if: github.event_name == 'push'
-    needs: windows-candidate-proof
+    if: github.event_name == 'workflow_dispatch' && inputs.action == 'post-publish' && inputs.version == '0.3.25'
+    env:
+      FESTIVAL_RELEASE_TAG: v${{ inputs.version }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          ref: v${{ inputs.version }}
           submodules: recursive
           fetch-depth: 0
+
+      - name: Require successful native proof for the unchanged release tag
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          proof_run=40453784837
+          proof_sha="$(gh api "repos/Obedience-Corp/festival/actions/runs/$proof_run" --jq .head_sha)"
+          test "$(git rev-parse HEAD)" = "$proof_sha"
+          conclusions="$(gh api "repos/Obedience-Corp/festival/actions/runs/$proof_run/jobs" \
+            --jq '[.jobs[] | select(.name | startswith("windows-candidate-proof / ")) | .conclusion] | sort | join(",")')"
+          test "$conclusions" = 'success,success'
 
       - name: Set up Go
         uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
@@ -73,7 +88,7 @@ jobs:
       - name: Detect release channel
         id: release_channel
         run: |
-          case "${GITHUB_REF_NAME}" in
+          case "${FESTIVAL_RELEASE_TAG}" in
             v*-dev.*)
               echo "mode=dev" >> "$GITHUB_OUTPUT"
               echo "cli_profile=dev" >> "$GITHUB_OUTPUT"
@@ -87,7 +102,7 @@ jobs:
               echo "cli_profile=stable" >> "$GITHUB_OUTPUT"
               ;;
             *)
-              echo "unsupported tag format: ${GITHUB_REF_NAME}" >&2
+              echo "unsupported tag format: ${FESTIVAL_RELEASE_TAG}" >&2
               exit 1
               ;;
           esac
@@ -166,7 +181,7 @@ jobs:
           cd tools/release-notes
           go run . \
             --repo-root ../.. \
-            --tag "${GITHUB_REF_NAME}" \
+            --tag "${FESTIVAL_RELEASE_TAG}" \
             --output "${RUNNER_TEMP}/festival-release-notes.md"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -224,13 +239,13 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          if gh release view "${GITHUB_REF_NAME}" --repo Obedience-Corp/festival --json tagName --jq .tagName >/dev/null 2>&1; then
+          if gh release view "${FESTIVAL_RELEASE_TAG}" --repo Obedience-Corp/festival --json tagName --jq .tagName >/dev/null 2>&1; then
             if [ "${{ steps.goreleaser.outcome }}" = "failure" ]; then
-              echo "::warning::GoReleaser reported failure, but ${GITHUB_REF_NAME} is published. Continuing post-publish steps (likely AUR/homebrew side failure)."
+              echo "::warning::GoReleaser reported failure, but ${FESTIVAL_RELEASE_TAG} is published. Continuing post-publish steps (likely AUR/homebrew side failure)."
             fi
             exit 0
           fi
-          echo "::error::GoReleaser failed before publishing GitHub release ${GITHUB_REF_NAME}"
+          echo "::error::GoReleaser failed before publishing GitHub release ${FESTIVAL_RELEASE_TAG}"
           exit 1
 
       - name: Verify published Windows ZIP and Scoop bucket
@@ -239,33 +254,33 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
-          release_state="$(gh release view "${GITHUB_REF_NAME}" \
+          release_state="$(gh release view "${FESTIVAL_RELEASE_TAG}" \
             --repo Obedience-Corp/festival --json isDraft,isPrerelease \
             --jq '[.isDraft, .isPrerelease] | join(" ")')"
           if [ "$release_state" != 'false false' ]; then
-            echo "::error::Stable release ${GITHUB_REF_NAME} is draft or prerelease"
+            echo "::error::Stable release ${FESTIVAL_RELEASE_TAG} is draft or prerelease"
             exit 1
           fi
 
           proof_dir="${RUNNER_TEMP}/published-windows-scoop"
           mkdir -p "$proof_dir"
-          archive_name="festival-${GITHUB_REF_NAME#v}-windows-x86_64.zip"
-          gh release download "${GITHUB_REF_NAME}" --repo Obedience-Corp/festival \
+          archive_name="festival-${FESTIVAL_RELEASE_TAG#v}-windows-x86_64.zip"
+          gh release download "${FESTIVAL_RELEASE_TAG}" --repo Obedience-Corp/festival \
             --pattern "$archive_name" --dir "$proof_dir"
-          gh release download "${GITHUB_REF_NAME}" --repo Obedience-Corp/festival \
+          gh release download "${FESTIVAL_RELEASE_TAG}" --repo Obedience-Corp/festival \
             --pattern checksums.txt --dir "$proof_dir"
           gh api 'repos/Obedience-Corp/scoop-bucket/contents/festival.json?ref=main' \
             --jq .content | base64 --decode > "$proof_dir/festival.json"
 
           python3 scripts/verify_published_windows_scoop.py \
-            --tag "${GITHUB_REF_NAME}" \
+            --tag "${FESTIVAL_RELEASE_TAG}" \
             --archive "$proof_dir/$archive_name" \
             --checksums "$proof_dir/checksums.txt" \
             --manifest "$proof_dir/festival.json"
 
       - name: Rewrite GitHub release body from bundled component notes
         run: |
-          gh release edit "${GITHUB_REF_NAME}" \
+          gh release edit "${FESTIVAL_RELEASE_TAG}" \
             --repo Obedience-Corp/festival \
             --notes-file "${RUNNER_TEMP}/festival-release-notes.md"
         env:
@@ -290,7 +305,7 @@ jobs:
           mkdir -p dist
           if [ ! -f dist/checksums.txt ]; then
             echo "dist/checksums.txt missing after GoReleaser; downloading from the published release"
-            gh release download "${GITHUB_REF_NAME}" \
+            gh release download "${FESTIVAL_RELEASE_TAG}" \
               --repo Obedience-Corp/festival \
               --pattern checksums.txt \
               --dir dist
@@ -301,11 +316,11 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          published_at="$(gh release view "${GITHUB_REF_NAME}" \
+          published_at="$(gh release view "${FESTIVAL_RELEASE_TAG}" \
             --repo Obedience-Corp/festival --json publishedAt --jq .publishedAt)"
           go -C tools/release-operator run . emit-marketplace-entry \
             --repo-root ../.. \
-            --tag "${GITHUB_REF_NAME}" \
+            --tag "${FESTIVAL_RELEASE_TAG}" \
             --channel "${{ steps.release_channel.outputs.mode }}" \
             --checksums dist/checksums.txt \
             --output dist/marketplace/obey-package.json \
@@ -317,7 +332,7 @@ jobs:
         env:
           MARKETPLACE_PUBLISH_TOKEN: ${{ secrets.MARKETPLACE_PUBLISH_TOKEN }}
           GH_TOKEN: ${{ secrets.MARKETPLACE_PUBLISH_TOKEN }}
-          FESTIVAL_TAG: ${{ github.ref_name }}
+          FESTIVAL_TAG: ${{ env.FESTIVAL_RELEASE_TAG }}
           RELEASE_CHANNEL: ${{ steps.release_channel.outputs.mode }}
         run: scripts/publish_marketplace_entry.sh
 
@@ -351,7 +366,7 @@ jobs:
   # Recover post-GoReleaser publishers for an already-created tag/release when
   # a side publisher (commonly AUR maintenance) aborted the main release job.
   post-publish:
-    if: github.event_name == 'workflow_dispatch' && inputs.action == 'post-publish'
+    if: github.event_name == 'workflow_dispatch' && inputs.action == 'post-publish' && inputs.version != '0.3.25'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout release tag
