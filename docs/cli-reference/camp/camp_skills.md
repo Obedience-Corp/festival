@@ -1,12 +1,12 @@
 ---
 title: "camp skills"
 linkTitle: "camp skills"
-description: "Manage camp skill directory links"
+description: "Manage camp skill bundles and their directory links"
 ---
 
 ## camp skills
 
-Manage camp skill directory links
+Manage camp skill bundles and their directory links
 
 ### Synopsis
 
@@ -25,8 +25,9 @@ at projects/worktrees/<name>/ is accepted; package subdirs under it are not.
 
 Commands:
   link     Project per-skill symlinks into a tool-specific skills directory
-  status   Show projection status for tool-specific skills directories
+  status   Show projection status and shipped bundle states
   unlink   Remove projected skill symlinks
+  update   Refresh shipped skill bundles to this camp version
 
 Examples:
   camp skills link --tool claude    Project skills into .claude/skills/
@@ -34,6 +35,7 @@ Examples:
   camp skills link --worktrees      Project into tools and every project worktree
   camp skills link --worktrees-only Project into project worktrees only
   camp skills status                Show all skill projection states
+  camp skills update                Refresh outdated shipped skill bundles
   camp skills unlink --tool claude  Remove projected symlinks from .claude/skills/
 
 ```
@@ -56,5 +58,6 @@ camp skills [flags]
 
 * [camp](../camp/)	 - Manage your camps and the projects and festivals inside them
 * [camp skills link](../camp_skills_link/)	 - Project camp skill bundles into tool-specific skills directories
-* [camp skills status](../camp_skills_status/)	 - Show the current state of projected skill bundle symlinks
+* [camp skills status](../camp_skills_status/)	 - Show skill bundle projection links and shipped bundle states
 * [camp skills unlink](../camp_skills_unlink/)	 - Remove projected skill bundle symlinks
+* [camp skills update](../camp_skills_update/)	 - Refresh shipped skill bundles to this camp version
