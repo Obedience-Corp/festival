@@ -1,24 +1,27 @@
-# Festival
+# Festival: A vibe engineering framework
 
 ![Festival Banner](docs/images/festival_banner.png)
 
 <p align="center"><a href="https://github.com/Obedience-Corp/festival"><img src="https://img.shields.io/github/stars/Obedience-Corp/festival?style=social" alt="Star Festival on GitHub"></a></p>
 
-**Festival is a vibe engineering framework.**
+Vibe coding is a fast way to explore an idea, build a demo, or recreate
+something familiar. When you go beyond the demo, build something new, or work
+where a mistake could cost millions, you need more control over how the work
+gets done.
 
-It uses the filesystem and Git. You configure it to your workflows and processes. When agents plan and execute, the work is done the way you want it done.
+**Vibe engineering means turning AI-assisted work into a process you can
+inspect, improve, and delegate repeatedly.** You define the outcome, review
+important decisions, and check the evidence behind the result. The aim is to
+let agents carry more of the work without having to babysit every step.
 
-When you're working with agents at scale, reviewing, understanding, and tracking their work can become the bottleneck. That leaves you less time to think about the right thing to do.
+Festival gives you the tools to build that process through **templates and
+configuration**: **Fest** for long-term goals and automated planning, **Camp**
+for shared context across sessions, and **Obey** for oversight and background
+orchestration. You shape how agents work, see where they need attention, and
+refine the process for the next run. Plans, decisions, progress, and checks stay
+in files and Git, so you can inspect the work and continue in another session.
 
-Everything lives in a camp workspace: your skills, planning documents, one-off scripts, and projects. A festival is an ambitious goal inside that camp. Specs, smaller workflows, and ideas you intend to execute are tracked as work items.
-
-You can create as many camps as you need and specialize each with its own skills, workflows, and processes. As you refine them over time, agents work differently in each camp. Switch between camps with `camp switch` (`csw`) to pick up that workspace's context and way of working.
-
-You describe a goal in a sentence. Your agent plans that goal inside the workflows you set up, and `fest next` shows it the next step. The plan, the checks, and the commits stay in files and Git when the session ends.
-
-Use it with Claude Code, Codex, Grok Build, Cursor, OpenCode, or another agent that can read files and run commands.
-
-[Get started](#get-started) · [Explore the demos](#explore-the-tools) · [Video quick start](https://docs.fest.build/getting-started/quickstart/) · [Website](https://fest.build/) · [Discord](https://discord.gg/Rt7dDY6VqD) · [简体中文](README.zh-CN.md)
+[Try it on one real goal](#get-started) · [See a completed build](#see-festival-in-action) · [How it works](#how-the-components-fit-together) · [简体中文](README.zh-CN.md)
 
 ## See Festival in action
 
@@ -35,7 +38,50 @@ review findings, and verification evidence for each build.
 [Inspect the three festivals](https://github.com/Festival-Examples/codesignal-practice-simulator/tree/main/festivals) ·
 [Watch all three replays](https://github.com/Festival-Examples/codesignal-practice-simulator#how-this-was-built)
 
-[Try it on one real goal](#get-started), or star this repository to keep it handy.
+**Start with one goal in a repository you already use.** Keep your existing
+coding agent, let it help set up Camp and Fest, and review the result. Add Obey
+when you want the daemon to manage execution.
+
+[Set up with your agent](#get-started) · [Configure Obey](https://docs.fest.build/obey/getting-started/)
+
+## How the components fit together
+
+```mermaid
+flowchart TB
+    accTitle: How Festival components work together
+    accDescr: Fest supplies plans and tracks progress. Camp shares saved context across sessions. Obey launches and supervises agents through a background daemon. All three work with your agent sessions.
+    subgraph festival["Festival: templates + configuration"]
+        fest["Fest<br/>Long-term goals<br/>Automated planning"]
+        camp["Camp<br/>Shared context<br/>Across agent sessions"]
+        obey["Obey<br/>Overseer<br/>Background daemon"]
+    end
+
+    agents["Agent sessions<br/>Your providers and models"]
+
+    fest <-->|Tasks and progress| agents
+    camp <-->|Read and record context| agents
+    obey -->|Launch and supervise| agents
+```
+
+| Component | What it makes possible |
+| --- | --- |
+| [Fest](https://docs.fest.build/methodology/overview/) | **Long-term goals and automated planning.** Guides agents through planning workflows, breaks goals into phases and tasks, and tracks execution through review and approval gates. |
+| [Camp](https://docs.fest.build/methodology/campaigns/) | **Shared context and context management.** Organizes projects, worktrees, research, decisions, and work items so successive agent sessions can pick up the same work. |
+| [Obey](https://docs.fest.build/obey/) | **Oversight and background orchestration.** Runs a local daemon that tracks agent sessions, launches and supervises supported providers, and drives festival execution. Its companion `ob` CLI provides planning, review, and other developer commands. |
+
+A **camp** is the workspace around your goals. A **festival** is a larger goal
+inside it. Each camp can have its own projects, knowledge, templates, and
+working practices. Switch camps with `camp switch` (`csw`); a new agent session
+can read the saved plans and decisions before continuing the work.
+
+You can use Camp and Fest directly with an agent that reads files and runs
+commands, including Claude Code, Codex, Grok Build, Cursor, or OpenCode. Add Obey
+when you want daemon-managed execution; its [provider setup guide](https://docs.fest.build/obey/getting-started/)
+covers the providers it can launch and supervise.
+
+The `festival` command installs and updates the tools. The base suite includes
+`camp`, `fest`, and the `festival` manager. Install Obey separately with
+`festival install obey`, which adds both `obey` and `ob`.
 
 ## What would you hand off?
 
@@ -215,15 +261,36 @@ Quality gates provide places to test and review. `fest validate` checks plan str
 
 [Loops & orchestration](https://docs.fest.build/guides/loops-and-orchestration/) · [Festival methodology](https://docs.fest.build/methodology/overview/) · [Work items](https://docs.fest.build/methodology/work-items/)
 
-### Three tools, one work system
+### Add background orchestration with Obey
 
-| Tool | What it handles |
-| --- | --- |
-| [camp](https://github.com/Obedience-Corp/camp) | Projects, context, navigation, and the work queue across your camp. |
-| [fest](https://github.com/Obedience-Corp/fest) | Goal-based plans, the next-step loop, progress, and review checkpoints. |
-| `festival` | Installing and updating the suite, browsing CLI plugins, and checking your installation. |
+After installing the Festival suite, add Obey:
 
-Run `festival browse` to explore available CLI plugins. See [suite and plugin management](https://docs.fest.build/getting-started/festival-manager/) for installation, updates, and how CLI plugins differ from agent integrations.
+```bash
+festival install obey
+obey ping
+ob providers
+```
+
+Follow the [Obey setup guide](https://docs.fest.build/obey/getting-started/) to
+check its service and configure a provider and model. From a planned festival,
+preview the execution context before starting the task loop:
+
+```bash
+ob fest execute --dry-run
+ob fest execute
+```
+
+Obey oversees the session while the agent works through the festival. Use
+`obey top` from the camp to follow sessions. For individual developer tasks,
+`ob` can plan from a spec, review a diff, or generate a commit message.
+
+Obey's binaries are publicly available even though its source repository is
+private. [Configuration](https://docs.fest.build/obey/configuration/) ·
+[Everyday use](https://docs.fest.build/obey/usage/) ·
+[Troubleshooting](https://docs.fest.build/obey/troubleshooting/)
+
+The `festival` manager also installs CLI plugins. Run `festival browse` to
+explore them, or read [suite and plugin management](https://docs.fest.build/getting-started/festival-manager/).
 
 ## Useful between the big goals, too
 
