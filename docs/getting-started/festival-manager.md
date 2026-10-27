@@ -53,6 +53,27 @@ lists direct upgrade commands. Check the
 [update reference]({{< ref "/cli-reference/festival/festival_update" >}}) before
 changing an installation.
 
+## Install Obey and ob
+
+The public Obey product package installs both the `obey` daemon CLI and the
+`ob` developer CLI. It is separate from the three-command Festival suite:
+
+```sh
+festival install obey
+festival which obey
+festival which ob
+festival status
+```
+
+Obey's source repository is private; installation uses public release archives
+and does not require source access or a GitHub login. Follow the
+[Obey setup guide]({{< ref "/obey/getting-started" >}}) to check the background
+service and configure a provider, then read [everyday use]({{< ref "/obey/usage" >}}).
+
+Update this package with `festival update obey`. A plain `festival update`
+updates the Festival suite. An Obey update normally restarts its daemon and
+ends supervised sessions; use `--no-restart` to defer that restart.
+
 ## Browse and install CLI plugins
 
 Visit the [Plugin Marketplace]({{< ref "/plugins" >}}) for released plugins,
@@ -99,8 +120,8 @@ loads for a kind of work. Neither is a `camp-*` or `fest-*` executable plugin.
 
 Use the [agent setup guides]({{< ref "/getting-started/agents" >}}) for an
 agent integration's installation path. Use `festival browse` and the Browser
-for marketplace CLI plugins. `obey` metadata is a catalog filter, not a signal
-that Festival can install it as a `camp` or `fest` plugin.
+for marketplace CLI plugins. Obey is a separate product package installed with
+`festival install obey`; it is not a `camp-*` or `fest-*` plugin.
 
 For planning help, start in a camp with `fest intro` or `fest understand methodology`. For project and navigation work, use `camp`. For suite health,
 updates, and package discovery, return to `festival`.
