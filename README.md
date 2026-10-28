@@ -2,7 +2,8 @@
 
 ![Festival Banner](docs/images/festival_banner.png)
 
-<p align="center"><a href="https://github.com/Obedience-Corp/festival"><img src="https://img.shields.io/github/stars/Obedience-Corp/festival?style=social" alt="Star Festival on GitHub"></a></p>
+<p align="center"><a href="https://github.com/Obedience-Corp/festival"><img src="https://img.shields.io/github/stars/Obedience-Corp/festival?style=social" alt="Star Festival on GitHub"></a>  <a href="https://github.com/Obedience-Corp/festival"><img src="https://img.shields.io/badge/built%20with-Festival-7c3aed.svg" alt="Built with Festival"></a>
+</p>
 
 Vibe coding is a fast way to explore an idea, build a demo, or recreate
 something familiar. When you go beyond the demo, build something new, or work
