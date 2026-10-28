@@ -2,7 +2,7 @@
   {{ $isCliLeaf := and (strings.HasPrefix .RelPermalink "/cli-reference/") (ne .RelPermalink "/cli-reference/") }}
   <article>
     {{ partial "breadcrumbs.html" . }}
-    <h1>{{ .Title }}</h1>
+    {{ if not (findRE `<h1[\s>]` .Content) }}<h1>{{ .Title }}</h1>{{ end }}
     {{ .Content }}
 
     {{ if $isCliLeaf }}

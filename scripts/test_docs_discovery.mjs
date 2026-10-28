@@ -176,8 +176,9 @@ test('new authored pages have unique metadata and self-canonical HTTPS URLs', ()
   assert.equal(descriptions.size, changedAuthoredRoutes.length, 'changed authored pages must have unique descriptions');
 });
 
-test('authored pages and a generated CLI page have one H1 and valid breadcrumb JSON-LD', () => {
-  for (const route of [...changedAuthoredRoutes, cliRoute]) {
+test('authored pages, section indexes, and a generated CLI page have one H1 and valid breadcrumb JSON-LD', () => {
+  const sectionRoutes = ['/cli-reference/ob/', '/obey/', '/cli-reference/fest/'];
+  for (const route of [...changedAuthoredRoutes, ...sectionRoutes, cliRoute]) {
     const html = page(route);
     assert.equal((html.match(/<h1\b[^>]*>/gi) || []).length, 1, `expected one H1 for ${route}`);
     assertBreadcrumbs(html, route);
