@@ -28,7 +28,7 @@ started on the new version instead of restarted, and nothing is deferred. The fl
 accepted and ignored for festival, camp, and fest.
 
 ```
-festival update [festival|camp|fest|obey] [flags]
+festival update [festival|camp|fest|obey|namespace/camp-plugin|namespace/fest-plugin] [flags]
 ```
 
 ### Options

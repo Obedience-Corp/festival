@@ -18,13 +18,15 @@ the whole suite and prints a notice saying so.
 
 obey installs the obey daemon and the ob developer CLI as their own package.
 
+A namespace/camp-* or namespace/fest-* target selects that exact marketplace plugin.
+
 --no-restart applies to obey only. Installing over a running daemon restarts it so the
 supervised process is the version that was just placed, which marks every live session
 failed; --no-restart installs the binaries, leaves the daemon alone, and reports the
 restart as pending. The flag is accepted and ignored for festival, camp, and fest.
 
 ```
-festival install <festival|camp|fest|obey> [flags]
+festival install <festival|camp|fest|obey|namespace/camp-plugin|namespace/fest-plugin> [flags]
 ```
 
 ### Options

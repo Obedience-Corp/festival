@@ -105,6 +105,7 @@ camp fresh [project-name] [flags]
       --cleanup-stack          Target an existing aggregate branch and remove child worktrees merged into it by ancestry or squash (requires --branch; refuses the default branch unless --allow-default-target)
   -n, --dry-run                Preview without making changes
   -h, --help                   help for fresh
+      --interaction-json       Stream Fresh output and native UI questions as NDJSON; read answers from stdin
       --list strings           Comma-separated set of projects to cycle in one run
       --no-branch              Skip branch creation even if configured
       --no-drain               Do not wait for camp's queued commits first

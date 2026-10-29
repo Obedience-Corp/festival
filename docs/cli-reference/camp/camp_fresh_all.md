@@ -26,8 +26,9 @@ camp fresh all [flags]
 ### Options
 
 ```
-  -h, --help       help for all
-      --no-drain   Do not wait for camp's queued commits first
+  -h, --help               help for all
+      --interaction-json   Stream Fresh output and native UI questions as NDJSON; read answers from stdin
+      --no-drain           Do not wait for camp's queued commits first
 ```
 
 ### Options inherited from parent commands
