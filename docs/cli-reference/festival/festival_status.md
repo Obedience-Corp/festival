@@ -26,8 +26,9 @@ festival status [flags]
 ### Options
 
 ```
-  -h, --help   help for status
-      --json   emit JSON output
+  -h, --help                 help for status
+      --json                 emit JSON output
+      --plugin stringArray   also report an explicitly selected namespace/camp-* or namespace/fest-* package (repeatable)
 ```
 
 ### Options inherited from parent commands
