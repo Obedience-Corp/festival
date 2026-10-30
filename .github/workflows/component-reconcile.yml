@@ -1,0 +1,38 @@
+name: Reconcile released suite components
+
+on:
+  schedule:
+    - cron: '3,33 * * * *'
+  workflow_dispatch:
+  repository_dispatch:
+    types: [component-released]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: released-component-suite
+  cancel-in-progress: false
+
+jobs:
+  bundle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    # The existing operator runs filesystem fixtures during preflight. Keep
+    # those and its disposable release checkout inside container isolation.
+    container: golang:1.26-bookworm
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: extractions/setup-just@v4
+      - name: Install release operator prerequisites
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends gh python3
+      - name: Assemble published components through the existing release operator
+        env:
+          GH_TOKEN: ${{ secrets.MARKETPLACE_PUBLISH_TOKEN }}
+        run: |
+          test -n "$GH_TOKEN"
+          python3 scripts/reconcile_suite.py

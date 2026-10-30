@@ -1,0 +1,45 @@
+name: Reconcile marketplace releases
+
+on:
+  schedule:
+    - cron: '13,43 * * * *'
+  workflow_dispatch:
+    inputs:
+      package:
+        description: Registered static package to reconcile
+        type: choice
+        options: [all, camp-app, festival]
+        default: all
+      version:
+        description: Stable version, or latest (all requires latest)
+        type: string
+        default: latest
+
+permissions:
+  contents: read
+
+concurrency:
+  group: marketplace-reconciliation
+  cancel-in-progress: false
+
+jobs:
+  reconcile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          submodules: recursive
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: festival-installer/go.mod
+      - name: Build released-schema validator
+        run: go -C festival-installer build -o "$RUNNER_TEMP/festival-metadata" ./cmd/festival-metadata
+      - name: Prepare, sign, verify and promote published releases
+        env:
+          GH_TOKEN: ${{ secrets.MARKETPLACE_PUBLISH_TOKEN }}
+          PACKAGE: ${{ inputs.package || 'all' }}
+          VERSION: ${{ inputs.version || 'latest' }}
+        run: |
+          test -n "$GH_TOKEN"
+          python3 scripts/reconcile_marketplace.py --package "$PACKAGE" --version "$VERSION" --validator "$RUNNER_TEMP/festival-metadata"
