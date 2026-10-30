@@ -34,6 +34,17 @@ require-stable-publish-credentials:
 status:
     go -C tools/release-operator run . status --repo-root ../..
 
+# Reconcile already-published static packages through signing, checks and merge.
+[no-cd]
+marketplace package="all" version="latest":
+    go -C festival-installer build -o "{{justfile_directory()}}/dist/festival-metadata" ./cmd/festival-metadata
+    python3 scripts/reconcile_marketplace.py --package {{quote(package)}} --version {{quote(version)}} --validator "{{justfile_directory()}}/dist/festival-metadata"
+
+# Reconcile published stable components through the existing suite release path.
+[no-cd]
+components:
+    python3 scripts/reconcile_suite.py
+
 # Show the release operator's detailed workflow help
 [no-cd]
 operator-help:
