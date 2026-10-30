@@ -50,6 +50,7 @@ camp settings [flags]
 
 * [camp](../camp/)	 - Manage your camps and the projects and festivals inside them
 * [camp settings catalog](../camp_settings_catalog/)	 - List camp documents
+* [camp settings commit-writer](../camp_settings_commit-writer/)	 - Set up or change automatic commit messages for this camp
 * [camp settings document](../camp_settings_document/)	 - Read and edit camp documents
 * [camp settings get](../camp_settings_get/)	 - Print camp settings
 * [camp settings set](../camp_settings_set/)	 - Set a camp setting

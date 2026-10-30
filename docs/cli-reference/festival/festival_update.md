@@ -1,12 +1,12 @@
 ---
 title: "festival update"
 linkTitle: "festival update"
-description: "Update the installed festival suite to the channel-latest release"
+description: "Update an installed package, or all managed packages with --all"
 ---
 
 ## festival update
 
-Update the installed festival suite to the channel-latest release
+Update an installed package, or all managed packages with --all
 
 ### Synopsis
 
@@ -34,6 +34,7 @@ festival update [festival|camp|fest|obey|namespace/camp-plugin|namespace/fest-pl
 ### Options
 
 ```
+      --all                update all eligible installed packages, retaining channels and deferring Obey restarts
       --allow-unverified   allow updating from unsigned content without prompting
       --channel string     override the release channel (default: the installed channel)
       --force              update/install a hub copy even when a package-manager suite is already on PATH

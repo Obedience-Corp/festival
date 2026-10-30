@@ -50,7 +50,10 @@ first, then any indexed target such as a project, worktree, or festival.
 
 A bare name is resolved on this machine first, then across machines in
 ~/.obey/machines.yaml and the machine this shell was hopped from. One match
-hops there. From inside a hop, a switch to any other machine unwinds this
+hops there. Fleet discovery waits up to three seconds and skips unavailable
+machines with a warning when a unique reachable match is found. If discovery
+finds no match, failed machines are reported with diagnostic guidance.
+From inside a hop, a switch to any other machine unwinds this
 ssh session first and continues in the shell underneath, so hops do not nest
 and a camp name behaves the same wherever you are sitting.
 Remote candidates are checked against live org and lifecycle metadata. Name-only
