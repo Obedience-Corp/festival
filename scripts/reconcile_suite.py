@@ -2,6 +2,7 @@
 """Feed published component releases into the existing co-tested suite operator."""
 
 import json
+import os
 from pathlib import Path
 import re
 import subprocess
@@ -39,6 +40,12 @@ def needs_bundle(selected, pinned, released):
 
 
 def main():
+    # Submodule URLs are SSH in the suite. The disposable CI checkout uses the
+    # existing HTTPS credential helper without needing an SSH key.
+    index = int(os.environ.get("GIT_CONFIG_COUNT", "0"))
+    os.environ[f"GIT_CONFIG_KEY_{index}"] = "url.https://github.com/.insteadOf"
+    os.environ[f"GIT_CONFIG_VALUE_{index}"] = "git@github.com:"
+    os.environ["GIT_CONFIG_COUNT"] = str(index + 1)
     with tempfile.TemporaryDirectory(prefix="festival-components-") as directory:
         root = Path(directory) / "festival"
         run("git", "clone", "--recurse-submodules", f"https://github.com/{REPO}.git", str(root))
