@@ -1,6 +1,8 @@
 import unittest
+import os
+from unittest.mock import patch
 
-from reconcile_suite import newest_published, needs_bundle
+from reconcile_suite import newest_published, needs_bundle, main
 
 
 class SuiteReconciliationTests(unittest.TestCase):
@@ -21,3 +23,16 @@ class SuiteReconciliationTests(unittest.TestCase):
         self.assertTrue(needs_bundle(new, old, old))
         self.assertTrue(needs_bundle(new, new, old))
         self.assertFalse(needs_bundle(new, new, new))
+
+    def test_published_source_only_components_are_eligible(self):
+        release = dict(tag_name="v0.10.1", draft=False, prerelease=False, published_at="2026-10-27T04:28:15Z", assets=[])
+        self.assertEqual(newest_published([release]), release)
+        def git(*args, **kwargs):
+            if "describe" in args:
+                return "v0.10.1"
+            if "rev-parse" in args:
+                return "a" * 40
+            return ""
+        with patch.dict(os.environ), patch("reconcile_suite.published", return_value=release), patch("reconcile_suite.run", side_effect=git), patch("reconcile_suite.subprocess.run") as bundle:
+            main()
+            bundle.assert_not_called()

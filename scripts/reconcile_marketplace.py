@@ -69,9 +69,29 @@ def verify_check_state(checks):
     return "success" if latest.get("conclusion") == "success" else "failed"
 
 
+def pr_verification_run(runs, sha, branch, number):
+    # A workflow_dispatch check on the same SHA does not satisfy GitHub's PR
+    # protection. Require the actual Metadata pull_request run, from this repo.
+    relevant = [r for r in runs if
+                r.get("event") == "pull_request" and r.get("head_sha") == sha and
+                r.get("path") == ".github/workflows/metadata.yml" and
+                r.get("head_branch") == branch and
+                r.get("head_repository", {}).get("full_name") == REPO and
+                any(p.get("number") == number for p in r.get("pull_requests", []))]
+    return max(relevant, key=lambda r: r["id"]) if relevant else None
+
+
+def validate_signed_candidate(root, metadata, base, sha, expected):
+    run("git", "fetch", "origin", sha, cwd=root)
+    run("git", "checkout", "--detach", sha, cwd=root)
+    validate_candidate(root, base, expected)
+    print(run(str(metadata), "verify", cwd=root), flush=True)
+
+
 def wait_and_merge(root, metadata, base, branch, number, expected, timeout=900):
     deadline = time.monotonic() + timeout
     last = None
+    approved = set()
     while time.monotonic() < deadline:
         pr = gh_json("api", f"repos/{REPO}/pulls/{number}")
         if pr.get("merged"):
@@ -81,14 +101,26 @@ def wait_and_merge(root, metadata, base, branch, number, expected, timeout=900):
         sha = pr["head"]["sha"]
         checks = gh_json("api", f"repos/{REPO}/commits/{sha}/check-runs?per_page=100")["check_runs"]
         state = verify_check_state(checks)
+        runs = gh_json("api", f"repos/{REPO}/actions/workflows/metadata.yml/runs?event=pull_request&head_sha={sha}&per_page=100")["workflow_runs"]
+        verification = pr_verification_run(runs, sha, branch, number)
+        if verification and verification.get("conclusion") == "action_required":
+            # GitHub may hold the signing bot's synchronize run for approval.
+            # Approve only our exact, signed generated change, never arbitrary
+            # PR code or workflow edits. The existing required job still runs.
+            if verification["id"] not in approved:
+                validate_signed_candidate(root, metadata, base, sha, expected)
+                run("gh", "api", "--method", "POST", f"repos/{REPO}/actions/runs/{verification['id']}/approve")
+                approved.add(verification["id"])
+            state = "pending"
+        elif not verification or verification.get("status") != "completed":
+            state = "pending"
+        elif verification.get("conclusion") != "success":
+            state = "failed"
         if (sha, state) != last:
             print(f"{branch}: {sha[:12]} verification {state}", flush=True)
             last = (sha, state)
         if state == "success":
-            run("git", "fetch", "origin", sha, cwd=root)
-            run("git", "checkout", "--detach", sha, cwd=root)
-            validate_candidate(root, base, expected)
-            print(run(str(metadata), "verify", cwd=root), flush=True)
+            validate_signed_candidate(root, metadata, base, sha, expected)
             # SHA is mandatory: a later signature/payload push must invalidate
             # this merge attempt. GitHub enforces protection; no admin bypass.
             result = gh_json("api", "--method", "PUT", f"repos/{REPO}/pulls/{number}/merge", "-f", f"sha={sha}", "-f", "merge_method=squash")

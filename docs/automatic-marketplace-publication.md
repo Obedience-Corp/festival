@@ -17,6 +17,13 @@ merge. It then verifies signed main and reads back the version. Failed runs
 remain visible in Actions; retries reuse an existing generated branch/PR or
 regenerate against changed main. Older events never downgrade the catalog.
 
+GitHub can hold the signing bot's PR verification for approval. After validating
+the exact generated payload and signatures, the publisher approves only that
+PR's Metadata verification run using its existing credential (Actions write).
+It waits for the real PR check; a successful manually dispatched check alone
+does not satisfy branch protection. Workflow/code edits and foreign PRs cannot
+reach this approval path. See [GitHub's required-check guidance](https://docs.github.com/en/pull-requests/how-tos/merge-and-close-pull-requests/troubleshooting-required-status-checks).
+
 `component-reconcile.yml` checks published stable Camp, Fest and Installer
 releases every half hour, on manual dispatch, or a `component-released`
 repository dispatch. It passes explicit released tags to the existing suite
@@ -25,6 +32,10 @@ release gates. Clients continue receiving one co-tested bundle. Duplicate runs
 do nothing when the published bundle already contains those commits; an
 interrupted pin-to-tag handoff can resume. A tagged but unpublished suite blocks
 another bundle and names the release workflow to inspect/retry.
+
+Camp and Fest component releases are source-only and need no attached binaries.
+The operator builds the published tag's commit and verifies the resulting suite;
+the suite's downloadable artifacts are required before marketplace promotion.
 
 The suite handoff uses the existing publisher credential and requires write
 access to Festival plus permission to inspect its publisher-secret names. It

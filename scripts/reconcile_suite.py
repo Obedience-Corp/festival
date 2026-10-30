@@ -57,8 +57,9 @@ def main():
         for component in COMPONENTS:
             release = published(f"Obedience-Corp/{component}")
             tag = release["tag_name"]
-            if not release.get("assets"):
-                raise RuntimeError(f"{component} {tag} has no published artifacts; retry after its release completes")
+            # Camp and Fest publish source releases with no attached binaries.
+            # The suite builds their pinned commits and gates its own archives;
+            # requiring component assets would reject their normal contract.
             run("git", "fetch", "origin", "--tags", cwd=root / component)
             selected[component] = run("git", "rev-parse", f"{tag}^{{commit}}", cwd=root / component)
             pinned[component] = run("git", "rev-parse", f"HEAD:{component}", cwd=root)
