@@ -26,6 +26,10 @@ do nothing when the published bundle already contains those commits; an
 interrupted pin-to-tag handoff can resume. A tagged but unpublished suite blocks
 another bundle and names the release workflow to inspect/retry.
 
+Camp and Fest component releases are source-only and need no attached binaries.
+The operator builds the published tag's commit and verifies the resulting suite;
+the suite's downloadable artifacts are required before marketplace promotion.
+
 The suite handoff uses the existing publisher credential and requires write
 access to Festival plus permission to inspect its publisher-secret names. It
 does not copy secret values, change branch protections, or bypass required
