@@ -17,6 +17,13 @@ merge. It then verifies signed main and reads back the version. Failed runs
 remain visible in Actions; retries reuse an existing generated branch/PR or
 regenerate against changed main. Older events never downgrade the catalog.
 
+GitHub can hold the signing bot's PR verification for approval. After validating
+the exact generated payload and signatures, the publisher approves only that
+PR's Metadata verification run using its existing credential (Actions write).
+It waits for the real PR check; a successful manually dispatched check alone
+does not satisfy branch protection. Workflow/code edits and foreign PRs cannot
+reach this approval path. See [GitHub's required-check guidance](https://docs.github.com/en/pull-requests/how-tos/merge-and-close-pull-requests/troubleshooting-required-status-checks).
+
 `component-reconcile.yml` checks published stable Camp, Fest and Installer
 releases every half hour, on manual dispatch, or a `component-released`
 repository dispatch. It passes explicit released tags to the existing suite

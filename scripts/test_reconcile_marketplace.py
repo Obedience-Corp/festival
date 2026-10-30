@@ -10,6 +10,20 @@ import reconcile_marketplace as publisher
 
 
 class PublicationTests(unittest.TestCase):
+    def verification_run(self, **kwargs):
+        return dict(id=2, event="pull_request", head_sha="a" * 40,
+                    path=".github/workflows/metadata.yml", head_branch="release/test",
+                    head_repository={"full_name": publisher.REPO}, pull_requests=[{"number": 1}],
+                    status="completed", conclusion="success") | kwargs
+
+    def test_only_matching_pr_workflow_satisfies_protection(self):
+        valid = self.verification_run()
+        for invalid in (dict(valid, event="workflow_dispatch"), dict(valid, head_sha="b" * 40),
+                        dict(valid, head_repository={"full_name": "fork/marketplace"}),
+                        dict(valid, pull_requests=[{"number": 2}]), dict(valid, path="other.yml")):
+            self.assertIsNone(publisher.pr_verification_run([invalid], "a" * 40, "release/test", 1))
+        self.assertEqual(publisher.pr_verification_run([valid], "a" * 40, "release/test", 1), valid)
+
     def test_only_latest_final_revision_check_can_pass(self):
         success = {"id": 1, "name": "verify", "app": {"id": 15368}, "status": "completed", "conclusion": "success"}
         self.assertEqual(publisher.verify_check_state([]), "pending")
@@ -54,7 +68,7 @@ class PublicationTests(unittest.TestCase):
         sha = "a" * 40
         pr = {"state": "open", "head": {"ref": "release/test", "sha": sha, "repo": {"full_name": publisher.REPO}}, "base": {"ref": "main"}}
         check = {"check_runs": [{"id": 1, "name": "verify", "app": {"id": 15368}, "status": "completed", "conclusion": "success"}]}
-        with patch.object(publisher, "gh_json", side_effect=[pr, check, {"merged": True}]) as gh, patch.object(publisher, "run", return_value="verified") as run, patch.object(publisher, "validate_candidate") as validate:
+        with patch.object(publisher, "gh_json", side_effect=[pr, check, {"workflow_runs": [self.verification_run()]}, {"merged": True}]) as gh, patch.object(publisher, "run", return_value="verified") as run, patch.object(publisher, "validate_candidate") as validate:
             publisher.wait_and_merge(Path("repo"), Path("metadata"), "base", "release/test", 1, {"index.json": "hash"})
             self.assertIn(f"sha={sha}", gh.call_args.args)
             validate.assert_called_once()
@@ -67,10 +81,24 @@ class PublicationTests(unittest.TestCase):
             if args[0] == "metadata":
                 raise subprocess.CalledProcessError(1, "metadata verify")
             return ""
-        with patch.object(publisher, "gh_json", side_effect=[pr, check]) as gh, patch.object(publisher, "run", side_effect=command), patch.object(publisher, "validate_candidate"):
+        with patch.object(publisher, "gh_json", side_effect=[pr, check, {"workflow_runs": [self.verification_run()]}]) as gh, patch.object(publisher, "run", side_effect=command), patch.object(publisher, "validate_candidate"):
             with self.assertRaises(subprocess.CalledProcessError):
                 publisher.wait_and_merge(Path("repo"), Path("metadata"), "base", "release/test", 1, {})
-            self.assertEqual(gh.call_count, 2)
+            self.assertEqual(gh.call_count, 3)
+
+    def test_held_pr_verification_requires_exact_signed_payload_before_approval(self):
+        pr = {"state": "open", "head": {"ref": "release/test", "sha": "a" * 40, "repo": {"full_name": publisher.REPO}}, "base": {"ref": "main"}}
+        held = {"workflow_runs": [self.verification_run(conclusion="action_required")]}
+        responses = [pr, {"check_runs": []}, held, {"merged": True}]
+        with patch.object(publisher, "gh_json", side_effect=responses), patch.object(publisher, "run", return_value="verified") as run, patch.object(publisher, "validate_candidate") as validate, patch.object(publisher.time, "sleep"):
+            publisher.wait_and_merge(Path("repo"), Path("metadata"), "base", "release/test", 1, {})
+            validate.assert_called_once()
+            run.assert_any_call("metadata", "verify", cwd=Path("repo"))
+            run.assert_any_call("gh", "api", "--method", "POST", f"repos/{publisher.REPO}/actions/runs/2/approve")
+        with patch.object(publisher, "gh_json", side_effect=responses), patch.object(publisher, "run", return_value="") as run, patch.object(publisher, "validate_candidate", side_effect=ValueError("foreign change")):
+            with self.assertRaisesRegex(ValueError, "foreign change"):
+                publisher.wait_and_merge(Path("repo"), Path("metadata"), "base", "release/test", 1, {})
+            self.assertFalse(any(c.args[0] == "gh" for c in run.call_args_list))
 
     def test_version_order_is_numeric_and_rejects_nonstable(self):
         self.assertGreater(publisher.version_tuple("0.10.0"), publisher.version_tuple("0.9.0"))
