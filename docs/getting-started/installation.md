@@ -37,8 +37,8 @@ The npm package downloads the matching Festival GitHub release archive for your
 platform, verifies it against the release checksums, and exposes `fest`,
 `camp`, and `festival`. It also keeps the release completion and shell-helper
 assets inside the installed package, but it does not edit your shell startup
-files. The npm package excludes Windows; on Windows x64, use Scoop or the
-checksummed ZIP below.
+files. The npm package excludes Windows. On Windows x64, select the **Windows
+x64** tab below for Scoop and checksummed ZIP instructions.
 
 {{< tabs names="macOS, Linux, Windows x64" >}}
 
