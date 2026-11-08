@@ -23,7 +23,18 @@ The sync command performs three critical operations:
      that occur when remote URLs change.
 
   3. SUBMODULE UPDATE
-     Fetches and checks out the correct commits for all submodules.
+     Preserves existing local branches, fast-forwards them safely when
+     behind a recorded gitlink, and discovers children after checkout.
+
+Orphaned gitlinks are reported without removing them from the index.
+Normal output shows failed paths and original errors. JSON results include
+ordered module results, nested child paths, owners, errors, and counts.
+Initialized counts verified top-level checkouts; failed excludes skips.
+After a partial clone, 'camp sync --dry-run' checks local work before retry.
+'camp sync projects/<path>' retries one module; a final 'camp sync' checks all.
+Use 'camp status --show-refs' to see root gitlink changes separately. A broken
+machine-local project link is optional and can be previewed with
+'camp project repair <name>'. See docs/guides/clone-sync-recovery.md.
 
 This order is critical: sync-before-update prevents silent code deletion
 when URLs change on remote repositories.
@@ -32,7 +43,7 @@ EXIT CODES:
   0  Success
   1  Runtime failure (including pre-flight, sync, or update failure)
   2  Usage error (bad flags or args)
-  3  Post-sync validation failed
+  3  Validation-only failure (updates completed)
 
 EXAMPLES:
   # Sync all submodules (recommended default)
@@ -91,7 +102,7 @@ camp sync [submodule...] [flags]
       --no-drain           Do not wait for camp's queued commits first
       --no-fetch           Skip fetching from remote (use local refs only)
       --no-probe-cache     Re-probe the rsync engine on both machines instead of using the cached 24h verdict
-  -p, --parallel int       Number of parallel git operations (git guards superproject ops with repo lockfiles that fail fast on contention; lower this if a slow disk surfaces transient lock errors) (default 4)
+  -p, --parallel int       Maximum update workers; operations sharing a superproject are serialized to avoid Git config/index contention (default 4)
   -v, --verbose            Show detailed output for each submodule
       --verify-artifacts   Check artifact roots against last-transfer snapshots (no transfer)
 ```
