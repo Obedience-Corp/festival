@@ -48,4 +48,4 @@ camp leverage history [flags]
 
 ### SEE ALSO
 
-* [camp leverage](../camp_leverage/)	 - Compute leverage scores for the camp's projects
+* [camp leverage](../camp_leverage/)	 - Compute leverage scores for a repository or camp

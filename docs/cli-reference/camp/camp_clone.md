@@ -15,22 +15,39 @@ Clone a camp repository and initialize all submodules.
 This command provides a single-step setup for new devices:
 
   1. CLONE REPOSITORY
-     Clones the camp repository with recursive submodules.
+     Clones the camp repository, then initializes submodules.
 
   2. SYNCHRONIZE URLs
      Copies URLs from .gitmodules to .git/config, ensuring
      URL consistency across all submodules.
 
   3. UPDATE SUBMODULES
-     Fetches and checks out the correct commits for all submodules.
+     Selects each submodule's declared branch (or remote default)
+     before discovering children in that checkout.
 
   4. VALIDATE SETUP
-     Verifies all submodules are initialized, at correct commits,
-     and have matching URLs.
+     Verifies declared submodules are initialized and checks URLs
+     and recorded gitlinks against the selected checkouts.
+     Reports declarations without gitlinks and gitlinks without
+     declarations separately for each owning repository.
 
   5. REGISTER CAMP
      If .campaign/campaign.yaml exists, registers the camp
      in the global registry for navigation and discovery.
+
+JSON results include a nested child tree and attempted/skipped/initialized
+counts when recursive submodules are declared. Validation keeps its boolean
+checks and adds checkStates (passed, failed, skipped, or unavailable).
+With --no-submodules, validation reports skipped checks.
+The initialized count is verified top-level checkouts; succeeded counts
+complete top-level subtrees, and failed excludes cancelled skips.
+Normal output shows each failed module and its original Git error.
+--no-validate skips checks but still reports failed initialization and exits 3
+when the root clone is usable. --no-submodules intentionally skips setup.
+A partial clone with a usable root remains registered. From that directory,
+run 'camp sync --dry-run', repair the reported cause, then retry the affected
+path with 'camp sync projects/<path>' and finish with 'camp sync'.
+See docs/guides/clone-sync-recovery.md for the safe recovery sequence.
 
 EXIT CODES:
   0  Success
@@ -91,7 +108,7 @@ camp clone <url> [directory] [flags]
       --no-register     Skip auto-registration in global camp registry
       --no-submodules   Skip submodule initialization
       --no-validate     Skip post-clone validation
-  -p, --parallel int    Number of parallel submodule initializations (default 4)
+  -p, --parallel int    Maximum initialization workers; operations sharing a superproject are serialized to avoid Git config/index contention (default 4)
   -v, --verbose         Show detailed output for each operation
 ```
 
