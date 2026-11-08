@@ -1,0 +1,21 @@
+# Festival documentation
+
+> Guides and references for Festival, a framework for organizing work with human and AI collaborators using files and Git.
+
+Festival includes Camp for shared workspace context, Fest for planning and tracking goals, and the Festival manager for installing the tools. Obey adds optional agent oversight and orchestration. A camp contains related work; a festival organizes a goal into phases, sequences, and tasks.
+
+## Getting started
+
+- [Quick start](https://docs.fest.build/getting-started/quickstart/): Set up and start using Festival.
+- [Installation](https://docs.fest.build/getting-started/installation/): Install the tools.
+- [Agent setup](https://docs.fest.build/getting-started/agents/): Set up supported agent integrations.
+- [Festival manager](https://docs.fest.build/getting-started/festival-manager/): Manage the suite and plugins.
+
+## Concepts and reference
+
+- [Methodology overview](https://docs.fest.build/methodology/overview/): Learn the planning model.
+- [Work items](https://docs.fest.build/methodology/work-items/): Find and organize work.
+- [CLI reference](https://docs.fest.build/cli-reference/): Browse command documentation.
+- [Obey setup](https://docs.fest.build/obey/getting-started/): Configure optional orchestration.
+- [Festival repository](https://github.com/Obedience-Corp/festival): Source, releases, and issues.
+- [Festival website](https://fest.build/): Product overview and releases.
