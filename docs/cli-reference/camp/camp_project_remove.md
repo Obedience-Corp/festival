@@ -14,7 +14,8 @@ Remove a project from the camp.
 
 By default, this only removes the project from git submodule tracking.
 The project directory is removed from the working tree by git rm. Pass --delete
-to also remove any worktree directories managed by camp.
+to also remove nonempty worktree directories managed by camp. Empty worktree
+directories are cleaned up automatically.
 
 For linked projects, prefer 'camp project unlink'. Linked projects are
 machine-local symlinks and are never deleted through this command.
