@@ -1,7 +1,11 @@
+import contextlib
 import hashlib
+import io
 import json
 from pathlib import Path
+import re
 import subprocess
+import sys
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -105,6 +109,117 @@ class PublicationTests(unittest.TestCase):
         for invalid in ("1.0.0-rc.1", "01.0.0", "../1.0.0", "v1.0.0"):
             with self.assertRaises(ValueError):
                 publisher.version_tuple(invalid)
+
+    def test_packages_include_festival_app_and_dispatch_choices_match(self):
+        self.assertIn("festival-app", publisher.PACKAGES)
+        workflow = Path(__file__).resolve().parents[1] / ".github/workflows/marketplace-reconcile.yml"
+        match = re.search(r"options:\s*\[([^\]]*)\]", workflow.read_text())
+        self.assertIsNotNone(match)
+        options = [item.strip() for item in match.group(1).split(",")]
+        self.assertEqual(options, ["all", *publisher.PACKAGES])
+
+    def git_fixture(self, root):
+        def git(*args):
+            return subprocess.check_output(("git", "-c", "user.name=fixture", "-c", "user.email=fixture@example.invalid", *args),
+                                           cwd=root, text=True, stderr=subprocess.DEVNULL).strip()
+        return git
+
+    def test_generated_payload_includes_first_publication_manifest(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            git = self.git_fixture(root)
+            git("init", "-q", "-b", "main")
+            (root / "index.json").write_text('{"v":1}')
+            (root / "obey-marketplace.json").write_text('{"v":1}')
+            git("add", ".")
+            git("commit", "-qm", "base")
+            (root / "index.json").write_text('{"v":2}')
+            (root / "obey-marketplace.json").write_text('{"v":2}')
+            manifest = root / "packages/obedience-corp/festival-app/obey-package.json"
+            manifest.parent.mkdir(parents=True)
+            manifest.write_text('{"new":true}')
+            payload = publisher.generated_payload(root, "festival-app")
+            self.assertEqual(set(payload), {"index.json", "obey-marketplace.json",
+                                            "packages/obedience-corp/festival-app/obey-package.json"})
+            for path, digest in payload.items():
+                self.assertEqual(digest, hashlib.sha256((root / path).read_bytes()).hexdigest())
+
+    def test_generated_payload_rejects_untracked_foreign_file(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            git = self.git_fixture(root)
+            git("init", "-q", "-b", "main")
+            (root / "index.json").write_text('{"v":1}')
+            git("add", ".")
+            git("commit", "-qm", "base")
+            (root / "notes.txt").write_text("stray")
+            with self.assertRaisesRegex(ValueError, "unexpected files"):
+                publisher.generated_payload(root, "festival-app")
+
+    def test_app_without_stable_release_is_current_and_opens_no_pr(self):
+        calls = []
+        none_yet = "obedience-corp/festival-app: no published stable app-v release yet; catalog unchanged"
+
+        def fake_run(*args, cwd=None):
+            calls.append(args)
+            if args[0] == "git" and args[1] == "clone":
+                Path(args[-1]).mkdir(parents=True, exist_ok=True)
+            if args[0] == "git" and args[1] in ("diff", "ls-files"):
+                return ""
+            if len(args) > 2 and args[1] == "reconcile":
+                self.assertEqual(args[2:], ("festival-app", "latest"))
+                return none_yet
+            return "a" * 40
+
+        def no_gh(*args):
+            raise AssertionError("gh must not be called when nothing changed")
+
+        output = io.StringIO()
+        with patch.object(publisher, "run", fake_run), patch.object(publisher, "gh_json", no_gh), \
+                contextlib.redirect_stdout(output):
+            self.assertIsNone(publisher.reconcile("festival-app", "latest", Path("validator")))
+        self.assertIn(none_yet, output.getvalue())
+        self.assertIn("festival-app: marketplace is current", output.getvalue())
+        self.assertFalse([call for call in calls if call[0] == "gh" or "validate" in call])
+
+    def test_all_mode_runs_every_package_without_failure_when_app_is_current(self):
+        calls = []
+        with tempfile.NamedTemporaryFile() as validator:
+            argv = ["reconcile_marketplace.py", "--package", "all", "--validator", validator.name]
+            with patch.object(publisher, "reconcile", lambda package, version, path: calls.append((package, version))), \
+                    patch.object(sys, "argv", argv):
+                publisher.main()
+        self.assertEqual(calls, [("camp-app", "latest"), ("festival", "latest"), ("festival-app", "latest")])
+
+    def test_resume_discards_untracked_manifest_before_detached_checkout(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            git = self.git_fixture(root)
+            manifest = root / "packages/obedience-corp/festival-app/obey-package.json"
+            git("init", "-q", "-b", "main")
+            (root / "index.json").write_text('{"v":1}')
+            (root / "obey-marketplace.json").write_text('{"v":1}')
+            git("add", ".")
+            git("commit", "-qm", "base")
+            git("switch", "-q", "-c", "release/catalog-festival-app-v0.2.0-test")
+            manifest.parent.mkdir(parents=True)
+            manifest.write_text('{"signed":true}')
+            (root / "index.json").write_text('{"v":2}')
+            git("add", ".")
+            git("commit", "-qm", "release")
+            branch = git("rev-parse", "HEAD")
+            git("switch", "-q", "main")
+            (root / "index.json").write_text('{"v":3}')
+            manifest.parent.mkdir(parents=True)
+            manifest.write_text('{"prepared":true}')
+            # Control: a bare reset leaves the untracked manifest, and git refuses the checkout.
+            git("reset", "--hard", "HEAD")
+            with self.assertRaises(subprocess.CalledProcessError):
+                git("checkout", "-q", "--detach", branch)
+            publisher.discard_prepared_files(root)
+            git("checkout", "-q", "--detach", branch)
+            self.assertEqual(git("status", "--porcelain"), "")
+            self.assertEqual(manifest.read_text(), '{"signed":true}')
 
 
 if __name__ == "__main__":
