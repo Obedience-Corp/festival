@@ -27,8 +27,10 @@ reports service.deferred and names the restart command. A daemon that was not ru
 started on the new version instead of restarted, and nothing is deferred. The flag is
 accepted and ignored for festival, camp, and fest.
 
+app updates Festival App in the format it was installed with when a newer stable release exists. A copy the App updated itself is reported, never replaced with an older release. Quit Festival App before updating it.
+
 ```
-festival update [festival|camp|fest|obey|namespace/camp-plugin|namespace/fest-plugin] [flags]
+festival update [festival|camp|fest|obey|app|namespace/camp-plugin|namespace/fest-plugin] [flags]
 ```
 
 ### Options

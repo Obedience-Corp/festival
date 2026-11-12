@@ -25,8 +25,10 @@ supervised process is the version that was just placed, which marks every live s
 failed; --no-restart installs the binaries, leaves the daemon alone, and reports the
 restart as pending. The flag is accepted and ignored for festival, camp, and fest.
 
+app installs Festival App, the desktop app, the standard way for this system: the app bundle in /Applications (or ~/Applications) on macOS, the App's own installer on Windows, the deb through apt on Debian and Ubuntu, and the AppImage in ~/.local/bin elsewhere. Every download is checked against the signed marketplace and the App's own update signature before anything is placed. --format appimage or --format deb chooses the Linux format. Quit Festival App before installing over it.
+
 ```
-festival install <festival|camp|fest|obey|namespace/camp-plugin|namespace/fest-plugin> [flags]
+festival install <festival|camp|fest|obey|app|namespace/camp-plugin|namespace/fest-plugin> [flags]
 ```
 
 ### Options
@@ -35,6 +37,7 @@ festival install <festival|camp|fest|obey|namespace/camp-plugin|namespace/fest-p
       --allow-unverified   allow installing unsigned content without prompting
       --channel string     release channel (stable|rc|dev) (default "stable")
       --force              install a hub copy even when a package-manager suite is already on PATH
+      --format string      Linux only: install Festival App as appimage or deb
   -h, --help               help for install
       --json               emit JSON output
       --no-restart         install the new obey binaries without restarting the running daemon

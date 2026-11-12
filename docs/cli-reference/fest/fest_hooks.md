@@ -14,6 +14,7 @@ Inspect the hooks resolved from the machine, festivals, and festival layers.
 
 Available Commands:
   list   Show the effective resolved hook set with source layers and shadow diffs
+  notifications   Inspect machine-local PRESENT and approval notifications
 
 ### Options
 
@@ -34,3 +35,4 @@ Available Commands:
 
 * [fest](../fest/)	 - Festival Methodology CLI - goal-oriented project management for AI agents
 * [fest hooks list](../fest_hooks_list/)	 - Show the effective resolved hook set
+* [fest hooks notifications](../fest_hooks_notifications/)	 - Inspect machine-local workflow notifications
