@@ -12,7 +12,7 @@ import tempfile
 import time
 
 REPO = "Obedience-Corp/marketplace"
-PACKAGES = ("camp-app", "festival")
+PACKAGES = ("camp-app", "festival", "festival-app")
 VERSION = re.compile(r"(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)\Z")
 
 
@@ -42,9 +42,19 @@ def catalog_version(root, package):
 def generated_payload(root, package):
     allowed = {f"packages/obedience-corp/{package}/obey-package.json", "index.json", "obey-marketplace.json"}
     changed = set(run("git", "diff", "--name-only", cwd=root).splitlines())
+    # A package's first publication creates its manifest; git diff never lists untracked files.
+    changed |= set(run("git", "ls-files", "--others", "--exclude-standard", cwd=root).splitlines())
     if not changed <= allowed:
         raise ValueError(f"preparation changed unexpected files: {sorted(changed - allowed)}")
     return {path: hashlib.sha256((root / path).read_bytes()).hexdigest() for path in changed}
+
+
+def discard_prepared_files(root):
+    """Drop this disposable clone's prepared files, including a new untracked manifest."""
+    run("git", "reset", "--hard", "HEAD", cwd=root)
+    # git reset never removes untracked files; a first publication's manifest would block
+    # the detached checkouts of the signed branch and of main.
+    run("git", "clean", "-fdq", "--", "packages/", cwd=root)
 
 
 def validate_candidate(root, base, expected):
@@ -152,6 +162,8 @@ def reconcile(package, version, validator):
         run("go", "build", "-o", str(metadata), "./tools/metadata", cwd=root)
         print(run(str(metadata), "verify", cwd=root), flush=True)
         base = run("git", "rev-parse", "HEAD", cwd=root)
+        # The tool reports a package with no stable release yet as current: it exits 0 and
+        # changes nothing, so the empty payload below ends the run without a PR.
         print(run(str(metadata), "reconcile", package, version, cwd=root), flush=True)
         expected = generated_payload(root, package)
         if not expected:
@@ -182,7 +194,7 @@ def reconcile(package, version, validator):
             number = int(url.rsplit("/", 1)[1])
         # Drop only this disposable clone's generated files before inspecting the
         # existing signed branch. The prepared content is pinned by its hashes.
-        run("git", "reset", "--hard", "HEAD", cwd=root)
+        discard_prepared_files(root)
         wait_and_merge(root, metadata, base, branch, number, expected)
         run("git", "fetch", "origin", "main", cwd=root)
         run("git", "checkout", "--detach", "origin/main", cwd=root)

@@ -63,10 +63,11 @@ release-pins mode="stable":
 beginner-path-smoke:
     bash scripts/smoke_beginner_path.sh
 
-# Verify the marketplace publish path opens a pull request and never writes to main
+# Verify the marketplace publish path opens a pull request and never writes to main.
+# Runs in a disposable container because the reconciler tests create git repositories.
 [no-cd]
 marketplace-publish:
-    bash scripts/test_marketplace_publish.sh
+    docker run --rm -v "{{justfile_directory()}}:/src:ro" python:3.13-bookworm bash -euc 'mkdir -p /work && cp -a /src/scripts /src/.github /work/ && cd /work && bash scripts/test_marketplace_publish.sh'
 
 # Verify packaged completion filenames come from scripts/completion-clis.txt
 [no-cd]

@@ -8,7 +8,7 @@ on:
       package:
         description: Registered static package to reconcile
         type: choice
-        options: [all, camp-app, festival]
+        options: [all, camp-app, festival, festival-app]
         default: all
       version:
         description: Stable version, or latest (all requires latest)
