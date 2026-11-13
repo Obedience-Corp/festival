@@ -76,6 +76,18 @@ Auto approval:
   to block until the judge returns instead.
 ```
 
+Standalone workflows:
+  A WORKFLOW.md outside a festival has no approval judge to delegate to, so
+  its blocking checkpoints are always a human decision. Approving one requires
+  an interactive terminal and typing APPROVE; --auto, --judge-command and
+  --override-judge do not apply there.
+
+Pinning:
+  --expect-step N refuses the approval, changing nothing, unless the
+  checkpoint is at step N. A tool that shows the user one checkpoint and then
+  runs this command passes the step it showed, so a workflow that has moved on
+  is not approved at a different step.
+
 ```
 fest workflow approve [flags]
 ```
@@ -84,6 +96,7 @@ fest workflow approve [flags]
 
 ```
       --auto                     delegate this checkpoint decision to the configured approval judge command
+      --expect-step int          refuse unless the checkpoint is at this step number
   -h, --help                     help for approve
       --judge-command string     approval judge command for --auto (overrides the .festival/config.yaml hooks.definitions.approval_judge hook; requires an interactive TTY)
       --judge-timeout duration   maximum time to wait for the approval judge (0 waits until it returns)
