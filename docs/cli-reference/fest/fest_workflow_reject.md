@@ -17,6 +17,13 @@ to reject and request revisions.
 
 The feedback will be recorded in the workflow state for reference.
 
+In a standalone workflow (a WORKFLOW.md outside a festival) the step stays
+blocked after a rejection until the revised work is re-submitted with
+'fest workflow advance'.
+
+--expect-step N refuses the rejection, changing nothing, unless the checkpoint
+is at step N.
+
 Failed gates with remediation:
   Use --remediation-phase to record that a phase gate did not pass and
   to link a remediation phase that will correct the underlying issues.
@@ -37,6 +44,7 @@ fest workflow reject [flags]
 ### Options
 
 ```
+      --expect-step int            refuse unless the checkpoint is at this step number
   -h, --help                       help for reject
   -r, --reason string              reason for rejection (required)
       --remediation-phase string   link a remediation phase for a failed gate (e.g. 005_FIX_PR_302)

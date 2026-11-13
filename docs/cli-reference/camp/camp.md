@@ -52,6 +52,7 @@ camp [flags]
 
 ### SEE ALSO
 
+* [camp approvals](../camp_approvals/)	 - See what in this camp is waiting on your approval
 * [camp artifacts](../camp_artifacts/)	 - Explore artifact files and manage declared roots
 * [camp attach](../camp_attach/)	 - Attach an external directory to a camp
 * [camp cache](../camp_cache/)	 - Manage the navigation index cache

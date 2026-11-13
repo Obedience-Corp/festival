@@ -17,7 +17,9 @@ This command:
   2. Advances the workflow to the next step
   3. Saves the updated state
 
-Note: If the current step has a blocking checkpoint, use 'fest workflow approve' instead.
+If the current step has a blocking checkpoint, advance records that the work
+is done and stops there, awaiting approval. Only 'fest workflow approve' moves
+past a checkpoint. After a rejection, advance re-submits the revised step.
 
 ```
 fest workflow advance [flags]
