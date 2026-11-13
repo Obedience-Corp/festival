@@ -34,7 +34,13 @@ camp project prune all [flags]
 ### Options inherited from parent commands
 
 ```
-      --no-color   disable colored output
+      --discard-dirty   Remove worktrees with uncommitted changes without saving them (unpushed submodule commits still keep a worktree)
+  -n, --dry-run         Preview without deleting
+  -f, --force           Skip local branch deletion confirmation
+      --keep-dirty      Keep every worktree that has uncommitted changes
+      --no-color        disable colored output
+      --remote          Also prune stale remote tracking refs
+      --remote-delete   Also delete merged branches on origin (destructive)
 ```
 
 ### SEE ALSO
