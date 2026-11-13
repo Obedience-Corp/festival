@@ -23,7 +23,7 @@ The key property is **navigability**. Both humans and AI agents can enter a camp
 
 Camps are independent. Switching from your day-job camp to your side-project camp is a single command. Each camp carries its own context, its own planning state, its own project graph.
 
-If you have read about the Home Repo pattern for coding agents, a camp is one. See [The Home Repo Pattern with Camp]({{< ref "/guides/home-repo-pattern" >}}).
+A camp is also the context hub for your coding agents: start an agent in the camp root and it has your skills and instructions, with every project one directory away. See [A Camp as Your Agents’ Context Hub]({{< ref "/guides/context-hub" >}}).
 
 ## Camp Directory Layout
 
