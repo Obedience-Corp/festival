@@ -118,7 +118,9 @@ camp project worktree list --project payments-api
 
 Worktrees live under `projects/worktrees/<project>/<name>/`, and camp copies the
 skill links into each new one, so a session started inside a worktree still has
-your skills. Remove a worktree when its branch merges:
+your skills. If you add a skill later, run `camp skills link --worktrees` to
+link it into worktrees that already exist. Remove a worktree when its branch
+merges:
 
 ```bash
 camp project worktree remove refund-fix --project payments-api
@@ -155,11 +157,11 @@ first time its path turns out to be missing. Camp does that setup up front, in
 
 ## One home or several
 
-The article describes one Home Repo per person. Camp is built for one camp per
-mission: your job, a side project, the open-source library you maintain. Each
-camp is a Home Repo with its own repos, skills and docs, and `camp list` shows
-them all. If one home fits how you work, make one camp and add everything to
-it.
+The article describes a single Home Repo, which a whole team can share. Camp
+is built for one camp per mission: your job, a side project, the open-source
+library you maintain. Each camp is a Home Repo with its own repos, skills and
+docs, and `camp list` shows them all. If one home fits how you work, make one
+camp and add everything to it.
 
 ## What a camp adds
 
