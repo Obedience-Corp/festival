@@ -12,6 +12,8 @@
     "pr:Obedience-Corp/fest:425",
     "pr:Obedience-Corp/fest:443",
     "pr:Obedience-Corp/fest:444",
+    "pr:Obedience-Corp/fest:451",
+    "pr:Obedience-Corp/fest:454",
     "pr:Obedience-Corp/festival:187",
     "pr:Obedience-Corp/festival:188",
     "pr:Obedience-Corp/festival:192",
@@ -29,6 +31,7 @@
     "release:Obedience-Corp/camp:424653876",
     "release:Obedience-Corp/camp:428853823",
     "release:Obedience-Corp/camp:438571325",
+    "release:Obedience-Corp/camp:444822435",
     "release:Obedience-Corp/fest:387685145",
     "release:Obedience-Corp/fest:388074387",
     "release:Obedience-Corp/fest:390939833",
@@ -37,6 +40,7 @@
     "release:Obedience-Corp/fest:414254686",
     "release:Obedience-Corp/fest:423133488",
     "release:Obedience-Corp/fest:425034845",
+    "release:Obedience-Corp/fest:443747973",
     "release:Obedience-Corp/festival:384452138",
     "release:Obedience-Corp/festival:387718546",
     "release:Obedience-Corp/festival:390944237",
@@ -45,7 +49,8 @@
     "release:Obedience-Corp/festival:414278359",
     "release:Obedience-Corp/festival:420158577",
     "release:Obedience-Corp/festival:428882789",
-    "release:Obedience-Corp/festival:439007038"
+    "release:Obedience-Corp/festival:439007038",
+    "release:Obedience-Corp/festival:444835371"
   ],
   "spotlights": [
     "camp-workitems-2026-01",
@@ -61,6 +66,7 @@
     "2026-W43",
     "2026-W44",
     "2026-W45",
-    "2026-W46"
+    "2026-W46",
+    "2026-W47"
   ]
 }
