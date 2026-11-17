@@ -16,7 +16,8 @@ With --check, compare this build's Festival suite release against the latest
 stable release on github.com/Obedience-Corp/festival and print how to upgrade.
 The result is cached for 24 hours in ~/.obey/update-check/suite.json, shared
 with camp. fest also mentions a newer release on stderr after human commands
-such as fest status and fest list, once per release; set
+such as fest status and fest list, at most once a day while this build is
+behind; set
 FESTIVAL_NO_UPDATE_CHECK=1 to turn that off. fest never updates itself.
 --check takes precedence over --short.
 
