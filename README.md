@@ -22,7 +22,61 @@ orchestration. You shape how agents work, see where they need attention, and
 refine the process for the next run. Plans, decisions, progress, and checks stay
 in files and Git, so you can inspect the work and continue in another session.
 
-[Try it on one real goal](#get-started) · [See a completed build](#see-festival-in-action) · [How it works](#how-the-components-fit-together) · [简体中文](README.zh-CN.md)
+[Install Festival](#install-festival) · [Install Festival App](#install-festival-app) · [Try it on one real goal](#get-started) · [See a completed build](#see-festival-in-action) · [How it works](#how-the-components-fit-together) · [简体中文](README.zh-CN.md)
+
+## Install Festival
+
+Choose one method for your system. Each installs the `festival` manager,
+`fest` for planning, and `camp` for managing workspaces. You’ll also need Git.
+
+**macOS with Homebrew**
+
+```bash
+brew install --cask Obedience-Corp/tap/festival
+```
+
+**macOS or Linux with Node.js 18 or later**
+
+```bash
+npm install -g @obedience-corp/festival
+```
+
+**Windows x64 with Scoop (PowerShell)**
+
+Install [Scoop](https://scoop.sh/) first, then run these commands in PowerShell.
+
+```powershell
+scoop install git
+scoop bucket add obedience https://github.com/Obedience-Corp/scoop-bucket
+scoop install obedience/festival
+```
+
+Check that the suite is ready from your terminal.
+
+```sh
+festival doctor
+```
+
+For native Linux packages and other install methods, see the
+[installation guide](https://docs.fest.build/getting-started/installation/).
+
+## Install Festival App
+
+Festival App is an optional desktop terminal for the same repositories and plans
+you use with the CLI. Arrange terminals, files, and browser views in split panes,
+or open Festival Activity to see what changed across your projects.
+
+With Festival v0.3.34 or later installed, run this command as your regular user.
+
+```sh
+festival install app
+```
+
+If `app` is an unknown target, check `festival version` and update Festival
+using the package manager you installed it with.
+You can also [download Festival App directly](https://fest.build/app#download).
+
+[![Festival App running a plan beside a README, swapping the panes, then opening the project activity graph](docs/images/demos/festival-app.gif)](https://fest.build/app#walkthrough)
 
 ## See Festival in action
 
@@ -126,38 +180,15 @@ The [agent setup guides](https://docs.fest.build/getting-started/agents/) cover 
 <details>
 <summary>Prefer to set up manually?</summary>
 
-Choose one method. Each installs `camp`, `fest`, and the `festival` manager.
-
-**macOS with Homebrew**
-
-```bash
-brew install --cask Obedience-Corp/tap/festival
-```
-
-**macOS or Linux with Node.js**
-
-```bash
-npm install -g @obedience-corp/festival
-```
-
-**Windows x64 with Scoop (PowerShell)**
-
-Install [Scoop](https://scoop.sh/) first, then run:
-
-```powershell
-scoop install git
-scoop bucket add obedience https://github.com/Obedience-Corp/scoop-bucket
-scoop install obedience/festival
-```
+Start with the [Festival CLI installation](#install-festival), then create your workspace.
 
 Windows supports local Camp and Fest work. `camp sync --from`,
 `camp clone --from`, and artifact transfer to or from another camp are not
 available in this release.
 
-Check the install and create one camp:
+Create your first camp in the terminal.
 
 ```bash
-festival doctor
 camp create my-camp
 ```
 
