@@ -22,7 +22,26 @@ orchestration. You shape how agents work, see where they need attention, and
 refine the process for the next run. Plans, decisions, progress, and checks stay
 in files and Git, so you can inspect the work and continue in another session.
 
-[Try it on one real goal](#get-started) · [See a completed build](#see-festival-in-action) · [How it works](#how-the-components-fit-together) · [简体中文](README.zh-CN.md)
+[Try it on one real goal](#get-started) · [Install Festival App](#install-festival-app) · [See a completed build](#see-festival-in-action) · [How it works](#how-the-components-fit-together) · [简体中文](README.zh-CN.md)
+
+## Install Festival App
+
+Festival App is an optional desktop terminal for the same repositories and plans
+you use with the CLI. Arrange terminals, files, and browser views in split panes,
+or open Festival Activity to see what changed across your projects.
+
+With Git and the `festival` manager v0.4.0 or later installed, run this command
+as your regular user.
+
+```sh
+festival install app
+```
+
+Check your manager version with `festival version`. To install or update the
+manager, follow the [CLI installation guide](https://docs.fest.build/getting-started/installation/).
+You can also [download Festival App directly](https://fest.build/app#download).
+
+[![Festival App running a plan beside a README, swapping the panes, then opening the project activity graph](docs/images/demos/festival-app.gif)](https://fest.build/app#walkthrough)
 
 ## See Festival in action
 
