@@ -150,6 +150,8 @@ Festival 把这些东西放进一个可审查、可提交、可恢复的工作�
 
 ## License
 
-[Apache License 2.0](LICENSE)
+Festival CLI 套件（`festival`、`fest` 和 `camp`）采用 [Apache License 2.0](LICENSE) 开源许可证。
+
+Obey（`obey` 守护进程和 `ob` 客户端）和 Festival App 是 Obedience Corp 提供的可选专有软件。通过 Festival CLI 安装或直接下载时，均适用各产品的发布条款。请参阅[二进制发行许可](https://github.com/Obedience-Corp/obey-releases/blob/main/LICENSE)及各版本附带的条款。
 
 Built by [Obedience Corp](https://obediencecorp.com). AI that does what you want, the way you want it done.
