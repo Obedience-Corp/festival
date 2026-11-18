@@ -75,6 +75,7 @@ festival install app
 If `app` is an unknown target, check `festival version` and update Festival
 using the package manager you installed it with.
 You can also [download Festival App directly](https://fest.build/app#download).
+See [Licensing](#licensing) for the terms that apply to the desktop app.
 
 [![Festival App running a plan beside a README, swapping the panes, then opening the project activity graph](docs/images/demos/festival-app.gif)](https://fest.build/app#walkthrough)
 
@@ -524,8 +525,17 @@ The CLI tools are free to use and run locally without a Festival account. Your a
 - [Report a bug or request a feature](https://github.com/Obedience-Corp/festival/issues): tell us what happened or what would help.
 - [Give feedback](https://fest.build/feedback/) or [read the blog](https://fest.build/blog/).
 
-**Festival App is in development.** The CLI tools are available now. [See what's coming](https://fest.build/#app).
-
 If Festival is useful to you, **star this repository** to help other developers discover it. A bug report, a workflow you share, or an example of work you've handed off helps us improve it.
 
-[Apache License 2.0](LICENSE) · Built by [Obedience Corp](https://obediencecorp.com/).
+## Licensing
+
+The Festival CLI suite (`festival`, `fest`, and `camp`) is open source under the
+[Apache License 2.0](LICENSE).
+
+Obey (the `obey` daemon and the `ob` client) and Festival App are optional
+proprietary products from Obedience Corp. Their release terms apply whether you
+install them through the Festival CLI or download them directly. See the
+[binary distribution license](https://github.com/Obedience-Corp/obey-releases/blob/main/LICENSE)
+and the terms included with each release.
+
+Built by [Obedience Corp](https://obediencecorp.com/).
