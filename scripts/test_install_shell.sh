@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
-# Unit tests for install.sh login-profile PATH writes.
+# Unit tests for install.sh login-profile PATH writes and its release lookup.
 #
 # Sources install.sh (main() is guarded so sourcing only defines functions)
-# and exercises configure_shell_startup against an isolated HOME. No network,
-# no real user rc files. Invoked by `just test install-shell`.
+# and exercises configure_shell_startup against an isolated HOME and
+# get_release_metadata against a stubbed curl. No network, no real user rc
+# files. Invoked by `just test install-shell`.
 set -euo pipefail
 
 repo_root="$(cd "$(dirname "$0")/.." && pwd)"
@@ -301,7 +302,7 @@ rm -f "$CURL_LOG"
 unset -f curl
 
 if [ "$fail" -ne 0 ]; then
-    echo "install.sh login-path tests FAILED" >&2
+    echo "install.sh tests FAILED" >&2
     exit 1
 fi
-echo "install.sh login-path tests passed"
+echo "install.sh tests passed"
