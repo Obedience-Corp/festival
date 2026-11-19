@@ -37,6 +37,8 @@ Environment:
   VERSION                    Release tag to install, or "latest" (default: latest)
   INSTALL_DIR                Binary install directory (default: ~/.local/bin)
   FESTIVAL_INSTALL_SHELL     auto, 1, or 0 (default: auto)
+  GITHUB_TOKEN, GH_TOKEN     Optional; authenticates the GitHub API release lookup
+                             (avoids the anonymous rate limit on shared CI runners)
 
 Shell setup:
   --setup-shell              Add a guarded source block to the detected shell rc file
@@ -84,16 +86,27 @@ detect_arch() {
     esac
 }
 
-# Get latest release version
+# Fetch a release's metadata from the GitHub API.
+#
+# GITHUB_TOKEN or GH_TOKEN, when set, lifts the 60 requests per hour that
+# GitHub allows an anonymous IP, which shared CI runners exhaust. A rejected
+# or expired token falls back to the anonymous request.
 get_release_metadata() {
     local version="${1:-latest}"
     local endpoint="releases/latest"
+    local url metadata token="${GITHUB_TOKEN:-${GH_TOKEN:-}}"
 
     if [ "$version" != "latest" ]; then
         endpoint="releases/tags/${version}"
     fi
+    url="https://api.github.com/repos/${REPO}/${endpoint}"
 
-    curl -fsSL "https://api.github.com/repos/${REPO}/${endpoint}"
+    # The header goes through stdin so the token stays out of the process list.
+    if [ -n "$token" ] && metadata=$(printf 'Authorization: Bearer %s\n' "$token" | curl -fsL -H @- "$url"); then
+        printf '%s\n' "$metadata"
+        return 0
+    fi
+    curl -fsSL "$url"
 }
 
 extract_tag_name() {
