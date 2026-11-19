@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
-# Unit tests for install.sh login-profile PATH writes.
+# Unit tests for install.sh login-profile PATH writes and its release lookup.
 #
 # Sources install.sh (main() is guarded so sourcing only defines functions)
-# and exercises configure_shell_startup against an isolated HOME. No network,
-# no real user rc files. Invoked by `just test install-shell`.
+# and exercises configure_shell_startup against an isolated HOME and
+# get_release_metadata against a stubbed curl. No network, no real user rc
+# files. Invoked by `just test install-shell`.
 set -euo pipefail
 
 repo_root="$(cd "$(dirname "$0")/.." && pwd)"
@@ -246,8 +247,62 @@ else
     pass_msg "--no-shell writes no shell files"
 fi
 
+# --- release metadata authenticates when a token is set ---
+# curl is stubbed: each call appends its args and the headers it read from
+# stdin to CURL_LOG, and CURL_REJECT_AUTH makes an authenticated call fail.
+CURL_LOG="$(mktemp "${TMPDIR:-/tmp}/festival-install-curl.XXXXXX")"
+curl() {
+    local stdin_headers=""
+    case " $* " in *" -H @- "*) stdin_headers="$(cat)" ;; esac
+    printf 'args=%s headers=%s\n' "$*" "$stdin_headers" >> "$CURL_LOG"
+    if [ -n "$stdin_headers" ] && [ -n "${CURL_REJECT_AUTH:-}" ]; then
+        return 22
+    fi
+    printf '{"tag_name":"v9.9.9"}\n'
+}
+
+metadata_case() { # $1 label, remaining args are env assignments
+    local label="$1"
+    shift
+    : > "$CURL_LOG"
+    metadata="$(env -u GITHUB_TOKEN -u GH_TOKEN "$@" bash -c 'source "$1"; '"$(declare -f curl)"'; CURL_LOG="$2"; get_release_metadata v9.9.9' _ "$repo_root/install.sh" "$CURL_LOG")" ||
+        { fail_msg "$label: get_release_metadata failed"; return; }
+    [ "$metadata" = '{"tag_name":"v9.9.9"}' ] || fail_msg "$label: metadata = $metadata"
+}
+
+metadata_case "no token"
+if [ "$(wc -l < "$CURL_LOG" | tr -d ' ')" = 1 ] && ! grep -q Authorization "$CURL_LOG"; then
+    pass_msg "no token makes one anonymous request"
+else
+    fail_msg "no token: $(cat "$CURL_LOG")"
+fi
+
+metadata_case "GITHUB_TOKEN" GITHUB_TOKEN=good-token
+if [ "$(wc -l < "$CURL_LOG" | tr -d ' ')" = 1 ] && grep -q "headers=Authorization: Bearer good-token" "$CURL_LOG" &&
+    ! sed 's/ headers=.*//' "$CURL_LOG" | grep -q good-token; then
+    pass_msg "GITHUB_TOKEN authenticates through stdin, not argv"
+else
+    fail_msg "GITHUB_TOKEN: $(cat "$CURL_LOG")"
+fi
+
+metadata_case "GH_TOKEN" GH_TOKEN=gh-token
+if grep -q "headers=Authorization: Bearer gh-token" "$CURL_LOG"; then
+    pass_msg "GH_TOKEN authenticates when GITHUB_TOKEN is unset"
+else
+    fail_msg "GH_TOKEN: $(cat "$CURL_LOG")"
+fi
+
+metadata_case "rejected token" GITHUB_TOKEN=stale-token CURL_REJECT_AUTH=1
+if [ "$(wc -l < "$CURL_LOG" | tr -d ' ')" = 2 ] && tail -1 "$CURL_LOG" | grep -q "headers=$"; then
+    pass_msg "a rejected token falls back to an anonymous request"
+else
+    fail_msg "rejected token: $(cat "$CURL_LOG")"
+fi
+rm -f "$CURL_LOG"
+unset -f curl
+
 if [ "$fail" -ne 0 ]; then
-    echo "install.sh login-path tests FAILED" >&2
+    echo "install.sh tests FAILED" >&2
     exit 1
 fi
-echo "install.sh login-path tests passed"
+echo "install.sh tests passed"
