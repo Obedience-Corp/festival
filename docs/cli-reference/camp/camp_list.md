@@ -18,12 +18,13 @@ Verification keeps registrations when their paths or configs are unavailable.
 Use 'camp registry prune' or 'camp unregister' to remove unwanted entries.
 
 In a terminal, 'camp list' (with no flags) opens an interactive browser where you
-can deactivate/reactivate camps (cycle lifecycle status), reassign their org,
-and copy paths. When machines are configured in ~/.obey/machines.yaml, press 'r'
-to load remote camps into the browser (not on open). Pass an org as a
-positional argument to open the browser filtered to that org. Piped, with
---json/--count, or with any filter/sort flag it prints the table instead. Home
-paths display as '~'.
+can deactivate/reactivate camps (cycle lifecycle status with 's'), reassign their
+org, and copy paths. Press 'o' to list orgs with their camp counts and filter the
+browser to one, and '?' to see every key. When machines are configured in
+~/.obey/machines.yaml, remote camps load into the browser when it opens; press
+'r' to hide or reload them. Pass an org as a positional argument to open the
+browser filtered to that org. Piped, with --json/--count, or with any
+filter/sort flag it prints the table instead. Home paths display as '~'.
 
 Shell integration (recommended for go/hop from the browser):
   eval "$(camp shell-init zsh)"   # or bash / sh
