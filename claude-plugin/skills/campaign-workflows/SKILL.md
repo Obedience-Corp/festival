@@ -14,10 +14,41 @@ festival planning and execution.
 
 ## Intents
 
+Capture the whole intent in one command. Put the body on stdin:
+
 ```bash
-camp intent add "idea"
+camp intent add "Login returns 500 after password reset" \
+  --type bug --concept projects/my-api --tag auth --body-file - <<'EOF'
+What is wrong or wanted, in a few sentences.
+
+Where it came from: the task, festival, PR or session that surfaced it.
+
+Done when: the observable result that closes it.
+EOF
+```
+
+| Flag | Sets |
+| --- | --- |
+| `--body-file -` / `--body "text"` | Description (markdown) |
+| `--type` | `idea`, `feature`, `bug`, `research`, `chore` |
+| `--concept` | Owning area, for example `projects/my-api` |
+| `--tag` | Tag, repeatable |
+| `--json` | Print the new intent's `id` and `path` |
+
+Newer camp versions add `--priority`, `--horizon` and dependency flags; run
+`camp intent add --help` to see what yours supports.
+
+A title alone is still a valid capture: `camp intent add "idea"`. Write the body
+when you have the context, because the reader will not.
+
+Without a terminal, `add` needs the title argument. `--body-file -` reads stdin
+until it closes, so always give it a heredoc or a pipe.
+
+```bash
 camp intent list
-camp intent move <id> active
+camp intent show <id>
+camp intent edit <id> --append-body "New evidence"
+camp intent move <id> ready
 camp intent promote <id>
 camp intent archive <id>
 ```
@@ -50,4 +81,5 @@ Item status moves are `camp intent move <id> <status>`, not a workflow command.
 - Running `fest` commands for intent or workflow-collection operations.
 - Deleting old work instead of moving it to dungeon statuses.
 - Promoting intents before they are sufficiently shaped.
+- Capturing a title and nothing else when you hold the context that explains it.
 - Reaching for a `camp flow` command: the surface is `camp workflow`.

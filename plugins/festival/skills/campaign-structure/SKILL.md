@@ -9,7 +9,7 @@ A camp was previously called a campaign; the layout below is the same either way
 
 ## Placement Rules
 
-- Raw idea / bug / future work / quick capture: `.campaign/intents/inbox/` (use `camp intent add`)
+- Raw idea / bug / future work / quick capture: `.campaign/intents/inbox/` (use `camp intent add "<title>" --body "<description>"`; see the `campaign-workflows` skill)
 - Enriching or preparing for execution: `.campaign/intents/active/`
 - Ready for structured work: `.campaign/intents/ready/` → promote to festival
 - Structured multi-phase execution: `festivals/`
