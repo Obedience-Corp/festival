@@ -35,8 +35,8 @@ EOF
 | `--tag` | Tag, repeatable |
 | `--json` | Print the new intent's `id` and `path` |
 
-Newer camp versions add `--priority`, `--horizon` and dependency flags; run
-`camp intent add --help` to see what yours supports.
+Run `camp intent add --help` for the other metadata flags your camp version
+supports.
 
 A title alone is still a valid capture: `camp intent add "idea"`. Write the body
 when you have the context, because the reader will not.
