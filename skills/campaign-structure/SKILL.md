@@ -1,7 +1,7 @@
 ---
 name: campaign-structure
 description: Orient within a camp's directory structure. Use when deciding where work belongs (intents vs festivals vs design vs docs vs dungeon), especially when a task is not yet planned or folder ownership is unclear.
-version: "1.4.1"
+version: "1.4.2"
 author: Obedience Corp
 license: Apache-2.0
 metadata:
@@ -20,7 +20,7 @@ A camp was previously called a campaign; the layout below is the same either way
 
 ## Placement Rules
 
-- Raw idea / bug / future work / quick capture: `.campaign/intents/inbox/` (use `camp intent add`)
+- Raw idea / bug / future work / quick capture: `.campaign/intents/inbox/` (use `camp intent add "<title>" --body "<description>"`; see the `campaign-workflows` skill)
 - Enriching or preparing for execution: `.campaign/intents/active/`
 - Ready for structured work: `.campaign/intents/ready/` → promote to festival
 - Structured multi-phase execution: `festivals/`
